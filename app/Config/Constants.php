@@ -12,7 +12,7 @@ define('AppName', "PraVocê.io");
 if (IsProduction){
     define ('assetfolder', '/');	
 } else {
-    define ('assetfolder', '/PraVoce-Adm/public/');	
+    define ('assetfolder', '/InsightSuite/public/');	
 }
 /*
  | --------------------------------------------------------------------

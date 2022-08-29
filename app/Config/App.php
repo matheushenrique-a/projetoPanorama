@@ -24,7 +24,7 @@ class App extends BaseConfig
      *
      * @var string
      */
-    public $baseURL = 'http://localhost/PraVoce-Adm/public/';
+    public $baseURL = 'http://localhost/InsightSuite/public/';
   
 
     /**
