@@ -29,6 +29,7 @@ abstract class BaseController extends Controller
      */
     protected $request;
     protected $dbMaster;
+    protected $session;
     /**
      * An array of helpers to be loaded automatically upon
      * class instantiation. These helpers will be available
@@ -48,7 +49,7 @@ abstract class BaseController extends Controller
 
         // Preload any models, libraries, etc, here.
         $this->dbMaster = new dbMaster(); // create an instance of Library class
-        // E.g.: $this->session = \Config\Services::session();
+        $this->session = session();
     }
 
 	public function loadpage($page, $dados){
@@ -68,14 +69,14 @@ abstract class BaseController extends Controller
 		$aux = "";
 
 		if (array_key_exists  ( $valor  , $_POST)) {
-			$aux = $_POST[$valor];
+			$aux = trim($_POST[$valor]);
 		} else {
 			$aux =   '';
 		}
 
 		if ($aux=="") {
 			if (array_key_exists  ( $valor  , $_GET)) {
-					$aux = $_GET[$valor];
+					$aux = trim($_GET[$valor]);
 			} else {
 				$aux =   '';
 			}

@@ -130,9 +130,14 @@
 								<!--end::Input group=-->
 								<!--begin::Wrapper-->
 								<div class="d-flex flex-stack flex-wrap gap-3 fs-base fw-semibold mb-8">
-									<div></div>
+									<div class="text-danger">
+											<?php
+												if (isset($error)){
+													echo $error;
+												}
+											;?></div>
 									<!--begin::Link-->
-									<a href="../../demo1/dist/authentication/layouts/overlay/reset-password.html" class="link-primary">Esqueceu sua senha?</a>
+									<a href="../../demo1/dist/authentication/layouts/overlay/reset-password.html" class="link-primary" style="pointer-events: none;">Esqueceu sua senha?</a>
 									<!--end::Link-->
 								</div>
 								<!--end::Wrapper-->
@@ -151,7 +156,7 @@
 								<!--end::Submit button-->
 								<!--begin::Sign up-->
 								<div class="text-gray-500 text-center fw-semibold fs-6">Não possui cadastro?
-								<a href="../../demo1/dist/authentication/layouts/overlay/sign-up.html" class="link-primary">Registre-se</a></div>
+								<a href="../../demo1/dist/authentication/layouts/overlay/sign-up.html" class="link-primary" style="pointer-events: none;">Registre-se</a></div>
 								<!--end::Sign up-->
 							</form>
 							<!--end::Form-->

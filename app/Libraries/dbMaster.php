@@ -10,10 +10,6 @@ class dbMaster {
 		$this->db = \Config\Database::connect();
 	}
 
-	public function test(){
-		echo "test"; exit;
-	}
-
 	public function select($table, $whereCheck, $likeCheck = null)
 	{
 		$builder = $this->db->table($table);
@@ -26,12 +22,13 @@ class dbMaster {
 		
 		$builder->where($whereCheck);
 		$builder->limit(100);
-		//echo $builder->getCompiledSelect(false);
+		//echo $builder->getCompiledSelect();
 		$result = $builder->get();
+		//echo "14:20:50 - <h3>Dump 21</h3> <br><br>" . var_dump($result->getResult()); exit;					//<-------DEBUG
 		$returnData = array();
-		$returnData["num_rows"] = $this->db->affectedRows();
+		$returnData["num_rows"] = count($result->getResult());
 		$returnData["countAll"] = $this->db->table($table)->countAll();
-		$returnData["existRecord"] = $this->db->affectedRows() > 0 ? true : false;
+		$returnData["existRecord"] = $returnData["num_rows"] > 0 ? true : false;
 		$returnData["firstRow"] = isset($result->getResult()[0]) ? $result->getResult()[0] : null;
 		$returnData["result"] = $result;
 
@@ -40,49 +37,58 @@ class dbMaster {
 
 	public function insert($table, $data)
 	{
-		$this->db->insert($table, $data);
-		$returnData["insert_id"] = $this->db->insert_id();
+		$builder = $this->db->table($table);
+		$builder->insert($data);
+		$returnData["insert_id"] = $this->db->insertID();
 		return $returnData;
 	}
 
 	public function update($table, $fieldUpdate, $whereArrayUpdt, $fielDynamicdUpdate = null)
 	{
-		$this->db->set($fieldUpdate);
+		$builder = $this->db->table($table);
+
+		$builder->set($fieldUpdate);
 
 		if (!empty($fielDynamicdUpdate)){
 			foreach($fielDynamicdUpdate as $key=>$value)
 			{
-				$this->db->set($key, $value, FALSE);
+				$builder->set($key, $value, FALSE);
 			}
 		}
 
-		$this->db->where($whereArrayUpdt);
-		//echo $this->db->get_compiled_update($table);exit;
-		$this->db->update($table);
+		$builder->where($whereArrayUpdt);
+		//echo $builder->getCompiledUpdate();exit;
+		$builder->update();
 
-		$returnData["affected_rows"] = $this->db->affected_rows();
-		$returnData["updated"] = $this->db->affected_rows() > 0 ? true : false;
+		$returnData["affected_rows"] = $this->db->affectedRows();
+		$returnData["updated"] = $this->db->affectedRows() > 0 ? true : false;
 		
 		return $returnData;
 	}	
 
 	public function delete($table, $whereCheck)
 	{
-		$this->db->delete($table, $whereCheck);
+		$builder = $this->db->table($table);
+		$builder->delete($whereCheck);
 	}
+
+
 
 	//Evita consulta a uma tabela que foi recenemente consultada
 	public function IsDataUpdated($table, $whereArray = null){
 		//default interval check
 		$minutes = integration_delay_bancos[$table];
-
+		//echo "13:18:37 - <h3>Dump 2</h3> <br><br>" . var_dump($table); exit;					//<-------DEBUG
 		$md5 = $this->getMd5($table, $whereArray);
 
-		$this->db->limit(1);
-		$this->db->where(' TIMESTAMPDIFF(minute,last_updated,now())  <', $minutes);
-		$this->db->where('md5', $md5);
-		$total_rows = $this->db->get('record_updates')->num_rows();
-
+		$builder = $this->db->table('record_updates');
+		$builder->limit(1);
+		$builder->where(' TIMESTAMPDIFF(minute,last_updated,now())  <', $minutes);
+		$builder->where('md5', $md5);
+		$result = $builder->get();
+		$total_rows = $this->db->affectedRows();
+		
+		//echo "13:17:40 - <h3>Dump 78</h3> <br><br>" . var_dump($total_rows); exit;					//<-------DEBUG 
 		if ($total_rows==1){
 			//se encontrou algum registro é porque existem linhas 
 			//com menos de X minutos na tabela, logo o dado está atualizado / existente
@@ -108,7 +114,7 @@ class dbMaster {
 	public function UpdateControl($md5){
 			$this->delete('record_updates', array('md5' => $md5));
 			$data = array('md5' => $md5);
-			$this->db->insert('record_updates', $data);
+			$this->insert('record_updates', $data);
 
 	}
 

@@ -7,7 +7,7 @@
  */
 
 define('IsProduction', false);
-define('AppName', "PraVocê.io");
+define('AppName', "Grupo QUID");
 
 if (IsProduction){
     define ('assetfolder', '/');	
