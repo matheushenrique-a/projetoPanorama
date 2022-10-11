@@ -64,6 +64,15 @@ abstract class BaseController extends Controller
         return view($page, $dados);
 	}    
 
+    function checkSession(){
+        $user = ($this->session->get('userId'));
+        $dados['pageTitle'] = "MegaBase - Vanguard Decode";
+        if (is_null($user)){
+            //echo "14:55:04 - <h3>Dump 87</h3> <br><br>" . var_dump($user); exit;					//<-------DEBUG
+            return redirect()->to('www.google.comb.br');
+        }
+        
+    }
     function getpost($valor, $cookie_persist = false) {
 	   
 		$aux = "";

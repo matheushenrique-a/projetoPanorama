@@ -310,7 +310,7 @@
 														<td><?php echo $row->matricula;?></td>
 														<td><?php echo $row->sexo;?></td>														<!--end::Two step=-->
 														<td><?php echo $row->cidade;?></td>
-														<td><?php echo $row->uf_residencia;?></td>
+														<td><?php echo $row->uf;?></td>
 													</tr>
 													<!--end::Table row-->
 													<?php 

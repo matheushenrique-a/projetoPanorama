@@ -4988,7 +4988,7 @@ License: For each use you must have a valid license purchased only from above li
 												</span>
 												<!--end::Svg Icon-->
 											</span>
-											<span class="menu-title">Clientes</span>
+											<span class="menu-title">MegaBase</span>
 											<span class="menu-arrow"></span>
 										</span>
 										<!--end:Menu link-->
@@ -5001,9 +5001,17 @@ License: For each use you must have a valid license purchased only from above li
 													<span class="menu-bullet">
 														<span class="bullet bullet-dot"></span>
 													</span>
-													<span class="menu-title">Data Lake</span>
+													<span class="menu-title">Consulta</span>
 												</a>
 												<!--end:Menu link-->
+												<!--begin:Menu link-->
+												<a class="menu-link" href="<?php echo assetfolder;?>index.php/vanguard-decode">
+													<span class="menu-bullet">
+														<span class="bullet bullet-dot"></span>
+													</span>
+													<span class="menu-title">Vanguard</span>
+												</a>
+												<!--end:Menu link-->												
 											</div>
 											<!--end:Menu item-->
 										</div>
