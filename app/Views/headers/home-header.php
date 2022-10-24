@@ -4891,7 +4891,7 @@ License: For each use you must have a valid license purchased only from above li
 						<div class="app-sidebar-logo px-6" id="kt_app_sidebar_logo">
 							<!--begin::Logo image-->
 							<a href="<?php echo assetfolder ?>">
-								<img alt="Logo" src="<?php echo assetfolder ?>assets/pravoce/media/logos/default-dark.svg" class="h-25px app-sidebar-logo-default" />
+								<img alt="Logo" src="<?php echo assetfolder ?>assets/pravoce/media/logos/default-dark-quid2.svg" class="h-25px app-sidebar-logo-default" />
 								<img alt="Logo" src="<?php echo assetfolder ?>assets/media/logos/default-small.svg" class="h-20px app-sidebar-logo-minimize" />
 							</a>
 							<!--end::Logo image-->
@@ -4988,7 +4988,7 @@ License: For each use you must have a valid license purchased only from above li
 												</span>
 												<!--end::Svg Icon-->
 											</span>
-											<span class="menu-title">MegaBase</span>
+											<span class="menu-title">MEGABASE</span>
 											<span class="menu-arrow"></span>
 										</span>
 										<!--end:Menu link-->
@@ -5001,7 +5001,7 @@ License: For each use you must have a valid license purchased only from above li
 													<span class="menu-bullet">
 														<span class="bullet bullet-dot"></span>
 													</span>
-													<span class="menu-title">Consulta</span>
+													<span class="menu-title">Buscar</span>
 												</a>
 												<!--end:Menu link-->
 												<!--begin:Menu link-->
@@ -5009,7 +5009,7 @@ License: For each use you must have a valid license purchased only from above li
 													<span class="menu-bullet">
 														<span class="bullet bullet-dot"></span>
 													</span>
-													<span class="menu-title">Vanguard</span>
+													<span class="menu-title">Decode</span>
 												</a>
 												<!--end:Menu link-->												
 											</div>
@@ -5017,364 +5017,35 @@ License: For each use you must have a valid license purchased only from above li
 										</div>
 										<!--end:Menu sub-->
 									</div>
-									<!--end:Menu item-->
+									<!--end:Menu item-->									
 									<!--begin:Menu item-->
 									<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
 										<!--begin:Menu link-->
 										<span class="menu-link">
 											<span class="menu-icon">
-												<!--begin::Svg Icon | path: icons/duotune/art/art002.svg-->
+												<!--begin::Svg Icon | path: icons/duotune/communication/com005.svg-->
 												<span class="svg-icon svg-icon-2">
-													<svg width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
-														<path opacity="0.3" d="M8.9 21L7.19999 22.6999C6.79999 23.0999 6.2 23.0999 5.8 22.6999L4.1 21H8.9ZM4 16.0999L2.3 17.8C1.9 18.2 1.9 18.7999 2.3 19.1999L4 20.9V16.0999ZM19.3 9.1999L15.8 5.6999C15.4 5.2999 14.8 5.2999 14.4 5.6999L9 11.0999V21L19.3 10.6999C19.7 10.2999 19.7 9.5999 19.3 9.1999Z" fill="currentColor" />
-														<path d="M21 15V20C21 20.6 20.6 21 20 21H11.8L18.8 14H20C20.6 14 21 14.4 21 15ZM10 21V4C10 3.4 9.6 3 9 3H4C3.4 3 3 3.4 3 4V21C3 21.6 3.4 22 4 22H9C9.6 22 10 21.6 10 21ZM7.5 18.5C7.5 19.1 7.1 19.5 6.5 19.5C5.9 19.5 5.5 19.1 5.5 18.5C5.5 17.9 5.9 17.5 6.5 17.5C7.1 17.5 7.5 17.9 7.5 18.5Z" fill="currentColor" />
+													<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+														<path d="M20 14H18V10H20C20.6 10 21 10.4 21 11V13C21 13.6 20.6 14 20 14ZM21 19V17C21 16.4 20.6 16 20 16H18V20H20C20.6 20 21 19.6 21 19ZM21 7V5C21 4.4 20.6 4 20 4H18V8H20C20.6 8 21 7.6 21 7Z" fill="currentColor" />
+														<path opacity="0.3" d="M17 22H3C2.4 22 2 21.6 2 21V3C2 2.4 2.4 2 3 2H17C17.6 2 18 2.4 18 3V21C18 21.6 17.6 22 17 22ZM10 7C8.9 7 8 7.9 8 9C8 10.1 8.9 11 10 11C11.1 11 12 10.1 12 9C12 7.9 11.1 7 10 7ZM13.3 16C14 16 14.5 15.3 14.3 14.7C13.7 13.2 12 12 10.1 12C8.10001 12 6.49999 13.1 5.89999 14.7C5.59999 15.3 6.19999 16 7.39999 16H13.3Z" fill="currentColor" />
 													</svg>
 												</span>
 												<!--end::Svg Icon-->
 											</span>
-											<span class="menu-title">Links Úteis</span>
+											<span class="menu-title">APLICAÇÕES</span>
 											<span class="menu-arrow"></span>
 										</span>
 										<!--end:Menu link-->
 										<!--begin:Menu sub-->
 										<div class="menu-sub menu-sub-accordion">
-											<!--begin:Menu item-->
-											<div class="menu-item">
-												<!--begin:Menu link-->
-												<a class="menu-link" href="https://likecadastro.panoramaemprestimos.com.br/login.do?action=sistema">
-													<span class="menu-bullet">
-														<span class="bullet bullet-dot"></span>
-													</span>
-													<span class="menu-title">Panorama</span>
-												</a>
-												<!--end:Menu link-->
-											</div>
-											<!--end:Menu item-->
-										</div>
-										<!--end:Menu sub-->
-										<!--begin:Menu sub-->
-										<div class="menu-sub menu-sub-accordion">
-											<!--begin:Menu item-->
+											
 											<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
 												<!--begin:Menu link-->
 												<span class="menu-link">
 													<span class="menu-bullet">
 														<span class="bullet bullet-dot"></span>
 													</span>
-													<span class="menu-title">Gestão a Vista</span>
-													<span class="menu-arrow"></span>
-												</span>
-												<!--end:Menu link-->
-												<!--begin:Menu sub-->
-												<div class="menu-sub menu-sub-accordion">
-													<!--begin:Menu item-->
-													<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-														<!--begin:Menu link-->
-														<span class="menu-link">
-															<span class="menu-bullet">
-																<span class="bullet bullet-dot"></span>
-															</span>
-															<span class="menu-title">General</span>
-															<span class="menu-arrow"></span>
-														</span>
-														<!--end:Menu link-->
-														<!--begin:Menu sub-->
-														<div class="menu-sub menu-sub-accordion menu-active-bg">
-															<!--begin:Menu item-->
-															<div class="menu-item">
-																<!--begin:Menu link-->
-																<a class="menu-link" href="../../demo1/dist/utilities/modals/general/invite-friends.html">
-																	<span class="menu-bullet">
-																		<span class="bullet bullet-dot"></span>
-																	</span>
-																	<span class="menu-title">Invite Friends</span>
-																</a>
-																<!--end:Menu link-->
-															</div>
-															<!--end:Menu item-->
-															<!--begin:Menu item-->
-															<div class="menu-item">
-																<!--begin:Menu link-->
-																<a class="menu-link" href="../../demo1/dist/utilities/modals/general/view-users.html">
-																	<span class="menu-bullet">
-																		<span class="bullet bullet-dot"></span>
-																	</span>
-																	<span class="menu-title">View Users</span>
-																</a>
-																<!--end:Menu link-->
-															</div>
-															<!--end:Menu item-->
-															<!--begin:Menu item-->
-															<div class="menu-item">
-																<!--begin:Menu link-->
-																<a class="menu-link" href="../../demo1/dist/utilities/modals/general/select-users.html">
-																	<span class="menu-bullet">
-																		<span class="bullet bullet-dot"></span>
-																	</span>
-																	<span class="menu-title">Select Users</span>
-																</a>
-																<!--end:Menu link-->
-															</div>
-															<!--end:Menu item-->
-															<!--begin:Menu item-->
-															<div class="menu-item">
-																<!--begin:Menu link-->
-																<a class="menu-link" href="../../demo1/dist/utilities/modals/general/upgrade-plan.html">
-																	<span class="menu-bullet">
-																		<span class="bullet bullet-dot"></span>
-																	</span>
-																	<span class="menu-title">Upgrade Plan</span>
-																</a>
-																<!--end:Menu link-->
-															</div>
-															<!--end:Menu item-->
-															<!--begin:Menu item-->
-															<div class="menu-item">
-																<!--begin:Menu link-->
-																<a class="menu-link" href="../../demo1/dist/utilities/modals/general/share-earn.html">
-																	<span class="menu-bullet">
-																		<span class="bullet bullet-dot"></span>
-																	</span>
-																	<span class="menu-title">Share & Earn</span>
-																</a>
-																<!--end:Menu link-->
-															</div>
-															<!--end:Menu item-->
-														</div>
-														<!--end:Menu sub-->
-													</div>
-													<!--end:Menu item-->
-													<!--begin:Menu item-->
-													<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-														<!--begin:Menu link-->
-														<span class="menu-link">
-															<span class="menu-bullet">
-																<span class="bullet bullet-dot"></span>
-															</span>
-															<span class="menu-title">Forms</span>
-															<span class="menu-arrow"></span>
-														</span>
-														<!--end:Menu link-->
-														<!--begin:Menu sub-->
-														<div class="menu-sub menu-sub-accordion menu-active-bg">
-															<!--begin:Menu item-->
-															<div class="menu-item">
-																<!--begin:Menu link-->
-																<a class="menu-link" href="../../demo1/dist/utilities/modals/forms/new-target.html">
-																	<span class="menu-bullet">
-																		<span class="bullet bullet-dot"></span>
-																	</span>
-																	<span class="menu-title">New Target</span>
-																</a>
-																<!--end:Menu link-->
-															</div>
-															<!--end:Menu item-->
-															<!--begin:Menu item-->
-															<div class="menu-item">
-																<!--begin:Menu link-->
-																<a class="menu-link" href="../../demo1/dist/utilities/modals/forms/new-card.html">
-																	<span class="menu-bullet">
-																		<span class="bullet bullet-dot"></span>
-																	</span>
-																	<span class="menu-title">New Card</span>
-																</a>
-																<!--end:Menu link-->
-															</div>
-															<!--end:Menu item-->
-															<!--begin:Menu item-->
-															<div class="menu-item">
-																<!--begin:Menu link-->
-																<a class="menu-link" href="../../demo1/dist/utilities/modals/forms/new-address.html">
-																	<span class="menu-bullet">
-																		<span class="bullet bullet-dot"></span>
-																	</span>
-																	<span class="menu-title">New Address</span>
-																</a>
-																<!--end:Menu link-->
-															</div>
-															<!--end:Menu item-->
-															<!--begin:Menu item-->
-															<div class="menu-item">
-																<!--begin:Menu link-->
-																<a class="menu-link" href="../../demo1/dist/utilities/modals/forms/create-api-key.html">
-																	<span class="menu-bullet">
-																		<span class="bullet bullet-dot"></span>
-																	</span>
-																	<span class="menu-title">Create API Key</span>
-																</a>
-																<!--end:Menu link-->
-															</div>
-															<!--end:Menu item-->
-															<!--begin:Menu item-->
-															<div class="menu-item">
-																<!--begin:Menu link-->
-																<a class="menu-link" href="../../demo1/dist/utilities/modals/forms/bidding.html">
-																	<span class="menu-bullet">
-																		<span class="bullet bullet-dot"></span>
-																	</span>
-																	<span class="menu-title">Bidding</span>
-																</a>
-																<!--end:Menu link-->
-															</div>
-															<!--end:Menu item-->
-														</div>
-														<!--end:Menu sub-->
-													</div>
-													<!--end:Menu item-->
-													<!--begin:Menu item-->
-													<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-														<!--begin:Menu link-->
-														<span class="menu-link">
-															<span class="menu-bullet">
-																<span class="bullet bullet-dot"></span>
-															</span>
-															<span class="menu-title">Wizards</span>
-															<span class="menu-arrow"></span>
-														</span>
-														<!--end:Menu link-->
-														<!--begin:Menu sub-->
-														<div class="menu-sub menu-sub-accordion menu-active-bg">
-															<!--begin:Menu item-->
-															<div class="menu-item">
-																<!--begin:Menu link-->
-																<a class="menu-link" href="../../demo1/dist/utilities/modals/wizards/create-app.html">
-																	<span class="menu-bullet">
-																		<span class="bullet bullet-dot"></span>
-																	</span>
-																	<span class="menu-title">Create App</span>
-																</a>
-																<!--end:Menu link-->
-															</div>
-															<!--end:Menu item-->
-															<!--begin:Menu item-->
-															<div class="menu-item">
-																<!--begin:Menu link-->
-																<a class="menu-link" href="../../demo1/dist/utilities/modals/wizards/create-campaign.html">
-																	<span class="menu-bullet">
-																		<span class="bullet bullet-dot"></span>
-																	</span>
-																	<span class="menu-title">Create Campaign</span>
-																</a>
-																<!--end:Menu link-->
-															</div>
-															<!--end:Menu item-->
-															<!--begin:Menu item-->
-															<div class="menu-item">
-																<!--begin:Menu link-->
-																<a class="menu-link" href="../../demo1/dist/utilities/modals/wizards/create-account.html">
-																	<span class="menu-bullet">
-																		<span class="bullet bullet-dot"></span>
-																	</span>
-																	<span class="menu-title">Create Business Acc</span>
-																</a>
-																<!--end:Menu link-->
-															</div>
-															<!--end:Menu item-->
-															<!--begin:Menu item-->
-															<div class="menu-item">
-																<!--begin:Menu link-->
-																<a class="menu-link" href="../../demo1/dist/utilities/modals/wizards/create-project.html">
-																	<span class="menu-bullet">
-																		<span class="bullet bullet-dot"></span>
-																	</span>
-																	<span class="menu-title">Create Project</span>
-																</a>
-																<!--end:Menu link-->
-															</div>
-															<!--end:Menu item-->
-															<!--begin:Menu item-->
-															<div class="menu-item">
-																<!--begin:Menu link-->
-																<a class="menu-link" href="../../demo1/dist/utilities/modals/wizards/top-up-wallet.html">
-																	<span class="menu-bullet">
-																		<span class="bullet bullet-dot"></span>
-																	</span>
-																	<span class="menu-title">Top Up Wallet</span>
-																</a>
-																<!--end:Menu link-->
-															</div>
-															<!--end:Menu item-->
-															<!--begin:Menu item-->
-															<div class="menu-item">
-																<!--begin:Menu link-->
-																<a class="menu-link" href="../../demo1/dist/utilities/modals/wizards/offer-a-deal.html">
-																	<span class="menu-bullet">
-																		<span class="bullet bullet-dot"></span>
-																	</span>
-																	<span class="menu-title">Offer a Deal</span>
-																</a>
-																<!--end:Menu link-->
-															</div>
-															<!--end:Menu item-->
-															<!--begin:Menu item-->
-															<div class="menu-item">
-																<!--begin:Menu link-->
-																<a class="menu-link" href="../../demo1/dist/utilities/modals/wizards/two-factor-authentication.html">
-																	<span class="menu-bullet">
-																		<span class="bullet bullet-dot"></span>
-																	</span>
-																	<span class="menu-title">Two Factor Auth</span>
-																</a>
-																<!--end:Menu link-->
-															</div>
-															<!--end:Menu item-->
-														</div>
-														<!--end:Menu sub-->
-													</div>
-													<!--end:Menu item-->
-													<!--begin:Menu item-->
-													<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-														<!--begin:Menu link-->
-														<span class="menu-link">
-															<span class="menu-bullet">
-																<span class="bullet bullet-dot"></span>
-															</span>
-															<span class="menu-title">Search</span>
-															<span class="menu-arrow"></span>
-														</span>
-														<!--end:Menu link-->
-														<!--begin:Menu sub-->
-														<div class="menu-sub menu-sub-accordion menu-active-bg">
-															<!--begin:Menu item-->
-															<div class="menu-item">
-																<!--begin:Menu link-->
-																<a class="menu-link" href="../../demo1/dist/utilities/modals/search/users.html">
-																	<span class="menu-bullet">
-																		<span class="bullet bullet-dot"></span>
-																	</span>
-																	<span class="menu-title">Users</span>
-																</a>
-																<!--end:Menu link-->
-															</div>
-															<!--end:Menu item-->
-															<!--begin:Menu item-->
-															<div class="menu-item">
-																<!--begin:Menu link-->
-																<a class="menu-link" href="../../demo1/dist/utilities/modals/search/select-location.html">
-																	<span class="menu-bullet">
-																		<span class="bullet bullet-dot"></span>
-																	</span>
-																	<span class="menu-title">Select Location</span>
-																</a>
-																<!--end:Menu link-->
-															</div>
-															<!--end:Menu item-->
-														</div>
-														<!--end:Menu sub-->
-													</div>
-													<!--end:Menu item-->
-												</div>
-												<!--end:Menu sub-->
-											</div>
-											<!--end:Menu item-->
-											<!--begin:Menu item-->
-											<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-												<!--begin:Menu link-->
-												<span class="menu-link">
-													<span class="menu-bullet">
-														<span class="bullet bullet-dot"></span>
-													</span>
-													<span class="menu-title">Search</span>
+													<span class="menu-title">VANGUARD</span>
 													<span class="menu-arrow"></span>
 												</span>
 												<!--end:Menu link-->
@@ -5383,63 +5054,25 @@ License: For each use you must have a valid license purchased only from above li
 													<!--begin:Menu item-->
 													<div class="menu-item">
 														<!--begin:Menu link-->
-														<a class="menu-link" href="../../demo1/dist/utilities/search/horizontal.html">
+														<a class="menu-link" href="https://sistemavanguard.com.br/vanguard/index.php" target="_blank">
 															<span class="menu-bullet">
 																<span class="bullet bullet-dot"></span>
 															</span>
-															<span class="menu-title">Horizontal</span>
+															<span class="menu-title">Vanguard</span>
 														</a>
 														<!--end:Menu link-->
 													</div>
-													<!--end:Menu item-->
-													<!--begin:Menu item-->
-													<div class="menu-item">
-														<!--begin:Menu link-->
-														<a class="menu-link" href="../../demo1/dist/utilities/search/vertical.html">
-															<span class="menu-bullet">
-																<span class="bullet bullet-dot"></span>
-															</span>
-															<span class="menu-title">Vertical</span>
-														</a>
-														<!--end:Menu link-->
-													</div>
-													<!--end:Menu item-->
-													<!--begin:Menu item-->
-													<div class="menu-item">
-														<!--begin:Menu link-->
-														<a class="menu-link" href="../../demo1/dist/utilities/search/users.html">
-															<span class="menu-bullet">
-																<span class="bullet bullet-dot"></span>
-															</span>
-															<span class="menu-title">Users</span>
-														</a>
-														<!--end:Menu link-->
-													</div>
-													<!--end:Menu item-->
-													<!--begin:Menu item-->
-													<div class="menu-item">
-														<!--begin:Menu link-->
-														<a class="menu-link" href="../../demo1/dist/utilities/search/select-location.html">
-															<span class="menu-bullet">
-																<span class="bullet bullet-dot"></span>
-															</span>
-															<span class="menu-title">Location</span>
-														</a>
-														<!--end:Menu link-->
-													</div>
-													<!--end:Menu item-->
 												</div>
-												<!--end:Menu sub-->
-											</div>
-											<!--end:Menu item-->
-											<!--begin:Menu item-->
+												
+											<!--end:Menu sub-->
+											</div>											
 											<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
 												<!--begin:Menu link-->
 												<span class="menu-link">
 													<span class="menu-bullet">
 														<span class="bullet bullet-dot"></span>
 													</span>
-													<span class="menu-title">Wizards</span>
+													<span class="menu-title">VOIP</span>
 													<span class="menu-arrow"></span>
 												</span>
 												<!--end:Menu link-->
@@ -5448,11 +5081,49 @@ License: For each use you must have a valid license purchased only from above li
 													<!--begin:Menu item-->
 													<div class="menu-item">
 														<!--begin:Menu link-->
-														<a class="menu-link" href="../../demo1/dist/utilities/wizards/horizontal.html">
+														<a class="menu-link" href="https://www.bmgconsig.com.br/principal/fsconsignataria.jsp" target="_blank">
 															<span class="menu-bullet">
 																<span class="bullet bullet-dot"></span>
 															</span>
-															<span class="menu-title">Horizontal</span>
+															<span class="menu-title">Mais Voip</span>
+														</a>
+														<!--end:Menu link-->
+													</div>
+												</div>
+												<div class="menu-sub menu-sub-accordion">
+													<!--begin:Menu item-->
+													<div class="menu-item">
+														<!--begin:Menu link-->
+														<a class="menu-link" href="https://www.bmgconsig.com.br/principal/fsconsignataria.jsp" target="_blank">
+															<span class="menu-bullet">
+																<span class="bullet bullet-dot"></span>
+															</span>
+															<span class="menu-title">Telein (desligado)</span>
+														</a>
+														<!--end:Menu link-->
+													</div>
+												</div>												<!--end:Menu sub-->
+											</div>												<!--end:Menu item-->
+											<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
+												<!--begin:Menu link-->
+												<span class="menu-link">
+													<span class="menu-bullet">
+														<span class="bullet bullet-dot"></span>
+													</span>
+													<span class="menu-title">VIRTUAL</span>
+													<span class="menu-arrow"></span>
+												</span>
+												<!--end:Menu link-->
+												<!--begin:Menu sub-->
+												<div class="menu-sub menu-sub-accordion">
+													<!--begin:Menu item-->
+													<div class="menu-item">
+														<!--begin:Menu link-->
+														<a class="menu-link" href="https://likecadastro.panoramaemprestimos.com.br/login.do?action=sistema" target="_blank">
+															<span class="menu-bullet">
+																<span class="bullet bullet-dot"></span>
+															</span>
+															<span class="menu-title">Panograma Like</span>
 														</a>
 														<!--end:Menu link-->
 													</div>
@@ -5460,107 +5131,123 @@ License: For each use you must have a valid license purchased only from above li
 													<!--begin:Menu item-->
 													<div class="menu-item">
 														<!--begin:Menu link-->
-														<a class="menu-link" href="../../demo1/dist/utilities/wizards/vertical.html">
+														<a class="menu-link" href="https://five.panoramaemprestimos.com.br/login.do?action=sistema" target="_blank">
 															<span class="menu-bullet">
 																<span class="bullet bullet-dot"></span>
 															</span>
-															<span class="menu-title">Vertical</span>
+															<span class="menu-title">Panorama Smile</span>
 														</a>
 														<!--end:Menu link-->
 													</div>
-													<!--end:Menu item-->
 													<!--begin:Menu item-->
 													<div class="menu-item">
 														<!--begin:Menu link-->
-														<a class="menu-link" href="../../demo1/dist/utilities/wizards/two-factor-authentication.html">
+														<a class="menu-link" href="http://gestao-topcred.virtualsistemas.com.br:8080/paginas/sistema/principal.jsf" target="_blank">
 															<span class="menu-bullet">
 																<span class="bullet bullet-dot"></span>
 															</span>
-															<span class="menu-title">Two Factor Auth</span>
+															<span class="menu-title">Gestão</span>
 														</a>
 														<!--end:Menu link-->
 													</div>
-													<!--end:Menu item-->
-													<!--begin:Menu item-->
-													<div class="menu-item">
-														<!--begin:Menu link-->
-														<a class="menu-link" href="../../demo1/dist/utilities/wizards/create-app.html">
-															<span class="menu-bullet">
-																<span class="bullet bullet-dot"></span>
-															</span>
-															<span class="menu-title">Create App</span>
-														</a>
-														<!--end:Menu link-->
-													</div>
-													<!--end:Menu item-->
-													<!--begin:Menu item-->
-													<div class="menu-item">
-														<!--begin:Menu link-->
-														<a class="menu-link" href="../../demo1/dist/utilities/wizards/create-campaign.html">
-															<span class="menu-bullet">
-																<span class="bullet bullet-dot"></span>
-															</span>
-															<span class="menu-title">Create Campaign</span>
-														</a>
-														<!--end:Menu link-->
-													</div>
-													<!--end:Menu item-->
-													<!--begin:Menu item-->
-													<div class="menu-item">
-														<!--begin:Menu link-->
-														<a class="menu-link" href="../../demo1/dist/utilities/wizards/create-account.html">
-															<span class="menu-bullet">
-																<span class="bullet bullet-dot"></span>
-															</span>
-															<span class="menu-title">Create Account</span>
-														</a>
-														<!--end:Menu link-->
-													</div>
-													<!--end:Menu item-->
-													<!--begin:Menu item-->
-													<div class="menu-item">
-														<!--begin:Menu link-->
-														<a class="menu-link" href="../../demo1/dist/utilities/wizards/create-project.html">
-															<span class="menu-bullet">
-																<span class="bullet bullet-dot"></span>
-															</span>
-															<span class="menu-title">Create Project</span>
-														</a>
-														<!--end:Menu link-->
-													</div>
-													<!--end:Menu item-->
-													<!--begin:Menu item-->
-													<div class="menu-item">
-														<!--begin:Menu link-->
-														<a class="menu-link" href="../../demo1/dist/utilities/modals/wizards/top-up-wallet.html">
-															<span class="menu-bullet">
-																<span class="bullet bullet-dot"></span>
-															</span>
-															<span class="menu-title">Top Up Wallet</span>
-														</a>
-														<!--end:Menu link-->
-													</div>
-													<!--end:Menu item-->
-													<!--begin:Menu item-->
-													<div class="menu-item">
-														<!--begin:Menu link-->
-														<a class="menu-link" href="../../demo1/dist/utilities/wizards/offer-a-deal.html">
-															<span class="menu-bullet">
-																<span class="bullet bullet-dot"></span>
-															</span>
-															<span class="menu-title">Offer a Deal</span>
-														</a>
-														<!--end:Menu link-->
-													</div>
-													<!--end:Menu item-->
 												</div>
 												<!--end:Menu sub-->
 											</div>
-											<!--end:Menu item-->
+											<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
+												<!--begin:Menu link-->
+												<span class="menu-link">
+													<span class="menu-bullet">
+														<span class="bullet bullet-dot"></span>
+													</span>
+													<span class="menu-title">CRÉDITO RÁPIDO</span>
+													<span class="menu-arrow"></span>
+												</span>
+												<!--end:Menu link-->
+												<!--begin:Menu sub-->
+												<div class="menu-sub menu-sub-accordion">
+													<!--begin:Menu item-->
+													<div class="menu-item">
+														<!--begin:Menu link-->
+														<a class="menu-link" href="crbetim.grupoquid.com.br" target="_blank">
+															<span class="menu-bullet">
+																<span class="bullet bullet-dot"></span>
+															</span>
+															<span class="menu-title">Like / Smile</span>
+														</a>
+														<!--end:Menu link-->
+													</div>
+												</div>
+												<!--end:Menu sub-->
+											</div>
+											<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
+												<!--begin:Menu link-->
+												<span class="menu-link">
+													<span class="menu-bullet">
+														<span class="bullet bullet-dot"></span>
+													</span>
+													<span class="menu-title">DAYCOVAL</span>
+													<span class="menu-arrow"></span>
+												</span>
+												<!--end:Menu link-->
+												<!--begin:Menu sub-->
+												<div class="menu-sub menu-sub-accordion">
+													<!--begin:Menu item-->
+													<div class="menu-item">
+														<!--begin:Menu link-->
+														<a class="menu-link" href="https://consignado.daycoval.com.br/Autorizador/Login/AC.UI.LOGIN.aspx" target="_blank">
+															<span class="menu-bullet">
+																<span class="bullet bullet-dot"></span>
+															</span>
+															<span class="menu-title">Consignado</span>
+														</a>
+														<!--end:Menu link-->
+													</div>
+													<!--end:Menu item-->
+													<!--begin:Menu item-->
+													<div class="menu-item">
+														<!--begin:Menu link-->
+														<a class="menu-link" href="https://portaldecredito.daycoval.com.br/login" target="_blank">
+															<span class="menu-bullet">
+																<span class="bullet bullet-dot"></span>
+															</span>
+															<span class="menu-title">Portal Crédito</span>
+														</a>
+														<!--end:Menu link-->
+													</div>
+												</div>
+												<!--end:Menu sub-->
+											</div>
+											<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
+												<!--begin:Menu link-->
+												<span class="menu-link">
+													<span class="menu-bullet">
+														<span class="bullet bullet-dot"></span>
+													</span>
+													<span class="menu-title">BMG</span>
+													<span class="menu-arrow"></span>
+												</span>
+												<!--end:Menu link-->
+												<!--begin:Menu sub-->
+												<div class="menu-sub menu-sub-accordion">
+													<!--begin:Menu item-->
+													<div class="menu-item">
+														<!--begin:Menu link-->
+														<a class="menu-link" href="https://www.bmgconsig.com.br/principal/fsconsignataria.jsp" target="_blank">
+															<span class="menu-bullet">
+																<span class="bullet bullet-dot"></span>
+															</span>
+															<span class="menu-title">Consignado</span>
+														</a>
+														<!--end:Menu link-->
+													</div>
+												</div>
+												<!--end:Menu sub-->
+											</div>										
 										</div>
 										<!--end:Menu sub-->
 									</div>
-									<!--end:Menu item-->									
+									<!--end:Menu item-->
+																	
 									<!--begin:Menu item-->
 									<div class="menu-item pt-5">
 										<!--begin:Menu content-->
