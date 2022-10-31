@@ -17,18 +17,6 @@ class DataLake extends BaseController
 
     public function vanguard_decript($cpf){
         $cpf = str_replace("c", "", $cpf);
-        $cpf = str_replace("G", "0", $cpf);
-        $cpf = str_replace("J", "1", $cpf);
-        $cpf = str_replace("D", "2", $cpf);
-        $cpf = str_replace("W", "3", $cpf);
-        $cpf = str_replace("Z", "4", $cpf);
-        $cpf = str_replace("S", "5", $cpf);
-        $cpf = str_replace("T", "6", $cpf);
-        $cpf = str_replace("O", "7", $cpf);
-        $cpf = str_replace("H", "8", $cpf);
-        $cpf = str_replace("C", "9", $cpf);
-
-
         $cpf = str_replace("*", "", $cpf);
         $cpf = str_replace("G", "0", $cpf);
         $cpf = str_replace("J", "1", $cpf);
