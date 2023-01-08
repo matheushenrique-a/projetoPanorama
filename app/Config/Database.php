@@ -50,6 +50,30 @@ class Database extends Config
         'port'     => 3306,
     ];
 
+     public $fgtsDB = [
+        'DSN'      => '',
+        'hostname' => 'localhost',
+        'username' => 'root',
+        'password' => '',
+        'database' => 'fintech',        
+        // 'hostname' => '35.208.178.233',
+        // 'username' => 'uecqu4bzohwbb',
+        // 'password' => 'tbhvch8oczcw',
+        // 'database' => 'dbrxcsrf1hku99',
+        'DBDriver' => 'MySQLi',
+        'DBPrefix' => '',
+        'pConnect' => false,
+        'DBDebug'  => (ENVIRONMENT !== 'production'),
+        'charset'  => 'utf8',
+        'DBCollat' => 'utf8_general_ci',
+        'swapPre'  => '',
+        'encrypt'  => false,
+        'compress' => false,
+        'strictOn' => false,
+        'failover' => [],
+        'port'     => 3306,
+    ];
+
     /**
      * This database connection is used when
      * running PHPUnit database tests.

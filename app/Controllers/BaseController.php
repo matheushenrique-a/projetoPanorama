@@ -9,6 +9,7 @@ use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use App\Libraries\dbMaster;
+use App\Libraries\dbMasterFGTS;
 
 /**
  * Class BaseController
@@ -29,6 +30,7 @@ abstract class BaseController extends Controller
      */
     protected $request;
     protected $dbMaster;
+    protected $dbMasterFGTS;
     protected $session;
     /**
      * An array of helpers to be loaded automatically upon
@@ -49,6 +51,7 @@ abstract class BaseController extends Controller
 
         // Preload any models, libraries, etc, here.
         $this->dbMaster = new dbMaster(); // create an instance of Library class
+        $this->dbMasterFGTS = new dbMasterFGTS(); // create an instance of Library class
         $this->session = session();
     }
 

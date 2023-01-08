@@ -10,9 +10,11 @@ define('IsProduction', false);
 define('AppName', "Grupo QUID");
 
 if (IsProduction){
-    define ('assetfolder', '/');	
+    define ('assetfolder', '/');
+    define ('FGTSUrl', '/');
 } else {
-    define ('assetfolder', '/InsightSuite/public/');	
+    define ('assetfolder', '/InsightSuite/public/');
+    define ('FGTSUrl', 'http://localhost/fintech/');
 }
 /*
  | --------------------------------------------------------------------
