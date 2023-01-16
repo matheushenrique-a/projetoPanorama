@@ -190,7 +190,6 @@
 											<!--begin::Card toolbar-->
 											<div class="card-toolbar">
 												<div class="d-flex align-items-center position-relative my-1 mx-3">
-													
 													</div>													
 												</div>
 												<!--begin::Toolbar-->
