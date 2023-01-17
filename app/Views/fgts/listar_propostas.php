@@ -230,11 +230,11 @@
 																<input class="form-check-input" type="checkbox" data-kt-check="true" data-kt-check-target="#kt_table_users .form-check-input" value="1" />
 															</div>
 														</th>
+														<th class="min-w-50px">ID</th>
 														<th class="min-w-225px">Cliente</th>
 														<th class="min-w-125px">CPF</th>
-														<th class="min-w-125px">ID</th>
 														<th class="min-w-25">Verificador</th>
-														<th class="min-w-225px">offlineMode</th>
+														<th class="min-w-225px">Integrada</th>
 														<th class="min-w-125px">Status</th>
 													</tr>
 													<!--end::Table row-->
@@ -255,6 +255,7 @@
 														</td>
 														<!--end::Checkbox-->
 														<!--begin::User=-->
+														<td><?php echo $row->id_proposta;?></td>
 														<td class="d-flex align-items-center">
 															<!--begin:: Avatar -->
 															<div class="symbol symbol-circle symbol-50px overflow-hidden me-3">
@@ -273,10 +274,10 @@
 															<!--begin::User details-->
 														</td>
 														<td><?php echo $row->cpf;?></td>
-														<td><?php echo $row->id_proposta;?></td>
-														<td><a href="<?php echo FGTSUrl ?>fgts/proposta-status/<?php echo $row->verificador;?>" target="_blank"><?php echo $row->verificador;?></a></td>
-														<td><?php echo $row->offlineMode;?></td>
-														<td><?php echo $row->statusProposta;?></td>
+														
+														<td><a href="<?php echo FGTSUrl ?>fgts/proposta-status/<?php echo $row->verificador;?>/DEeDeqqew234deT45" target="_blank"><?php echo $row->verificador;?></a></td>
+														<td><?php echo ($row->offlineMode == "Y"  ? '<span class="badge badge-light-danger">NÃO</span>' : '<span class="badge badge-light-success">New</span>SIM');?></td>
+														<td><?php echo ($row->statusProposta == "PASSO 07 - GRAVADA"  ? '<span class="badge badge-light-success fs-6">' . $row->statusProposta . '</span>' : $row->statusProposta);?></td>
 													</tr>
 													<!--end::Table row-->
 													<?php 
