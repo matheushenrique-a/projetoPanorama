@@ -234,8 +234,10 @@
 														<th class="min-w-225px">Cliente</th>
 														<th class="min-w-125px">CPF</th>
 														<th class="min-w-25">Verificador</th>
-														<th class="min-w-225px">Integrada</th>
+														<th class="min-w-50px">Integrada</th>
+														<th class="min-w-50px">Operador</th>
 														<th class="min-w-125px">Status</th>
+														<th class="min-w-50px">Ação</th>
 													</tr>
 													<!--end::Table row-->
 												</thead>
@@ -245,41 +247,53 @@
 													<?php 
 														foreach ($propostas['result']->getResult() as $row) {
 													?>
-													<!--begin::Table row-->
-													<tr>
-														<!--begin::Checkbox-->
-														<td>
-															<div class="form-check form-check-sm form-check-custom form-check-solid">
-																<input class="form-check-input" type="checkbox" value="1" />
-															</div>
-														</td>
-														<!--end::Checkbox-->
-														<!--begin::User=-->
-														<td><?php echo $row->id_proposta;?></td>
-														<td class="d-flex align-items-center">
-															<!--begin:: Avatar -->
-															<div class="symbol symbol-circle symbol-50px overflow-hidden me-3">
-																<a href="<?php echo FGTSUrl ?>fgts/proposta/<?php echo $row->verificador;?>/sadfQWERFsadfAQWERQWEr" target="_blank">
-																	<div class="symbol-label fs-3 bg-light-danger text-danger"><?php echo substr($row->nome, 0, 1);?></div>
-																</a>
-															</div>
-															<!--end::Avatar-->
-															<!--begin::User details-->
-															<div class="d-flex flex-column"> 
-																<a href="<?php echo FGTSUrl ?>fgts/proposta/<?php echo $row->verificador;?>/sadfQWERFsadfAQWERQWEr" target="_blank" class="text-gray-800 text-hover-primary mb-1">
-																<?php echo $row->nome;?>
-																</a>
-																<span><?php echo $row->email;?></span>
-															</div>
-															<!--begin::User details-->
-														</td>
-														<td><?php echo $row->cpf;?></td>
-														
-														<td><a href="<?php echo FGTSUrl ?>fgts/proposta-status/<?php echo $row->verificador;?>/DEeDeqqew234deT45" target="_blank"><?php echo $row->verificador;?></a></td>
-														<td><?php echo ($row->offlineMode == "Y"  ? '<span class="badge badge-light-danger">NÃO</span>' : '<span class="badge badge-light-success">New</span>SIM');?></td>
-														<td><?php echo ($row->statusProposta == "PASSO 07 - GRAVADA"  ? '<span class="badge badge-light-success fs-6">' . $row->statusProposta . '</span>' : $row->statusProposta);?></td>
-													</tr>
-													<!--end::Table row-->
+														<tr>
+															<!--begin::Checkbox-->
+															<td>
+																<div class="form-check form-check-sm form-check-custom form-check-solid">
+																	<input class="form-check-input" type="checkbox" value="1" />
+																</div>
+															</td>
+															<!--end::Checkbox-->
+															<!--begin::User=-->
+															<td><?php echo $row->id_proposta;?></td>
+															<td class="d-flex align-items-center">
+																<!--begin:: Avatar -->
+																<div class="symbol symbol-circle symbol-50px overflow-hidden me-3">
+																	<a href="<?php echo FGTSUrl ?>fgts/proposta/<?php echo $row->verificador;?>/sadfQWERFsadfAQWERQWEr" target="_blank">
+																		<div class="symbol-label fs-3 bg-light-danger text-danger"><?php echo substr($row->nome, 0, 1);?></div>
+																	</a>
+																</div>
+																<!--end::Avatar-->
+																<!--begin::User details-->
+																<div class="d-flex flex-column"> 
+																	<a href="<?php echo FGTSUrl ?>fgts/proposta/<?php echo $row->verificador;?>/sadfQWERFsadfAQWERQWEr" target="_blank" class="text-gray-800 text-hover-primary mb-1">
+																	<?php echo $row->nome;?>
+																	</a>
+																	<span><?php echo $row->email;?></span>
+																</div>
+																<!--begin::User details-->
+															</td>
+															<td><?php echo $row->cpf;?></td>
+															<td><a href="<?php echo FGTSUrl ?>fgts/proposta-status/<?php echo $row->verificador;?>/DEeDeqqew234deT45" target="_blank"><?php echo strtoupper($row->verificador);?></a></td>
+															<td><?php echo ($row->offlineMode == "Y"  ? '<span class="badge py-3 px-4 fs-7 badge-light-danger">NÃO</span>' : '<span class="badge py-3 px-4 fs-7 badge-light-success">SIM</span>');?></td>
+															<td>Fernando</td>
+															<td><?php echo ($row->statusProposta == "PASSO 07 - GRAVADA"  ? '<span class="badge py-3 px-4 fs-7 badge-light-success fs-6">' . $row->statusProposta . '</span>' : $row->statusProposta);?></td>
+															<td>
+																<div><!--begin::PopUp menu-->
+																	<a href="#" class="btn btn-sm btn-icon btn-light btn-active-light-primary" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" data-bs-toggle="tooltip" data-bs-placement="top" title=""><!--begin::Svg Icon | path: icons/duotune/general/gen052.svg--><span class="svg-icon svg-icon-2 m-0"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="10" y="10" width="4" height="4" rx="2" fill="currentColor"/><rect x="17" y="10" width="4" height="4" rx="2" fill="currentColor"/><rect x="3" y="10" width="4" height="4" rx="2" fill="currentColor"/></svg></span><!--end::Svg Icon--></a>
+																	<div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-250px py-4" data-kt-menu="true">
+																		<div class="menu-item px-3"><a href="#" class="menu-link px-2"><i class="bi bi-people text-gray-400 fs-2"></i><span class="mx-2">Atuar Proposta</span></a></div>
+																		<div class="separator my-5"></div>
+																		<div class="menu-item px-3"><a href="#" class="menu-link px-2"><i class="bi bi-bookmark-check-fill text-gray-400 fs-2"></i><span class="mx-2">Pendente Adesão</span></a></div>
+																		<div class="menu-item px-3"><a href="#" class="menu-link px-2"><i class="bi bi-cash-coin text-gray-400 fs-2"></i><span class="mx-2">Proposta disponível</span></a></div>
+																		<div class="separator my-5"></div>
+																		<div class="menu-item px-3"><a href="<?php echo FGTSUrl ?>fgts/proposta-status/<?php echo $row->verificador;?>/sadfQWERFsadfAQWERQWEr" class="menu-link px-2" target="_blank"><i class="bi bi-info-square-fill text-gray-400 fs-2"></i><span class="mx-2">Status Proposta</span><span class="badge badge-light-danger ms-auto">5</span></a></div>
+																		<div class="menu-item px-3"><a href="<?php echo FGTSUrl ?>fgts/proposta/<?php echo $row->verificador;?>/sadfQWERFsadfAQWERQWEr" class="menu-link px-2" target="_blank"><i class="bi bi-pencil-square text-gray-400 fs-2"></i><span class="mx-2">Editar Proposta</span></a></div>
+																	</div>
+																</div><!--end::PopUp menu-->
+															</td>
+														</tr>
 													<?php 
 														} //End:Foreach
 													?>
