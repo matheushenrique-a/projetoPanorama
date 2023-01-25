@@ -31,7 +31,7 @@ abstract class BaseController extends Controller
     protected $request;
     protected $dbMaster;
     protected $dbMasterFGTS;
-    protected $session;
+    protected $my_session;
     /**
      * An array of helpers to be loaded automatically upon
      * class instantiation. These helpers will be available
@@ -52,7 +52,7 @@ abstract class BaseController extends Controller
         // Preload any models, libraries, etc, here.
         $this->dbMaster = new dbMaster(); // create an instance of Library class
         $this->dbMasterFGTS = new dbMasterFGTS(); // create an instance of Library class
-        $this->session = session();
+        $this->my_session = session();
     }
 
 	public function loadpage($page, $dados){
@@ -68,13 +68,11 @@ abstract class BaseController extends Controller
 	}    
 
     function checkSession(){
-        $user = ($this->session->get('userId'));
-        $dados['pageTitle'] = "MegaBase - Vanguard Decode";
-        if (is_null($user)){
-            //echo "14:55:04 - <h3>Dump 87</h3> <br><br>" . var_dump($user); exit;					//<-------DEBUG
-            return redirect()->to('www.google.comb.br');
-        }
-        
+
+        if (!$this->my_session->has('userId')){
+           //echo "09:52:56 - <h3>Dump 49</h3> <br><br>" . var_dump(!$this->my_session->has('userId')); exit;					//<-------DEBUG
+           redirectHelper('sign-in');
+        }        
     }
     function getpost($valor, $cookie_persist = false) {
 	   

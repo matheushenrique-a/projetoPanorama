@@ -37,7 +37,13 @@ $routes->setAutoRoute(true);
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
 $routes->get('/', 'Home::index');
+//FGTS
+$routes->match(['get', 'post'], '/fgts-pendente-adesao/(:any)', 'Fgts\Fgts::atualizarStatusPropostaAdesao/$1');
+$routes->match(['get', 'post'], '/fgts-proposta-disponível/(:any)', 'Fgts\Fgts::atualizarStatusPropostaDisponivel/$1');
+$routes->match(['get', 'post'], '/fgts-operador-owner/(:any)', 'Fgts\Fgts::atualizarStatusPropostaOperador/$1');
 $routes->match(['get', 'post'], '/fgts-listar-propostas', 'Fgts\Fgts::listarPropostas');
+
+//DATALAKE
 $routes->match(['get', 'post'], '/datalake-buscar', 'DataLake\DataLake::buscarCliente');
 $routes->match(['get', 'post'], '/vanguard-decode', 'DataLake\DataLake::vanguardDecode');
 $routes->match(['get', 'post'], '/datalake-carregar-inss', 'DataLake\DataLake::load_INSS_Batch');

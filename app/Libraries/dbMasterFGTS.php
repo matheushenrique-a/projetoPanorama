@@ -12,7 +12,7 @@ class dbMasterFGTS {
 			'hostname' => 'localhost',
 			'username' => 'root',
 			'password' => '',
-			'database' => 'fintech',        
+			'database' => 'mytradesplus',        
 			// 'hostname' => '35.208.178.233',
 			// 'username' => 'uecqu4bzohwbb',
 			// 'password' => 'tbhvch8oczcw',
