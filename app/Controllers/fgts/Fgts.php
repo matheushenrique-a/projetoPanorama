@@ -20,20 +20,24 @@ class Fgts extends BaseController
     }
 
     public function listarPropostas(){
+        $fases = $this->fasesProposta();
         //echo "22:00:48 - <h3>Dump 36</h3> <br><br>" . var_dump($this->session->session_id); exit;					//<-------DEBUG
         $cpf = $this->getpost('txtCPF');
         $verificador = $this->getpost('verificador');
         $nome = $this->getpost('txtNome');
         $statusPropostaFiltro = $this->getpost('statusPropostaFiltro');
+        $offlineMode = $this->getpost('offlineMode');
         $btnExport = $this->getpost('btnExport');
 
         $whereCheck = [];
         $likeCheck = [];
         if (!empty($cpf)) $whereCheck['cpf'] = $cpf;
+        if (!empty($offlineMode)) $whereCheck['offlineMode'] = $offlineMode;
         if (!empty($verificador)) $whereCheck['verificador'] = $verificador;
         if (!empty($statusPropostaFiltro)) $whereCheck['statusProposta'] = $statusPropostaFiltro;
         if (!empty($nome)) $likeCheck['nome'] = $nome;
 
+        //echo "17:10:44 - <h3>Dump 98</h3> <br><br>" . var_dump($whereCheck); exit;					//<-------DEBUG
         $propostas = $this->dbMasterFGTS->select('proposta_fgts', $whereCheck, $likeCheck);
        // echo "14:46:43 - <h3>Dump 92</h3> <br><br>" . var_dump($propostas); exit;					//<-------DEBUG
 
@@ -41,8 +45,10 @@ class Fgts extends BaseController
         $dados['propostas'] = $propostas;
         $dados['cpf'] = $cpf;
         $dados['nome'] = $nome;
+        $dados['offlineMode'] = $offlineMode;
         $dados['verificador'] = $verificador;
         $dados['statusPropostaFiltro'] = $statusPropostaFiltro;
+        $dados['fases'] = $fases;
         
         return $this->loadpage('fgts/listar_propostas', $dados);
     }
@@ -74,6 +80,16 @@ class Fgts extends BaseController
         $this->dbMasterFGTS->update('proposta_fgts', $fields, $where, $fieldsDynamic);
 
         return redirect()->to('fgts-listar-propostas');
+    }
+
+    public function fasesProposta(){
+        $db =  $this->dbMasterFGTS->getDB();
+        $builder = $db->table('proposta_fgts');
+        $builder->orderBy('statusProposta', 'ASC');
+        $builder->distinct();
+        $builder->select('statusProposta');
+		//echo $builder->getCompiledSelect();exit;
+		return $builder->get();
     }
 
 }

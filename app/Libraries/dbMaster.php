@@ -130,6 +130,11 @@ class dbMaster {
 		}
 	}
 
+	public function getDB()
+	{
+		return $this->db;
+	}
+
 	//Cria um identificador unico para um registro
 	public function getMd5($table, $whereArray){
 		$md5 = trim($table) . '|';
