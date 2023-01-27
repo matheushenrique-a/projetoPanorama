@@ -6,38 +6,13 @@ class dbMaster {
 	protected $db;
 
 	public function __construct($dbOption = null){
-		//$this->db = db_connect();
-		
-		
+
+		//Quando for necessário conectar em um banco diferente do padrão
+		//Recebe o parametro com o nome do profile no Config/Database.php
 		if (is_null($dbOption)){
-			//if (!empty($dbOption)) {echo "17:58:57 - Breakpoint 3"; exit;}
 			$this->db = \Config\Database::connect();
 		}else {
-			//if (!empty($dbOption)) {echo "17:58:57 - Breakpoint 444"; exit;}
-			$fgtsDB = [
-				'DSN'      => '',
-				'hostname' => 'localhost',
-				'username' => 'root',
-				'password' => '',
-				'database' => 'mytradesplus',        
-				// 'hostname' => '35.208.178.233',
-				// 'username' => 'uecqu4bzohwbb',
-				// 'password' => 'tbhvch8oczcw',
-				// 'database' => 'dbrxcsrf1hku99',
-				'DBDriver' => 'MySQLi',
-				'DBPrefix' => '',
-				'pConnect' => false,
-				'DBDebug'  => (ENVIRONMENT !== 'production'),
-				'charset'  => 'utf8',
-				'DBCollat' => 'utf8_general_ci',
-				'swapPre'  => '',
-				'encrypt'  => false,
-				'compress' => false,
-				'strictOn' => false,
-				'failover' => [],
-				'port'     => 3306,
-			];		
-			$this->db = \Config\Database::connect($fgtsDB);
+			$this->db = \Config\Database::connect($dbOption);
 		}	
 	}
 
@@ -51,7 +26,7 @@ class dbMaster {
 			}
 		}
 		
-		$builder->where($whereCheck);
+		if (!is_null($whereCheck)) $builder->where($whereCheck);
 		$builder->limit(100);
 		//echo $builder->getCompiledSelect();
 		$result = $builder->get();

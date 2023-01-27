@@ -9,7 +9,6 @@ use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use App\Libraries\dbMaster;
-use App\Libraries\dbMasterFGTS;
 
 /**
  * Class BaseController
@@ -32,6 +31,8 @@ abstract class BaseController extends Controller
     protected $dbMaster;
     protected $dbMasterFGTS;
     protected $my_session;
+
+    protected $dbProfile = null; // usa conexão padrão no Config/Database.php
     /**
      * An array of helpers to be loaded automatically upon
      * class instantiation. These helpers will be available
@@ -39,21 +40,26 @@ abstract class BaseController extends Controller
      *
      * @var array
      */
-    protected $helpers = ["hUtil"];
+    protected $helpers = ["hUtil", "hMetronic"];
 
     /**
      * Constructor.
      */
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
     {
-        // Do Not Edit This Line
+        // $DBConfig = new \Config\Database;
         parent::initController($request, $response, $logger);
 
         // Preload any models, libraries, etc, here.
-        $this->dbMaster = new dbMaster(); // create an instance of Library class
-        $this->dbMasterFGTS = new dbMasterFGTS(); // create an instance of Library class
+        $this->dbMaster = new dbMaster($this->dbProfile); // create an instance of Library class
         $this->my_session = session();
     }
+
+    //permite escolher uma configuração de banco diferente no arquivo Confi/Database
+    public function setDB($dbProfile){
+        $this->dbProfile = $dbProfile;
+        //echo "xx" . $this->dbProfile;exit;
+	}
 
 	public function loadpage($page, $dados){
         

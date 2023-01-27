@@ -136,14 +136,14 @@
 										</div>
 									</div>
 									<!--begin::Card-->
-									<div class="card">
+									<div class="card" style="justify-content: start;">
 										<!--begin::Card header-->
 										<!--begin::Form-->
 										<form id="frmDataLake" class="form" action="<?php echo assetfolder;?>fgts-listar-propostas" method="POST">
-											<div class="card-header border-0 pt-6">
+											<div class="card-header border-0 pt-6" style="justify-content: start;">
 												<!--begin::Card title-->
 												<div class="card-title">
-													<div class="d-flex align-items-center position-relative my-1">
+													<div class="d-flex align-items-center position-relative my-1 mx-3">
 														<div class="mb-3">
 															<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Nome:</label>
 															<input type="text" class="form-control" placeholder="Nome cliente" name="txtNome" value="<?php echo $nome;?>" />
@@ -162,25 +162,25 @@
 														</div>													
 													</div>
 													<div class="mb-3">
-															<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Operador:</label>
-															<div class="d-flex align-items-center position-relative my-1">
-																<select class="form-select form-control-solid" aria-label="" name="statusPropostaFiltro">
-																	<?php
-																		echo '<option value="" ' .  ($statusPropostaFiltro == "" ? 'selected' : '') . '> TODOS </option>';
-																		foreach ($fases->getResult() as $row){
-																			echo '<option value="' . $row->statusProposta . '" ' .  ($statusPropostaFiltro == $row->statusProposta ? 'selected' : '') . '>' . $row->statusProposta . '</option>';
-																		}
-																	;?>
-																</select>
-															</div>												
-														</div>
+														<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Operador:</label>
+														<div class="d-flex align-items-center position-relative my-1 mx-3">
+															<select class="form-select form-control-solid" aria-label="" name="operadorFiltro">
+																<?php
+																	echo '<option value="" ' .  ($operadorFiltro == "" ? 'selected' : '') . '> TODOS </option>';
+																	foreach ($users["result"]->getResult() as $row){
+																		echo '<option value="' . $row->userId . '" ' .  ($operadorFiltro == $row->userId ? 'selected' : '') . '>' . $row->nickname . '</option>';
+																	}
+																;?>
+															</select>
+														</div>												
+													</div>
 												</div>
 												<!--begin::Card title-->
 												<div class="card-title">
 													<div class="d-flex align-items-center position-relative my-1">
 														<div class="mb-3">
 															<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Status:</label>
-															<div class="d-flex align-items-center position-relative my-1">
+															<div class="d-flex align-items-center position-relative my-1 mx-3">
 																<select class="form-select form-control-solid" aria-label="" name="statusPropostaFiltro">
 																	<?php
 																		echo '<option value="" ' .  ($statusPropostaFiltro == "" ? 'selected' : '') . '> TODAS </option>';
@@ -193,7 +193,7 @@
 														</div>
 														<div class="d-flex align-items-center position-relative my-1 mx-3">
 															<div class="mb-3">
-																<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Integração:</label>
+																<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Online:</label>
 																<div class="d-flex align-items-center position-relative my-1">
 																	<select class="form-select form-control-solid" aria-label="" name="offlineMode">
 																	<?php
@@ -205,32 +205,14 @@
 																</div>
 															</div>													
 														</div>												
-														<!--begin::Card title-->
-														<!--begin::Card toolbar-->
-														<div class="card-toolbar">
-															<div class="d-flex align-items-center position-relative my-1 mx-3">
+														<div class="d-flex align-items-center position-relative my-1 mx-3">
+															<div class="mb-3">
+																<div class="d-flex align-items-center position-relative my-1 mt-8">
+																<button type="submit" class="btn btn-primary" >Buscar Propostas</button>										
+																</div>
 															</div>													
-															<!--begin::Toolbar-->
-															<div class="d-flex justify-content-end pt-5" data-kt-user-table-toolbar="base">
-																<!--begin::Export-->
-																<button type="submit" class="btn btn-light-primary me-3" name="btnExport" value="btnExport">
-																	<!--begin::Svg Icon | path: icons/duotune/arrows/arr078.svg-->
-																	<span class="svg-icon svg-icon-2">
-																		<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-																			<rect opacity="0.3" x="12.75" y="4.25" width="12" height="2" rx="1" transform="rotate(90 12.75 4.25)" fill="currentColor" />
-																			<path d="M12.0573 6.11875L13.5203 7.87435C13.9121 8.34457 14.6232 8.37683 15.056 7.94401C15.4457 7.5543 15.4641 6.92836 15.0979 6.51643L12.4974 3.59084C12.0996 3.14332 11.4004 3.14332 11.0026 3.59084L8.40206 6.51643C8.0359 6.92836 8.0543 7.5543 8.44401 7.94401C8.87683 8.37683 9.58785 8.34458 9.9797 7.87435L11.4427 6.11875C11.6026 5.92684 11.8974 5.92684 12.0573 6.11875Z" fill="currentColor" />
-																			<path opacity="0.3" d="M18.75 8.25H17.75C17.1977 8.25 16.75 8.69772 16.75 9.25C16.75 9.80228 17.1977 10.25 17.75 10.25C18.3023 10.25 18.75 10.6977 18.75 11.25V18.25C18.75 18.8023 18.3023 19.25 17.75 19.25H5.75C5.19772 19.25 4.75 18.8023 4.75 18.25V11.25C4.75 10.6977 5.19771 10.25 5.75 10.25C6.30229 10.25 6.75 9.80228 6.75 9.25C6.75 8.69772 6.30229 8.25 5.75 8.25H4.75C3.64543 8.25 2.75 9.14543 2.75 10.25V19.25C2.75 20.3546 3.64543 21.25 4.75 21.25H18.75C19.8546 21.25 20.75 20.3546 20.75 19.25V10.25C20.75 9.14543 19.8546 8.25 18.75 8.25Z" fill="currentColor" />
-																		</svg>
-																	</span>
-																	<!--end::Svg Icon-->Exportar
-																</button>
-																<!--end::Export-->
-																<!--begin::Add user-->
-																<button type="submit" class="btn btn-primary" >Buscar Propostas</button>
-																<!--end::Add user-->
-															</div>
-														</div>
-														<!--end::Toolbar-->
+														</div>												
+														<!--begin::Card title-->
 													</div>
 													<!--end::Card toolbar-->
 												</div>
@@ -251,11 +233,12 @@
 																<input class="form-check-input" type="checkbox" data-kt-check="true" data-kt-check-target="#kt_table_users .form-check-input" value="1" />
 															</div>
 														</th>
-														<th class="min-w-50px">ID</th>
-														<th class="min-w-225px">Cliente</th>
+														<th class="min-w-25px">ID</th>
+														<th class="min-w-200px">Cliente</th>
 														<th class="min-w-125px">CPF</th>
-														<th class="min-w-25">Verificador</th>
-														<th class="min-w-50px">Integrada</th>
+														<th class="min-w-25">Parcelas</th>
+														<th class="min-w-25">Verif.</th>
+														<th class="min-w-50px">Online</th>
 														<th class="min-w-50px">Operador</th>
 														<th class="min-w-125px">Status</th>
 														<th class="min-w-50px">Ação</th>
@@ -281,25 +264,26 @@
 															<td class="d-flex align-items-center">
 																<!--begin:: Avatar -->
 																<div class="symbol symbol-circle symbol-50px overflow-hidden me-3">
-																	<a href="<?php echo FGTSUrl ?>fgts/proposta/<?php echo $row->verificador;?>/sadfQWERFsadfAQWERQWEr" target="_blank">
+																	<a href="<?php echo FGTSUrl ?>fgts/proposta/<?php echo $row->verificador;?>/<?php echo createToken();?>" target="_blank">
 																		<div class="symbol-label fs-3 bg-light-danger text-danger"><?php echo substr($row->nome, 0, 1);?></div>
 																	</a>
 																</div>
 																<!--end::Avatar-->
 																<!--begin::User details-->
 																<div class="d-flex flex-column"> 
-																	<a href="<?php echo FGTSUrl ?>fgts/proposta/<?php echo $row->verificador;?>/sadfQWERFsadfAQWERQWEr" target="_blank" class="text-gray-800 text-hover-primary mb-1">
-																	<?php echo $row->nome;?>
+																	<a href="<?php echo FGTSUrl ?>fgts/proposta/<?php echo $row->verificador;?>/<?php echo createToken();?>" target="_blank" class="text-gray-800 text-hover-primary mb-1">
+																		<?php echo $row->nome;?>
 																	</a>
 																	<span><?php echo $row->email;?></span>
 																</div>
 																<!--begin::User details-->
 															</td>
 															<td><?php echo $row->cpf;?></td>
+															<td><?php echo propostaValorParcel($row);?></td>
 															<td><a href="<?php echo FGTSUrl ?>fgts/proposta-status/<?php echo $row->verificador;?>/DEeDeqqew234deT45" target="_blank"><?php echo strtoupper($row->verificador);?></a></td>
-															<td><?php echo ($row->offlineMode == "Y"  ? '<span class="badge py-3 px-4 fs-7 badge-light-danger">NÃO</span>' : '<span class="badge py-3 px-4 fs-7 badge-light-success">SIM</span>');?></td>
+															<td><?php echo propostaOfflineModeFormat($row->offlineMode);?></td>
 															<td><?php echo $row->OperadorCCenter;?></td>
-															<td><?php echo ($row->statusProposta == "PASSO 07 - GRAVADA"  ? '<span class="badge py-3 px-4 fs-7 badge-light-success fs-6">' . $row->statusProposta . '</span>' : $row->statusProposta);?></td>
+															<td><?php echo propostaFaseFormat($row->statusProposta);?></td>
 															<td>
 																<div><!--begin::PopUp menu-->
 																	<a href="#" class="btn btn-sm btn-icon btn-light btn-active-light-primary" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" data-bs-toggle="tooltip" data-bs-placement="top" title=""><!--begin::Svg Icon | path: icons/duotune/general/gen052.svg--><span class="svg-icon svg-icon-2 m-0"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="10" y="10" width="4" height="4" rx="2" fill="currentColor"/><rect x="17" y="10" width="4" height="4" rx="2" fill="currentColor"/><rect x="3" y="10" width="4" height="4" rx="2" fill="currentColor"/></svg></span><!--end::Svg Icon--></a>
@@ -309,8 +293,10 @@
 																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-pendente-adesao/<?php echo $row->id_proposta;?>" class="menu-link px-2"><i class="bi bi-bookmark-check-fill text-gray-400 fs-2"></i><span class="mx-2">Pendente Adesão</span></a></div>
 																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponível/<?php echo $row->id_proposta;?>" class="menu-link px-2"><i class="bi bi-cash-coin text-gray-400 fs-2"></i><span class="mx-2">Proposta disponível</span></a></div>
 																		<div class="separator my-5"></div>
-																		<div class="menu-item px-3"><a href="<?php echo FGTSUrl ?>fgts/proposta-status/<?php echo $row->verificador;?>/sadfQWERFsadfAQWERQWEr" class="menu-link px-2" target="_blank"><i class="bi bi-info-square-fill text-gray-400 fs-2"></i><span class="mx-2">Status Proposta</span><span class="badge badge-light-danger ms-auto">5</span></a></div>
-																		<div class="menu-item px-3"><a href="<?php echo FGTSUrl ?>fgts/proposta/<?php echo $row->verificador;?>/sadfQWERFsadfAQWERQWEr" class="menu-link px-2" target="_blank"><i class="bi bi-pencil-square text-gray-400 fs-2"></i><span class="mx-2">Editar Proposta</span></a></div>
+																		<div class="menu-item px-3"><a href="<?php echo FGTSUrl ?>fgts/proposta-status/<?php echo $row->verificador;?>/<?php echo createToken();?>" class="menu-link px-2" target="_blank"><i class="bi bi-info-square-fill text-gray-400 fs-2"></i><span class="mx-2">Status Proposta</span><span class="badge badge-light-danger ms-auto">5</span></a></div>
+																		<div class="menu-item px-3"><a href="<?php echo FGTSUrl ?>fgts/proposta/<?php echo $row->verificador;?>/<?php echo createToken();?>" class="menu-link px-2" target="_blank"><i class="bi bi-pencil-square text-gray-400 fs-2"></i><span class="mx-2">Editar Proposta</span></a></div>
+																		<div class="separator my-5"></div>
+																		<div class="menu-item px-3"><a href="<?php echo FGTSUrl ?>fgts/notificar-cliente/<?php echo $row->verificador;?>/<?php echo createToken();?>" class="menu-link px-2" target="_blank"><i class="fa-brands fa-whatsapp text-gray-400 fs-2"></i><span class="mx-2">Notificar Cliente</span></a></div>
 																	</div>
 																</div><!--end::PopUp menu-->
 															</td>

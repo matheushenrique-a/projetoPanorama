@@ -5,40 +5,41 @@ use App\Controllers\BaseController;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
-use App\Libraries\dbMaster;
+//use App\Libraries\dbMaster;
 
 class Fgts extends BaseController
 {
-    protected $dbMasterFGTS;
     protected $session;
 
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger) {
+        parent::setDB("fgtsDB"); //passa o banco de dados diferente do default (opcional) antes de iniciar o controler
         parent::initController($request, $response, $logger);
         $this->checkSession();
-        $this->dbMasterFGTS = new dbMaster(); // create an instance of Library class
+        //$this->dbMaster = new dbMaster(); // create an instance of Library class
         $this->session = session();
     }
 
     public function listarPropostas(){
         $fases = $this->fasesProposta();
+        $users = $this->listaOPeradores();
         //echo "22:00:48 - <h3>Dump 36</h3> <br><br>" . var_dump($this->session->session_id); exit;					//<-------DEBUG
         $cpf = $this->getpost('txtCPF');
         $verificador = $this->getpost('verificador');
         $nome = $this->getpost('txtNome');
         $statusPropostaFiltro = $this->getpost('statusPropostaFiltro');
         $offlineMode = $this->getpost('offlineMode');
-        $btnExport = $this->getpost('btnExport');
+        $operadorFiltro = $this->getpost('operadorFiltro');
 
         $whereCheck = [];
         $likeCheck = [];
         if (!empty($cpf)) $whereCheck['cpf'] = $cpf;
         if (!empty($offlineMode)) $whereCheck['offlineMode'] = $offlineMode;
-        if (!empty($verificador)) $whereCheck['verificador'] = $verificador;
+        if (!empty($verificador)) $likeCheck['verificador'] = $verificador;
         if (!empty($statusPropostaFiltro)) $whereCheck['statusProposta'] = $statusPropostaFiltro;
         if (!empty($nome)) $likeCheck['nome'] = $nome;
 
         //echo "17:10:44 - <h3>Dump 98</h3> <br><br>" . var_dump($whereCheck); exit;					//<-------DEBUG
-        $propostas = $this->dbMasterFGTS->select('proposta_fgts', $whereCheck, $likeCheck);
+        $propostas = $this->dbMaster->select('proposta_fgts', $whereCheck, $likeCheck);
        // echo "14:46:43 - <h3>Dump 92</h3> <br><br>" . var_dump($propostas); exit;					//<-------DEBUG
 
         $dados['pageTitle'] = "FGTS - Listar propostas";
@@ -48,7 +49,9 @@ class Fgts extends BaseController
         $dados['offlineMode'] = $offlineMode;
         $dados['verificador'] = $verificador;
         $dados['statusPropostaFiltro'] = $statusPropostaFiltro;
+        $dados['operadorFiltro'] = $operadorFiltro;
         $dados['fases'] = $fases;
+        $dados['users'] = $users;
         
         return $this->loadpage('fgts/listar_propostas', $dados);
     }
@@ -57,7 +60,7 @@ class Fgts extends BaseController
         $where = array('id_proposta' => $id_proposta);
         $fields = array('OperadorCCenter' => $this->session->nickname);
         $fieldsDynamic = array('last_update' => 'current_timestamp()');
-        $this->dbMasterFGTS->update('proposta_fgts', $fields, $where, $fieldsDynamic);
+        $this->dbMaster->update('proposta_fgts', $fields, $where, $fieldsDynamic);
 
         return redirect()->to('fgts-listar-propostas');
     }
@@ -67,7 +70,7 @@ class Fgts extends BaseController
         $where = array('id_proposta' => $id_proposta);
         $fields = array('statusProposta' => $status);
         $fieldsDynamic = array('last_update' => 'current_timestamp()');
-        $this->dbMasterFGTS->update('proposta_fgts', $fields, $where, $fieldsDynamic);
+        $this->dbMaster->update('proposta_fgts', $fields, $where, $fieldsDynamic);
 
         return redirect()->to('fgts-listar-propostas');
     }
@@ -77,13 +80,13 @@ class Fgts extends BaseController
         $where = array('id_proposta' => $id_proposta);
         $fields = array('statusProposta' => $status);
         $fieldsDynamic = array('last_update' => 'current_timestamp()');
-        $this->dbMasterFGTS->update('proposta_fgts', $fields, $where, $fieldsDynamic);
+        $this->dbMaster->update('proposta_fgts', $fields, $where, $fieldsDynamic);
 
         return redirect()->to('fgts-listar-propostas');
     }
 
     public function fasesProposta(){
-        $db =  $this->dbMasterFGTS->getDB();
+        $db =  $this->dbMaster->getDB();
         $builder = $db->table('proposta_fgts');
         $builder->orderBy('statusProposta', 'ASC');
         $builder->distinct();
@@ -91,5 +94,10 @@ class Fgts extends BaseController
 		//echo $builder->getCompiledSelect();exit;
 		return $builder->get();
     }
+
+    public function listaOPeradores(){
+        $users = $this->dbMaster->select('user_account', null);
+		return $users;
+    }    
 
 }
