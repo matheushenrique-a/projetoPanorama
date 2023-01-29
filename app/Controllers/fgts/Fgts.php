@@ -5,21 +5,27 @@ use App\Controllers\BaseController;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
-//use App\Libraries\dbMaster;
+use App\Libraries\dbMaster;
 
 class Fgts extends BaseController
 {
     protected $session;
+    protected $dbMasterDefault;
 
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger) {
         parent::setDB("fgtsDB"); //passa o banco de dados diferente do default (opcional) antes de iniciar o controler
         parent::initController($request, $response, $logger);
         $this->checkSession();
-        //$this->dbMaster = new dbMaster(); // create an instance of Library class
+
+        //nesse caso o dbMaster vai apontar para o banco FGTS
+
+        //o dbMasterDefault vai apontar para o banco do InsightSuite
+        $this->dbMasterDefault = new dbMaster();
         $this->session = session();
     }
 
     public function listarPropostas(){
+
         $fases = $this->fasesProposta();
         $users = $this->listaOPeradores();
         //echo "22:00:48 - <h3>Dump 36</h3> <br><br>" . var_dump($this->session->session_id); exit;					//<-------DEBUG
@@ -96,7 +102,7 @@ class Fgts extends BaseController
     }
 
     public function listaOPeradores(){
-        $users = $this->dbMaster->select('user_account', null);
+        $users = $this->dbMasterDefault->select('user_account', null);
 		return $users;
     }    
 

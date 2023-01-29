@@ -29,7 +29,6 @@ abstract class BaseController extends Controller
      */
     protected $request;
     protected $dbMaster;
-    protected $dbMasterFGTS;
     protected $my_session;
 
     protected $dbProfile = null; // usa conexão padrão no Config/Database.php
