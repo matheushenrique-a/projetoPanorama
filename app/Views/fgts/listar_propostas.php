@@ -178,41 +178,37 @@
 												<!--begin::Card title-->
 												<div class="card-title">
 													<div class="d-flex align-items-center position-relative my-1">
-														<div class="mb-3">
-															<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Status:</label>
-															<div class="d-flex align-items-center position-relative my-1 mx-3">
+														<div class="mb-3  mx-3">
+															<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0"> Status:</label>
+															<div class="d-flex align-items-center position-relative my-1">
 																<select class="form-select form-control-solid" aria-label="" name="statusPropostaFiltro">
 																	<?php
-																		echo '<option value="" ' .  ($statusPropostaFiltro == "" ? 'selected' : '') . '> TODAS </option>';
-																		foreach ($fases->getResult() as $row){
-																			echo '<option value="' . $row->statusProposta . '" ' .  ($statusPropostaFiltro == $row->statusProposta ? 'selected' : '') . '>' . $row->statusProposta . '</option>';
+																		echo '<option value="" ' .  ($statusPropostaFiltro == "" ? 'selected' : '') . '></option>';
+																		foreach (getFases() as $row){
+																			//echo '19:21:04 - <h3>Dump 34 da variável $row </h3> <br><br>' . var_dump($row); exit;					//<-------DEBUG
+																			echo '<option value="' . $row['faseName'] . '" ' .  ($statusPropostaFiltro == $row['faseName'] ? 'selected' : '') . '>' . $row['faseName'] . '</option>';
 																		}
 																	;?>
 																</select>
 															</div>												
 														</div>
-														<div class="d-flex align-items-center position-relative my-1 mx-3">
-															<div class="mb-3">
-																<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Online:</label>
-																<div class="d-flex align-items-center position-relative my-1">
-																	<select class="form-select form-control-solid" aria-label="" name="offlineMode">
-																	<?php
-																		echo '<option value="" ' .  ($offlineMode == "" ? 'selected' : '') . '> TODAS </option>';
-																		echo '<option value="Y" ' .  ($offlineMode == "Y" ? 'selected' : '') . '> NÃO </option>';
-																		echo '<option value="N" ' .  ($offlineMode == "N" ? 'selected' : '') . '> SIM </option>';
-																	?>
-																	</select>													
-																</div>
-															</div>													
+														<div class="mb-3  mx-3">
+															<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Online:</label>
+															<div class="d-flex align-items-center position-relative my-1">
+																<select class="form-select form-control-solid" aria-label="" name="offlineMode">
+																<?php
+																	echo '<option value="" ' .  ($offlineMode == "" ? 'selected' : '') . '> TODAS </option>';
+																	echo '<option value="Y" ' .  ($offlineMode == "Y" ? 'selected' : '') . '> NÃO </option>';
+																	echo '<option value="N" ' .  ($offlineMode == "N" ? 'selected' : '') . '> SIM </option>';
+																?>
+																</select>													
+															</div>								
 														</div>												
-														<div class="d-flex align-items-center position-relative my-1 mx-3">
-															<div class="mb-3">
-																<div class="d-flex align-items-center position-relative my-1 mt-8">
-																<button type="submit" class="btn btn-primary" >Buscar Propostas</button>										
-																</div>
-															</div>													
-														</div>												
-														<!--begin::Card title-->
+														<div class="mb-3  mx-3">
+															<div class="d-flex align-items-center position-relative my-1 mt-8">
+															<button type="submit" class="btn btn-primary" >Buscar Propostas</button>										
+															</div>
+														</div>													
 													</div>
 													<!--end::Card toolbar-->
 												</div>
@@ -290,13 +286,16 @@
 																	<div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-250px py-4" data-kt-menu="true">
 																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-operador-owner/<?php echo $row->id_proposta;?>"  class="menu-link px-2"><i class="bi bi-people text-gray-400 fs-2"></i><span class="mx-2">Atuar Proposta</span></a></div>
 																		<div class="separator my-5"></div>
-																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-pendente-adesao/<?php echo $row->id_proposta;?>" class="menu-link px-2"><i class="bi bi-bookmark-check-fill text-gray-400 fs-2"></i><span class="mx-2">Pendente Adesão</span></a></div>
-																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponível/<?php echo $row->id_proposta;?>" class="menu-link px-2"><i class="bi bi-cash-coin text-gray-400 fs-2"></i><span class="mx-2">Proposta disponível</span></a></div>
+																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/ADE" class="menu-link px-2"><i class="bi bi-bookmark-check-fill text-gray-400 fs-2"></i><span class="mx-2">Pendente Adesão</span></a></div>
+																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/DIS" class="menu-link px-2"><i class="bi bi-cash-coin text-gray-400 fs-2"></i><span class="mx-2">Proposta disponível</span></a></div>
 																		<div class="separator my-5"></div>
-																		<div class="menu-item px-3"><a href="<?php echo FGTSUrl ?>fgts/proposta-status/<?php echo $row->verificador;?>/<?php echo createToken();?>" class="menu-link px-2" target="_blank"><i class="bi bi-info-square-fill text-gray-400 fs-2"></i><span class="mx-2">Status Proposta</span><span class="badge badge-light-danger ms-auto">5</span></a></div>
+																		<div class="menu-item px-3"><a href="<?php echo FGTSUrl ?>fgts/proposta-status/<?php echo $row->verificador;?>/<?php echo createToken();?>" class="menu-link px-2" target="_blank"><i class="bi bi-info-square-fill text-gray-400 fs-2"></i><span class="mx-2">Visualizar Proposta</span><span class="badge badge-light-danger ms-auto">5</span></a></div>
 																		<div class="menu-item px-3"><a href="<?php echo FGTSUrl ?>fgts/proposta/<?php echo $row->verificador;?>/<?php echo createToken();?>" class="menu-link px-2" target="_blank"><i class="bi bi-pencil-square text-gray-400 fs-2"></i><span class="mx-2">Editar Proposta</span></a></div>
 																		<div class="separator my-5"></div>
-																		<div class="menu-item px-3"><a href="<?php echo FGTSUrl ?>fgts/notificar-cliente/<?php echo $row->verificador;?>/<?php echo createToken();?>" class="menu-link px-2" target="_blank"><i class="fa-brands fa-whatsapp text-gray-400 fs-2"></i><span class="mx-2">Notificar Cliente</span></a></div>
+																		<div class="menu-item px-3"><a href="<?php echo FGTSUrl ?>fgts/notificar-cliente/<?php echo $row->verificador;?>/<?php echo createToken();?>" class="menu-link px-2" target="_blank"><i class="fa-brands fa-whatsapp text-gray-400 fs-2"></i><span class="mx-2">Mudança Fase</span></a></div>
+																		<div class="menu-item px-3"><a href="<?php echo FGTSUrl ?>fgts/notificar-cliente-sem-compromisso/<?php echo $row->verificador;?>/<?php echo createToken();?>" class="menu-link px-2" target="_blank"><i class="fa-brands fa-whatsapp text-gray-400 fs-2"></i><span class="mx-2">Proposta s/ Compromisso</span></a></div>
+																		<div class="separator my-5"></div>
+																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/CAN" class="menu-link px-2"><i class="bi bi-bookmark-check-fill text-gray-400 fs-2"></i><span class="mx-2">Cancelar Proposta</span></a></div>
 																	</div>
 																</div><!--end::PopUp menu-->
 															</td>

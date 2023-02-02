@@ -38,8 +38,7 @@ $routes->setAutoRoute(true);
 // route since we don't have to scan directories.
 $routes->get('/', 'Home::index');
 //FGTS
-$routes->match(['get', 'post'], '/fgts-pendente-adesao/(:any)', 'Fgts\Fgts::atualizarStatusPropostaAdesao/$1');
-$routes->match(['get', 'post'], '/fgts-proposta-disponível/(:any)', 'Fgts\Fgts::atualizarStatusPropostaDisponivel/$1');
+$routes->match(['get', 'post'], '/fgts-proposta-disponivel/(:any)/(:any)', 'Fgts\Fgts::atualizarStatusProposta/$1/$2');
 $routes->match(['get', 'post'], '/fgts-operador-owner/(:any)', 'Fgts\Fgts::atualizarStatusPropostaOperador/$1');
 $routes->match(['get', 'post'], '/fgts-listar-propostas', 'Fgts\Fgts::listarPropostas');
 

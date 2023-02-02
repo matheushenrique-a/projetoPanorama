@@ -16,19 +16,28 @@ class dbMaster {
 		}	
 	}
 
-	public function select($table, $whereCheck, $likeCheck = null)
+	public function select($table, $whereCheck, $parameters = null)
 	{
 		$builder = $this->db->table($table);
 
-		if (!is_null($likeCheck)){
-			if (count($likeCheck) > 0){
-				$builder->like($likeCheck);
+		if (!is_null($parameters)) {
+			if (array_key_exists('whereNotIn', $parameters)) {
+				$builder->whereNotIn($parameters['whereNotIn'][0], $parameters['whereNotIn'][1]);
+			}
+			if (array_key_exists('likeCheck', $parameters)) {
+				$builder->like($parameters['likeCheck']);
 			}
 		}
+
+		// if (!is_null($parameters)){
+		// 	if (count($parameters) > 0){
+		// 		$builder->like($parameters);
+		// 	}
+		// }
 		
 		if (!is_null($whereCheck)) $builder->where($whereCheck);
 		$builder->limit(100);
-		//echo $builder->getCompiledSelect();
+		//if ($table == 'proposta_fgts'){ echo $builder->getCompiledSelect();exit;}
 		$result = $builder->get();
 		//echo "14:20:50 - <h3>Dump 21</h3> <br><br>" . var_dump($result->getResult()); exit;					//<-------DEBUG
 		$returnData = array();

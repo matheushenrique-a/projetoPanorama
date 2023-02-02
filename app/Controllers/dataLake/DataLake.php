@@ -63,8 +63,7 @@ class DataLake extends BaseController
         if (!empty($matricula)) $whereCheck['matricula'] = $matricula;
         if (!empty($sexo)) $whereCheck['sexo'] = $sexo;
 
-        //echo "21:08:31 - <h3>Dump 19</h3> <br><br>" . var_dump($whereCheck); exit;					//<-------DEBUG
-
+        $likeCheck = array("likeCheck" => $likeCheck);
         $clientes = $this->dbMaster->select('dw_clientes', $whereCheck, $likeCheck);
         
         

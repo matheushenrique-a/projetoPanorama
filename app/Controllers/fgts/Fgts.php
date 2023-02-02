@@ -44,9 +44,15 @@ class Fgts extends BaseController
         if (!empty($statusPropostaFiltro)) $whereCheck['statusProposta'] = $statusPropostaFiltro;
         if (!empty($nome)) $likeCheck['nome'] = $nome;
 
-        //echo "17:10:44 - <h3>Dump 98</h3> <br><br>" . var_dump($whereCheck); exit;					//<-------DEBUG
-        $propostas = $this->dbMaster->select('proposta_fgts', $whereCheck, $likeCheck);
-       // echo "14:46:43 - <h3>Dump 92</h3> <br><br>" . var_dump($propostas); exit;					//<-------DEBUG
+        $fasesRemove = [lookupFases('CAN')['faseName'], lookupFases('FIM')['faseName']];
+        $whereNotIn = array("whereNotIn" => array('statusProposta', $fasesRemove));
+        $likeCheck = array("likeCheck" => $likeCheck);
+
+        //TODO: ajustar WhereNotIn
+        $whereCheck['statusProposta <>'] = lookupFases('CAN')['faseName'];
+        $whereCheck['statusProposta !='] = lookupFases('FIM')['faseName'];
+
+        $propostas = $this->dbMaster->select('proposta_fgts', $whereCheck, $whereNotIn + $likeCheck);
 
         $dados['pageTitle'] = "FGTS - Listar propostas";
         $dados['propostas'] = $propostas;
@@ -71,18 +77,8 @@ class Fgts extends BaseController
         return redirect()->to('fgts-listar-propostas');
     }
 
-    public function atualizarStatusPropostaDisponivel($id_proposta){
-        $status = "PASSO 08 - PROPOSTA DISPONÍVEL";
-        $where = array('id_proposta' => $id_proposta);
-        $fields = array('statusProposta' => $status);
-        $fieldsDynamic = array('last_update' => 'current_timestamp()');
-        $this->dbMaster->update('proposta_fgts', $fields, $where, $fieldsDynamic);
-
-        return redirect()->to('fgts-listar-propostas');
-    }
-
-    public function atualizarStatusPropostaAdesao($id_proposta){
-        $status = "PASSO 08 - PENDENTE ADESAO";
+    public function atualizarStatusProposta($id_proposta, $idFase){
+        $status = lookupFases($idFase)['faseName'];
         $where = array('id_proposta' => $id_proposta);
         $fields = array('statusProposta' => $status);
         $fieldsDynamic = array('last_update' => 'current_timestamp()');
