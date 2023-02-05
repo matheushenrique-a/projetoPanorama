@@ -24,6 +24,86 @@ class Fgts extends BaseController
         $this->session = session();
     }
 
+    //retorna dados da proposta gravada
+    public function proposta_buscar($id_proposta)
+    {
+        return $this->dbMaster->select('proposta_fgts', array('id_proposta' => $id_proposta));
+    }
+
+    public function clienteDetalhes($id_proposta){
+        $data['pageTitle'] = "FGTS - Detalhes Cliente";
+        
+        $cliente = $this->proposta_buscar($id_proposta);
+        $ddd = $cliente['firstRow']->ddd;
+		$celular = $cliente['firstRow']->celular;
+        $to = limparMascaraTelefone("55".$ddd . substr($celular, 1));
+        
+        if ($cliente['existRecord']){
+			$data['id_proposta'] = $id_proposta;		
+			$data['verificador'] = $cliente['firstRow']->verificador;
+			$data['cpf']  = $cliente['firstRow']->cpf;
+			$data['dtaNascimento'] = $cliente['firstRow']->data_nascimento;
+			$data['email'] = $cliente['firstRow']->email;
+
+			$data['rdSexo'] = $cliente['firstRow']->sexo;
+			$data['nomeCompleto'] = $cliente['firstRow']->nome;
+			$data['nomeMae'] = $cliente['firstRow']->mae;
+			$data['documento_identificacao'] = $cliente['firstRow']->documento_identificacao;
+			$data['numero_documento'] = $cliente['firstRow']->numero_documento;
+			$data['uf_documento'] = $cliente['firstRow']->uf_documento;
+			$data['orgaoEmissor'] = $cliente['firstRow']->orgao_emissor;
+			$data['uf_nascimento'] = $cliente['firstRow']->uf_nascimento;
+			$data['cidade_nascimento'] = $cliente['firstRow']->cidade_nascimento;
+
+			$data['numeroCep'] = $cliente['firstRow']->cep;
+			$data['enderecoResidencia'] = $cliente['firstRow']->logradouro;
+			$data['numeroEndereco'] = $cliente['firstRow']->numero;
+			$data['complemento'] = $cliente['firstRow']->completo;
+			$data['bairroResidencia'] = $cliente['firstRow']->bairro;
+			$data['estadoResidencia'] = $cliente['firstRow']->uf_residencia;
+			$data['nomeCidadeResidencia'] = $cliente['firstRow']->cidade;
+
+			$data['rdTipoConta'] = $cliente['firstRow']->forma_credito;
+			$data['numBanco'] = $cliente['firstRow']->banco_numero;
+			$data['agencia'] = $cliente['firstRow']->agencia_numero;
+			$data['numDigitoAgencia'] = $cliente['firstRow']->agencia_digito;
+			$data['numConta'] = $cliente['firstRow']->conta_numero;
+			$data['numDigito'] = $cliente['firstRow']->conta_digito;
+
+			$data['ddd'] = $cliente['firstRow']->ddd;
+			$data['celular'] = $cliente['firstRow']->celular;
+			$data['nomePai'] = $cliente['firstRow']->pai;
+			$data['dataEmissao'] = $cliente['firstRow']->data_emissao;
+			$data['estadoCivil'] = $cliente['firstRow']->estado_civil;
+			$data['nomeConjuge'] = $cliente['firstRow']->conjuge;
+			$data['orgaoEmissor'] = $cliente['firstRow']->orgao_emissor;
+			$data['estadoEmissor'] = $cliente['firstRow']->uf_documento;
+			$data['parcelas'] = $cliente['firstRow']->parcelas;
+			$data['valorSolicitado'] = $cliente['firstRow']->valorSolicitado;
+			$data['seguroFGTS'] = $cliente['firstRow']->seguroFGTS;
+			
+			$statusProposta = $cliente['firstRow']->statusProposta;
+			$data['statusProposta'] = $statusProposta;
+			$offlineMode = $cliente['firstRow']->offlineMode;
+			$data['offlineMode'] = $offlineMode;
+
+        }
+
+        
+
+        $db =  $this->dbMaster->getDB();
+        $builder = $db->table('whatsapp_log');
+        $builder->Like('whatsapp_log.To', substr($to,-8)); //bug do número 9 no whatsapp
+        $builder->orLike('whatsapp_log.From', substr($to,-8));
+        $builder->orderBy('id', 'ASC');
+        $builder->select('*');
+		//echo $builder->getCompiledSelect();exit;
+		$chat = $this->dbMaster->resultfy($builder->get());
+        //echo '22:51:12 - <h3>Dump 91 da variável $chat </h3> <br><br>' . var_dump($chat); exit;					//<-------DEBUG
+        $data['chat'] = $chat;
+        return $this->loadpage('fgts/cliente_detalhes', $data);
+    }
+
     public function listarPropostas(){
 
         $fases = $this->fasesProposta();

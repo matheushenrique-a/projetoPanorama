@@ -270,11 +270,15 @@
 																	<a href="<?php echo FGTSUrl ?>fgts/proposta/<?php echo $row->verificador;?>/<?php echo createToken();?>" target="_blank" class="text-gray-800 text-hover-primary mb-1">
 																		<?php echo $row->nome;?>
 																	</a>
-																	<span><?php echo $row->email;?></span>
+																	<span><?php echo $row->email;?></span>	
 																</div>
 																<!--begin::User details-->
 															</td>
-															<td><?php echo $row->cpf;?></td>
+															<td>
+																<a href="<?php echo assetfolder;?>fgts-cliente-detalhes/<?php echo $row->id_proposta;?>" target="_blank" class="text-gray-800 text-hover-primary mb-1">	
+																	<?php echo $row->cpf;?>
+																</a>
+															</td>
 															<td><?php echo propostaValorParcel($row);?></td>
 															<td><a href="<?php echo FGTSUrl ?>fgts/proposta-status/<?php echo $row->verificador;?>/DEeDeqqew234deT45" target="_blank"><?php echo strtoupper($row->verificador);?></a></td>
 															<td><?php echo propostaOfflineModeFormat($row->offlineMode);?></td>
@@ -287,6 +291,7 @@
 																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-operador-owner/<?php echo $row->id_proposta;?>"  class="menu-link px-2"><i class="bi bi-people text-gray-400 fs-2"></i><span class="mx-2">Atuar Proposta</span></a></div>
 																		<div class="separator my-5"></div>
 																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/ADE" class="menu-link px-2"><i class="bi bi-bookmark-check-fill text-gray-400 fs-2"></i><span class="mx-2">Pendente Adesão</span></a></div>
+																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/INS" class="menu-link px-2"><i class="bi bi-bookmark-check-fill text-gray-400 fs-2"></i><span class="mx-2">Pendente Banco PAN</span></a></div>
 																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/DIS" class="menu-link px-2"><i class="bi bi-cash-coin text-gray-400 fs-2"></i><span class="mx-2">Proposta disponível</span></a></div>
 																		<div class="separator my-5"></div>
 																		<div class="menu-item px-3"><a href="<?php echo FGTSUrl ?>fgts/proposta-status/<?php echo $row->verificador;?>/<?php echo createToken();?>" class="menu-link px-2" target="_blank"><i class="bi bi-info-square-fill text-gray-400 fs-2"></i><span class="mx-2">Visualizar Proposta</span><span class="badge badge-light-danger ms-auto">5</span></a></div>
@@ -295,6 +300,7 @@
 																		<div class="menu-item px-3"><a href="<?php echo FGTSUrl ?>fgts/notificar-cliente/<?php echo $row->verificador;?>/<?php echo createToken();?>" class="menu-link px-2" target="_blank"><i class="fa-brands fa-whatsapp text-gray-400 fs-2"></i><span class="mx-2">Mudança Fase</span></a></div>
 																		<div class="menu-item px-3"><a href="<?php echo FGTSUrl ?>fgts/notificar-cliente-sem-compromisso/<?php echo $row->verificador;?>/<?php echo createToken();?>" class="menu-link px-2" target="_blank"><i class="fa-brands fa-whatsapp text-gray-400 fs-2"></i><span class="mx-2">Proposta s/ Compromisso</span></a></div>
 																		<div class="separator my-5"></div>
+																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/SAL" class="menu-link px-2"><i class="bi bi-bookmark-check-fill text-gray-400 fs-2"></i><span class="mx-2">Saldo Insuficiente</span></a></div>
 																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/CAN" class="menu-link px-2"><i class="bi bi-bookmark-check-fill text-gray-400 fs-2"></i><span class="mx-2">Cancelar Proposta</span></a></div>
 																	</div>
 																</div><!--end::PopUp menu-->

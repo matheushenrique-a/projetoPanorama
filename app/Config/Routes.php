@@ -41,6 +41,7 @@ $routes->get('/', 'Home::index');
 $routes->match(['get', 'post'], '/fgts-proposta-disponivel/(:any)/(:any)', 'Fgts\Fgts::atualizarStatusProposta/$1/$2');
 $routes->match(['get', 'post'], '/fgts-operador-owner/(:any)', 'Fgts\Fgts::atualizarStatusPropostaOperador/$1');
 $routes->match(['get', 'post'], '/fgts-listar-propostas', 'Fgts\Fgts::listarPropostas');
+$routes->match(['get', 'post'], '/fgts-cliente-detalhes/(:any)', 'Fgts\Fgts::clienteDetalhes/$1');
 
 //DATALAKE
 $routes->match(['get', 'post'], '/datalake-buscar', 'DataLake\DataLake::buscarCliente');

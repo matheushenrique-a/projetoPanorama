@@ -37,12 +37,15 @@ class dbMaster {
 		
 		if (!is_null($whereCheck)) $builder->where($whereCheck);
 		$builder->limit(100);
-		//if ($table == 'proposta_fgts'){ echo $builder->getCompiledSelect();exit;}
-		$result = $builder->get();
-		//echo "14:20:50 - <h3>Dump 21</h3> <br><br>" . var_dump($result->getResult()); exit;					//<-------DEBUG
+		return $this->resultfy($builder->get());
+	}
+
+	public function resultfy($result){
+		//echo '22:52:20 - <h3>Dump 33 da variável $this->db </h3> <br><br>' . var_dump($this->db); exit;					//<-------DEBUG
 		$returnData = array();
 		$returnData["num_rows"] = count($result->getResult());
-		$returnData["countAll"] = $this->db->table($table)->countAll();
+		//$returnData["countAll"] = $this->db->table($table)->countAll();
+		$returnData["countAll"] = $returnData["num_rows"];
 		$returnData["existRecord"] = $returnData["num_rows"] > 0 ? true : false;
 		$returnData["firstRow"] = isset($result->getResult()[0]) ? $result->getResult()[0] : null;
 		$returnData["result"] = $result;
