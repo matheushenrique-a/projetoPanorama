@@ -10,28 +10,52 @@
     }
 
     
+    function lookupFases($search){
+        $search = strtolower($search);
+        $data = getFases();
+  
+        //modo lookup
+        foreach ($data as $item){
+            if (strtolower($item['faseCode']) == $search){
+                return $item;
+            }
+        }
+    }
+
+	function lookupFasesByName($search){
+        $search = strtolower($search);
+        $data = getFases();
+  
+        //modo lookup
+        foreach ($data as $item){
+            if (strtolower($item['faseName']) == $search){
+                return $item;
+            }
+        }
+    }
+
     function getFases(){
         $data = array(
-            array('faseCode' => 'ZAP', 'faseName' => 'WHATSAPP'),
-            array('faseCode' => 'CRD', 'faseName' => 'CRIADA'),
-            array('faseCode' => 'SIO', 'faseName' => 'PASSO 02 - SIMULACAO ONLINE'),
-            array('faseCode' => 'SIF', 'faseName' => 'PASSO 02 - SIMULACAO OFFLINE'),
-            array('faseCode' => 'DAD', 'faseName' => 'PASSO 03 - DADOS PESSOAIS'),
-            array('faseCode' => 'DOC', 'faseName' => 'PASSO 03.1 - DADOS PESSOAIS DOCUMENTOS'),
-            array('faseCode' => 'RES', 'faseName' => 'PASSO 04 - DADOS RESIDENCIAIS'),
-            array('faseCode' => 'BAN', 'faseName' => 'PASSO 05 - DADOS BANCÁRIOS'),
-            array('faseCode' => 'REV', 'faseName' => 'PASSO 06 - REVISAO FINAL'),
-            array('faseCode' => 'GRF', 'faseName' => 'PASSO 07 - GRAVADA OFFLINE'),
-            array('faseCode' => 'GRO', 'faseName' => 'PASSO 07 - GRAVADA ONLINE'),
-            array('faseCode' => 'DIS', 'faseName' => 'PASSO 08 - PROPOSTA DISPONÍVEL'),
-            array('faseCode' => 'FOR', 'faseName' => 'PASSO 08 - FORMALIZAÇÃO FEITA'),
-            array('faseCode' => 'ADE', 'faseName' => 'PASSO 08 - PENDENTE ADESAO'),
-            array('faseCode' => 'INS', 'faseName' => 'PASSO 08 - PENDENTE INSTITUIÇÃO'),
-            array('faseCode' => 'SEL', 'faseName' => 'PASSO 08 - PROPOSTA SELECIONADA'),
-            array('faseCode' => 'CON', 'faseName' => 'PASSO 08 - APP CONFIGURADO'),
-            array('faseCode' => 'FIM', 'faseName' => 'PASSO 09 - PROPOSTA FINALIZADA'),
-            array('faseCode' => 'SAL', 'faseName' => 'PASSO 09 - SALDO INSUFICIENTE'),
-            array('faseCode' => 'CAN', 'faseName' => 'PASSO 09 - CANCELADA'),
+            array('faseCode' => 'ZAP', 'faseName' => 'WHATSAPP', 'color' => 'light-danger'),
+            array('faseCode' => 'CRD', 'faseName' => 'CRIADA', 'color' => 'light-danger'),
+            array('faseCode' => 'SIO', 'faseName' => 'PASSO 02 - SIMULACAO ONLINE', 'color' => 'light-danger'),
+            array('faseCode' => 'SIF', 'faseName' => 'PASSO 02 - SIMULACAO OFFLINE', 'color' => 'light-danger'),
+            array('faseCode' => 'DAD', 'faseName' => 'PASSO 03 - DADOS PESSOAIS', 'color' => 'light-danger'),
+            array('faseCode' => 'DOC', 'faseName' => 'PASSO 03.1 - DADOS PESSOAIS DOCUMENTOS', 'color' => 'light-danger'),
+            array('faseCode' => 'RES', 'faseName' => 'PASSO 04 - DADOS RESIDENCIAIS', 'color' => 'light-danger'),
+            array('faseCode' => 'BAN', 'faseName' => 'PASSO 05 - DADOS BANCÁRIOS', 'color' => 'light-danger'),
+            array('faseCode' => 'REV', 'faseName' => 'PASSO 06 - REVISAO FINAL', 'color' => 'light-danger'),
+            array('faseCode' => 'GRF', 'faseName' => 'PASSO 07 - GRAVADA OFFLINE', 'color' => 'light-info'),
+            array('faseCode' => 'GRO', 'faseName' => 'PASSO 07 - GRAVADA ONLINE', 'color' => 'light-success'),
+            array('faseCode' => 'DIS', 'faseName' => 'PASSO 08 - PROPOSTA DISPONÍVEL', 'color' => 'light-danger'),
+            array('faseCode' => 'FOR', 'faseName' => 'PASSO 08 - FORMALIZAÇÃO FEITA', 'color' => 'light-info'),
+            array('faseCode' => 'ADE', 'faseName' => 'PASSO 08 - PENDENTE ADESAO', 'color' => 'light-danger'),
+            array('faseCode' => 'INS', 'faseName' => 'PASSO 08 - PENDENTE INSTITUIÇÃO', 'color' => 'light-danger'),
+            array('faseCode' => 'SEL', 'faseName' => 'PASSO 08 - PROPOSTA SELECIONADA', 'color' => 'light-info'),
+            array('faseCode' => 'CON', 'faseName' => 'PASSO 08 - APP CONFIGURADO', 'color' => 'light-info'),
+            array('faseCode' => 'FIM', 'faseName' => 'PASSO 09 - PROPOSTA FINALIZADA', 'color' => 'light-success'),
+            array('faseCode' => 'SAL', 'faseName' => 'PASSO 09 - SALDO INSUFICIENTE', 'color' => 'light-success'),
+            array('faseCode' => 'CAN', 'faseName' => 'PASSO 09 - CANCELADA', 'color' => 'light-success'),
         );
         return $data;
     }
@@ -75,19 +99,6 @@
 		return $string ? implode(', ', $string) . ' atrás' : 'agora pouco';
 	}
    
-
-    function lookupFases($search){
-        $search = strtolower($search);
-        $data = getFases();
-  
-        //modo lookup
-        foreach ($data as $item){
-            if (strtolower($item['faseCode']) == $search){
-                return $item;
-            }
-        }
-    }
-
 	//verifica se numa string tem alguma das opções existentes
 	function checkStringOptions($body, $data, $exactCompare = false){
 		$result = false;

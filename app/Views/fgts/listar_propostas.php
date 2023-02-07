@@ -281,7 +281,7 @@
 															</td>
 															<td><?php echo propostaValorParcel($row);?></td>
 															<td><a href="<?php echo FGTSUrl ?>fgts/proposta-status/<?php echo $row->verificador;?>/DEeDeqqew234deT45" target="_blank"><?php echo strtoupper($row->verificador);?></a></td>
-															<td><?php echo propostaOfflineModeFormat($row->offlineMode);?></td>
+															<td><a href="<?php echo FGTSUrl ?>fgts/validar-cpf-api/<?php echo $row->id_proposta;?>/0/0/0/<?php echo createToken();?>" class="menu-link px-2" target="_blank"><?php echo propostaOfflineModeFormat($row->offlineMode);?></a></td>
 															<td><?php echo $row->OperadorCCenter;?></td>
 															<td><?php echo propostaFaseFormat($row->statusProposta);?></td>
 															<td>
@@ -293,6 +293,7 @@
 																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/ADE" class="menu-link px-2"><i class="bi bi-bookmark-check-fill text-gray-400 fs-2"></i><span class="mx-2">Pendente Adesão</span></a></div>
 																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/INS" class="menu-link px-2"><i class="bi bi-bookmark-check-fill text-gray-400 fs-2"></i><span class="mx-2">Pendente Banco PAN</span></a></div>
 																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/DIS" class="menu-link px-2"><i class="bi bi-cash-coin text-gray-400 fs-2"></i><span class="mx-2">Proposta disponível</span></a></div>
+																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/GRO" class="menu-link px-2"><i class="bi bi-cash-coin text-gray-400 fs-2"></i><span class="mx-2">Pendente formalização</span></a></div>
 																		<div class="separator my-5"></div>
 																		<div class="menu-item px-3"><a href="<?php echo FGTSUrl ?>fgts/proposta-status/<?php echo $row->verificador;?>/<?php echo createToken();?>" class="menu-link px-2" target="_blank"><i class="bi bi-info-square-fill text-gray-400 fs-2"></i><span class="mx-2">Visualizar Proposta</span><span class="badge badge-light-danger ms-auto">5</span></a></div>
 																		<div class="menu-item px-3"><a href="<?php echo FGTSUrl ?>fgts/proposta/<?php echo $row->verificador;?>/<?php echo createToken();?>" class="menu-link px-2" target="_blank"><i class="bi bi-pencil-square text-gray-400 fs-2"></i><span class="mx-2">Editar Proposta</span></a></div>
