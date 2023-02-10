@@ -95,7 +95,7 @@ class Fgts extends BaseController
         $builder = $db->table('whatsapp_log');
         $builder->Like('whatsapp_log.To', substr($to,-8)); //bug do número 9 no whatsapp
         $builder->orLike('whatsapp_log.From', substr($to,-8));
-        $builder->orderBy('id', 'ASC');
+        $builder->orderBy('id', 'DESC');
         $builder->select('*');
 		//echo $builder->getCompiledSelect();exit;
 		$chat = $this->dbMaster->resultfy($builder->get());

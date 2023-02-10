@@ -47,7 +47,7 @@
             array('faseCode' => 'REV', 'faseName' => 'PASSO 06 - REVISAO FINAL', 'color' => 'light-danger'),
             array('faseCode' => 'GRF', 'faseName' => 'PASSO 07 - GRAVADA OFFLINE', 'color' => 'light-info'),
             array('faseCode' => 'GRO', 'faseName' => 'PASSO 07 - GRAVADA ONLINE', 'color' => 'light-success'),
-            array('faseCode' => 'DIS', 'faseName' => 'PASSO 08 - PROPOSTA DISPONÍVEL', 'color' => 'light-danger'),
+            array('faseCode' => 'DIS', 'faseName' => 'PASSO 08 - PROPOSTA DISPONÍVEL', 'color' => 'light-success'),
             array('faseCode' => 'FOR', 'faseName' => 'PASSO 08 - FORMALIZAÇÃO FEITA', 'color' => 'light-info'),
             array('faseCode' => 'ADE', 'faseName' => 'PASSO 08 - PENDENTE ADESAO', 'color' => 'light-danger'),
             array('faseCode' => 'INS', 'faseName' => 'PASSO 08 - PENDENTE INSTITUIÇÃO', 'color' => 'light-danger'),
@@ -55,6 +55,7 @@
             array('faseCode' => 'CON', 'faseName' => 'PASSO 08 - APP CONFIGURADO', 'color' => 'light-info'),
             array('faseCode' => 'FIM', 'faseName' => 'PASSO 09 - PROPOSTA FINALIZADA', 'color' => 'light-success'),
             array('faseCode' => 'SAL', 'faseName' => 'PASSO 09 - SALDO INSUFICIENTE', 'color' => 'light-success'),
+            array('faseCode' => 'NIV', 'faseName' => 'PASSO 09 - ANIVERSÁRIO PRÓXIMO', 'color' => 'light-success'),
             array('faseCode' => 'CAN', 'faseName' => 'PASSO 09 - CANCELADA', 'color' => 'light-success'),
         );
         return $data;
