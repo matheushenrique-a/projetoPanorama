@@ -89,8 +89,6 @@ class Fgts extends BaseController
 
         }
 
-        
-
         $db =  $this->dbMaster->getDB();
         $builder = $db->table('whatsapp_log');
         $builder->Like('whatsapp_log.To', substr($to,-8)); //bug do número 9 no whatsapp
@@ -105,7 +103,6 @@ class Fgts extends BaseController
     }
 
     public function listarPropostas(){
-
         $fases = $this->fasesProposta();
         $users = $this->listaOPeradores();
         //echo "22:00:48 - <h3>Dump 36</h3> <br><br>" . var_dump($this->session->session_id); exit;					//<-------DEBUG
@@ -115,24 +112,43 @@ class Fgts extends BaseController
         $statusPropostaFiltro = $this->getpost('statusPropostaFiltro');
         $offlineMode = $this->getpost('offlineMode');
         $operadorFiltro = $this->getpost('operadorFiltro');
-
+        
+        $flag = $this->getpost('flag',true);
+        $flag = (empty($flag) ? 'ACAO' : $flag);
+        
         $whereCheck = [];
         $likeCheck = [];
+        $whereNotIn = [];
+        $whereIn = [];
+        
         if (!empty($cpf)) $whereCheck['cpf'] = $cpf;
         if (!empty($offlineMode)) $whereCheck['offlineMode'] = $offlineMode;
         if (!empty($verificador)) $likeCheck['verificador'] = $verificador;
         if (!empty($statusPropostaFiltro)) $whereCheck['statusProposta'] = $statusPropostaFiltro;
         if (!empty($nome)) $likeCheck['nome'] = $nome;
 
-        $fasesRemove = [lookupFases('CAN')['faseName'], lookupFases('FIM')['faseName']];
-        $whereNotIn = array("whereNotIn" => array('statusProposta', $fasesRemove));
+        if ($flag == "ADESAO"){
+            $fasesAdd = getFasesCategory('funil');
+            $whereIn = array("whereIn" => array('statusProposta', $fasesAdd)); 
+        } else if ($flag == "ACAO"){
+            $fasesAdd = getFasesCategory('acao');
+            $whereIn = array("whereIn" => array('statusProposta', $fasesAdd)); 
+        } else if ($flag == "OCULTAS"){
+            $fasesAdd = getFasesCategory('fim');
+            $whereIn = array("whereIn" => array('statusProposta', $fasesAdd)); 
+            // $fasesRemove = [lookupFases('CAN')['faseName'], lookupFases('FIM')['faseName']];
+            // $whereNotIn = array("whereNotIn" => array('statusProposta', $fasesRemove));        
+        } else {
+
+        }
+        
         $likeCheck = array("likeCheck" => $likeCheck);
 
         //TODO: ajustar WhereNotIn
-        $whereCheck['statusProposta <>'] = lookupFases('CAN')['faseName'];
-        $whereCheck['statusProposta !='] = lookupFases('FIM')['faseName'];
+        //$whereCheck['statusProposta <>'] = lookupFases('CAN')['faseName'];
+        //$whereCheck['statusProposta !='] = lookupFases('FIM')['faseName'];
 
-        $propostas = $this->dbMaster->select('proposta_fgts', $whereCheck, $whereNotIn + $likeCheck);
+        $propostas = $this->dbMaster->select('proposta_fgts', $whereCheck, $whereNotIn + $likeCheck + $whereIn);
 
         $dados['pageTitle'] = "FGTS - Listar propostas";
         $dados['propostas'] = $propostas;
@@ -144,6 +160,7 @@ class Fgts extends BaseController
         $dados['operadorFiltro'] = $operadorFiltro;
         $dados['fases'] = $fases;
         $dados['users'] = $users;
+        $dados['flag'] = $flag;
         
         return $this->loadpage('fgts/listar_propostas', $dados);
     }

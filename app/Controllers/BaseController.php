@@ -9,6 +9,7 @@ use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use App\Libraries\dbMaster;
+use Config\Services;
 
 /**
  * Class BaseController
@@ -91,11 +92,21 @@ abstract class BaseController extends Controller
 
 		if ($aux=="") {
 			if (array_key_exists  ( $valor  , $_GET)) {
-					$aux = trim($_GET[$valor]);
+                $aux = trim($_GET[$valor]);
 			} else {
 				$aux =   '';
 			}
 		}
+
+		//Depois tenta pegar via Cookie
+		if ($cookie_persist) {
+            helper('cookie');
+			if ($aux=="") {
+                $aux = Services::request()->getCookie($valor);	
+			} else {
+                Services::response()->setCookie($valor, $aux);
+			}
+		}        
         		
 		return htmlspecialchars($aux, ENT_QUOTES);
 	}

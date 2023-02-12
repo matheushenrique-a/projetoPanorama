@@ -36,30 +36,49 @@
 
     function getFases(){
         $data = array(
-            array('faseCode' => 'ZAP', 'faseName' => 'WHATSAPP', 'color' => 'light-danger'),
-            array('faseCode' => 'CRD', 'faseName' => 'CRIADA', 'color' => 'light-danger'),
-            array('faseCode' => 'SIO', 'faseName' => 'PASSO 02 - SIMULACAO ONLINE', 'color' => 'light-danger'),
-            array('faseCode' => 'SIF', 'faseName' => 'PASSO 02 - SIMULACAO OFFLINE', 'color' => 'light-danger'),
-            array('faseCode' => 'DAD', 'faseName' => 'PASSO 03 - DADOS PESSOAIS', 'color' => 'light-danger'),
-            array('faseCode' => 'DOC', 'faseName' => 'PASSO 03.1 - DADOS PESSOAIS DOCUMENTOS', 'color' => 'light-danger'),
-            array('faseCode' => 'RES', 'faseName' => 'PASSO 04 - DADOS RESIDENCIAIS', 'color' => 'light-danger'),
-            array('faseCode' => 'BAN', 'faseName' => 'PASSO 05 - DADOS BANCÁRIOS', 'color' => 'light-danger'),
-            array('faseCode' => 'REV', 'faseName' => 'PASSO 06 - REVISAO FINAL', 'color' => 'light-danger'),
-            array('faseCode' => 'GRF', 'faseName' => 'PASSO 07 - GRAVADA OFFLINE', 'color' => 'light-info'),
-            array('faseCode' => 'GRO', 'faseName' => 'PASSO 07 - GRAVADA ONLINE', 'color' => 'light-success'),
-            array('faseCode' => 'DIS', 'faseName' => 'PASSO 08 - PROPOSTA DISPONÍVEL', 'color' => 'light-success'),
-            array('faseCode' => 'FOR', 'faseName' => 'PASSO 08 - FORMALIZAÇÃO FEITA', 'color' => 'light-info'),
-            array('faseCode' => 'ADE', 'faseName' => 'PASSO 08 - PENDENTE ADESAO', 'color' => 'light-danger'),
-            array('faseCode' => 'INS', 'faseName' => 'PASSO 08 - PENDENTE INSTITUIÇÃO', 'color' => 'light-danger'),
-            array('faseCode' => 'SEL', 'faseName' => 'PASSO 08 - PROPOSTA SELECIONADA', 'color' => 'light-info'),
-            array('faseCode' => 'CON', 'faseName' => 'PASSO 08 - APP CONFIGURADO', 'color' => 'light-info'),
-            array('faseCode' => 'FIM', 'faseName' => 'PASSO 09 - PROPOSTA FINALIZADA', 'color' => 'light-success'),
-            array('faseCode' => 'SAL', 'faseName' => 'PASSO 09 - SALDO INSUFICIENTE', 'color' => 'light-success'),
-            array('faseCode' => 'NIV', 'faseName' => 'PASSO 09 - ANIVERSÁRIO PRÓXIMO', 'color' => 'light-success'),
-            array('faseCode' => 'CAN', 'faseName' => 'PASSO 09 - CANCELADA', 'color' => 'light-success'),
+            array('faseCode' => 'ZAP', 'faseName' => 'WHATSAPP', 'color' => 'light-danger', 'categoria' => 'funil'),
+            array('faseCode' => 'CRD', 'faseName' => 'CRIADA', 'color' => 'light-danger', 'categoria' => 'acao'),
+            array('faseCode' => 'SIO', 'faseName' => 'PASSO 02 - SIMULACAO ONLINE', 'color' => 'light-danger', 'categoria' => 'acao'),
+            array('faseCode' => 'SIF', 'faseName' => 'PASSO 02 - SIMULACAO OFFLINE', 'color' => 'light-danger', 'categoria' => 'acao'),
+            array('faseCode' => 'DAD', 'faseName' => 'PASSO 03 - DADOS PESSOAIS', 'color' => 'light-danger', 'categoria' => 'acao'),
+            array('faseCode' => 'DOC', 'faseName' => 'PASSO 03.1 - DADOS PESSOAIS DOCUMENTOS', 'color' => 'light-danger', 'categoria' => 'acao'),
+            array('faseCode' => 'RES', 'faseName' => 'PASSO 04 - DADOS RESIDENCIAIS', 'color' => 'light-danger', 'categoria' => 'acao'),
+            array('faseCode' => 'BAN', 'faseName' => 'PASSO 05 - DADOS BANCÁRIOS', 'color' => 'light-danger', 'categoria' => 'acao'),
+            array('faseCode' => 'REV', 'faseName' => 'PASSO 06 - REVISAO FINAL', 'color' => 'light-danger', 'categoria' => 'acao'),
+            array('faseCode' => 'CAD', 'faseName' => 'PASSO 06 - CADASTRO PENDENTE', 'color' => 'light-danger', 'categoria' => 'acao'),
+            array('faseCode' => 'GRF', 'faseName' => 'PASSO 07 - GRAVADA OFFLINE', 'color' => 'light-info', 'categoria' => 'acao'),
+            array('faseCode' => 'GRO', 'faseName' => 'PASSO 07 - GRAVADA ONLINE', 'color' => 'light-success', 'categoria' => 'acao'),
+            array('faseCode' => 'DIS', 'faseName' => 'PASSO 08 - PROPOSTA DISPONÍVEL', 'color' => 'light-success', 'categoria' => 'acao'),
+            array('faseCode' => 'FOR', 'faseName' => 'PASSO 08 - FORMALIZAÇÃO FEITA', 'color' => 'light-info', 'categoria' => 'acao'),
+            array('faseCode' => 'CNH', 'faseName' => 'PASSO 08 - PENDENTE DOCUMENTO', 'color' => 'light-info', 'categoria' => 'acao'),
+            array('faseCode' => 'CCN', 'faseName' => 'PASSO 08 - BANCO INVÁLIDO', 'color' => 'light-info', 'categoria' => 'acao'),
+            array('faseCode' => 'ADE', 'faseName' => 'PASSO 08 - PENDENTE ADESAO', 'color' => 'light-danger', 'categoria' => 'funil'),
+            array('faseCode' => 'INS', 'faseName' => 'PASSO 08 - PENDENTE INSTITUIÇÃO', 'color' => 'light-danger', 'categoria' => 'funil'),
+            array('faseCode' => 'SEL', 'faseName' => 'PASSO 08 - PROPOSTA SELECIONADA', 'color' => 'light-info', 'categoria' => 'acao'),
+            array('faseCode' => 'CON', 'faseName' => 'PASSO 08 - APP CONFIGURADO', 'color' => 'light-info', 'categoria' => 'acao'),
+            array('faseCode' => 'FIM', 'faseName' => 'PASSO 09 - PROPOSTA FINALIZADA', 'color' => 'light-success', 'categoria' => 'fim'),
+            array('faseCode' => 'SAL', 'faseName' => 'PASSO 09 - SALDO INSUFICIENTE', 'color' => 'light-success', 'categoria' => 'fim'),
+            array('faseCode' => 'NIV', 'faseName' => 'PASSO 09 - ANIVERSÁRIO PRÓXIMO', 'color' => 'light-success', 'categoria' => 'fim'),
+            array('faseCode' => 'CAN', 'faseName' => 'PASSO 09 - CANCELADA', 'color' => 'light-success', 'categoria' => 'fim'),
         );
         return $data;
     }
+
+	function getFasesCategory($category){
+		$category = strtolower($category);
+		$fases = getFases();
+		
+		$fasesResult = [];
+
+		foreach ($fases as $key => $value) {
+			if (strtolower($value["categoria"]) == $category){
+				$fasesResult[] = $value["faseName"];
+			}
+		}
+
+        return $fasesResult;
+    }
+
 
     // '1980-04-04T06:00:00'
 	function dataUsPtLong($dateEntry){

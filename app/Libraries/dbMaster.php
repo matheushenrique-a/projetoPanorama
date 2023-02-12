@@ -27,6 +27,9 @@ class dbMaster {
 			if (array_key_exists('likeCheck', $parameters)) {
 				$builder->like($parameters['likeCheck']);
 			}
+			if (array_key_exists('whereIn', $parameters)) {
+				$builder->whereIn($parameters['whereIn'][0], $parameters['whereIn'][1]);
+			}
 		}
 
 		// if (!is_null($parameters)){

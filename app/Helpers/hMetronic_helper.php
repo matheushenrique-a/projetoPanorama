@@ -1,7 +1,7 @@
 <?php 
 
 function propostaFaseFormat($texto){
-    return '<span class="badge py-3 px-4 fs-7 badge-' . lookupFasesByName($texto)['color'] . '">' . $texto . '</span>';
+    return '<span class="badge py-3 px-4 fs-7 badge-' . lookupFasesByName($texto)['color'] . '">' . substr($texto, strpos($texto, "- ")+1) . '</span>';
     
     
     // if ($texto == "PASSO 07 - GRAVADA OFFLINE") {
