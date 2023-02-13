@@ -39,7 +39,7 @@ class dbMaster {
 		// }
 		
 		if (!is_null($whereCheck)) $builder->where($whereCheck);
-		$builder->limit(100);
+		$builder->limit(500);
 		return $this->resultfy($builder->get());
 	}
 
