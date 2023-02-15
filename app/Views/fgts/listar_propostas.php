@@ -161,24 +161,36 @@
 															<input type="text" class="form-control" placeholder="" name="verificador" value="<?php echo $verificador;?>" />
 														</div>													
 													</div>
-													<div class="mb-3">
-														<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Operador:</label>
-														<div class="d-flex align-items-center position-relative my-1 mx-3">
-															<select class="form-select form-control-solid" aria-label="" name="operadorFiltro">
-																<?php
-																	echo '<option value="" ' .  ($operadorFiltro == "" ? 'selected' : '') . '> TODOS </option>';
-																	foreach ($users["result"]->getResult() as $row){
-																		echo '<option value="' . $row->userId . '" ' .  ($operadorFiltro == $row->userId ? 'selected' : '') . '>' . $row->nickname . '</option>';
-																	}
-																;?>
-															</select>
-														</div>												
+													<div class="d-flex align-items-center position-relative my-1 mx-3">
+														<div class="mb-3">
+															<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Telefone:</label>
+															<input type="text" class="form-control" placeholder="" name="celular" value="<?php echo $celular;?>" />
+														</div>													
+													</div>
+													<div class="d-flex align-items-center position-relative my-1 mx-3">
+														<div class="mb-3">
+															<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Email:</label>
+															<input type="text" class="form-control" placeholder="" name="email" value="<?php echo $email;?>" />
+														</div>													
 													</div>
 												</div>
 												<!--begin::Card title-->
 												<div class="card-title">
 													<div class="d-flex align-items-center position-relative my-1">
 														<div class="mb-3  mx-3">
+															<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Operador:</label>
+															<div class="d-flex align-items-center position-relative my-1">
+																<select class="form-select form-control-solid" aria-label="" name="operadorFiltro">
+																	<?php
+																		echo '<option value="" ' .  ($operadorFiltro == "" ? 'selected' : '') . '> TODOS </option>';
+																		foreach ($users["result"]->getResult() as $row){
+																			echo '<option value="' . $row->userId . '" ' .  ($operadorFiltro == $row->userId ? 'selected' : '') . '>' . $row->nickname . '</option>';
+																		}
+																	;?>
+																</select>
+															</div>												
+														</div>
+														<div class="mb-3 mx-3">
 															<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0"> Status:</label>
 															<div class="d-flex align-items-center position-relative my-1">
 																<select class="form-select form-control-solid" aria-label="" name="statusPropostaFiltro">
@@ -324,6 +336,7 @@
 																		<div class="separator my-5"></div>
 																		<div class="menu-item px-3"><a href="<?php echo FGTSUrl ?>fgts/notificar-cliente/<?php echo $row->verificador;?>/<?php echo createToken();?>" class="menu-link px-2" target="_blank"><i class="fa-brands fa-whatsapp text-gray-400 fs-2"></i><span class="mx-2">Mudança Fase</span></a></div>
 																		<div class="menu-item px-3"><a href="<?php echo FGTSUrl ?>fgts/notificar-cliente-sem-compromisso/<?php echo $row->verificador;?>/<?php echo createToken();?>" class="menu-link px-2" target="_blank"><i class="fa-brands fa-whatsapp text-gray-400 fs-2"></i><span class="mx-2">Sem Compromisso</span></a></div>
+																		<div class="menu-item px-3"><a href="<?php echo FGTSUrl ?>fgts/enviar-oferta-indicacao/<?php echo $row->verificador;?>/<?php echo createToken();?>" class="menu-link px-2" target="_blank"><i class="fa-brands fa-whatsapp text-gray-400 fs-2"></i><span class="mx-2">Oferta iFood</span></a></div>
 																		<div class="separator my-5"></div>
 																		<div class="menu-item px-3"><a href="<?php echo FGTSUrl ?>fgts/sacar-fgts/<?php echo $row->id_proposta;?>/<?php echo createToken();?>" class="menu-link px-2" target="_blank"><i class="bi-cash-coin text-gray-400 text-gray-400 fs-2"></i><span class="mx-2">Sacar FGTS</span></a></div>
 																	</div>

@@ -4,6 +4,11 @@ namespace App\Libraries;
 
 class dbMaster {
 	protected $db;
+	protected $orderby;
+
+
+	public function setOrderBy($value) {$this->orderby = $value;}
+	public function getOrderBy() {return $this->orderby;}
 
 	public function __construct($dbOption = null){
 
@@ -20,6 +25,10 @@ class dbMaster {
 	{
 		$builder = $this->db->table($table);
 
+		if (!is_null($this->orderby)) {
+			$builder->orderBy($this->orderby[0], $this->orderby[1]);
+		}
+
 		if (!is_null($parameters)) {
 			if (array_key_exists('whereNotIn', $parameters)) {
 				$builder->whereNotIn($parameters['whereNotIn'][0], $parameters['whereNotIn'][1]);
@@ -31,6 +40,13 @@ class dbMaster {
 				$builder->whereIn($parameters['whereIn'][0], $parameters['whereIn'][1]);
 			}
 		}
+
+		//echo '13:52:09 - <h3>Dump 72 da variável $this->OrderBy </h3> <br><br>' . var_dump($this->orderby); exit;					//<-------DEBUG
+		// if (is_null($this->OrderBy)){
+		// 	echo "13:49:44 - Breakpoint 2"; exit;					//<-------DEBUG
+		// } else {
+		// 	echo "13:49:47 - Breakpoint 5"; exit;					//<-------DEBUG
+		// }
 
 		// if (!is_null($parameters)){
 		// 	if (count($parameters) > 0){

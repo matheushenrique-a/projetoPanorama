@@ -108,7 +108,9 @@ class Fgts extends BaseController
         //echo "22:00:48 - <h3>Dump 36</h3> <br><br>" . var_dump($this->session->session_id); exit;					//<-------DEBUG
         $cpf = $this->getpost('txtCPF');
         $verificador = $this->getpost('verificador');
+        $celular = $this->getpost('celular');
         $nome = $this->getpost('txtNome');
+        $email = $this->getpost('email');
         $statusPropostaFiltro = $this->getpost('statusPropostaFiltro');
         $offlineMode = $this->getpost('offlineMode');
         $operadorFiltro = $this->getpost('operadorFiltro');
@@ -124,12 +126,15 @@ class Fgts extends BaseController
         if (!empty($cpf)) $whereCheck['cpf'] = $cpf;
         if (!empty($offlineMode)) $whereCheck['offlineMode'] = $offlineMode;
         if (!empty($verificador)) $likeCheck['verificador'] = $verificador;
+        if (!empty($celular)) $likeCheck['celular'] = $celular;
         if (!empty($statusPropostaFiltro)) $whereCheck['statusProposta'] = $statusPropostaFiltro;
         if (!empty($nome)) $likeCheck['nome'] = $nome;
+        if (!empty($email)) $likeCheck['email'] = $email;
 
         if ($flag == "ADESAO"){
             $fasesAdd = getFasesCategory('funil');
             $whereIn = array("whereIn" => array('statusProposta', $fasesAdd)); 
+            $this->dbMaster->setOrderBy(array('id_proposta', 'DESC'));
         } else if ($flag == "ACAO"){
             $fasesAdd = getFasesCategory('acao');
             $whereIn = array("whereIn" => array('statusProposta', $fasesAdd)); 
@@ -144,10 +149,6 @@ class Fgts extends BaseController
         
         $likeCheck = array("likeCheck" => $likeCheck);
 
-        //TODO: ajustar WhereNotIn
-        //$whereCheck['statusProposta <>'] = lookupFases('CAN')['faseName'];
-        //$whereCheck['statusProposta !='] = lookupFases('FIM')['faseName'];
-
         $propostas = $this->dbMaster->select('proposta_fgts', $whereCheck, $whereNotIn + $likeCheck + $whereIn);
 
         $dados['pageTitle'] = "FGTS - Listar propostas";
@@ -156,6 +157,8 @@ class Fgts extends BaseController
         $dados['nome'] = $nome;
         $dados['offlineMode'] = $offlineMode;
         $dados['verificador'] = $verificador;
+        $dados['celular'] = $celular;
+        $dados['email'] = $email;
         $dados['statusPropostaFiltro'] = $statusPropostaFiltro;
         $dados['operadorFiltro'] = $operadorFiltro;
         $dados['fases'] = $fases;
