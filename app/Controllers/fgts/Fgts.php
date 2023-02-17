@@ -140,6 +140,7 @@ class Fgts extends BaseController
             $whereIn = array("whereIn" => array('statusProposta', $fasesAdd)); 
         } else if ($flag == "OCULTAS"){
             $fasesAdd = getFasesCategory('fim');
+            $this->dbMaster->setOrderBy(array('id_proposta', 'DESC'));
             $whereIn = array("whereIn" => array('statusProposta', $fasesAdd)); 
             // $fasesRemove = [lookupFases('CAN')['faseName'], lookupFases('FIM')['faseName']];
             // $whereNotIn = array("whereNotIn" => array('statusProposta', $fasesRemove));        
