@@ -134,13 +134,11 @@ class Fgts extends BaseController
         if ($flag == "ADESAO"){
             $fasesAdd = getFasesCategory('funil');
             $whereIn = array("whereIn" => array('statusProposta', $fasesAdd)); 
-            $this->dbMaster->setOrderBy(array('id_proposta', 'DESC'));
         } else if ($flag == "ACAO"){
             $fasesAdd = getFasesCategory('acao');
             $whereIn = array("whereIn" => array('statusProposta', $fasesAdd)); 
         } else if ($flag == "OCULTAS"){
             $fasesAdd = getFasesCategory('fim');
-            $this->dbMaster->setOrderBy(array('id_proposta', 'DESC'));
             $whereIn = array("whereIn" => array('statusProposta', $fasesAdd)); 
             // $fasesRemove = [lookupFases('CAN')['faseName'], lookupFases('FIM')['faseName']];
             // $whereNotIn = array("whereNotIn" => array('statusProposta', $fasesRemove));        
@@ -150,6 +148,7 @@ class Fgts extends BaseController
         
         $likeCheck = array("likeCheck" => $likeCheck);
 
+        $this->dbMaster->setOrderBy(array('id_proposta', 'DESC'));
         $propostas = $this->dbMaster->select('proposta_fgts', $whereCheck, $whereNotIn + $likeCheck + $whereIn);
 
         $dados['pageTitle'] = "FGTS - Listar propostas";
