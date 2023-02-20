@@ -228,15 +228,25 @@
 																?>
 																</select>													
 															</div>								
-														</div>												
-														<div class="mb-3  mx-3">
-															<div class="d-flex align-items-center position-relative my-1 mt-8">
-															<button type="submit" class="btn btn-primary" >Buscar</button>										
+														</div>
+													</div>
+													<!--end::Card toolbar-->
+												</div>
+												<div class="card-title">
+													<div class="d-flex align-items-center position-relative my-1">
+													<div class="mb-0 mx-3">
+														<div class="d-flex align-items-center position-relative my-1 mt-0 mb-0">
+																<button type="submit" class="btn btn-primary" >Buscar Proposta</button>										
+															</div>
+														</div>													
+														<div class="mb-0 mx-3">
+															<div class="d-flex align-items-center position-relative my-1 mt-0 mb-0">
+																<a href="<?php echo FGTSUrl;?>fgts/batch-check/DEeDeqqew234deT45" target="_blank" class="btn btn-info">Batch check</a>										
 															</div>
 														</div>													
 													</div>
 													<!--end::Card toolbar-->
-												</div>
+												</div>												
 											</div>
 										</form>
 										<!--end::Form-->										
