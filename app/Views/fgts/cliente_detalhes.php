@@ -50,12 +50,32 @@
 								<div id="kt_app_content_container" class="app-container container-xxl">
 								<div class="row g-5 g-xl-8">
 										<div class="col-xl-6">
-											<form id="frmDataLake" class="form" action="<?php echo assetfolder;?>vanguard-decode" method="POST">
+											<form id="frmDataLake" class="form" action="<?php echo assetfolder;?>fgts-cliente-detalhes/<?php echo $id_proposta;?>" method="POST">
 												<!-- Inicio: detalhes -->
 												<div class="flex-lg-row-fluid">
 													<!--begin::Messenger-->
 													<div class="card" id="kt_chat_messenger">
 														<!--begin::Accordion-->
+														<div class="accordion" id="kt_accordion_1  ms-lg-7 ms-xl-10">
+															<div class="accordion-item">
+																<h2 class="accordion-header" id="kt_accordion_1_header_1">
+																	<button class="accordion-button fs-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#kt_accordion_1_body_133" aria-expanded="true" aria-controls="kt_accordion_1_body_1">
+																		HISTÓRICO OCORRÊNCIAS
+																	</button>
+																</h2>
+																<div id="kt_accordion_1_body_133" class="accordion-collapse collapse show" aria-labelledby="kt_accordion_1_header_1" data-bs-parent="#kt_accordion_1">
+																	<div class="accordion-body">
+																		<div class="input-group">
+																			<span class="input-group-text">Ocorrências</span>
+																			<textarea class="form-control" aria-label="Ocorrências" rows=6 name="ocorrencias"><?php echo $ocorrencias;?></textarea>
+																		</div>
+																		<div class="d-flex align-items-center position-relative my-1 mt-5 mb-0">
+																			<button type="submit" class="btn btn-primary" name="btnSalvar" value="btnSalvar">Salvar</button>										
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
 														<div class="accordion" id="kt_accordion_1  ms-lg-7 ms-xl-10">
 															<div class="accordion-item">
 																<h2 class="accordion-header" id="kt_accordion_1_header_1">

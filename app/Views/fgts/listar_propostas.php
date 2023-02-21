@@ -235,7 +235,7 @@
 												<div class="card-title">
 													<div class="d-flex align-items-center position-relative my-1">
 													<div class="mb-0 mx-3">
-														<div class="d-flex align-items-center position-relative my-1 mt-0 mb-0">
+															<div class="d-flex align-items-center position-relative my-1 mt-0 mb-0">
 																<button type="submit" class="btn btn-primary" >Buscar Proposta</button>										
 															</div>
 														</div>													
@@ -314,8 +314,11 @@
 															</td>
 															<td><?php echo $row->ddd . $row->celular;?></td>
 															<td><?php echo time_elapsed_string($row->last_update)?></td>
-															<td><a href="<?php echo FGTSUrl ?>fgts/validar-cpf-api/<?php echo $row->id_proposta;?>/0/0/0/1/<?php echo createToken();?>" class="menu-link px-2" target="_blank"><?php echo propostaOfflineModeFormat($row->offlineMode);?></a></td>
-															<td><?php echo $row->OperadorCCenter;?></td>
+															<td>
+																<a href="<?php echo FGTSUrl ?>fgts/validar-cpf-api/<?php echo $row->id_proposta;?>/0/0/0/1/<?php echo createToken();?>" class="menu-link px-2" target="_blank"><?php echo propostaOfflineModeFormat($row->offlineMode);?></a>
+																<span></span>	
+															</td>
+															<td><?php echo $row->OperadorCCenter;?> <i class="bi bi-chat-dots fs-4" title="<?php echo $row->ocorrencias;?>"></i></td>
 															<td><?php echo propostaFaseFormat($row->statusProposta);?></td>
 															<td>
 																<div><!--begin::PopUp menu-->
@@ -352,6 +355,7 @@
 																		<div class="menu-item px-3"><a href="<?php echo FGTSUrl ?>fgts/enviar-oferta-indicacao/<?php echo $row->verificador;?>/<?php echo createToken();?>" class="menu-link px-2" target="_blank"><i class="fa-brands fa-whatsapp text-gray-400 fs-2"></i><span class="mx-2">Oferta iFood</span></a></div>
 																		<div class="separator my-5"></div>
 																		<div class="menu-item px-3"><a href="<?php echo FGTSUrl ?>fgts/sacar-fgts/<?php echo $row->id_proposta;?>/<?php echo createToken();?>" class="menu-link px-2" target="_blank"><i class="bi-cash-coin text-gray-400 text-gray-400 fs-2"></i><span class="mx-2">Sacar FGTS</span></a></div>
+																		<div class="menu-item px-3"><a href="<?php echo FGTSUrl ?>fgts/gerar-link-formalizacao/<?php echo $row->id_proposta;?>/<?php echo createToken();?>" class="menu-link px-2" target="_blank"><i class="bi-cash-coin text-gray-400 text-gray-400 fs-2"></i><span class="mx-2">Link Formalização</span></a></div>
 																	</div>
 																</div><!--end::PopUp menu-->																
 															</td>

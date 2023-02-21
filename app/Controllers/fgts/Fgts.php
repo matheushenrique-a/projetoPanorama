@@ -32,18 +32,28 @@ class Fgts extends BaseController
 
     public function clienteDetalhes($id_proposta){
         $data['pageTitle'] = "FGTS - Detalhes Cliente";
-        
+
+        $ocorrencias = $this->getpost('ocorrencias');
+        $btnSalvar = $this->getpost('btnSalvar');
+        if (!empty($btnSalvar)){
+            $where = array('id_proposta' => $id_proposta);
+            $fields = array('ocorrencias' => $ocorrencias);
+            $fieldsDynamic = array('last_update' => 'current_timestamp()');
+            $this->dbMaster->update('proposta_fgts', $fields, $where, $fieldsDynamic);
+        }
+
         $cliente = $this->proposta_buscar($id_proposta);
         $ddd = $cliente['firstRow']->ddd;
 		$celular = $cliente['firstRow']->celular;
         $to = limparMascaraTelefone("55".$ddd . substr($celular, 1));
-        
+       
         if ($cliente['existRecord']){
-			$data['id_proposta'] = $id_proposta;		
+			$data['id_proposta'] = $id_proposta;	
 			$data['verificador'] = $cliente['firstRow']->verificador;
 			$data['cpf']  = $cliente['firstRow']->cpf;
 			$data['dtaNascimento'] = $cliente['firstRow']->data_nascimento;
 			$data['email'] = $cliente['firstRow']->email;
+			$data['ocorrencias'] = $cliente['firstRow']->ocorrencias;
 
 			$data['rdSexo'] = $cliente['firstRow']->sexo;
 			$data['nomeCompleto'] = $cliente['firstRow']->nome;
