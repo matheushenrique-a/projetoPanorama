@@ -36,7 +36,7 @@
 
     function getFases(){
         $data = array(
-            array('faseCode' => 'ZAP', 'faseName' => 'WHATSAPP', 'color' => 'light-danger', 'categoria' => 'funil'),
+            array('faseCode' => 'ZAP', 'faseName' => 'WHATSAPP', 'color' => 'light-danger', 'categoria' => 'fim'),
             array('faseCode' => 'CRD', 'faseName' => 'CRIADA', 'color' => 'light-danger', 'categoria' => 'acao'),
             array('faseCode' => 'SIO', 'faseName' => 'PASSO 02 - SIMULACAO ONLINE', 'color' => 'light-danger', 'categoria' => 'acao'),
             array('faseCode' => 'SIF', 'faseName' => 'PASSO 02 - SIMULACAO OFFLINE', 'color' => 'light-danger', 'categoria' => 'acao'),
