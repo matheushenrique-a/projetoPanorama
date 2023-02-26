@@ -76,6 +76,39 @@
 																</div>
 															</div>
 														</div>
+														<!--begin::Accordion-->
+														<div class="accordion" id="kt_accordion_1  ms-lg-7 ms-xl-10">
+															<div class="accordion-item">
+																<h2 class="accordion-header" id="kt_accordion_1_header_1">
+																	<button class="accordion-button fs-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#kt_accordion_1_body_133" aria-expanded="true" aria-controls="kt_accordion_1_body_1">
+																		INTEGRAÇÃO MANUAL
+																	</button>
+																</h2>
+																<div id="kt_accordion_1_body_133" class="accordion-collapse collapse show" aria-labelledby="kt_accordion_1_header_1" data-bs-parent="#kt_accordion_1">
+																	<div class="accordion-body">
+																		<div class="input-group">
+																			<span class="input-group-text" style="width: 155px">Código proposta</span>
+																			<input type="text" class="form-control" placeholder="" name="txtNome" value="" />
+																		</div>
+																		<div class="input-group">
+																			<span class="input-group-text" style="width: 155px">Valor Pago</span>
+																			<input type="text" class="form-control" placeholder="" name="txtNome" value="" />
+																		</div>
+																		<div class="input-group">
+																			<span class="input-group-text" style="width: 155px">URL Cliente</span>
+																			<input type="text" class="form-control" placeholder="" name="txtNome" value="" />
+																		</div>
+																		<div class="input-group">
+																			<span class="input-group-text" style="width: 155px">Erro Integração</span>
+																			<textarea class="form-control" aria-label="Ocorrências" rows=3 name="ocorrencias"><?php echo $ocorrencias;?></textarea>
+																		</div>
+																		<div class="d-flex align-items-center position-relative my-1 mt-5 mb-0">
+																			<button type="submit" class="btn btn-primary" name="btnSalvar" value="btnSalvar">Salvar</button>										
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
 														<div class="accordion" id="kt_accordion_1  ms-lg-7 ms-xl-10">
 															<div class="accordion-item">
 																<h2 class="accordion-header" id="kt_accordion_1_header_1">

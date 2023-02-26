@@ -112,6 +112,18 @@ class Fgts extends BaseController
         return $this->loadpage('fgts/cliente_detalhes', $data);
     }
 
+
+    public function indicadores(){
+        $indicadores = [];
+        $indicadores['clicks_campanha'] = $this->dbMaster->runQuery("select count(*) total from campanha_click_count where DATE(last_updated) = CURDATE();")['firstRow']->total;
+        $indicadores['clicks_campanha_ontem'] = $this->dbMaster->runQuery("select count(*) total from campanha_click_count where DATE(last_updated) = DATE_SUB(CURDATE(), INTERVAL 1 DAY);")['firstRow']->total;
+        $indicadores['propostas_cadastradas'] = $this->dbMaster->runQuery("select count(*) total from proposta_fgts where DATE(data_criacao) = CURDATE();")['firstRow']->total;
+        $indicadores['propostas_cadastradas_ontem'] = $this->dbMaster->runQuery("select count(*) total from proposta_fgts where DATE(data_criacao) = DATE_SUB(CURDATE(), INTERVAL 1 DAY);")['firstRow']->total;
+        $indicadores['top_indicacao'] = $this->dbMaster->runQuery("select chave_origem, count(*) total from proposta_fgts where DATE(data_criacao) = CURDATE() and chave_origem is not null group by chave_origem order by total desc")['firstRow'];
+
+        return $indicadores;
+    }
+
     public function listarPropostas(){
         $fases = $this->fasesProposta();
         $users = $this->listaOPeradores();
@@ -124,7 +136,7 @@ class Fgts extends BaseController
         $statusPropostaFiltro = $this->getpost('statusPropostaFiltro');
         $offlineMode = $this->getpost('offlineMode');
         $operadorFiltro = $this->getpost('operadorFiltro');
-        
+
         $flag = $this->getpost('flag',true);
         $flag = (empty($flag) ? 'ACAO' : $flag);
         
@@ -133,7 +145,7 @@ class Fgts extends BaseController
         $whereNotIn = [];
         $whereIn = [];
         
-        if (!empty($cpf)) $whereCheck['cpf'] = $cpf;
+        if (!empty($cpf)) $likeCheck['cpf'] = $cpf;
         if (!empty($offlineMode)) $whereCheck['offlineMode'] = $offlineMode;
         if (!empty($verificador)) $likeCheck['verificador'] = $verificador;
         if (!empty($celular)) $likeCheck['celular'] = $celular;
@@ -141,25 +153,28 @@ class Fgts extends BaseController
         if (!empty($nome)) $likeCheck['nome'] = $nome;
         if (!empty($email)) $likeCheck['email'] = $email;
 
-        if ($flag == "ADESAO"){
-            $fasesAdd = getFasesCategory('funil');
-            $whereIn = array("whereIn" => array('statusProposta', $fasesAdd)); 
-        } else if ($flag == "ACAO"){
-            $fasesAdd = getFasesCategory('acao');
-            $whereIn = array("whereIn" => array('statusProposta', $fasesAdd)); 
-        } else if ($flag == "OCULTAS"){
-            $fasesAdd = getFasesCategory('fim');
-            $whereIn = array("whereIn" => array('statusProposta', $fasesAdd)); 
-            // $fasesRemove = [lookupFases('CAN')['faseName'], lookupFases('FIM')['faseName']];
-            // $whereNotIn = array("whereNotIn" => array('statusProposta', $fasesRemove));        
-        } else {
-
+        if ((count($likeCheck) == 0) and (count($whereCheck) == 0)){
+            if ($flag == "ADESAO"){
+                $fasesAdd = getFasesCategory('funil');
+                $whereIn = array("whereIn" => array('statusProposta', $fasesAdd)); 
+            } else if ($flag == "ACAO"){
+                $fasesAdd = getFasesCategory('acao');
+                $whereIn = array("whereIn" => array('statusProposta', $fasesAdd)); 
+            } else if ($flag == "OCULTAS"){
+                $fasesAdd = getFasesCategory('fim');
+                $whereIn = array("whereIn" => array('statusProposta', $fasesAdd)); 
+                // $fasesRemove = [lookupFases('CAN')['faseName'], lookupFases('FIM')['faseName']];
+                // $whereNotIn = array("whereNotIn" => array('statusProposta', $fasesRemove));        
+            }
         }
         
         $likeCheck = array("likeCheck" => $likeCheck);
 
         $this->dbMaster->setOrderBy(array('id_proposta', 'DESC'));
         $propostas = $this->dbMaster->select('proposta_fgts', $whereCheck, $whereNotIn + $likeCheck + $whereIn);
+
+        //INDICADORES
+        $dados['indicadores'] = $this->indicadores();
 
         $dados['pageTitle'] = "FGTS - Listar propostas";
         $dados['propostas'] = $propostas;

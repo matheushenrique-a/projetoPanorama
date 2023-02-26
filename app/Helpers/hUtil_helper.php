@@ -50,6 +50,7 @@
             array('faseCode' => 'GRO', 'faseName' => 'PASSO 07 - GRAVADA ONLINE', 'color' => 'light-success', 'categoria' => 'acao'),
             array('faseCode' => 'DIS', 'faseName' => 'PASSO 08 - PROPOSTA DISPONÍVEL', 'color' => 'light-success', 'categoria' => 'acao'),
             array('faseCode' => 'FOR', 'faseName' => 'PASSO 08 - FORMALIZAÇÃO FEITA', 'color' => 'light-info', 'categoria' => 'acao'),
+            array('faseCode' => 'PGT', 'faseName' => 'PASSO 08 - AGUARDANDO PAGAMENTO', 'color' => 'light-info', 'categoria' => 'acao'),
             array('faseCode' => 'CNH', 'faseName' => 'PASSO 08 - PENDENTE DOCUMENTO', 'color' => 'light-info', 'categoria' => 'acao'),
             array('faseCode' => 'CCN', 'faseName' => 'PASSO 08 - BANCO INVÁLIDO', 'color' => 'light-info', 'categoria' => 'acao'),
             array('faseCode' => 'ADE', 'faseName' => 'PASSO 08 - PENDENTE ADESAO', 'color' => 'light-danger', 'categoria' => 'funil'),

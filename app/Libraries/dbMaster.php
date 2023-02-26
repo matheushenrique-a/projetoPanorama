@@ -160,6 +160,11 @@ class dbMaster {
 
 	}
 
+	public function runQuery($sql){
+		$builder = $this->db->query($sql);
+		return $this->resultfy($builder);
+	}
+
 	public function forceUpdate($table, $whereArray)
 	{
 		$md5 = $this->getMd5($table, $whereArray);
