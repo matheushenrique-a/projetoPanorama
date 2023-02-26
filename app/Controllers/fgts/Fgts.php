@@ -33,13 +33,43 @@ class Fgts extends BaseController
     public function clienteDetalhes($id_proposta){
         $data['pageTitle'] = "FGTS - Detalhes Cliente";
 
+        //OCORRENCIAS
         $ocorrencias = $this->getpost('ocorrencias');
         $btnSalvar = $this->getpost('btnSalvar');
+
+        //PROPOSTA GRAVADA
+        $txtNumeroProposta = $this->getpost('txtNumeroProposta');
+        $txtValorPago = $this->getpost('txtValorPago');
+        $txtURLCliente = $this->getpost('txtURLCliente');
+        $txtErroIntegracao = $this->getpost('txtErroIntegracao');
+        $btnSalvarProposta = $this->getpost('btnSalvarProposta');
+
         if (!empty($btnSalvar)){
             $where = array('id_proposta' => $id_proposta);
             $fields = array('ocorrencias' => $ocorrencias);
             $fieldsDynamic = array('last_update' => 'current_timestamp()');
             $this->dbMaster->update('proposta_fgts', $fields, $where, $fieldsDynamic);
+        }
+
+        if (!empty($btnSalvarProposta)){
+            $where = array('id_proposta' => $id_proposta);
+            $this->dbMaster->delete('proposta_fgts_gravacao_json', $where);
+            $valorClean = str_replace(".", "", $txtValorPago);
+            $valorClean = str_replace(",", ".", $valorClean);
+
+            $json = '[{"numero_proposta": "' . $txtNumeroProposta . '","id_rastreamento_externo": null}]';
+            $fields = array('id_proposta' => $id_proposta, 'json' => $json, 'numeroPropostaGerada' => $txtNumeroProposta, 'valor_pago' => $valorClean, 'linkCliente' => $txtURLCliente, 'MotivoIntegracao' => $txtErroIntegracao);
+            $this->dbMaster->insert('proposta_fgts_gravacao_json', $fields);
+        } else {
+            $whereCheck = array('id_proposta' => $id_proposta);
+			$jsonGravacao = $this->dbMaster->select('proposta_fgts_gravacao_json', $whereCheck);
+
+            if ($jsonGravacao['existRecord']){
+                $txtNumeroProposta = $jsonGravacao['firstRow']->numeroPropostaGerada;
+                $txtValorPago = SimpleRound($jsonGravacao['firstRow']->valor_pago);
+                $txtURLCliente = $jsonGravacao['firstRow']->linkCliente;
+                $txtErroIntegracao = $jsonGravacao['firstRow']->MotivoIntegracao;
+            }
         }
 
         $cliente = $this->proposta_buscar($id_proposta);
@@ -92,10 +122,16 @@ class Fgts extends BaseController
 			$data['valorSolicitado'] = $cliente['firstRow']->valorSolicitado;
 			$data['seguroFGTS'] = $cliente['firstRow']->seguroFGTS;
 			
+            $data['txtNumeroProposta'] = $txtNumeroProposta;
+            $data['txtValorPago'] = $txtValorPago;
+            $data['txtURLCliente'] = $txtURLCliente;
+            $data['txtErroIntegracao'] = $txtErroIntegracao;
+
 			$statusProposta = $cliente['firstRow']->statusProposta;
 			$data['statusProposta'] = $statusProposta;
 			$offlineMode = $cliente['firstRow']->offlineMode;
 			$data['offlineMode'] = $offlineMode;
+			$data['header'] = $cliente['firstRow']->header;
 
         }
 
@@ -116,6 +152,7 @@ class Fgts extends BaseController
     public function indicadores(){
         $indicadores = [];
         $indicadores['clicks_campanha'] = $this->dbMaster->runQuery("select count(*) total from campanha_click_count where DATE(last_updated) = CURDATE();")['firstRow']->total;
+        $indicadores['clicks_campanha_inbound'] = $this->dbMaster->runQuery("select slug, count(*) total from campanha_click_count where DATE(last_updated) = CURDATE() group by slug order by total desc;")['firstRow'];
         $indicadores['clicks_campanha_ontem'] = $this->dbMaster->runQuery("select count(*) total from campanha_click_count where DATE(last_updated) = DATE_SUB(CURDATE(), INTERVAL 1 DAY);")['firstRow']->total;
         $indicadores['propostas_cadastradas'] = $this->dbMaster->runQuery("select count(*) total from proposta_fgts where DATE(data_criacao) = CURDATE();")['firstRow']->total;
         $indicadores['propostas_cadastradas_ontem'] = $this->dbMaster->runQuery("select count(*) total from proposta_fgts where DATE(data_criacao) = DATE_SUB(CURDATE(), INTERVAL 1 DAY);")['firstRow']->total;

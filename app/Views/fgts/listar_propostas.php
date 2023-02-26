@@ -128,7 +128,7 @@
 													</span>
 													<!--end::Svg Icon-->
 													<div class="text-white fw-bold fs-2 mb-2 mt-5"><?php echo $indicadores['top_indicacao']->total;?> propostas</div>
-													<div class="fw-semibold text-white">originadas da campanha <?php echo strtoupper($indicadores['top_indicacao']->chave_origem);?></div>
+													<div class="fw-semibold text-white">vindas de <?php echo strtoupper($indicadores['top_indicacao']->chave_origem);?> e <?php echo strtoupper($indicadores['clicks_campanha_inbound']->total);?> clicks vindos de <?php echo strtoupper($indicadores['clicks_campanha_inbound']->slug);?></div>
 												</div>
 												<!--end::Body-->
 											</a>
