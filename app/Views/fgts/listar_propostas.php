@@ -127,8 +127,8 @@
 														</svg>
 													</span>
 													<!--end::Svg Icon-->
-													<div class="text-white fw-bold fs-2 mb-2 mt-5"><?php echo $indicadores['top_indicacao']->total;?> propostas</div>
-													<div class="fw-semibold text-white">vindas de <?php echo strtoupper($indicadores['top_indicacao']->chave_origem);?> e <?php echo strtoupper($indicadores['clicks_campanha_inbound']->total);?> clicks vindos de <?php echo strtoupper($indicadores['clicks_campanha_inbound']->slug);?></div>
+													<div class="text-white fw-bold fs-2 mb-2 mt-5"><?php echo (isset($indicadores['top_indicacao']->total)  ? $indicadores['top_indicacao']->total : 0);?> propostas</div>
+													<div class="fw-semibold text-white">vindas de <?php echo (isset(($indicadores['top_indicacao']->chave_origem))  ? strtoupper($indicadores['top_indicacao']->chave_origem) : '-'); ;?> e <?php echo strtoupper($indicadores['clicks_campanha_inbound']->total);?> clicks vindos de <?php echo strtoupper($indicadores['clicks_campanha_inbound']->slug);?></div>
 												</div>
 												<!--end::Body-->
 											</a>
@@ -334,6 +334,7 @@
 																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/NIV" class="menu-link px-2"><i class="bi bi-bookmark-check-fill fs-2"></i><span class="mx-2">Aniversário Próximo</span></a></div>
 																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/CAN" class="menu-link px-2"><i class="bi bi-bookmark-check-fill text-gray-400 fs-2"></i><span class="mx-2">Cancelada Perdida </span></a></div>
 																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/PGT" class="menu-link px-2"><i class="bi bi-bookmark-check-fill text-gray-400 fs-2"></i><span class="mx-2">Aguardando Pagamento</span></a></div>
+																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/ATS" class="menu-link px-2"><i class="bi bi-bookmark-check-fill text-gray-400 fs-2"></i><span class="mx-2">Pagamento Atrasado</span></a></div>
 																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/FOR" class="menu-link px-2"><i class="bi bi-bookmark-check-fill text-gray-400 fs-2"></i><span class="mx-2">Formalização feita</span></a></div>
 																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/FIM" class="menu-link px-2"><i class="bi bi-bookmark-check-fill text-gray-400 fs-2"></i><span class="mx-2">Finalizada Paga</span></a></div>
 																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/SAL" class="menu-link px-2"><i class="bi bi-bookmark-check-fill text-gray-400 fs-2"></i><span class="mx-2">Saldo Insuficiente</span></a></div>
