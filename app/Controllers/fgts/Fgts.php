@@ -35,6 +35,7 @@ class Fgts extends BaseController
 
         //OCORRENCIAS
         $ocorrencias = $this->getpost('ocorrencias');
+        $txtMensagemDireta = $this->getpost('txtMensagemDireta');
         $btnSalvar = $this->getpost('btnSalvar');
 
         //PROPOSTA GRAVADA
@@ -43,15 +44,19 @@ class Fgts extends BaseController
         $txtURLCliente = $this->getpost('txtURLCliente');
         $txtErroIntegracao = $this->getpost('txtErroIntegracao');
         $btnSalvarProposta = $this->getpost('btnSalvarProposta');
+        $btnMensagemDireta = $this->getpost('btnMensagemDireta');
 
         if (!empty($btnSalvar)){
             $where = array('id_proposta' => $id_proposta);
             $fields = array('ocorrencias' => $ocorrencias);
             $fieldsDynamic = array('last_update' => 'current_timestamp()');
             $this->dbMaster->update('proposta_fgts', $fields, $where, $fieldsDynamic);
-        }
-
-        if (!empty($btnSalvarProposta)){
+        } else if (!empty($btnMensagemDireta)){
+            $where = array('id_proposta' => $id_proposta);
+            $fields = array('mensagem_direta' => $txtMensagemDireta);
+            $fieldsDynamic = array('last_update' => 'current_timestamp()');
+            $this->dbMaster->update('proposta_fgts', $fields, $where, $fieldsDynamic);
+        } else if (!empty($btnSalvarProposta)){
             $where = array('id_proposta' => $id_proposta);
             $this->dbMaster->delete('proposta_fgts_gravacao_json', $where);
             $valorClean = str_replace(".", "", $txtValorPago);
@@ -60,16 +65,17 @@ class Fgts extends BaseController
             $json = '[{"numero_proposta": "' . $txtNumeroProposta . '","id_rastreamento_externo": null}]';
             $fields = array('id_proposta' => $id_proposta, 'json' => $json, 'numeroPropostaGerada' => $txtNumeroProposta, 'valor_pago' => $valorClean, 'linkCliente' => $txtURLCliente, 'MotivoIntegracao' => $txtErroIntegracao);
             $this->dbMaster->insert('proposta_fgts_gravacao_json', $fields);
-        } else {
-            $whereCheck = array('id_proposta' => $id_proposta);
-			$jsonGravacao = $this->dbMaster->select('proposta_fgts_gravacao_json', $whereCheck);
+        }
 
-            if ($jsonGravacao['existRecord']){
-                $txtNumeroProposta = $jsonGravacao['firstRow']->numeroPropostaGerada;
-                $txtValorPago = SimpleRound($jsonGravacao['firstRow']->valor_pago);
-                $txtURLCliente = $jsonGravacao['firstRow']->linkCliente;
-                $txtErroIntegracao = $jsonGravacao['firstRow']->MotivoIntegracao;
-            }
+
+        $whereCheck = array('id_proposta' => $id_proposta);
+        $jsonGravacao = $this->dbMaster->select('proposta_fgts_gravacao_json', $whereCheck);
+
+        if ($jsonGravacao['existRecord']){
+            $txtNumeroProposta = $jsonGravacao['firstRow']->numeroPropostaGerada;
+            $txtValorPago = SimpleRound($jsonGravacao['firstRow']->valor_pago);
+            $txtURLCliente = $jsonGravacao['firstRow']->linkCliente;
+            $txtErroIntegracao = $jsonGravacao['firstRow']->MotivoIntegracao;
         }
 
         $cliente = $this->proposta_buscar($id_proposta);
@@ -84,6 +90,7 @@ class Fgts extends BaseController
 			$data['dtaNascimento'] = $cliente['firstRow']->data_nascimento;
 			$data['email'] = $cliente['firstRow']->email;
 			$data['ocorrencias'] = $cliente['firstRow']->ocorrencias;
+			$data['txtMensagemDireta'] = $cliente['firstRow']->mensagem_direta;
 
 			$data['rdSexo'] = $cliente['firstRow']->sexo;
 			$data['nomeCompleto'] = $cliente['firstRow']->nome;
@@ -121,6 +128,7 @@ class Fgts extends BaseController
 			$data['parcelas'] = $cliente['firstRow']->parcelas;
 			$data['valorSolicitado'] = $cliente['firstRow']->valorSolicitado;
 			$data['seguroFGTS'] = $cliente['firstRow']->seguroFGTS;
+			$data['data_criacao'] = $cliente['firstRow']->data_criacao;
 			
             $data['txtNumeroProposta'] = $txtNumeroProposta;
             $data['txtValorPago'] = $txtValorPago;
@@ -132,7 +140,8 @@ class Fgts extends BaseController
 			$offlineMode = $cliente['firstRow']->offlineMode;
 			$data['offlineMode'] = $offlineMode;
 			$data['header'] = $cliente['firstRow']->header;
-
+			$data['data_emissao'] = $cliente['firstRow']->data_emissao;
+			$data['data_criacao'] = $cliente['firstRow']->data_criacao;
         }
 
         $db =  $this->dbMaster->getDB();
@@ -143,8 +152,22 @@ class Fgts extends BaseController
         $builder->select('*');
 		//echo $builder->getCompiledSelect();exit;
 		$chat = $this->dbMaster->resultfy($builder->get());
-        //echo '22:51:12 - <h3>Dump 91 da variável $chat </h3> <br><br>' . var_dump($chat); exit;					//<-------DEBUG
         $data['chat'] = $chat;
+
+
+        $db =  $this->dbMaster->getDB();
+        $builder = $db->table('customer_journey');
+        $builder->Where('verificador', $cliente['firstRow']->verificador);
+        $builder->orWhere('id_proposta', $cliente['firstRow']->id_proposta);
+        $builder->orWhere('email', $cliente['firstRow']->email);
+        $builder->orWhere('cpf', $cliente['firstRow']->cpf);
+        $builder->orderBy('id_interaction', 'DESC');
+        $builder->select('*');
+		//echo $builder->getCompiledSelect();exit;
+		$journey = $this->dbMaster->resultfy($builder->get());
+        $data['journey'] = $journey;
+
+
         return $this->loadpage('fgts/cliente_detalhes', $data);
     }
 

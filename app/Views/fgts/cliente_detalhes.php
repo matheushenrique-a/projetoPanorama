@@ -66,7 +66,7 @@
 																<div id="kt_accordion_1_body_133" class="accordion-collapse collapse show" aria-labelledby="kt_accordion_1_header_1" data-bs-parent="#kt_accordion_1">
 																	<div class="accordion-body">
 																		<div class="input-group">
-																			<span class="input-group-text">Ocorrências</span>
+																			<span class="input-group-text" style="width: 155px">Ocorrências</span>
 																			<textarea class="form-control" aria-label="Ocorrências" rows=6 name="ocorrencias"><?php echo $ocorrencias;?></textarea>
 																		</div>
 																		<div class="d-flex align-items-center position-relative my-1 mt-5 mb-0">
@@ -112,6 +112,27 @@
 														<!--begin::Accordion-->
 														<div class="accordion" id="kt_accordion_1  ms-lg-7 ms-xl-10">
 															<div class="accordion-item">
+																<h2 class="accordion-header" id="kt_accordion_1_header_1">
+																	<button class="accordion-button fs-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#kt_accordion_1_body_133" aria-expanded="true" aria-controls="kt_accordion_1_body_1">
+																		MENSAGEM AO CLIENTE - FASE PERSONALIZADA
+																	</button>
+																</h2>
+																<div id="kt_accordion_1_body_133" class="accordion-collapse collapse show" aria-labelledby="kt_accordion_1_header_1" data-bs-parent="#kt_accordion_1">
+																	<div class="accordion-body">
+																		<div class="input-group">
+																			<span class="input-group-text" style="width: 155px">Mensagem ao <br>cliente</span>
+																			<textarea class="form-control" aria-label="Mensagem Direta ao Cliente" maxlength="450" rows=5 name="txtMensagemDireta"><?php echo $txtMensagemDireta;?></textarea>
+																		</div>
+																		<div class="d-flex align-items-center position-relative my-1 mt-5 mb-0">
+																			<button type="submit" class="btn btn-primary" name="btnMensagemDireta" value="btnMensagemDireta">Salvar</button>										
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+														<!--begin::Accordion-->
+														<div class="accordion" id="kt_accordion_1  ms-lg-7 ms-xl-10">
+															<div class="accordion-item">
 																<h2 class="accordion-header" id="kt_accordion_1_header_2">
 																	<button class="accordion-button fs-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#kt_accordion_1_body_2" aria-expanded="true" aria-controls="kt_accordion_1_body_1">
 																	INFORMAÇÕES:
@@ -124,60 +145,95 @@
 																</div>
 															</div>
 														</div>
-														<div class="accordion" id="kt_accordion_1  ms-lg-7 ms-xl-10">
-															<div class="accordion-item">
-																<h2 class="accordion-header" id="kt_accordion_1_header_1">
-																	<button class="accordion-button fs-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#kt_accordion_1_body_1" aria-expanded="true" aria-controls="kt_accordion_1_body_1">
-																		DADOS CONTATO
-																	</button>
-																</h2>
-																<div id="kt_accordion_1_body_1" class="accordion-collapse collapse show" aria-labelledby="kt_accordion_1_header_1" data-bs-parent="#kt_accordion_1">
-																	<div class="accordion-body">
-																		<div class="row"><div class="col-9"><label class="font-size-h4 font-weight-bolder text-dark">E-mail: </label> <label class="font-size-h4 font-weight-light text-dark"><?php echo $email?></label></div></div>
-																		<div class="row"><div class="col-9"><label class="font-size-h4 font-weight-bolder text-dark">Telefone: </label> <label class="font-size-h4 font-weight-light text-dark"><?php echo "$ddd $celular";?></label></div></div>
+														<div class="accordion  accordion-toggle-arrow" id="validacaoDados"><div class="card">
+															<!--begin::Block-->
+															<div class="card-header" id="headingOne4"><div class="card-title" ><i class="flaticon2-checkmark"></i>DADOS PESSOAIS:</div></div>
+																<div id="validaContato" class="" data-parent="#validacaoDados"><div class="card-body font-size-h4"><div class="row">
+																	<div class="form-group col-12  ml-5 mb-0">
+																		<div>
+																			<div class="row mt-5"><div class="col-12"><label class="font-size-h3 font-weight-bolder text-dark">CPF: </label> <label class="font-size-h3 font-weight-light text-dark"><?php echo $cpf?></label></div></div>
+																			<div class="row"><div class="col-9"><label class="font-size-h3 font-weight-bolder text-dark">E-mail: </label> <label class="font-size-h3 font-weight-light text-dark"><?php echo $email?></label></div></div>
+																			<div class="row"><div class="col-9"><label class="font-size-h3 font-weight-bolder text-dark">Telefone: </label> <label class="font-size-h3 font-weight-light text-dark"><?php echo "$ddd $celular";?></label></div></div>
+																			<div class="row"><div class="col-12"><label class="font-size-h3 font-weight-bolder text-dark">Nascimento: </label> <label class="font-size-h3 font-weight-light text-dark"><?php echo str_replace("-", "/", dataUsPt($dtaNascimento))?></label></div></div>
+																			<div class="row"><div class="col-12"><label class="font-size-h3 font-weight-bolder text-dark">Criação Proposta: </label> <label class="font-size-h3 font-weight-light text-dark"><?php echo str_replace("-", "/", ($data_criacao))?></label></div></div>
+																		</div>
 																	</div>
-																</div>
-															</div>
-														</div>
-														<!--begin::Accordion-->
-														<div class="accordion" id="kt_accordion_1  ms-lg-7 ms-xl-10">
-															<div class="accordion-item">
-																<h2 class="accordion-header" id="kt_accordion_1_header_2">
-																	<button class="accordion-button fs-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#kt_accordion_1_body_2" aria-expanded="true" aria-controls="kt_accordion_1_body_1">
-																		DADOS PESSOAIS
-																	</button>
-																</h2>
-																<div id="kt_accordion_1_body_2" class="accordion-collapse collapse show" aria-labelledby="kt_accordion_1_header_2" data-bs-parent="#kt_accordion_2">
-																	<div class="accordion-body">
-																	<div class="row mt-5"><div class="col-12"><label class="font-size-h4 font-weight-bolder text-dark">CPF: </label> <label class="font-size-h4 font-weight-light text-dark"><?php echo $cpf?></label></div></div>
-																		<div class="row"><div class="col-12"><label class="font-size-h4 font-weight-bolder text-dark">Nome: </label> <label class="font-size-h4 font-weight-light text-dark"><?php echo $nomeCompleto?></label></div></div>
-																		<div class="row"><div class="col-12"><label class="font-size-h4 font-weight-bolder text-dark">Nascimento: </label> <label class="font-size-h4 font-weight-light text-dark"><?php echo $dtaNascimento?></label></div></div>
-																		<div class="row"><div class="col-12"><label class="font-size-h4 font-weight-bolder text-dark">Mãe: </label> <label class="font-size-h4 font-weight-light text-dark"><?php echo $nomeMae?></label></div></div>
-																		<div class="row"><div class="col-12"><label class="font-size-h4 font-weight-bolder text-dark">Pai: </label> <label class="font-size-h4 font-weight-light text-dark"><?php echo $nomePai?></label></div></div>
-																		<div class="row"><div class="col-12"><label class="font-size-h4 font-weight-bolder text-dark">Natural: </label> <label class="font-size-h4 font-weight-light text-dark"><?php echo $uf_nascimento . " - " . $cidade_nascimento?></label></div></div>
-																		<div class="row"><div class="col-12"><label class="font-size-h4 font-weight-bolder text-dark">Estado Civil: </label> <label class="font-size-h4 font-weight-light text-dark"><?php echo (empty($estadoCivil)  ? '-' : lookupEstadoCivil($estadoCivil)); ?></label></div></div>
-																		<div class="row"><div class="col-12"><label class="font-size-h4 font-weight-bolder text-dark">Documento: </label> <label class="font-size-h4 font-weight-light text-dark"><?php echo $numero_documento?></label></div></div>
-																		<div class="row"><div class="col-12"><label class="font-size-h4 font-weight-bolder text-dark">Órgão Emissor: </label> <label class="font-size-h4 font-weight-light text-dark"><?php echo $orgaoEmissor . " - " . $uf_documento?></label></div></div>
+																</div></div></div>
+															<!--end::Block-->
+															<!--begin::Block-->
+															<?php if ($offlineMode == "NXXX") {?>
+																<div class="card-header" id="headingOne4"><div class="card-title" data-toggle="" data-target="#validaProposta"><i class="flaticon2-checkmark"></i>PROPOSTA ANTECIPAÇÃO:</div></div>
+																<div id="validaProposta" class="" data-parent="#validacaoDados"><div class="card-body font-size-h4"><div class="row">
+																	<div class="form-group col-12  ml-5 mb-0">
+																		<div>
+																			<div class="row mt-5"><div class="col-12"><label class="font-size-h4 font-weight-bolder text-dark">Total antecipações: </label> <label class="font-size-h4 font-weight-light text-dark"><?php echo $parcelas;?> parcelas</label></div></div>
+																			<div class="row"><div class="col-12"><label class="font-size-h4 font-weight-bolder text-dark">Valor a receber: </label> <label class="font-size-h4 font-weight-light text-dark">R$ <?php echo $proposta_selecionada['valor_liquido'];?></label></div></div>
+																			<div class="row"><div class="col-12"><label class="font-size-h4 font-weight-bolder text-dark">Juros: </label> <label class="font-size-h4 font-weight-light text-dark"><?php echo round($proposta_selecionada['juros_mensal'],2);?>% ao mês</label></div></div>
+																			<div class="row"><div class="col-12"><label class="font-size-h4 font-weight-bolder text-dark">IOF: </label> <label class="font-size-h4 font-weight-light text-dark">R$ <?php echo $proposta_selecionada['valor_iof'];?></label></div></div>
+																			<div class="row"><div class="col-12"><label class="font-size-h4 font-weight-bolder text-dark">Seguro: </label> <label class="font-size-h4 font-weight-light text-dark"><?php echo $proposta_selecionada['seguro'];?></label></div></div>
+																			<div class="row"><div class="col-12"><label class="font-size-h4 font-weight-bolder text-dark">Valor Seguro: </label> <label class="font-size-h4 font-weight-light text-dark">R$ <?php echo $proposta_selecionada['seguroValor'];?></label></div></div>
+																		</div>
 																	</div>
-																</div>
-															</div>
-														</div>
-														<!--begin::Accordion-->
-														<div class="accordion" id="kt_accordion_1  ms-lg-7 ms-xl-10">
-															<div class="accordion-item">
-																<h2 class="accordion-header" id="kt_accordion_1_header_2">
-																	<button class="accordion-button fs-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#kt_accordion_1_body_2" aria-expanded="true" aria-controls="kt_accordion_1_body_1">
-																	ENDEREÇO RESIDENCIAL:
-																	</button>
-																</h2>
-																<div id="kt_accordion_1_body_2" class="accordion-collapse collapse show" aria-labelledby="kt_accordion_1_header_2" data-bs-parent="#kt_accordion_2">
-																	<div class="accordion-body">
-																		<div class="row"><div class="col-12"><label class="font-size-h4 font-weight-bolder text-dark"></label> <label class="font-size-h4 font-weight-light text-dark"><?php echo $bairroResidencia . " - " . $nomeCidadeResidencia?></label></div></div>
-																		<div class="row"><div class="col-12"><label class="font-size-h4 font-weight-bolder text-dark">CEP: </label> <label class="font-size-h4 font-weight-light text-dark"><?php echo $numeroCep?></label></div></div>
+																</div></div></div>
+															<?php } else if ($offlineMode == "NXXX") {?>
+																<div class="card-header" id="headingOne4"><div class="card-title" data-toggle="" data-target="#validaProposta"><i class="flaticon2-checkmark"></i>ANTECIPAÇÃO SOLICITADA:</div></div>
+																<div id="validaProposta" class="" data-parent="#validacaoDados"><div class="card-body font-size-h4">
+																	<div class="row">
+																	<div class="form-group col-12  ml-5 mb-0">
+																		<div>
+																			<div class="row mt-5"><div class="col-12"><label class="font-size-h4 font-weight-bolder text-dark">Parcelas: </label> <label class="font-size-h4 font-weight-light text-dark"><?php echo (empty($parcelas)  ? 'Não' : $parcelas . ' parcelas'); ?></label></div></div>
+																			<div class="row"><div class="col-12"><label class="font-size-h4 font-weight-bolder text-dark">Valor específico: </label> <label class="font-size-h4 font-weight-light text-dark"><?php echo (empty($valorSolicitado)  ? 'Não' : "R$ " . SimpleRound($valorSolicitado)); ?> </label></div></div>
+																			<div class="row"><div class="col-12"><label class="font-size-h4 font-weight-bolder text-dark">Valor máximo: </label> <label class="font-size-h4 font-weight-light text-dark"><?php echo ((empty($valorSolicitado) and empty($parcelas))  ? 'Sim' : "Não"); ?> </label></div></div>
+																			<div class="row"><div class="col-12"><label class="font-size-h4 font-weight-bolder text-dark">Seguro FGTS: </label> <label class="font-size-h4 font-weight-light text-dark"><?php echo ($seguroFGTS == "Y"  ? 'Sim' : "Não"); ?> </label></div></div>
+																		</div>
 																	</div>
-																</div>
+																</div></div></div>
+															<?php }?>
+															<!--end::Block-->
+															<!--begin::Block-->
+															<div class="card-header" id="headingOne4"><div class="card-title" data-toggle="" data-target="#validaDadosPessoais"><i class="flaticon2-checkmark"></i>DADOS COMPLEMENTARES:</div></div>
+																<div id="validaDadosPessoais" class="" data-parent="#validacaoDados"><div class="card-body font-size-h4"><div class="row">
+																	<div class="form-group col-12  ml-5 mb-0">
+																		<div>
+																			<div class="row"><div class="col-12"><label class="font-size-h4 font-weight-bolder text-dark">Nome: </label> <label class="font-size-h4 font-weight-light text-dark"><?php echo $nomeCompleto?></label></div></div>
+																			<div class="row"><div class="col-12"><label class="font-size-h4 font-weight-bolder text-dark">Mãe: </label> <label class="font-size-h4 font-weight-light text-dark"><?php echo $nomeMae?></label></div></div>
+																			<div class="row"><div class="col-12"><label class="font-size-h4 font-weight-bolder text-dark">Pai: </label> <label class="font-size-h4 font-weight-light text-dark"><?php echo $nomePai?></label></div></div>
+																			<div class="row"><div class="col-12"><label class="font-size-h4 font-weight-bolder text-dark">Natural: </label> <label class="font-size-h4 font-weight-light text-dark"><?php echo $uf_nascimento . " - " . $cidade_nascimento?></label></div></div>
+																			<div class="row"><div class="col-12"><label class="font-size-h4 font-weight-bolder text-dark">Estado Civil: </label> <label class="font-size-h4 font-weight-light text-dark"><?php echo (empty($estadoCivil)  ? '-' : lookupEstadoCivil($estadoCivil)); ?></label></div></div>
+																			<div class="row"><div class="col-12"><label class="font-size-h4 font-weight-bolder text-dark">Documento: </label> <label class="font-size-h4 font-weight-light text-dark"><?php echo $documento_identificacao . ' - ' . $numero_documento?></label></div></div>
+																			<div class="row"><div class="col-12"><label class="font-size-h4 font-weight-bolder text-dark">Data Emissão: </label> <label class="font-size-h4 font-weight-light text-dark"><?php echo dataUsPt($data_emissao)?></label></div></div>
+																			<div class="row"><div class="col-12"><label class="font-size-h4 font-weight-bolder text-dark">Órgão Emissor: </label> <label class="font-size-h4 font-weight-light text-dark"><?php echo $orgaoEmissor . " - " . $uf_documento?></label></div></div>
+																		</div>
+																	</div>
+																</div></div>
 															</div>
-														</div>
+															<!--end::Block-->
+															<!--begin::Block-->
+															<div class="card-header" id="headingOne4"><div class="card-title d" data-toggle="" data-target="#validaResidencial"><i class="flaticon2-checkmark"></i>ENDEREÇO RESIDENCIAL:</div></div>
+																<div id="validaResidencial" class="" data-parent="#validacaoDados"><div class="card-body font-size-h4"><div class="row">
+																	<div class="form-group col-12  ml-5 mb-0">
+																		<div>
+																			<div class="row mt-5"><div class="col-12"><label class="font-size-h4 font-weight-bolder text-dark">Endereço: </label> <label class="font-size-h4 font-weight-light text-dark"><?php echo $enderecoResidencia . ", " . $numeroEndereco . " " . $complemento?></label></div></div>
+																			<div class="row"><div class="col-12"><label class="font-size-h4 font-weight-bolder text-dark"></label> <label class="font-size-h4 font-weight-light text-dark"><?php echo $bairroResidencia . " - " . $nomeCidadeResidencia?></label></div></div>
+																			<div class="row"><div class="col-12"><label class="font-size-h4 font-weight-bolder text-dark">CEP: </label> <label class="font-size-h4 font-weight-light text-dark"><?php echo $numeroCep?></label></div></div>
+																		</div>
+																	</div>		
+																</div></div></div>
+															<!--end::Block-->
+															<!--begin::Block-->
+															<div class="card-header" id="headingOne4"><div class="card-title d" data-toggle="" data-target="#validaBancarios"><i class="flaticon2-checkmark"></i>DADOS BANCÁRIOS:</div></div>
+																<div id="validaBancarios" class="" data-parent="#validacaoDados"><div class="card-body font-size-h4"><div class="row">
+																	<div class="form-group  col-12  ml-5 mb-0">
+																		<div>
+																			<div class="row mt-5"><div class="col-12"><label class="font-size-h4 font-weight-bolder text-dark">Tipo Conta: </label> <label class="font-size-h4 font-weight-light text-dark"><?php echo ($rdTipoConta == "CC" ? "Conta Corrente" : "Poupança");?></label></div></div>
+																			<div class="row"><div class="col-12"><label class="font-size-h4 font-weight-bolder text-dark">Banco: </label> <label class="font-size-h4 font-weight-light text-dark"><?php echo $numBanco . " -  " . (empty($numBanco)  ? '-' : lookupBancosBrasileiros($numBanco));?></label></div></div>
+																			<div class="row"><div class="col-12"><label class="font-size-h4 font-weight-bolder text-dark">Agência: </label> <label class="font-size-h4 font-weight-light text-dark"><?php echo $agencia .  (empty($numDigitoAgencia) ? "": "-".$numDigitoAgencia);?></label></div></div>
+																			<div class="row"><div class="col-12"><label class="font-size-h4 font-weight-bolder text-dark">Número conta: </label> <label class="font-size-h4 font-weight-light text-dark"><?php echo $numConta . "-" . $numDigito?></label></div></div>
+																		</div>
+																	</div>
+																</div></div></div>
+															<!--end::Block-->
+														</div></div>
 													</div>
 												</div>
 												<!-- Fim: detalhes -->
@@ -185,7 +241,6 @@
 										</div>
 										<div class="col-xl-6">
 											<!--CHAT START  -->
-												
 												<div class="flex-lg-row-fluid">
 													<!--begin::Messenger-->
 													<div class="card" id="kt_chat_messenger">
@@ -274,7 +329,7 @@
 																						<div class="symbol  symbol-35px symbol-circle "><div class="symbol-label fs-3 bg-light-success text-success"><?php echo substr(strtoupper($row->ProfileName),0,1);?></div></div><!--end::Avatar-->
 																						<div class="ms-3">
 																							<a href="#" class="fs-5 fw-bold text-gray-900 text-hover-primary me-1"><?php echo strtoupper($row->ProfileName);?></a>
-																							<span class="text-muted fs-7 mb-1"><?php echo time_elapsed_string($row->last_updated) . '<span class="badge badge-light-' . ($row->SmsStatus == 'failed'  ? 'danger' : 'success') .  ' ms-auto">' . $row->SmsStatus . '</span>'?></span>
+																							<span class="text-muted fs-7 mb-1"><?php echo time_elapsed_string($row->last_updated) . ' - ' . date_format(date_create($row->last_updated),"d/M H:i:s") . '<span class="badge badge-light-' . ($row->SmsStatus == 'failed'  ? 'danger' : 'success') .  ' ms-auto">' . $row->SmsStatus . '</span>'?></span>
 																						</div>
 																					</div>
 																					<div class="p-5 rounded bg-light-success text-dark mw-lg-400px text-start" data-kt-element="message-text">
@@ -289,7 +344,7 @@
 																				<div class="d-flex flex-column align-items-end">
 																					<div class="d-flex align-items-center mb-2">
 																						<div class="me-3">
-																							<span class="text-muted fs-7 mb-1"><?php echo time_elapsed_string($row->last_updated) . '<span class="badge badge-light-' . ($row->SmsStatus == 'failed'  ? 'danger' : 'success') .  ' ms-auto">' . $row->SmsStatus . '</span>'?></span>
+																							<span class="text-muted fs-7 mb-1"><?php echo time_elapsed_string($row->last_updated) . ' - ' . date_format(date_create($row->last_updated),"d/M H:i:s") . '<span class="badge badge-light-' . ($row->SmsStatus == 'failed'  ? 'danger' : 'success') .  ' ms-auto">' . $row->SmsStatus . '</span>'?></span>
 																							<a href="#" class="fs-5 fw-bold text-gray-900 text-hover-primary ms-1"><?php echo strtoupper($row->ProfileName);?></a>  
 																						</div>
 																						<div class="symbol  symbol-35px symbol-circle "><div class="symbol-label fs-3 bg-light-info text-info">P</div></div><!--end::Avatar-->                 
@@ -309,6 +364,37 @@
 													<!--end::Messenger-->   
 												</div>
 											<!--CHAT END  -->
+											
+											
+											
+											<!--end: TIMELINE-->
+											<div class="card card-flush ">
+												<!--begin::Header-->
+												<div class="card-header pt-5">        
+													<h3 class="card-title align-items-start flex-column">
+														<span class="card-label fw-bold text-dark">Timeline</span>
+														<span class="text-gray-400 pt-2 fw-semibold fs-6">Últimas atividades do cliente</span>
+													</h3>
+												</div>
+												<!--end::Header-->
+												<!--begin::Body-->
+												<div class="card-body pt-6">
+													<?php 
+														if ($journey['num_rows'] > 0 ){
+															foreach ($journey["result"]->getResult() as $row){
+																
+													?>
+													<div class="timeline-label mb-5">
+														<div class="timeline-item">
+															<div class="timeline-label fw-bold text-gray-800 fs-6"><?php echo date_format(date_create($row->last_update),"d/m H:i")?></div>
+															<div class="timeline-badge"><i class="fa fa-genderless text-<?php echo ($row->direction == "SAIDA"  ? 'danger' : 'success'); ?> fs-1"></i></div>
+															<div class="fw-semibold text-gray-700 ps-3 fs-7"><?php echo "<b>via " . $row->channel . "</b> - " . $row->descricao;?></div>
+														</div>
+													</div>
+													<?php }}?>
+												</div>
+											</div>
+											<!--end: TIMELINE-->
 										</div>
 									</div>
 									

@@ -205,7 +205,7 @@
 															</div>												
 														</div>
 														<div class="mb-3  mx-3">
-															<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Online:</label>
+															<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Ocultas:</label>
 															<div class="d-flex align-items-center position-relative my-1">
 																<select class="form-select form-control-solid" aria-label="" name="offlineMode">
 																<?php
@@ -330,7 +330,10 @@
 																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/CAD" class="menu-link px-2"><i class="bi bi-bookmark-check-fill fs-2"></i><span class="mx-2">Pendente cadastro</span></a></div>
 																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/ADE" class="menu-link px-2"><i class="bi bi-bookmark-check-fill text-gray-400 fs-2"></i><span class="mx-2">Pendente Adesão</span></a></div>
 																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/INS" class="menu-link px-2"><i class="bi bi-bookmark-check-fill text-gray-400 fs-2"></i><span class="mx-2">Pendente Banco PAN</span></a></div>
+																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/LCX" class="menu-link px-2"><i class="bi bi-bookmark-check-fill text-gray-400 fs-2"></i><span class="mx-2">Lentidão CAIXA</span></a></div>
+																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/VUL" class="menu-link px-2"><i class="bi bi-bookmark-check-fill text-gray-400 fs-2"></i><span class="mx-2">Cliente Vulnerável</span></a></div>
 																		<div class="separator my-5"></div>
+																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/MDI" class="menu-link px-2"><i class="bi bi-bookmark-check-fill text-gray-400 fs-2"></i><span class="mx-2">Mensagem Direta</span></a></div>
 																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/NIV" class="menu-link px-2"><i class="bi bi-bookmark-check-fill fs-2"></i><span class="mx-2">Aniversário Próximo</span></a></div>
 																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/CAN" class="menu-link px-2"><i class="bi bi-bookmark-check-fill text-gray-400 fs-2"></i><span class="mx-2">Cancelada Perdida </span></a></div>
 																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/PGT" class="menu-link px-2"><i class="bi bi-bookmark-check-fill text-gray-400 fs-2"></i><span class="mx-2">Aguardando Pagamento</span></a></div>

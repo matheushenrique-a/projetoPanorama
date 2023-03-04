@@ -53,6 +53,9 @@
             array('faseCode' => 'PGT', 'faseName' => 'PASSO 08 - AGUARDANDO PAGAMENTO', 'color' => 'light-info', 'categoria' => 'acao'),
             array('faseCode' => 'ATS', 'faseName' => 'PASSO 08 - PAGAMENTO EM ATRASO', 'color' => 'light-info', 'categoria' => 'acao'),
             array('faseCode' => 'CNH', 'faseName' => 'PASSO 08 - PENDENTE DOCUMENTO', 'color' => 'light-info', 'categoria' => 'acao'),
+            array('faseCode' => 'LCX', 'faseName' => 'PASSO 08 - LENTIDÃO CAIXA', 'color' => 'light-info', 'categoria' => 'acao'),
+            array('faseCode' => 'VUL', 'faseName' => 'PASSO 08 - CLIENTE VULNERÁVEL', 'color' => 'light-info', 'categoria' => 'acao'),
+            array('faseCode' => 'MDI', 'faseName' => 'PASSO 08 - MENSAGEM DIRETA', 'color' => 'light-info', 'categoria' => 'acao'),
             array('faseCode' => 'CCN', 'faseName' => 'PASSO 08 - BANCO INVÁLIDO', 'color' => 'light-info', 'categoria' => 'acao'),
             array('faseCode' => 'ADE', 'faseName' => 'PASSO 08 - PENDENTE ADESAO', 'color' => 'light-danger', 'categoria' => 'funil'),
             array('faseCode' => 'INS', 'faseName' => 'PASSO 08 - PENDENTE INSTITUIÇÃO', 'color' => 'light-danger', 'categoria' => 'funil'),
@@ -65,6 +68,15 @@
         );
         return $data;
     }
+	function dataUsPt($dateEntry, $barSeparator = false){
+		$date = str_replace('/', '-', $dateEntry);
+
+		if ($barSeparator){
+			return date('d/m/Y', strtotime($date));
+		} else {
+			return date('d-m-Y', strtotime($date));
+		}
+	}
 
 	function getFasesCategory($category){
 		$category = strtolower($category);
