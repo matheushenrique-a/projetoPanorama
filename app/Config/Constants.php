@@ -16,6 +16,18 @@ if (IsProduction){
     define ('assetfolder', '/InsightSuite/public/');
     define ('FGTSUrl', 'http://localhost/fintech/');
 }
+
+//TELEGRAM NOTIFICAÇÕES PRA VOCE (GRUPO INTERNO DE ALERTAS)
+define ('telegramToken', '5947884925:AAG35Bq2edQTVd3Uxw5TIzPmjGGk71xr2tI'); //webhook https://www.beppig.com/index.php/telegram/webhook",
+define ('telegramPraVoceGroup', '-481159474');
+define ('telegramPraVoceGroupLogErrors', '-587867421');
+
+//DEFINE NOTIFICAÇÕES ATIVAS
+define('smsMsg', false);
+define('emailMsg', false);
+define('whatAppMsg', false);
+define('telegramAlerts', true);
+
 /*
  | --------------------------------------------------------------------
  | App Namespace

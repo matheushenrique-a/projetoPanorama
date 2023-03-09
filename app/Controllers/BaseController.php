@@ -10,6 +10,7 @@ use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use App\Libraries\dbMaster;
 use Config\Services;
+use App\Models\m_telegram;
 
 /**
  * Class BaseController

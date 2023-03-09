@@ -6,11 +6,13 @@ use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use App\Libraries\dbMaster;
+use App\Models\M_telegram;
 
 class Fgts extends BaseController
 {
     protected $session;
     protected $dbMasterDefault;
+    protected $telegram;
 
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger) {
         parent::setDB("fgtsDB"); //passa o banco de dados diferente do default (opcional) antes de iniciar o controler
@@ -22,6 +24,7 @@ class Fgts extends BaseController
         //o dbMasterDefault vai apontar para o banco do InsightSuite
         $this->dbMasterDefault = new dbMaster();
         $this->session = session();
+        $this->telegram =  new M_telegram();
     }
 
     //retorna dados da proposta gravada
@@ -268,6 +271,14 @@ class Fgts extends BaseController
         $fields = array('statusProposta' => $status);
         $fieldsDynamic = array('last_update' => 'current_timestamp()');
         $this->dbMaster->update('proposta_fgts', $fields, $where, $fieldsDynamic);
+
+        $cliente = $this->proposta_buscar($id_proposta);
+        $verificador = strtoupper($cliente['firstRow']->verificador);
+        $email = $cliente['firstRow']->email;
+
+        $faseSimples = propostaFaseFormatSimples($status);
+        $output = $this->telegram->notifyTelegramGroup("🐰🐰🐰 FASE $verificador - " . $faseSimples);
+        $result = $this->dbMaster->insert('customer_journey', array("verificador" => $verificador, "descricao" => "FASE: $faseSimples", "slug" => 'PRP', "direction" => "SAIDA", "channel" => "INSIGHT", "type" => "PROPOSTA"));
 
         return redirect()->to('fgts-listar-propostas');
     }
