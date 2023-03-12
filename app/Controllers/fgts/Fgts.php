@@ -48,6 +48,8 @@ class Fgts extends BaseController
         $txtErroIntegracao = $this->getpost('txtErroIntegracao');
         $btnSalvarProposta = $this->getpost('btnSalvarProposta');
         $btnMensagemDireta = $this->getpost('btnMensagemDireta');
+        $btnCidadesListar = $this->getpost('btnCidadesListar');
+        $btnGravarFacta = $this->getpost('btnGravarFacta');
 
         if (!empty($btnSalvar)){
             $where = array('id_proposta' => $id_proposta);
@@ -145,6 +147,24 @@ class Fgts extends BaseController
 			$data['header'] = $cliente['firstRow']->header;
 			$data['data_emissao'] = $cliente['firstRow']->data_emissao;
 			$data['data_criacao'] = $cliente['firstRow']->data_criacao;
+
+            if (!empty($btnCidadesListar)){
+                $this->dbMaster->setOrderBy(array("nome", "ASC"));
+                $this->dbMaster->setLimit(2000);
+                $whereCheck = array('estado' =>  $cliente['firstRow']->uf_residencia);
+                $listaCidadesResidencia = $this->dbMaster->select('estado_cidade', $whereCheck);
+                $data['listaCidadesResidencia'] = $listaCidadesResidencia;
+                
+                if ($cliente['firstRow']->uf_residencia != $cliente['firstRow']->uf_nascimento){
+                    $whereCheck = array('estado' =>  $cliente['firstRow']->uf_nascimento);
+                    $listaCidadesNascimento = $this->dbMaster->select('estado_cidade', $whereCheck);
+                    $data['listaCidadesNascimento'] = $listaCidadesNascimento;
+                } else {
+                    $data['listaCidadesNascimento'] = $data['listaCidadesResidencia'];
+                }
+                $this->dbMaster->setLimit(500);
+            }
+
         }
 
         $db =  $this->dbMaster->getDB();
@@ -277,7 +297,13 @@ class Fgts extends BaseController
         $email = $cliente['firstRow']->email;
 
         $faseSimples = propostaFaseFormatSimples($status);
-        $output = $this->telegram->notifyTelegramGroup("🐰🐰🐰 FASE $verificador - " . $faseSimples);
+
+        if ($status == "PASSO 09 - PROPOSTA FINALIZADA"){
+            $output = $this->telegram->notifyTelegramGroup("⭐️⭐️⭐️ FASE $verificador - <b>PROPOSTA PAGA</b>");
+        } else {
+            $output = $this->telegram->notifyTelegramGroup("👾👾👾 FASE $verificador - " . $faseSimples);
+        }
+
         $result = $this->dbMaster->insert('customer_journey', array("verificador" => $verificador, "descricao" => "FASE: $faseSimples", "slug" => 'PRP', "direction" => "SAIDA", "channel" => "INSIGHT", "type" => "PROPOSTA"));
 
         return redirect()->to('fgts-listar-propostas');

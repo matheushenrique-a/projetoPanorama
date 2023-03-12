@@ -128,7 +128,7 @@
 													</span>
 													<!--end::Svg Icon-->
 													<div class="text-white fw-bold fs-2 mb-2 mt-5"><?php echo (isset($indicadores['top_indicacao']->total)  ? $indicadores['top_indicacao']->total : 0);?> propostas</div>
-													<div class="fw-semibold text-white">vindas de <?php echo (isset(($indicadores['top_indicacao']->chave_origem))  ? strtoupper($indicadores['top_indicacao']->chave_origem) : '-'); ;?> e <?php echo strtoupper($indicadores['clicks_campanha_inbound']->total);?> clicks vindos de <?php echo strtoupper($indicadores['clicks_campanha_inbound']->slug);?></div>
+													<div class="fw-semibold text-white">vindas de <?php echo (isset(($indicadores['top_indicacao']->chave_origem))  ? strtoupper($indicadores['top_indicacao']->chave_origem) : '-'); ;?> e <?php echo strtoupper(( isset($indicadores['clicks_campanha_inbound']->total) ? isset($indicadores['clicks_campanha_inbound']->total) : ''));?> clicks vindos de <?php echo strtoupper(( isset($indicadores['clicks_campanha_inbound']->slug) ? $indicadores['clicks_campanha_inbound']->slug : ''));?></div>
 												</div>
 												<!--end::Body-->
 											</a>
@@ -355,7 +355,8 @@
 																		<div class="menu-item px-3"><a href="<?php echo FGTSUrl ?>fgts/proposta-status/<?php echo $row->verificador;?>/<?php echo createToken();?>" class="menu-link px-2" target="_blank"><i class="bi bi-info-square-fill text-gray-400 fs-2"></i><span class="mx-2">Visualizar Proposta</span><span class="badge badge-light-danger ms-auto">5</span></a></div>
 																		<div class="menu-item px-3"><a href="<?php echo FGTSUrl ?>fgts/proposta/<?php echo $row->verificador;?>/<?php echo createToken();?>" class="menu-link px-2" target="_blank"><i class="bi bi-pencil-square text-gray-400 fs-2"></i><span class="mx-2">Editar Proposta</span></a></div>
 																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-cliente-detalhes/<?php echo $row->id_proposta;?>" class="menu-link px-2" target="_blank"><i class="bi bi-pencil-square text-gray-400 fs-2"></i><span class="mx-2">Histórico Proposta</span></a></div>
-																		<div class="menu-item px-3"><a href="<?php echo FGTSUrl ?>fgts/validar-cpf-api/<?php echo $row->id_proposta;?>/0/0/0/0/<?php echo createToken();?>" class="menu-link px-2" target="_blank"><i class="bi bi-info-square-fill text-gray-400 fs-2"></i><span class="mx-2">Validar Adesão</span></a></div>
+																		<div class="menu-item px-3"><a href="<?php echo FGTSUrl ?>fgts/validar-cpf-api/<?php echo $row->id_proposta;?>/0/0/0/0/<?php echo createToken();?>" class="menu-link px-2" target="_blank"><i class="bi bi-info-square-fill text-gray-400 fs-2"></i><span class="mx-2">Validar Adesão PAN</span></a></div>
+																		<div class="menu-item px-3"><a href="<?php echo FGTSUrl ?>fgts/validar-cpf-api-facta/<?php echo $row->id_proposta;?>/A/0/0/<?php echo createToken();?>" class="menu-link px-2" target="_blank"><i class="bi bi-info-square-fill text-gray-400 fs-2"></i><span class="mx-2">Validar Adesão FACTA</span></a></div>
 																		<div class="separator my-5"></div>
 																		<div class="menu-item px-3"><a href="<?php echo FGTSUrl ?>fgts/notificar-cliente/<?php echo $row->verificador;?>/<?php echo createToken();?>" class="menu-link px-2" target="_blank"><i class="fa-brands fa-whatsapp text-gray-400 fs-2"></i><span class="mx-2">Mudança Fase</span></a></div>
 																		<div class="menu-item px-3"><a href="<?php echo FGTSUrl ?>fgts/notificar-cliente-sem-compromisso/<?php echo $row->verificador;?>/<?php echo createToken();?>" class="menu-link px-2" target="_blank"><i class="fa-brands fa-whatsapp text-gray-400 fs-2"></i><span class="mx-2">Sem Compromisso</span></a></div>

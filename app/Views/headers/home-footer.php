@@ -5099,6 +5099,7 @@
 		<script src="<?php echo assetfolder ?>assets/plugins/custom/datatables/datatables.bundle.js"></script>
 		<!--end::Vendors Javascript-->
 		<!--begin::Custom Javascript(used by this page)-->
+		<script src="<?php echo assetfolder ?>assets/js/pravoce.js"></script>
 		<script src="<?php echo assetfolder ?>assets/js/widgets.bundle.js"></script>
 		<script src="<?php echo assetfolder ?>assets/js/custom/widgets.js"></script>
 		<script src="<?php echo assetfolder ?>assets/js/custom/apps/chat/chat.js"></script>

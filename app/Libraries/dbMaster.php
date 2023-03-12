@@ -5,10 +5,14 @@ namespace App\Libraries;
 class dbMaster {
 	protected $db;
 	protected $orderby;
+	protected $limit = 500;
 
 
 	public function setOrderBy($value) {$this->orderby = $value;}
 	public function getOrderBy() {return $this->orderby;}
+
+	public function setLimit($value) {$this->limit = $value;}
+	public function getLimit() {return $this->limit;}
 
 	public function __construct($dbOption = null){
 
@@ -55,7 +59,7 @@ class dbMaster {
 		// }
 		
 		if (!is_null($whereCheck)) $builder->where($whereCheck);
-		$builder->limit(500);
+		$builder->limit($this->limit);
 		return $this->resultfy($builder->get());
 	}
 

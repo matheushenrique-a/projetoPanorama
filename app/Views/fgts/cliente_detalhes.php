@@ -133,6 +133,51 @@
 														<!--begin::Accordion-->
 														<div class="accordion" id="kt_accordion_1  ms-lg-7 ms-xl-10">
 															<div class="accordion-item">
+																<h2 class="accordion-header" id="kt_accordion_1_header_1">
+																	<button class="accordion-button fs-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#kt_accordion_1_body_133" aria-expanded="true" aria-controls="kt_accordion_1_body_1">
+																		INTEGRAÇÃO FACTA - MAPEAMENTO CIDADES
+																	</button>
+																</h2>
+																<div id="kt_accordion_1_body_133" class="accordion-collapse collapse show" aria-labelledby="kt_accordion_1_header_1" data-bs-parent="#kt_accordion_1">
+																	<div class="accordion-body">
+																		<div class="input-group">
+																			<span class="input-group-text" style="width: 155px"><?php echo $uf_nascimento . " - " . $cidade_nascimento;?></span>
+																			<select class="form-select" aria-label="Select example" name="selectCidadeNascimento" id="selectCidadeNascimento">
+																				<option></option>
+																				<?php
+																					if (isset($listaCidadesNascimento)) {
+																						foreach ($listaCidadesNascimento["result"]->getResult() as $row){
+																							echo '<option value="' . $row->codigo  . '" ' . (strtolower($row->nome) == strtolower($cidade_nascimento) ? 'selected' : '') . '>' . $row->nome .  '</option>';
+																						}
+																					}
+																				?>																			
+																			</select>
+																		</div>
+																		<div class="input-group">
+																			<span class="input-group-text" style="width: 155px"><?php echo $estadoResidencia . " - " . $nomeCidadeResidencia;?></span>
+																			<select class="form-select" aria-label="Select example" name="selectCidadeResidencia" id="selectCidadeResidencia">
+																				<option></option>
+																				<option></option>
+																				<?php
+																					if (isset($listaCidadesResidencia)) {
+																						foreach ($listaCidadesResidencia["result"]->getResult() as $row){
+																							echo '<option value="' . $row->codigo  . '" ' . (strtolower($row->nome) == strtolower($nomeCidadeResidencia) ? 'selected' : '') . '>' . $row->nome .  '</option>';
+																						}
+																					}
+																				?>		
+																			</select>
+																		</div>
+																		<div class="d-flex align-items-center position-relative my-1 mt-5 mb-0">
+																			<button type="submit" class="btn btn-primary me-5" name="btnCidadesListar" value="btnCidadesListar">Listar Cidades</button>										
+																			<button type="button" onclick="goFactaBtn('<?php echo FGTSUrl ?>fgts/validar-cpf-api-facta/<?php echo $id_proposta;?>/G/xxx/yyy/<?php echo createToken();?>')" class="btn btn-primary" name="btnGravarFacta" value="btnGravarFacta">Gravar Proposta Facta</button>
+																		</div>
+																	</div>
+																</div>
+															</div>
+														</div>
+														<!--begin::Accordion-->
+														<div class="accordion" id="kt_accordion_1  ms-lg-7 ms-xl-10">
+															<div class="accordion-item">
 																<h2 class="accordion-header" id="kt_accordion_1_header_2">
 																	<button class="accordion-button fs-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#kt_accordion_1_body_2" aria-expanded="true" aria-controls="kt_accordion_1_body_1">
 																	INFORMAÇÕES:
@@ -344,7 +389,7 @@
 																				<div class="d-flex flex-column align-items-end">
 																					<div class="d-flex align-items-center mb-2">
 																						<div class="me-3">
-																							<span class="text-muted fs-7 mb-1"><?php echo time_elapsed_string($row->last_updated) . ' - ' . date_format(date_create($row->last_updated),"d/M H:i:s") . '<span class="badge badge-light-' . ($row->SmsStatus == 'failed'  ? 'danger' : 'success') .  ' ms-auto">' . $row->SmsStatus . '</span>'?></span>
+																							<span class="text-muted fs-7 mb-1"><?php echo time_elapsed_string($row->last_updated) . ' - ' . date("d/M H:i:s", strtotime($row->last_updated . ' -3 hours')) . '<span class="badge badge-light-' . ($row->SmsStatus == 'failed'  ? 'danger' : 'success') .  ' ms-auto">' . $row->SmsStatus . '</span>'?></span>
 																							<a href="#" class="fs-5 fw-bold text-gray-900 text-hover-primary ms-1"><?php echo strtoupper($row->ProfileName);?></a>  
 																						</div>
 																						<div class="symbol  symbol-35px symbol-circle "><div class="symbol-label fs-3 bg-light-info text-info">P</div></div><!--end::Avatar-->                 
