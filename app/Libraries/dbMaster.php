@@ -7,7 +7,6 @@ class dbMaster {
 	protected $orderby;
 	protected $limit = 500;
 
-
 	public function setOrderBy($value) {$this->orderby = $value;}
 	public function getOrderBy() {return $this->orderby;}
 

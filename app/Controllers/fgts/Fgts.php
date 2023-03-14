@@ -28,9 +28,12 @@ class Fgts extends BaseController
     }
 
     //retorna dados da proposta gravada
-    public function proposta_buscar($id_proposta)
-    {
+    public function proposta_buscar($id_proposta){
         return $this->dbMaster->select('proposta_fgts', array('id_proposta' => $id_proposta));
+    }
+
+    public function proposta_gravacao_buscar($id_proposta){
+        return $this->dbMaster->select('proposta_fgts_gravacao_json', array('id_proposta' => $id_proposta));
     }
 
     public function clienteDetalhes($id_proposta){
@@ -207,6 +210,41 @@ class Fgts extends BaseController
         return $indicadores;
     }
 
+    public function indicadores_diarios(){
+        $statusFilaAgora = $this->dbMaster->runQuery("select statusProposta, count(*) total from proposta_fgts where statusProposta IN ('CRIADA', 'PASSO 02 - SIMULACAO ONLINE', 'PASSO 02 - SIMULACAO OFFLINE', 'PASSO 03 - DADOS PESSOAIS', 'PASSO 03.1 - DADOS PESSOAIS DOCUMENTOS', 'PASSO 04 - DADOS RESIDENCIAIS', 'PASSO 05 - DADOS BANCÁRIOS', 'PASSO 06 - REVISAO FINAL', 'PASSO 06 - CADASTRO PENDENTE', 'PASSO 07 - GRAVADA OFFLINE', 'PASSO 07 - GRAVADA ONLINE', 'PASSO 08 - PROPOSTA DISPONÍVEL', 'PASSO 08 - FORMALIZAÇÃO FEITA', 'PASSO 08 - AGUARDANDO PAGAMENTO', 'PASSO 08 - PAGAMENTO EM ATRASO', 'PASSO 08 - PENDENTE DOCUMENTO', 'PASSO 08 - LENTIDÃO CAIXA', 'PASSO 08 - CLIENTE VULNERÁVEL', 'PASSO 08 - MENSAGEM DIRETA', 'PASSO 08 - BANCO INVÁLIDO', 'PASSO 08 - PROPOSTA SELECIONADA', 'PASSO 08 - APP CONFIGURADO') group by statusProposta order by total desc;");
+        $propostasPagasOntem = $this->dbMaster->runQuery("select p.statusProposta, count(p.statusProposta) numero, sum(valor_pago) valor from proposta_fgts p inner join proposta_fgts_gravacao_json g on p.id_proposta = g.id_proposta where p.statusProposta = 'PASSO 09 - PROPOSTA FINALIZADA' and DATE(p.last_update) = DATE_SUB(CURDATE(), INTERVAL 1 DAY) group by p.statusProposta;");
+        $top5FontesPagamento = $this->dbMaster->runQuery("select chave_origem, count(*) total from proposta_fgts where DATE(last_update) = DATE_SUB(CURDATE(), INTERVAL 1 DAY) and chave_origem is not null and statusProposta = 'PASSO 09 - PROPOSTA FINALIZADA' group by chave_origem order by total desc LIMIT 5;");
+        $top5FontesTrafego = $this->dbMaster->runQuery("select slug, count(*) total from campanha_click_count where DATE(last_updated) = CURDATE() group by slug order by total desc LIMIT 5;");
+        
+        
+        $strFilaAgora = "⭐️⭐️⭐️ <b> PRODUÇÃO DIÁRIA </b> ⭐️⭐️⭐️\n\n";
+        $strFilaAgora .= "<b>📦📦📦 STATUS DA ESTEIRA - AGORA:</b>\n";
+        
+        foreach ($statusFilaAgora["result"]->getResult() as $row){
+            $strFilaAgora .= "- " . propostaFaseFormatSimples($row->statusProposta) . " - " . $row->total . "\n";
+        }
+        $output = $this->telegram->notifyTelegramGroup($strFilaAgora, telegramPraVoceDiretoria);
+
+        $strFilaAgora = "<b>💰💰💰PROPOSTAS PAGAS - ONTEM</b>\n";      
+        foreach ($propostasPagasOntem["result"]->getResult() as $row){
+            $strFilaAgora .= "- " . propostaFaseFormatSimples($row->statusProposta) . ' - ' . $row->numero . ' - R$' . simpleRound($row->valor) . "\n";
+        }
+        $output = $this->telegram->notifyTelegramGroup($strFilaAgora, telegramPraVoceDiretoria);
+        
+        $strFilaAgora = "<b>📈📈📈TOP 5 - ORIGEM PROPOSTAS PAGAS - ONTEM</b>\n";
+        foreach ($top5FontesPagamento["result"]->getResult() as $row){
+            $strFilaAgora .= "- " . strtoupper($row->chave_origem) . ' - ' . $row->total . "\n";
+        }
+        $output = $this->telegram->notifyTelegramGroup($strFilaAgora, telegramPraVoceDiretoria);        
+
+        $strFilaAgora = "<b>👩🏻‍🔧👩🏻‍🔧👩🏻‍🔧TOP 5 - ORIGEM NOVOS CLIENTES - HOJE </b>\n";
+        foreach ($top5FontesTrafego["result"]->getResult() as $row){
+            $strFilaAgora .= "- " . strtoupper($row->slug) . ' - ' . $row->total . "\n";
+        }
+        $output = $this->telegram->notifyTelegramGroup($strFilaAgora, telegramPraVoceDiretoria);
+
+    }
+
     public function listarPropostas(){
         $fases = $this->fasesProposta();
         $users = $this->listaOPeradores();
@@ -251,6 +289,8 @@ class Fgts extends BaseController
             }
         }
         
+        //foreach($fasesAdd as $item){echo "'" . $item . "', ";}exit;
+
         $likeCheck = array("likeCheck" => $likeCheck);
 
         $this->dbMaster->setOrderBy(array('id_proposta', 'DESC'));
@@ -299,7 +339,15 @@ class Fgts extends BaseController
         $faseSimples = propostaFaseFormatSimples($status);
 
         if ($status == "PASSO 09 - PROPOSTA FINALIZADA"){
-            $output = $this->telegram->notifyTelegramGroup("⭐️⭐️⭐️ FASE $verificador - <b>PROPOSTA PAGA</b>");
+            $jsonGravacao = $this->proposta_gravacao_buscar($id_proposta);
+            if ($jsonGravacao['existRecord']){
+                $txtValorPago = SimpleRound($jsonGravacao['firstRow']->valor_pago);
+                if ($jsonGravacao['firstRow']->valor_pago > 0) {
+                    $output = $this->telegram->notifyTelegramGroup("⭐️⭐️⭐️ FASE - $verificador - <b>PROPOSTA PAGA [$txtValorPago]</b>");
+                } else {
+                    $output = $this->telegram->notifyTelegramGroup("⭐️⭐️⭐️ FASE - $verificador - <b>PROPOSTA PAGA</b>");
+                }
+            }
         } else {
             $output = $this->telegram->notifyTelegramGroup("👾👾👾 FASE $verificador - " . $faseSimples);
         }
