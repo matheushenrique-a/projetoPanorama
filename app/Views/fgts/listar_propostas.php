@@ -315,7 +315,7 @@
 															<td><?php echo $row->ddd . $row->celular; echo ($row->celular_failed == "Y"  ? '<span class="badge badge-light-danger">erro</span>' : '');?> </td>
 															<td><?php echo time_elapsed_string($row->last_update)?></td>
 															<td>
-																<a href="<?php echo FGTSUrl ?>fgts/validar-cpf-api/<?php echo $row->id_proposta;?>/0/0/0/1/<?php echo createToken();?>" class="menu-link px-2" target="_blank"><?php echo propostaOfflineModeFormat($row->offlineMode);?></a>
+																<a href="<?php echo FGTSUrl ?>fgts/validar-cpf-api/<?php echo $row->id_proposta;?>/0/0/0/0/<?php echo createToken();?>" class="menu-link px-2" target="_blank"><?php echo propostaOfflineModeFormat($row->offlineMode);?></a>
 																<span></span>	
 															</td>
 															<td><?php echo $row->OperadorCCenter;?> <i class="bi bi-chat-dots fs-4" title="<?php echo $row->ocorrencias;?>"></i></td>
