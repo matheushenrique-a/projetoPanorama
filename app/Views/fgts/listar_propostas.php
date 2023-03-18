@@ -269,7 +269,6 @@
 														<th class="min-w-150px">CPF / Opção</th>
 														<th class="min-w-25">Celular</th>
 														<th class="min-w-50">Atual.</th>
-														<th class="min-w-50px">Online</th>
 														<th class="min-w-50px">Oper.</th>
 														<th class="min-w-125px">Status</th>
 														<th class="min-w-25px">AÇÃO</th>
@@ -286,9 +285,23 @@
 														<tr>
 															<!--begin::Checkbox-->
 															<td>
-																<div class="form-check form-check-sm form-check-custom form-check-solid">
-																	<input class="form-check-input" type="checkbox" value="1" />
-																</div>
+																<div><!--begin::PopUp menu-->
+																	<a href="#" class="btn btn-sm btn-icon btn-light btn-active-light-primary" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" data-bs-toggle="tooltip" data-bs-placement="top" title=""><!--begin::Svg Icon | path: icons/duotune/general/gen052.svg--><i class="las la-copy"></i><!--end::Svg Icon--></a>
+																	<div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-250px py-4" data-kt-menu="true">
+																		
+																		<div class="menu-item px-3"><a href="#" onclick="copyText('<?php echo strtoUpper($row->verificador);?>'); return false;"class="menu-link px-2"><i class="bi bi-card-text fs-2"></i><span class="mx-2"><?php echo strtoUpper($row->verificador);?></span></a></div>
+																		<div class="menu-item px-3"><a href="#" onclick="copyText('<?php echo $row->cpf;?>'); return false;"class="menu-link px-2"><i class="bi bi-card-text fs-2"></i><span class="mx-2"><?php echo $row->cpf;?></span></a></div>
+																		<div class="menu-item px-3"><a href="#" onclick="copyText('<?php echo limparMascara($row->cpf);?>'); return false;"class="menu-link px-2"><i class="bi bi-card-text fs-2"></i><span class="mx-2"><?php echo limparMascara($row->cpf);?></span></a></div>
+																		<div class="separator my-5"></div>
+																		<div class="menu-item px-3"><a href="#" onclick="copyText('<?php echo $row->email;?>'); return false;"class="menu-link px-2"><i class="bi bi-card-text fs-2"></i><span class="mx-2"><?php echo $row->email;?></span></a></div>
+																		<div class="menu-item px-3"><a href="#" onclick="copyText('<?php echo shortURL . strtoUpper($row->verificador);?>'); return false;"class="menu-link px-2"><i class="bi bi-card-text fs-2"></i><span class="mx-2"><?php echo shortURL . strtoUpper($row->verificador);?></span></a></div>
+																		<div class="separator my-5"></div>
+																		<div class="menu-item px-3"><a href="#" onclick="copyText('<?php echo limparMascara('0' . $row->ddd . $row->celular);?>'); return false;"class="menu-link px-2"><i class="bi bi-card-text fs-2"></i><span class="mx-2"><?php echo limparMascara('0' . $row->ddd . $row->celular);?></span></a></div>
+																		<div class="menu-item px-3"><a href="#" onclick="copyText('<?php echo $row->ddd . $row->celular;?>'); return false;"class="menu-link px-2"><i class="bi bi-card-text fs-2"></i><span class="mx-2"><?php echo $row->ddd . $row->celular;?></span></a></div>
+																		<div class="separator my-5"></div>
+																		<div class="menu-item px-3"><a href="#" onclick="copyText('<?php echo dataUsPt($row->data_nascimento, true);?>'); return false;"class="menu-link px-2"><i class="bi bi-card-text fs-2"></i><span class="mx-2"><?php echo dataUsPt($row->data_nascimento, true);?></span></a></div>
+																	</div>
+																</div><!--end::PopUp menu-->																
 															</td>
 															<!--end::Checkbox-->
 															<!--begin::User=-->
@@ -314,10 +327,6 @@
 															</td>
 															<td><?php echo $row->ddd . $row->celular; echo ($row->celular_failed == "Y"  ? '<span class="badge badge-light-danger">erro</span>' : '');?> </td>
 															<td><?php echo time_elapsed_string($row->last_update)?></td>
-															<td>
-																<a href="<?php echo FGTSUrl ?>fgts/validar-cpf-api/<?php echo $row->id_proposta;?>/0/0/0/0/<?php echo createToken();?>" class="menu-link px-2" target="_blank"><?php echo propostaOfflineModeFormat($row->offlineMode);?></a>
-																<span></span>	
-															</td>
 															<td><?php echo $row->OperadorCCenter;?> <i class="bi bi-chat-dots fs-4" title="<?php echo $row->ocorrencias;?>"></i></td>
 															<td><?php echo propostaFaseFormat($row->statusProposta);?></td>
 															<td>
@@ -342,6 +351,7 @@
 																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/FIM" class="menu-link px-2"><i class="bi bi-bookmark-check-fill text-gray-400 fs-2"></i><span class="mx-2">Finalizada Paga</span></a></div>
 																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/SAL" class="menu-link px-2"><i class="bi bi-bookmark-check-fill text-gray-400 fs-2"></i><span class="mx-2">Saldo Insuficiente</span></a></div>
 																		<div class="separator my-5"></div>
+																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/SEL" class="menu-link px-2"><i class="bi bi-bookmark-check-fill fs-2"></i><span class="mx-2">Proposta selecionada</span></a></div>
 																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/DIS" class="menu-link px-2"><i class="bi bi-bookmark-check-fill fs-2"></i><span class="mx-2">Proposta disponível</span></a></div>
 																	</div>
 																</div><!--end::PopUp menu-->

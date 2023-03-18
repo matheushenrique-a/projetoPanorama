@@ -190,6 +190,97 @@
 																</div>
 															</div>
 														</div>
+														<!--begin::Accordion-->
+														<div class="accordion" id="kt_accordion_1  ms-lg-7 ms-xl-10">
+															<div class="accordion-item">
+																<h2 class="accordion-header" id="kt_accordion_1_header_2">
+																	<button class="accordion-button fs-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#kt_accordion_1_body_2" aria-expanded="true" aria-controls="kt_accordion_1_body_1">
+																	SIMULAÇÕES PROPOSTA:
+																	</button>
+																</h2>
+																<div id="kt_accordion_1_body_2" class="accordion-collapse collapse show" aria-labelledby="kt_accordion_1_header_2" data-bs-parent="#kt_accordion_2">
+																	<div class="accordion-body">
+
+
+
+
+
+
+
+
+																		<div class="card-body table-responsive">
+																			<!--begin::Table-->
+																			<table class="table align-middle table-row-dashed table-hover fs-6 gy-2" id="kt_table_users">
+																				<!--begin::Table head-->
+																				<thead>
+																					<!--begin::Table row-->
+																					<tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
+																						<th class="min-w-25px">ID</th>
+																						<th class="min-w-25px">Parc.</th>
+																						<th class="min-w-25px">Banco</th>
+																						<th class="min-w-50px">Data</th>
+																						<th class="min-w-50px">Status</th>
+																					</tr>
+																					<!--end::Table row-->
+																				</thead>
+																				<!--end::Table head-->
+																				<!--begin::Table body-->
+																				<tbody class="text-gray-600 fw-semibold">
+																					<?php 
+																						//foreach ($simulacoes['result']->getResult() as $row) {
+																						
+																						for ($x=3; $x<=10; $x++) {
+
+																							$id_json = "";
+																							$banco = "";
+																							$data = "";
+																							$status = "";
+
+																							foreach ($simulacoes['result']->getResult() as $row) {
+																								if ($row->parcelas == null) $row->parcelas = 10;
+
+																								
+																								if ($x == $row->parcelas) {
+																									if ($row->id_json == $id_simulacao) $status = "APROVADA";
+																									$id_json = $row->id_json;
+																									$banco = $row->banco;
+																									$data = dataUsPt($row->last_update, true);
+																									break;
+																								}
+																							}
+																					?>
+																						<tr>
+																							<td><?php echo $id_json?></td>
+																							<td><a href="<?php echo FGTSUrl ?>fgts/validar-cpf-api/<?php echo $row->id_proposta;?>/<?php echo $x?>/0/0/0/<?php echo createToken();?>" class="menu-link px-2" target="_blank"><?php echo $x;?></a></td>
+																							<td><?php echo $banco;?></td>
+																							<td><?php echo $data;?></td>
+																							<td><?php echo $status;?></td>
+																						</tr>
+																					<?php 
+																						} //End:Foreach
+																					?>
+																				</tbody>
+																				<!--end::Table body-->
+																			</table>
+																			<!--end::Table-->
+																		</div>
+																		<!--end::Card body-->
+
+
+
+
+
+
+
+
+
+
+
+
+																	</div>
+																</div>
+															</div>
+														</div>
 														<div class="accordion  accordion-toggle-arrow" id="validacaoDados"><div class="card">
 															<!--begin::Block-->
 															<div class="card-header" id="headingOne4"><div class="card-title" ><i class="flaticon2-checkmark"></i>DADOS PESSOAIS:</div></div>
@@ -299,7 +390,7 @@
 																	<!--begin::Info-->
 																	<div class="mb-0 lh-1">
 																		<span class="badge badge-success badge-circle w-10px h-10px me-1"></span>
-																		<span class="fs-7 fw-semibold text-muted">Proposta: <?php echo strtoupper($verificador);?></span>
+																		<span class="fs-7 fw-semibold text-muted"><a href="<?php echo FGTSUrl ?>fgts/proposta-status/<?php echo $verificador;?>/DEeDeqqew234deT45" target="_blank">Proposta: <?php echo strtoupper($verificador);?></a></span>
 																	</div>
 																	<!--end::Info-->
 																</div>

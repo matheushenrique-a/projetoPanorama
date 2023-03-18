@@ -9,6 +9,8 @@
 define('IsProduction', false);
 define('AppName', "Grupo QUID");
 
+define ('shortURL', 'https://pravc.io/');
+
 if (IsProduction){
     define ('assetfolder', '/');
     define ('FGTSUrl', '/');
