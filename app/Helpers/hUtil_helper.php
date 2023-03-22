@@ -36,38 +36,53 @@
 
     function getFases(){
         $data = array(
-            array('faseCode' => 'ZAP', 'faseName' => 'WHATSAPP', 'color' => 'light-danger', 'categoria' => 'fim'),
-            array('faseCode' => 'CRD', 'faseName' => 'CRIADA', 'color' => 'light-danger', 'categoria' => 'acao'),
-            array('faseCode' => 'SIO', 'faseName' => 'PASSO 02 - SIMULACAO ONLINE', 'color' => 'light-danger', 'categoria' => 'acao'),
-            array('faseCode' => 'SIF', 'faseName' => 'PASSO 02 - SIMULACAO OFFLINE', 'color' => 'light-danger', 'categoria' => 'acao'),
-            array('faseCode' => 'DAD', 'faseName' => 'PASSO 03 - DADOS PESSOAIS', 'color' => 'light-danger', 'categoria' => 'acao'),
-            array('faseCode' => 'DOC', 'faseName' => 'PASSO 03.1 - DADOS PESSOAIS DOCUMENTOS', 'color' => 'light-danger', 'categoria' => 'acao'),
-            array('faseCode' => 'RES', 'faseName' => 'PASSO 04 - DADOS RESIDENCIAIS', 'color' => 'light-danger', 'categoria' => 'acao'),
-            array('faseCode' => 'BAN', 'faseName' => 'PASSO 05 - DADOS BANCÁRIOS', 'color' => 'light-danger', 'categoria' => 'acao'),
-            array('faseCode' => 'REV', 'faseName' => 'PASSO 06 - REVISAO FINAL', 'color' => 'light-danger', 'categoria' => 'acao'),
-            array('faseCode' => 'CAD', 'faseName' => 'PASSO 06 - CADASTRO PENDENTE', 'color' => 'light-danger', 'categoria' => 'acao'),
-            array('faseCode' => 'GRF', 'faseName' => 'PASSO 07 - GRAVADA OFFLINE', 'color' => 'light-info', 'categoria' => 'acao'),
-            array('faseCode' => 'GRO', 'faseName' => 'PASSO 07 - GRAVADA ONLINE', 'color' => 'light-success', 'categoria' => 'acao'),
-            array('faseCode' => 'DIS', 'faseName' => 'PASSO 08 - PROPOSTA DISPONÍVEL', 'color' => 'light-success', 'categoria' => 'acao'),
-            array('faseCode' => 'FOR', 'faseName' => 'PASSO 08 - FORMALIZAÇÃO FEITA', 'color' => 'light-info', 'categoria' => 'acao'),
-            array('faseCode' => 'PGT', 'faseName' => 'PASSO 08 - AGUARDANDO PAGAMENTO', 'color' => 'light-info', 'categoria' => 'acao'),
-            array('faseCode' => 'ATS', 'faseName' => 'PASSO 08 - PAGAMENTO EM ATRASO', 'color' => 'light-info', 'categoria' => 'acao'),
-            array('faseCode' => 'CNH', 'faseName' => 'PASSO 08 - PENDENTE DOCUMENTO', 'color' => 'light-info', 'categoria' => 'acao'),
-            array('faseCode' => 'LCX', 'faseName' => 'PASSO 08 - LENTIDÃO CAIXA', 'color' => 'light-info', 'categoria' => 'acao'),
-            array('faseCode' => 'VUL', 'faseName' => 'PASSO 08 - CLIENTE VULNERÁVEL', 'color' => 'light-info', 'categoria' => 'acao'),
-            array('faseCode' => 'MDI', 'faseName' => 'PASSO 08 - MENSAGEM DIRETA', 'color' => 'light-info', 'categoria' => 'acao'),
-            array('faseCode' => 'CCN', 'faseName' => 'PASSO 08 - BANCO INVÁLIDO', 'color' => 'light-info', 'categoria' => 'acao'),
-            array('faseCode' => 'ADE', 'faseName' => 'PASSO 08 - PENDENTE ADESAO', 'color' => 'light-danger', 'categoria' => 'funil'),
-            array('faseCode' => 'INS', 'faseName' => 'PASSO 08 - PENDENTE INSTITUIÇÃO', 'color' => 'light-danger', 'categoria' => 'funil'),
-            array('faseCode' => 'SEL', 'faseName' => 'PASSO 08 - PROPOSTA SELECIONADA', 'color' => 'light-info', 'categoria' => 'acao'),
-            array('faseCode' => 'CON', 'faseName' => 'PASSO 08 - APP CONFIGURADO', 'color' => 'light-info', 'categoria' => 'acao'),
-            array('faseCode' => 'FIM', 'faseName' => 'PASSO 09 - PROPOSTA FINALIZADA', 'color' => 'light-success', 'categoria' => 'fim'),
-            array('faseCode' => 'SAL', 'faseName' => 'PASSO 09 - SALDO INSUFICIENTE', 'color' => 'light-success', 'categoria' => 'fim'),
-            array('faseCode' => 'NIV', 'faseName' => 'PASSO 09 - ANIVERSÁRIO PRÓXIMO', 'color' => 'light-success', 'categoria' => 'fim'),
-            array('faseCode' => 'CAN', 'faseName' => 'PASSO 09 - CANCELADA', 'color' => 'light-success', 'categoria' => 'fim'),
+            array('faseCode' => 'ZAP', 'faseName' => 'WHATSAPP', 'faseCliente' => "REGISTRO INTERNO", 'color' => 'light-danger', 'categoria' => 'fim'),
+            array('faseCode' => 'CRD', 'faseName' => 'CRIADA', 'faseCliente' => "REGISTRO INTERNO", 'color' => 'light-danger', 'categoria' => 'acao'),
+            // array('faseCode' => 'SIO', 'faseName' => 'PASSO 02 - SIMULACAO ONLINE', 'color' => 'light-danger', 'categoria' => 'acao'),
+            // array('faseCode' => 'SIF', 'faseName' => 'PASSO 02 - SIMULACAO OFFLINE', 'color' => 'light-danger', 'categoria' => 'acao'),
+            // array('faseCode' => 'DAD', 'faseName' => 'PASSO 03 - DADOS PESSOAIS', 'color' => 'light-danger', 'categoria' => 'acao'),
+            // array('faseCode' => 'DOC', 'faseName' => 'PASSO 03.1 - DADOS PESSOAIS DOCUMENTOS', 'color' => 'light-danger', 'categoria' => 'acao'),
+            // array('faseCode' => 'RES', 'faseName' => 'PASSO 04 - DADOS RESIDENCIAIS', 'color' => 'light-danger', 'categoria' => 'acao'),
+            // array('faseCode' => 'BAN', 'faseName' => 'PASSO 05 - DADOS BANCÁRIOS', 'color' => 'light-danger', 'categoria' => 'acao'),
+            // array('faseCode' => 'REV', 'faseName' => 'PASSO 06 - REVISAO FINAL', 'color' => 'light-danger', 'categoria' => 'acao'),
+            array('faseCode' => 'CAD', 'faseName' => 'PASSO 06 - CADASTRO PENDENTE', 'faseCliente' => "AGUARDANDO DADOS P/ DEPÓSITO", 'color' => 'light-danger', 'categoria' => 'acao'),
+            array('faseCode' => 'GRF', 'faseName' => 'PASSO 07 - GRAVADA OFFLINE', 'faseCliente' => "VERIFICAÇÃO SALDO FGTS", 'color' => 'light-info', 'categoria' => 'acao'),
+            array('faseCode' => 'GRO', 'faseName' => 'PASSO 07 - GRAVADA ONLINE', 'faseCliente' => "AGUARDANDO ACEITE PROPOSTA", 'color' => 'light-success', 'categoria' => 'acao'),
+            array('faseCode' => 'DIS', 'faseName' => 'PASSO 08 - PROPOSTA DISPONÍVEL', 'faseCliente' => "PROPOSTA LIBERADA", 'color' => 'light-success', 'categoria' => 'acao'),
+            array('faseCode' => 'FOR', 'faseName' => 'PASSO 08 - FORMALIZAÇÃO FEITA', 'faseCliente' => "APROVAÇÃO PROPOSTA PELO BANCO", 'color' => 'light-info', 'categoria' => 'acao'),
+            array('faseCode' => 'PGT', 'faseName' => 'PASSO 08 - AGUARDANDO PAGAMENTO', 'faseCliente' => "PAGAMENTO EM PROCESSAMENTO", 'color' => 'light-info', 'categoria' => 'acao'),
+            array('faseCode' => 'ATS', 'faseName' => 'PASSO 08 - PAGAMENTO EM ATRASO', 'faseCliente' => "PAGAMENTO EM ATRASO", 'color' => 'light-info', 'categoria' => 'acao'),
+            array('faseCode' => 'CNH', 'faseName' => 'PASSO 08 - PENDENTE DOCUMENTO', 'faseCliente' => "AGUARDANDO ENVIO CNH/RG", 'color' => 'light-info', 'categoria' => 'acao'),
+            array('faseCode' => 'LCX', 'faseName' => 'PASSO 08 - LENTIDÃO CAIXA', 'faseCliente' => "LENTIDÃO SISTEMA CAIXA", 'color' => 'light-info', 'categoria' => 'acao'),
+            array('faseCode' => 'VUL', 'faseName' => 'PASSO 08 - CLIENTE VULNERÁVEL', 'faseCliente' => "CONTATO CLIENTE", 'color' => 'light-info', 'categoria' => 'acao'),
+            array('faseCode' => 'MDI', 'faseName' => 'PASSO 08 - MENSAGEM DIRETA', 'faseCliente' => "REVISÃO DA PROPOSTA", 'color' => 'light-info', 'categoria' => 'acao'),
+            array('faseCode' => 'CCN', 'faseName' => 'PASSO 08 - BANCO INVÁLIDO', 'faseCliente' => "BANCO INVÁLIDO", 'color' => 'light-info', 'categoria' => 'acao'),
+            array('faseCode' => 'ADE', 'faseName' => 'PASSO 08 - PENDENTE ADESAO', 'faseCliente' => "PENDENTE CONFIGURAÇÃO APP FGTS", 'color' => 'light-danger', 'categoria' => 'funil'),
+            array('faseCode' => 'INS', 'faseName' => 'PASSO 08 - PENDENTE INSTITUIÇÃO', 'faseCliente' => "PENDENTE CONFIGURAÇÃO APP FGTS", 'color' => 'light-danger', 'categoria' => 'funil'),
+            array('faseCode' => 'SEL', 'faseName' => 'PASSO 08 - PROPOSTA SELECIONADA', 'faseCliente' => "REGISTRO PROPOSTA JUNTO AO BANCO", 'color' => 'light-info', 'categoria' => 'acao'),
+            array('faseCode' => 'CON', 'faseName' => 'PASSO 08 - APP CONFIGURADO', 'faseCliente' => "VERIFICAÇÃO SALDO FGTS", 'color' => 'light-info', 'categoria' => 'acao'),
+            array('faseCode' => 'FIM', 'faseName' => 'PASSO 09 - PROPOSTA FINALIZADA', 'faseCliente' => "PROPOSTA CONCLUÍDA", 'color' => 'light-success', 'categoria' => 'fim'),
+            array('faseCode' => 'SAL', 'faseName' => 'PASSO 09 - SALDO INSUFICIENTE', 'faseCliente' => "SALDO INSUFICIENTE", 'color' => 'light-success', 'categoria' => 'fim'),
+            array('faseCode' => 'NIV', 'faseName' => 'PASSO 09 - ANIVERSÁRIO PRÓXIMO', 'faseCliente' => "DATA ANIVERSÁRIO PRÓXIMO", 'color' => 'light-success', 'categoria' => 'fim'),
+            array('faseCode' => 'CAN', 'faseName' => 'PASSO 09 - CANCELADA', 'faseCliente' => "PROPOSTA CONCLUÍDA", 'color' => 'light-success', 'categoria' => 'fim'),
+            array('faseCode' => 'AFL', 'faseName' => 'PASSO 09 - AFILIADO', 'faseCliente' => "PROGRAMA AFILIADO", 'color' => 'light-success', 'categoria' => 'fim'),
         );
         return $data;
+
+		//CRIAR FASE 
+			//-> PROPOSTA REPROVADA 
+			//-> PROPOSTA EXCLUSIVIDADE PAN
+			//-> LIMITE 5K
+
+		//FASES ONDE O CLIENTE DEVE PODER EDITAR PROPOSTA:
+			//PASSO 06 - CADASTRO PENDENTE
+			//PASSO 08 - BANCO INVÁLIDO
+		//LEGENDA
+		//"PASSO 07 - GRAVADA ONLINE" = "PASSO 07 - FORMALIZAÇÃO CLIENTE";
+		//"PASSO 07 - GRAVADA OFFLINE" = "PASSO 07 - AGUARDANDO ROBÔ";
+		
     }
+	
 	function dataUsPt($dateEntry, $barSeparator = false){
 		$date = str_replace('/', '-', $dateEntry);
 

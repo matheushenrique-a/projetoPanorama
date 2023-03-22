@@ -325,11 +325,7 @@
 																	<?php echo propostaValorParcel($row);?>
 																</a>
 															</td>
-															<td>
-																	<?php echo $row->ddd . $row->celular; 
-																	echo ($row->celular_failed == "Y"  ? '<span class="badge badge-light-danger">erro</span>' : '');
-																	echo ($row->celular_alertas == "N"  ? '<span class="badge badge-light-danger">block</span>' : '');?> 
-															</td>
+															<td><?php echo $row->ddd . $row->celular; echo ($row->celular_failed == "Y"  ? '<span class="badge badge-light-danger">erro</span>' : '');?> </td>
 															<td><?php echo time_elapsed_string($row->last_update)?></td>
 															<td><?php echo $row->OperadorCCenter;?> <i class="bi bi-chat-dots fs-4" title="<?php echo $row->ocorrencias;?>"></i></td>
 															<td><?php echo propostaFaseFormat($row->statusProposta);?></td>

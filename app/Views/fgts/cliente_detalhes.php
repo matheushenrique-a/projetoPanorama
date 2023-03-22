@@ -251,7 +251,7 @@
 																					?>
 																						<tr>
 																							<td><?php echo $id_json?></td>
-																							<td><a href="<?php echo FGTSUrl ?>fgts/validar-cpf-api/<?php echo $row->id_proposta;?>/<?php echo $x?>/0/0/0/<?php echo createToken();?>" class="menu-link px-2" target="_blank"><?php echo $x;?></a></td>
+																							<td><a href="<?php echo FGTSUrl ?>fgts/validar-cpf-api/<?php echo $id_proposta;?>/<?php echo $x?>/0/0/0/<?php echo createToken();?>" class="menu-link px-2" target="_blank"><?php echo $x;?></a></td>
 																							<td><?php echo $banco;?></td>
 																							<td><?php echo $data;?></td>
 																							<td><?php echo $status;?></td>
