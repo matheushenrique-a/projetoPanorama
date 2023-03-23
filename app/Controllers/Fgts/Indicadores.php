@@ -28,6 +28,7 @@ class Indicadores extends BaseController
     public function indicadores_diarios(){
         $statusFilaAgora = $this->dbMaster->runQuery("select statusProposta, count(*) total from proposta_fgts where statusProposta IN ('CRIADA', 'PASSO 02 - SIMULACAO ONLINE', 'PASSO 02 - SIMULACAO OFFLINE', 'PASSO 03 - DADOS PESSOAIS', 'PASSO 03.1 - DADOS PESSOAIS DOCUMENTOS', 'PASSO 04 - DADOS RESIDENCIAIS', 'PASSO 05 - DADOS BANCÁRIOS', 'PASSO 06 - REVISAO FINAL', 'PASSO 06 - CADASTRO PENDENTE', 'PASSO 07 - GRAVADA OFFLINE', 'PASSO 07 - GRAVADA ONLINE', 'PASSO 08 - PROPOSTA DISPONÍVEL', 'PASSO 08 - FORMALIZAÇÃO FEITA', 'PASSO 08 - AGUARDANDO PAGAMENTO', 'PASSO 08 - PAGAMENTO EM ATRASO', 'PASSO 08 - PENDENTE DOCUMENTO', 'PASSO 08 - LENTIDÃO CAIXA', 'PASSO 08 - CLIENTE VULNERÁVEL', 'PASSO 08 - MENSAGEM DIRETA', 'PASSO 08 - BANCO INVÁLIDO', 'PASSO 08 - PROPOSTA SELECIONADA', 'PASSO 08 - APP CONFIGURADO') group by statusProposta order by total desc;");
         $propostasPagasOntem = $this->dbMaster->runQuery("select p.statusProposta, count(p.statusProposta) numero, sum(valor_pago) valor from proposta_fgts p inner join proposta_fgts_gravacao_json g on p.id_proposta = g.id_proposta where p.statusProposta = 'PASSO 09 - PROPOSTA FINALIZADA' and DATE(p.last_update) = DATE_SUB(CURDATE(), INTERVAL 1 DAY) group by p.statusProposta;");
+        $propostasPagas30 = $this->dbMaster->runQuery("select p.statusProposta, count(p.statusProposta) numero, sum(valor_pago) valor from proposta_fgts p inner join proposta_fgts_gravacao_json g on p.id_proposta = g.id_proposta where p.statusProposta = 'PASSO 09 - PROPOSTA FINALIZADA' and DATE(p.last_update) = DATE_SUB(CURDATE(), INTERVAL 30 DAY) group by p.statusProposta;");
         $top5FontesPagamento = $this->dbMaster->runQuery("select chave_origem, count(*) total from proposta_fgts where DATE(last_update) = DATE_SUB(CURDATE(), INTERVAL 1 DAY) and chave_origem is not null and statusProposta = 'PASSO 09 - PROPOSTA FINALIZADA' group by chave_origem order by total desc LIMIT 5;");
         $top5FontesTrafego = $this->dbMaster->runQuery("select slug, count(*) total from campanha_click_count where DATE(last_updated) = CURDATE() group by slug order by total desc LIMIT 5;");
         $api = $this->dbMaster->runQuery("select status, count(*) total from api_log where DATE(last_update) = DATE_SUB(CURDATE(), INTERVAL 1 DAY) group by status order by total;");
@@ -42,6 +43,12 @@ class Indicadores extends BaseController
 
         $strFilaAgora = "<b>💰💰💰 PAGAS - ONTEM</b>\n";      
         foreach ($propostasPagasOntem["result"]->getResult() as $row){
+            $strFilaAgora .= "- " . propostaFaseFormatSimples($row->statusProposta) . ' - ' . $row->numero . ' - R$' . simpleRound($row->valor) . "\n";
+        }
+        $output = $this->telegram->notifyTelegramGroup($strFilaAgora, telegramPraVoceDiretoria);
+
+        $strFilaAgora = "<b>💰💰💰 PAGAS - 30 DIAS</b>\n";      
+        foreach ($propostasPagas30["result"]->getResult() as $row){
             $strFilaAgora .= "- " . propostaFaseFormatSimples($row->statusProposta) . ' - ' . $row->numero . ' - R$' . simpleRound($row->valor) . "\n";
         }
         $output = $this->telegram->notifyTelegramGroup($strFilaAgora, telegramPraVoceDiretoria);

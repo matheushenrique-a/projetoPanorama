@@ -249,6 +249,9 @@ class Fgts extends BaseController
             } else if ($flag == "ACAO"){
                 $fasesAdd = getFasesCategory('acao');
                 $whereIn = array("whereIn" => array('statusProposta', $fasesAdd)); 
+            } else if ($flag == "ACOMPANHAR"){
+                $fasesAdd = getFasesCategory('acompanhar');
+                $whereIn = array("whereIn" => array('statusProposta', $fasesAdd)); 
             } else if ($flag == "OCULTAS"){
                 $fasesAdd = getFasesCategory('fim');
                 $whereIn = array("whereIn" => array('statusProposta', $fasesAdd)); 

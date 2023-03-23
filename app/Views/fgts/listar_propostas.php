@@ -223,7 +223,8 @@
 																<?php
 																	echo '<option value="TODAS" ' .  ($flag == "TODAS" ? 'selected' : '') . '> TODAS </option>';
 																	echo '<option value="ADESAO" ' .  ($flag == "ADESAO" ? 'selected' : '') . '> Adeão e Instituição </option>';
-																	echo '<option value="ACAO" ' .  ($flag == "ACAO" ? 'selected' : '') . '> Acompanhamento e ação </option>';
+																	echo '<option value="ACAO" ' .  ($flag == "ACAO" ? 'selected' : '') . '> Acompanhamento e Ação </option>';
+																	echo '<option value="ACOMPANHAR" ' .  ($flag == "ACOMPANHAR" ? 'selected' : '') . '> Proposta disponível </option>';
 																	echo '<option value="OCULTAS" ' .  ($flag == "OCULTAS" ? 'selected' : '') . '> Finalizadas </option>';
 																?>
 																</select>													
