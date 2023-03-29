@@ -29,7 +29,7 @@ define ('telegramPraVoceGroupLogErrors', '-587867421');
 define('smsMsg', false);
 define('emailMsg', false);
 define('whatAppMsg', false);
-define('telegramAlerts', true);
+define('telegramAlerts', false);
 
 /*
  | --------------------------------------------------------------------

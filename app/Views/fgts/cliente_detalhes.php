@@ -229,22 +229,24 @@
 																					<?php 
 																						//foreach ($simulacoes['result']->getResult() as $row) {
 																						
-																						for ($x=3; $x<=10; $x++) {
+																						for ($x=3; $x<=12; $x++) {
 
 																							$id_json = "";
 																							$banco = "";
 																							$data = "";
 																							$status = "";
+																							$valor_liquido = "";
 
 																							foreach ($simulacoes['result']->getResult() as $row) {
 																								if ($row->parcelas == null) $row->parcelas = 10;
-
+																								
 																								
 																								if ($x == $row->parcelas) {
 																									if ($row->id_json == $id_simulacao) $status = "APROVADA";
 																									$id_json = $row->id_json;
 																									$banco = $row->banco;
 																									$data = dataUsPt($row->last_update, true);
+																									$valor_liquido = (isset($row->json['valor_liquido']) ? simpleRound($row->json['valor_liquido']) : '');    ;
 																									break;
 																								}
 																							}
@@ -254,7 +256,7 @@
 																							<td><a href="<?php echo FGTSUrl ?>fgts/validar-cpf-api/<?php echo $id_proposta;?>/<?php echo $x?>/0/0/0/<?php echo createToken();?>" class="menu-link px-2" target="_blank"><?php echo $x;?></a></td>
 																							<td><?php echo $banco;?></td>
 																							<td><?php echo $data;?></td>
-																							<td><?php echo $status;?></td>
+																							<td><?php echo (empty($valor_liquido)  ? '' : 'R$ ' . $valor_liquido);?><?php echo (empty($status)  ? '' : '<br>' . $status);?></td>
 																						</tr>
 																					<?php 
 																						} //End:Foreach

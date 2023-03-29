@@ -82,7 +82,7 @@
 		//"PASSO 07 - GRAVADA OFFLINE" = "PASSO 07 - AGUARDANDO ROBÔ";
 		
     }
-	
+
 	function dataUsPt($dateEntry, $barSeparator = false){
 		$date = str_replace('/', '-', $dateEntry);
 

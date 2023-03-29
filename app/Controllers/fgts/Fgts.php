@@ -7,6 +7,7 @@ use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use App\Libraries\dbMaster;
 use App\Models\M_telegram;
+use Config\Services;
 
 class Fgts extends BaseController
 {
@@ -143,6 +144,14 @@ class Fgts extends BaseController
             $data['txtValorPago'] = $txtValorPago;
             $data['txtURLCliente'] = $txtURLCliente;
             $data['txtErroIntegracao'] = $txtErroIntegracao;
+            foreach ($simulacoes['result']->getResult() as $row) {
+                if ($row->banco == "PAN"){
+                    $row->json = $this->pan_json_simulacao_translator_advanced($row->json);
+                } else if ($row->banco == "FACTA"){
+                    $row->json = $this->facta_json_simulacao_translator_advanced($row->json);
+                }
+            }
+    
             $data['simulacoes'] = $simulacoes;
             $data['id_simulacao'] = $cliente['firstRow']->id_simulacao;
 
@@ -216,17 +225,49 @@ class Fgts extends BaseController
     public function listarPropostas(){
         $fases = $this->fasesProposta();
         $users = $this->listaOPeradores();
-        //echo "22:00:48 - <h3>Dump 36</h3> <br><br>" . var_dump($this->session->session_id); exit;					//<-------DEBUG
-        $cpf = $this->getpost('txtCPF');
-        $verificador = $this->getpost('verificador');
-        $celular = $this->getpost('celular');
-        $nome = $this->getpost('txtNome');
-        $email = $this->getpost('email');
-        $statusPropostaFiltro = $this->getpost('statusPropostaFiltro');
-        $offlineMode = $this->getpost('offlineMode');
-        $operadorFiltro = $this->getpost('operadorFiltro');
+        $buscarProp = $this->getpost('buscarProp');
 
+        if (!empty($buscarProp)){
+            helper('cookie');
+            $cpf = $this->getpost('txtCPF', false);
+            $verificador = $this->getpost('verificador', false);
+            $celular = $this->getpost('celular', false);
+            $nome = $this->getpost('txtNome', false);
+            $email = $this->getpost('email', false);
+            //echo '22:16:13 - <h3>Dump 87 </h3> <br><br>' . var_dump($email); exit;					//<-------DEBUG
+            $statusPropostaFiltro = $this->getpost('statusPropostaFiltro', false);
+            $offlineMode = $this->getpost('offlineMode', false);
+            $operadorFiltro = $this->getpost('operadorFiltro', false);
+            $flag = $this->getpost('flag',false);
+               
+            Services::response()->setCookie('cpf', $cpf);
+            Services::response()->setCookie('verificador', $verificador);
+            Services::response()->setCookie('celular', $celular);
+            Services::response()->setCookie('nome', $nome);
+            Services::response()->setCookie('email', $email);
+            Services::response()->setCookie('statusPropostaFiltro', $statusPropostaFiltro);
+            Services::response()->setCookie('offlineMode', $offlineMode);
+            Services::response()->setCookie('operadorFiltro', $operadorFiltro);
+            Services::response()->setCookie('flag', $flag);
+
+            //$aux = Services::request()->getCookie($valor);	
+        } else {
+
+        $cpf = $this->getpost('txtCPF', true);
+        $verificador = $this->getpost('verificador', true);
+        $celular = $this->getpost('celular', true);
+        $nome = $this->getpost('txtNome', true);
+        $email = $this->getpost('email', true);
+        //echo '22:16:13 - <h3>Dump 22 </h3> <br><br>' . var_dump($email); exit;					//<-------DEBUG
+        $statusPropostaFiltro = $this->getpost('statusPropostaFiltro', true);
+        $offlineMode = $this->getpost('offlineMode', true);
+        $operadorFiltro = $this->getpost('operadorFiltro', true);
         $flag = $this->getpost('flag',true);
+
+    }
+        
+ 
+
         $flag = (empty($flag) ? 'ACAO' : $flag);
         
         $whereCheck = [];
@@ -343,4 +384,164 @@ class Fgts extends BaseController
 		return $users;
     }    
 
+
+    ////NAO EDITAR
+    public function facta_json_simulacao_translator_advanced($simulacao_record){
+        $result = json_decode($simulacao_record,true);
+
+        //{"permitido":"SIM","simulacao_fgts":"4757999","valor_liquido":"1.183,50","iof":47.12,"taxa":"2.04","parcelas_selecionadas":12,"tabela":"39640 - FGTS GOLD RB","data_solicitacao":"11\/03\/2023 00:10:40"}
+        $returnData = array();
+        $returnData["existProposta"] = false;
+        $returnData["rawjson"] = $simulacao_record;
+        $returnData["motivo"] = "";
+
+        //SEM RETORNO DA API(NULL) OU ENTAO MENSAGEM DE ERRO
+        if (is_null($result) or (isset($result['codigo']))) {
+            $returnData["existProposta"] = false;
+            $returnData["motivo"] = "[ERROAPI]";
+            $returnData["detalhes"] = $result['msg'];
+        } else if (isset($result['permitido'])){
+            //UNICA PROPOSTA É SEM SALDO
+            if (strtolower($result['permitido']) == 'sim'){
+
+                $valor = str_replace(".", "", $result['valor_liquido']);
+                $valor = str_replace(",", ".", $result['valor_liquido']);
+
+                $returnData["existProposta"] = true;
+                $returnData["motivo"] = "[PROPOSTA]";
+                $returnData["simulacao_fgts"] = $result['simulacao_fgts'];
+                $returnData["valor_liquido"] = $valor;
+                $returnData["valor_iof"] = $result['iof'];
+                $returnData["juros_mensal"] = $result['taxa'];
+                $returnData["parcelas_selecionadas"] = $result['parcelas_selecionadas'];
+                $returnData["tabela"] = $result['tabela'];
+                $returnData["seguro"] = 'Não contratado';
+                $returnData["seguroValor"] = "N/A";
+            } else {
+                $returnData["existProposta"] = false;
+                $returnData["motivo"] = "[NAOPERMITIDO]";
+            }
+        }
+        //echo '23:21:56 - <h3>Dump 41 </h3> <br><br>' . var_dump($returnData); exit;					//<-------DEBUG
+        return $returnData;
+    }	
+
+    public function pan_json_simulacao_translator_advanced($simulacao_record){
+        $result = json_decode($simulacao_record,true);
+
+        $returnData = array();
+        $returnData["existProposta"] = false;
+        $returnData["rawjson"] = $simulacao_record;
+        $returnData["motivo"] = "";
+        $returnData["taxaCadastro"] = 'Não cobrada';
+        $returnData["taxaCadastroValor"] = 0;
+        $returnData["seguro"] = 'Não contratado';
+        $returnData["seguroValor"] = 0;
+        $returnData["juros_mensal_inicial"] = "2.49";
+        $returnData["valor_liquido_extra"] = 0;
+
+        //SEM RETORNO DA API(NULL) OU ENTAO MENSAGEM DE ERRO
+        if (is_null($result) or (isset($result['codigo']))) {
+            $returnData["existProposta"] = false;
+            $returnData["motivo"] = "[ERROAPI]";
+            $returnData["detalhes"] = $this->translateMessage(isset($result['detalhes'][0]) ? $result['detalhes'][0] : "gateway timeout");
+        } else if (isset($result['condicoes_credito'])){
+            //UNICA PROPOSTA É SEM SALDO
+            if ($result['condicoes_credito'][0]['sucesso'] == false){
+                $returnData["existProposta"] = false;
+                $returnData["motivo"] = "[SALDO]";
+                $returnData["detalhes"] = $this->translateMessage($result['condicoes_credito'][0]['mensagem_erro']);
+            //PROPOSTA NORMAL
+            } else if ($result['condicoes_credito'][0]['sucesso'] == true){
+                $returnData["existProposta"] = true;
+                $returnData["motivo"] = "[PROPOSTA]";
+                //$returnData["juros_mensal_inicial"] = $result['condicoes_credito'][0]['taxa_referencia_mensal'];
+                $returnData["valor_liquido_extra"] = $result['condicoes_credito'][0]['valor_liquido'];
+
+                //BUSCA MELHOR PROPOSTA/TAXA DE JUROS
+                $numPropostas = count($result['condicoes_credito']);
+                $melhorProposta = 0;
+                for ($propId = 0; $propId <= $numPropostas-1; $propId++){
+                    if ($result['condicoes_credito'][$propId]['sucesso']){
+                        $melhorProposta = $propId;
+                    }
+                }
+                //echo "<br>A melhor proposta é:<br>" . $melhorProposta . "-" . $result['condicoes_credito'][$melhorProposta]['valor_liquido'] .  "<br>"; exit;
+                
+                //EXTRAI VALOR SEGURO E TAXA DE CADASTRO SE EXISTIREM
+                for ($desp = 0; $desp <= count($result['condicoes_credito'][$melhorProposta]['despesas'])-1; $desp++){
+                    if (($result['condicoes_credito'][$melhorProposta]['despesas'][$desp]['grupo'] == "CADASTRO") and ($result['condicoes_credito'][$melhorProposta]['despesas'][$desp]['inclusa'] == true) and ($returnData["taxaCadastro"] == 'Não cobrada')){
+                        $returnData["taxaCadastro"] = 'Inclusa';
+                        $returnData["taxaCadastroValor"] = simpleRound($result['condicoes_credito'][$melhorProposta]['despesas'][$desp]['valor_calculado']);
+                    } else if (($result['condicoes_credito'][$melhorProposta]['despesas'][$desp]['grupo'] == "SEGURO") and ($result['condicoes_credito'][$melhorProposta]['despesas'][$desp]['inclusa'] == true)  and ($returnData["seguro"] == 'Não contratado')){
+                        $returnData["seguro"] = 'Contratado';
+                        $returnData["seguroValor"] = simpleRound($result['condicoes_credito'][$melhorProposta]['despesas'][$desp]['valor_calculado']);
+                    }
+                }
+
+                //GRAVA DEMAIS DADOS DA PROPOSTA
+                $returnData["json"] = $result['condicoes_credito'][$melhorProposta];
+                $returnData["mensagem"] = $result['condicoes_credito'][$melhorProposta]['mensagem_erro'];
+                $returnData["valor_liquido"] = $result['condicoes_credito'][$melhorProposta]['valor_liquido'];
+                $returnData["valor_bruto"] = $result['condicoes_credito'][$melhorProposta]['valor_bruto'];
+                $returnData["valor_iof"] = $result['condicoes_credito'][$melhorProposta]['valor_iof'];
+                $returnData["juros_mensal"] = $result['condicoes_credito'][$melhorProposta]['taxa_referencia_mensal'];
+                $returnData["numero_parcelas"] = count($result['condicoes_credito'][$melhorProposta]['parcelas']);
+                $returnData["parcelas"] = $result['condicoes_credito'][$melhorProposta]['parcelas'];
+                $returnData["valor_liquido_extra"] = $returnData["valor_liquido"] - $returnData["valor_liquido_extra"];
+
+            }
+        }
+
+        return $returnData;
+    }
+
+    		//Converte explicação retornada pela API do banco em algo mais claro.
+		function translateMessage($message) {
+			//$message = str_replace("xxx", "", $message);
+			$title = "";
+			$message_id = "";
+			$rawMessageAPI = $message;
+			$acaoCliente = false;
+
+			if (findText($message, ["não possui adesão"])) {
+				$message = "Para prosseguir com a antecipação do Saque Aniversário você deve aderir a essa modalidade através do App FGTS. <br /><br />Você pode fazer isso pela internet seguindo o passo-a-passo do vídeo abaixo.";
+				$title = "Adesão Saque-Aniversário";
+				$message_id = "[ADESAO]";
+				$acaoCliente = true;
+			} else if (findText($message, ["Instituição Fiduciária não possui"])) {
+				$message = "Você precisa autorizar o BANCO PAN S.A. a consultar seu saldo FGTS através do App FGTS. Assim poderemos apresentar uma proposta personalizada através do nosso parceiro financeiro. <br/> <br/> Veja como é fácil seguindo os passsos do vídeo abaixo.";
+				$title = "Permissão de consulta FGTS";
+				$message_id = "[LIBERACAO]";
+				$acaoCliente = true;
+			} else if (findText($message, ["Operação não permitida antes"])) {
+				$message = "Período de aniversário próximo, aguarde prazo de carência da Caixa Econômica. <br /> <br />Motivo: <br />" .  $message;
+				$title = "Proximidade de aniversário";
+				$message_id = "[ANIVERSARIO]";
+				$acaoCliente = true;
+			} else if (findText($message, ["Erro ao realizar a consulta. HTTPStatus: 404", "Erro ao realizar a consulta. HTTPStatus: 524", "Entre em contato com o setor de FGTS", "informar o saldo", "não pode ser menor", "Fiduciária em andamento", "não possui contas", "parcela inválido", "NÃO possui saldo disponível", "cpf_cliente não pode ser nulo", "cpf_cliente não é válido", "maior que o limite", "Valor da Operação não pode ser menor"])) {
+				$message = "Você não possui saldo liberado para antecipação do FGTS no momento.";
+				$title = "Saldo indisponível";
+				$message_id = "[SALDO]";	
+				$acaoCliente = true;
+			} else if (findText($message, ["One or more errors occurred", "simulacaoFGTS timed-out", "Não foi possível realizar", "exige cadastramento", "Erro ao realizar", "gateway timeout", "estamos com indisponibilidade", "Ocorreu um erro na chamada", "Tempo máximo excedido", "Tempo maximo", "Force OfflineMode On"])) {
+				$message = "No momento o serviço de consulta da instituição bancária está fora do ar. Tente novamente após alguns minutos.";
+				$title = "Falha de conexão";
+				$message_id = "[ERROAPI]";	
+				$acaoCliente = false;
+			} else if (findText($message, ["Falha na geração do token", "exige cadastramento"])) {
+				$message = "No momento o serviço de consulta da instituição bancária está fora do ar. Tente novamente após alguns minutos.";
+				$title = "Falha de conexão";
+				$message_id = "[ABRIR-CHAMADO]";	
+				$acaoCliente = false;
+			} else {
+				$message = "Não foi possível consultar seu saldo FGTS.  <br /> <br />Motivo: <br />" .  $message;
+				$title = "Ocorreu um erro";
+				$message_id = "[FALHA-INESPERADA]";
+				$acaoCliente = true;
+				$this->m_telegram->notifyTelegramGroup("FATAL ERROR: [FALHA-INESPERADA]: " . $message);
+			}
+
+			return array('descricao' => $message, 'titulo' => $title, 'codigo' => $message_id, 'acaoCliente' => $acaoCliente, 'rawMessageAPI' => $rawMessageAPI); 
+		}
 }

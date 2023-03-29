@@ -237,7 +237,7 @@
 													<div class="d-flex align-items-center position-relative my-1">
 													<div class="mb-0 mx-3">
 															<div class="d-flex align-items-center position-relative my-1 mt-0 mb-0">
-																<button type="submit" class="btn btn-primary" >Buscar Proposta</button>										
+																<button type="submit" class="btn btn-primary"  name="buscarProp" value="buscarProp">Buscar Proposta</button>										
 															</div>
 														</div>													
 														<div class="mb-0 mx-3">
