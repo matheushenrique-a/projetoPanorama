@@ -200,14 +200,6 @@
 																</h2>
 																<div id="kt_accordion_1_body_2" class="accordion-collapse collapse show" aria-labelledby="kt_accordion_1_header_2" data-bs-parent="#kt_accordion_2">
 																	<div class="accordion-body">
-
-
-
-
-
-
-
-
 																		<div class="card-body table-responsive">
 																			<!--begin::Table-->
 																			<table class="table align-middle table-row-dashed table-hover fs-6 gy-2" id="kt_table_users">
@@ -215,11 +207,13 @@
 																				<thead>
 																					<!--begin::Table row-->
 																					<tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
+																						<th class="min-w-25px">Apr</th>
 																						<th class="min-w-25px">ID</th>
 																						<th class="min-w-25px">Parc.</th>
 																						<th class="min-w-25px">Banco</th>
 																						<th class="min-w-50px">Data</th>
 																						<th class="min-w-50px">Status</th>
+																						<th class="min-w-50px">Del</th>
 																					</tr>
 																					<!--end::Table row-->
 																				</thead>
@@ -252,11 +246,29 @@
 																							}
 																					?>
 																						<tr>
+																							<td>
+																								<?php if(!empty($id_json)){
+																									if(!empty($status)){?>
+																										<i class="las la-check-circle text-success fs-1" title="Proposta aprovada"></i>	
+																									<?php } else {?>
+																										<a href="<?php echo assetfolder;?>fgts-adm-simulacao/A/<?php echo $id_proposta;?>/<?php echo $id_json;?>"
+																											<i class="las la-question-circle text-gray fs-1" title="Aprovar proposta"></i> 
+																										</a>
+																								<?php }}?>
+																							</td>
+
 																							<td><?php echo $id_json?></td>
 																							<td><a href="<?php echo FGTSUrl ?>fgts/validar-cpf-api/<?php echo $id_proposta;?>/<?php echo $x?>/0/0/0/<?php echo createToken();?>" class="menu-link px-2" target="_blank"><?php echo $x;?></a></td>
 																							<td><?php echo $banco;?></td>
 																							<td><?php echo $data;?></td>
 																							<td><?php echo (empty($valor_liquido)  ? '' : 'R$ ' . $valor_liquido);?><?php echo (empty($status)  ? '' : '<br>' . $status);?></td>
+																							<td>
+																								<?php if(!empty($id_json)){?>
+																									<a href="<?php echo assetfolder;?>fgts-adm-simulacao/D/<?php echo $id_proposta;?>/<?php echo $id_json;?>"
+																										<i class="las la-trash-alt fs-1" title="Remover simulação"></i> 
+																									</a>
+																								<?php }?>
+																							</td>
 																						</tr>
 																					<?php 
 																						} //End:Foreach
@@ -408,37 +420,12 @@
 																	</button>
 																	<!--begin::Menu 3-->
 																	<div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semibold w-200px py-3" data-kt-menu="true" style="">
-																		<!--begin::Heading-->
-																		<div class="menu-item px-3">
-																			<div class="menu-content text-muted pb-2 px-3 fs-7 text-uppercase">
-																				Contacts
-																			</div>
-																		</div>
-																		<!--end::Heading-->
-
-																		<!--begin::Menu item-->
-																		<div class="menu-item px-3">
-																			<a href="#" class="menu-link px-3" data-bs-toggle="modal" data-bs-target="#kt_modal_users_search">
-																				Add Contact
-																			</a>
-																		</div>
-																		<!--end::Menu item-->
-
-																		<!--begin::Menu item-->
-																		<div class="menu-item px-3">
-																			<a href="#" class="menu-link flex-stack px-3" data-bs-toggle="modal" data-bs-target="#kt_modal_invite_friends">
-																				Invite Contacts
-
-																				<i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" aria-label="Specify a contact email to send an invitation" data-bs-original-title="Specify a contact email to send an invitation" data-kt-initialized="1"></i>
-																			</a>
-																		</div>
-																		<!--end::Menu item-->
-																		<!--begin::Menu item-->
-																		<div class="menu-item px-3 my-1">
-																			<a href="#" class="menu-link px-3" data-bs-toggle="tooltip" data-bs-original-title="Coming soon" data-kt-initialized="1">
-																				Settings
-																			</a>
-																		</div>
+																		<div class="menu-item px-3"><div class="menu-content text-muted pb-2 px-3 fs-6"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $id_proposta;?>/GRO">Pendente formalização</a></div></div>
+																		<div class="menu-item px-3"><div class="menu-content text-muted pb-2 px-3 fs-6"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $id_proposta;?>/CNH">Pendente documento</a></div></div>
+																		<div class="menu-item px-3"><div class="menu-content text-muted pb-2 px-3 fs-6"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $id_proposta;?>/MDI">Mensagem direta</a></div></div>
+																		<div class="menu-item px-3"><div class="menu-content text-muted pb-2 px-3 fs-6"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $id_proposta;?>/GRO">Pendente formalização</a></div></div>
+																		<div class="menu-item px-3"><div class="menu-content text-muted pb-2 px-3 fs-6"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $id_proposta;?>/PGT">Aguardando depósito</a></div></div>
+																		<div class="menu-item px-3"><div class="menu-content text-muted pb-2 px-3 fs-6"><a href="<?php echo FGTSUrl ?>fgts/notificar-cliente/<?php echo $verificador;?>/<?php echo createToken();?>">Mudança Fase</a></div></div>
 																	<!--end::Menu item-->
 																	</div>
 																	<!--end::Menu 3-->

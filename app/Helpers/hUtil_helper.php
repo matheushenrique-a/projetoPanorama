@@ -194,11 +194,33 @@
         } else {
             false;
         }
-	}    
+	} 
+	   
+	function findText($fraselonga, $frasescurta, $exact = false){
+		$result = false;
+
+		foreach ($frasescurta as $item){
+			if ($exact){
+				if (strtolower($item) == strtolower($fraselonga)){
+					return true;
+				}
+			} else {
+				if (strpos(strtolower($fraselonga), strtolower($item)) !== false){
+					return true;
+				}
+			}
+		}
+
+		return $result;
+	}
 
 
     function SimpleRound($n){
-		return number_format($n, 2, ',', '.');
+		try {
+			return number_format($n, 2, ',', '.');
+		} catch (\Exception $e) {
+			return $n;
+		}
 	}
 
     function redirectHelper($url = ''){

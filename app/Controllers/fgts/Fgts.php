@@ -37,6 +37,30 @@ class Fgts extends BaseController
         return $this->dbMaster->select('proposta_fgts_gravacao_json', array('id_proposta' => $id_proposta));
     }
 
+    public function adm_simulacao($action, $id_proposta, $id_json){
+        if ($action == "D") {
+            $whereCheck = array('id_json' => $id_json, 'id_proposta' => $id_proposta);
+            $this->dbMaster->delete('proposta_fgts_simulacao_json', $whereCheck);
+        } else if ($action == "A") {
+    		//sincroniza parcela / valor do json com a proposta
+	    	//usando quando o cliente escolhe a proposta no modo offline
+            $whereCheck = array('id_json' => $id_json);
+            $simulacao = $this->dbMaster->select('proposta_fgts_simulacao_json', $whereCheck);
+            
+            $id_proposta = $simulacao["firstRow"]->id_proposta;
+            $parcelas = $simulacao["firstRow"]->parcelas;
+            $valorSolicitado = $simulacao["firstRow"]->valor;
+
+            //Atualiza a proposta e faz sincronismo
+            $whereArrayUpdt = array('id_proposta' => $id_proposta);
+            $fieldUpdate = array('parcelas' => $parcelas, 'valorSolicitado' =>$valorSolicitado, 'id_simulacao' =>$id_json);
+            $fielDynamicdUpdate = array('last_update' => 'current_timestamp()');
+            $this->dbMaster->update('proposta_fgts', $fieldUpdate, $whereArrayUpdt, $fielDynamicdUpdate);
+        }
+
+        return redirect()->to('fgts-cliente-detalhes/' . $id_proposta);
+    }
+
     public function clienteDetalhes($id_proposta){
         $data['pageTitle'] = "FGTS - Detalhes Cliente";
 
