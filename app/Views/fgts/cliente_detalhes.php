@@ -87,6 +87,10 @@
 																<div id="kt_accordion_1_body_133" class="accordion-collapse collapse show" aria-labelledby="kt_accordion_1_header_1" data-bs-parent="#kt_accordion_1">
 																	<div class="accordion-body">
 																		<div class="input-group">
+																			<span class="input-group-text" style="width: 155px">Banco proposta</span>
+																			<input type="text" class="form-control" placeholder="" name="txtBanco" value="<?php echo $txtBanco;?>" />
+																		</div>
+																		<div class="input-group">
 																			<span class="input-group-text" style="width: 155px">Código proposta</span>
 																			<input type="text" class="form-control" placeholder="" name="txtNumeroProposta" value="<?php echo $txtNumeroProposta;?>" />
 																		</div>

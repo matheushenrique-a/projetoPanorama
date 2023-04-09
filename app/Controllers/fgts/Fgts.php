@@ -71,6 +71,7 @@ class Fgts extends BaseController
 
         //PROPOSTA GRAVADA
         $txtNumeroProposta = $this->getpost('txtNumeroProposta');
+        $txtBanco = $this->getpost('txtBanco');
         $txtValorPago = $this->getpost('txtValorPago');
         $txtURLCliente = $this->getpost('txtURLCliente');
         $txtErroIntegracao = $this->getpost('txtErroIntegracao');
@@ -96,7 +97,7 @@ class Fgts extends BaseController
             $valorClean = str_replace(",", ".", $valorClean);
 
             $json = '[{"numero_proposta": "' . $txtNumeroProposta . '","id_rastreamento_externo": null}]';
-            $fields = array('id_proposta' => $id_proposta, 'json' => $json, 'numeroPropostaGerada' => $txtNumeroProposta, 'valor_pago' => $valorClean, 'linkCliente' => $txtURLCliente, 'MotivoIntegracao' => $txtErroIntegracao);
+            $fields = array('id_proposta' => $id_proposta, 'json' => $json, 'banco' => $txtBanco, 'numeroPropostaGerada' => $txtNumeroProposta, 'valor_pago' => $valorClean, 'linkCliente' => $txtURLCliente, 'MotivoIntegracao' => $txtErroIntegracao);
             $this->dbMaster->insert('proposta_fgts_gravacao_json', $fields);
         }
 
@@ -109,6 +110,7 @@ class Fgts extends BaseController
             $txtNumeroProposta = $jsonGravacao['firstRow']->numeroPropostaGerada;
             $txtValorPago = SimpleRound($jsonGravacao['firstRow']->valor_pago);
             $txtURLCliente = $jsonGravacao['firstRow']->linkCliente;
+            $txtBanco = $jsonGravacao['firstRow']->banco;
             $txtErroIntegracao = $jsonGravacao['firstRow']->MotivoIntegracao;
         }
 
@@ -165,6 +167,7 @@ class Fgts extends BaseController
 			$data['data_criacao'] = $cliente['firstRow']->data_criacao;
 			
             $data['txtNumeroProposta'] = $txtNumeroProposta;
+            $data['txtBanco'] = $txtBanco;
             $data['txtValorPago'] = $txtValorPago;
             $data['txtURLCliente'] = $txtURLCliente;
             $data['txtErroIntegracao'] = $txtErroIntegracao;
