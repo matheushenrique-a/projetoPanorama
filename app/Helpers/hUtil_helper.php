@@ -46,7 +46,7 @@
             // array('faseCode' => 'BAN', 'faseName' => 'PASSO 05 - DADOS BANCÁRIOS', 'color' => 'light-danger', 'categoria' => 'acao'),
             // array('faseCode' => 'REV', 'faseName' => 'PASSO 06 - REVISAO FINAL', 'color' => 'light-danger', 'categoria' => 'acao'),
             array('faseCode' => 'CAD', 'faseName' => 'PASSO 06 - CADASTRO PENDENTE', 'faseCliente' => "AGUARDANDO DADOS P/ DEPÓSITO", 'color' => 'light-danger', 'categoria' => 'acao'),
-            array('faseCode' => 'GRF', 'faseName' => 'PASSO 07 - GRAVADA OFFLINE', 'faseCliente' => "VERIFICAÇÃO SALDO FGTS", 'color' => 'light-info', 'categoria' => 'acao'),
+            array('faseCode' => 'GRF', 'faseName' => 'PASSO 07 - GRAVADA OFFLINE', 'faseCliente' => "VERIFICAÇÃO SALDO FGTS", 'color' => 'light-info', 'categoria' => 'acompanhar'),
             array('faseCode' => 'GRO', 'faseName' => 'PASSO 07 - GRAVADA ONLINE', 'faseCliente' => "AGUARDANDO ACEITE PROPOSTA", 'color' => 'light-success', 'categoria' => 'acao'),
             array('faseCode' => 'DIS', 'faseName' => 'PASSO 08 - PROPOSTA DISPONÍVEL', 'faseCliente' => "PROPOSTA LIBERADA", 'color' => 'light-success', 'categoria' => 'acompanhar'),
             array('faseCode' => 'FOR', 'faseName' => 'PASSO 08 - FORMALIZAÇÃO FEITA', 'faseCliente' => "APROVAÇÃO PROPOSTA PELO BANCO", 'color' => 'light-info', 'categoria' => 'acao'),
