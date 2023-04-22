@@ -279,21 +279,17 @@ class Fgts extends BaseController
 
             //$aux = Services::request()->getCookie($valor);	
         } else {
-
-        $cpf = $this->getpost('txtCPF', true);
-        $verificador = $this->getpost('verificador', true);
-        $celular = $this->getpost('celular', true);
-        $nome = $this->getpost('txtNome', true);
-        $email = $this->getpost('email', true);
-        //echo '22:16:13 - <h3>Dump 22 </h3> <br><br>' . var_dump($email); exit;					//<-------DEBUG
-        $statusPropostaFiltro = $this->getpost('statusPropostaFiltro', true);
-        $offlineMode = $this->getpost('offlineMode', true);
-        $operadorFiltro = $this->getpost('operadorFiltro', true);
-        $flag = $this->getpost('flag',true);
-
-    }
-        
- 
+            $cpf = $this->getpost('txtCPF', true);
+            $verificador = $this->getpost('verificador', true);
+            $celular = $this->getpost('celular', true);
+            $nome = $this->getpost('txtNome', true);
+            $email = $this->getpost('email', true);
+            //echo '22:16:13 - <h3>Dump 22 </h3> <br><br>' . var_dump($email); exit;					//<-------DEBUG
+            $statusPropostaFiltro = $this->getpost('statusPropostaFiltro', true);
+            $offlineMode = $this->getpost('offlineMode', true);
+            $operadorFiltro = $this->getpost('operadorFiltro', true);
+            $flag = $this->getpost('flag',true);
+        }
 
         $flag = (empty($flag) ? 'ACAO' : $flag);
         
@@ -335,6 +331,15 @@ class Fgts extends BaseController
         $this->dbMaster->setOrderBy(array('id_proposta', 'DESC'));
         $propostas = $this->dbMaster->select('proposta_fgts', $whereCheck, $whereNotIn + $likeCheck + $whereIn);
 
+        foreach ($propostas['result']->getResult() as $row) {
+            $simulacao_detalhes = null;
+            //$simulacao_detalhes = $this->json_proposta_any($row->id_proposta);
+            //echo '17:11:44 - <h3>Dump 91 </h3> <br><br>' . var_dump($simulacao_detalhes); exit;					//<-------DEBUG
+            $row->id_simulacao =  $simulacao_detalhes;
+            // if (!is_null($row->id_simulacao)){
+            //     echo $row->id_simulacao['banco'] . " - " . simpleRound($row->id_simulacao['valor_liquido']);exit;
+            // }
+        }
         //INDICADORES
         $dados['indicadores'] = $this->indicadores();
 
@@ -412,6 +417,28 @@ class Fgts extends BaseController
     }    
 
 
+    //json de qualquer simulação existente
+    public function json_proposta_any($id_proposta){
+        $proposta = $this->proposta_buscar($id_proposta);
+
+        //recupera json da proposta aceita
+        $whereCheck = array('id_proposta' => $id_proposta);
+        $response = $this->dbMaster->select('proposta_fgts_simulacao_json', $whereCheck);
+        if (!$response['existRecord']){
+            return null;
+        }
+
+        //TODO: caso json nao exista??
+        $json = $response["firstRow"]->json;
+        $prefixo = $response["firstRow"]->banco;
+
+        if ($prefixo == "PAN"){
+            return $this->pan_json_simulacao_translator_advanced($json);
+        } else if ($prefixo == "FACTA"){
+            return $this->facta_json_simulacao_translator_advanced($json);						
+        }
+    }
+
     ////NAO EDITAR
     public function facta_json_simulacao_translator_advanced($simulacao_record){
         $result = json_decode($simulacao_record,true);
@@ -421,6 +448,8 @@ class Fgts extends BaseController
         $returnData["existProposta"] = false;
         $returnData["rawjson"] = $simulacao_record;
         $returnData["motivo"] = "";
+        $returnData["banco"] = "FACTA";
+
 
         //SEM RETORNO DA API(NULL) OU ENTAO MENSAGEM DE ERRO
         if (is_null($result) or (isset($result['codigo']))) {
@@ -466,6 +495,7 @@ class Fgts extends BaseController
         $returnData["seguroValor"] = 0;
         $returnData["juros_mensal_inicial"] = "2.49";
         $returnData["valor_liquido_extra"] = 0;
+        $returnData["banco"] = "PAN";
 
         //SEM RETORNO DA API(NULL) OU ENTAO MENSAGEM DE ERRO
         if (is_null($result) or (isset($result['codigo']))) {

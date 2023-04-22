@@ -145,27 +145,27 @@
 																<div id="kt_accordion_1_body_133" class="accordion-collapse collapse show" aria-labelledby="kt_accordion_1_header_1" data-bs-parent="#kt_accordion_1">
 																	<div class="accordion-body">
 																		<div class="input-group">
-																			<span class="input-group-text" style="width: 155px"><?php echo $uf_nascimento . " - " . $cidade_nascimento;?></span>
+																			<span class="input-group-text" style="width: 155px"><?php echo $uf_nascimento . "-" . strtoupper(remove_accents(trim($cidade_nascimento)));?></span>
 																			<select class="form-select" aria-label="Select example" name="selectCidadeNascimento" id="selectCidadeNascimento">
 																				<option></option>
 																				<?php
 																					if (isset($listaCidadesNascimento)) {
 																						foreach ($listaCidadesNascimento["result"]->getResult() as $row){
-																							echo '<option value="' . $row->codigo  . '" ' . (strtolower($row->nome) == strtolower($cidade_nascimento) ? 'selected' : '') . '>' . $row->nome .  '</option>';
+																							echo '<option value="' . $row->codigo  . '" ' . ($row->nome == strtoupper(remove_accents(trim($cidade_nascimento))) ? 'selected' : '') . '>' . $row->nome .  '</option>';
 																						}
 																					}
 																				?>																			
 																			</select>
 																		</div>
 																		<div class="input-group">
-																			<span class="input-group-text" style="width: 155px"><?php echo $estadoResidencia . " - " . $nomeCidadeResidencia;?></span>
+																			<span class="input-group-text" style="width: 155px"><?php echo $estadoResidencia . "-" . $nomeCidadeResidencia;?></span>
 																			<select class="form-select" aria-label="Select example" name="selectCidadeResidencia" id="selectCidadeResidencia">
 																				<option></option>
 																				<option></option>
 																				<?php
 																					if (isset($listaCidadesResidencia)) {
 																						foreach ($listaCidadesResidencia["result"]->getResult() as $row){
-																							echo '<option value="' . $row->codigo  . '" ' . (strtolower($row->nome) == strtolower($nomeCidadeResidencia) ? 'selected' : '') . '>' . $row->nome .  '</option>';
+																							echo '<option value="' . $row->codigo  . '" ' . ($row->nome == strtoupper(remove_accents(trim($nomeCidadeResidencia))) ? 'selected' : '') . '>' . $row->nome .  '</option>';
 																						}
 																					}
 																				?>		

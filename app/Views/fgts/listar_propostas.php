@@ -323,7 +323,13 @@
 															<td>
 																<a href="<?php echo assetfolder;?>fgts-cliente-detalhes/<?php echo $row->id_proposta;?>" target="_blank" class="text-gray-800 text-hover-primary mb-1">	
 																	<?php echo $row->cpf;?><br>
-																	<?php echo propostaValorParcel($row);?>
+																	<?php 
+																	if (!is_null($row->id_simulacao)){
+																		echo $row->id_simulacao['banco'] . " - " . simpleRound($row->id_simulacao['valor_liquido']);
+
+																	}
+																	
+																	;?>
 																</a>
 															</td>
 															<td>
@@ -341,9 +347,12 @@
 																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/GRO" class="menu-link px-2"><i class="bi bi-bookmark-check-fill fs-2"></i><span class="mx-2">Pendente formalização</span></a></div>
 																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/CNH" class="menu-link px-2"><i class="bi bi-bookmark-check-fill fs-2"></i><span class="mx-2">Pendente documento</span></a></div>
 																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/CCN" class="menu-link px-2"><i class="bi bi-bookmark-check-fill fs-2"></i><span class="mx-2">Depósito devolvido</span></a></div>
+																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/RPA" class="menu-link px-2"><i class="bi bi-bookmark-check-fill fs-2"></i><span class="mx-2">Reprovado PAN</span></a></div>
+																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/PEX" class="menu-link px-2"><i class="bi bi-bookmark-check-fill fs-2"></i><span class="mx-2">Exclusividade PAN</span></a></div>
+																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/RFA" class="menu-link px-2"><i class="bi bi-bookmark-check-fill fs-2"></i><span class="mx-2">Reprovado FACTA</span></a></div>
 																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/CAD" class="menu-link px-2"><i class="bi bi-bookmark-check-fill fs-2"></i><span class="mx-2">Pendente cadastro</span></a></div>
 																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/ADE" class="menu-link px-2"><i class="bi bi-bookmark-check-fill text-gray-400 fs-2"></i><span class="mx-2">Pendente Adesão</span></a></div>
-																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/INS" class="menu-link px-2"><i class="bi bi-bookmark-check-fill text-gray-400 fs-2"></i><span class="mx-2">Pendente Banco PAN</span></a></div>
+																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/INS" class="menu-link px-2"><i class="bi bi-bookmark-check-fill text-gray-400 fs-2"></i><span class="mx-2">Pendente Banco</span></a></div>
 																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/LCX" class="menu-link px-2"><i class="bi bi-bookmark-check-fill text-gray-400 fs-2"></i><span class="mx-2">Lentidão CAIXA</span></a></div>
 																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/VUL" class="menu-link px-2"><i class="bi bi-bookmark-check-fill text-gray-400 fs-2"></i><span class="mx-2">Cliente Vulnerável</span></a></div>
 																		<div class="separator my-5"></div>
