@@ -21,6 +21,10 @@ function propostaFaseFormat($texto){
     return '<span class="badge py-3 px-4 fs-7 badge-' . lookupFasesByName($texto)['color'] . '">' . $textoSimples . '</span>';
 }
 
+function propostaFaseBancoFormat($texto){
+    return '<span class="badge py-3 px-4 fs-7 badge-light mt-2">' . $texto . '</span>';
+}
+
 function propostaOfflineModeFormat($texto){
     if ($texto == "Y") {
         return '<span class="badge py-3 px-4 fs-7 badge-light-danger">NÃO</span>';

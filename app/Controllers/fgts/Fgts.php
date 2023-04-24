@@ -165,6 +165,7 @@ class Fgts extends BaseController
 			$data['valorSolicitado'] = $cliente['firstRow']->valorSolicitado;
 			$data['seguroFGTS'] = $cliente['firstRow']->seguroFGTS;
 			$data['data_criacao'] = $cliente['firstRow']->data_criacao;
+			$data['statusPropostaBanco'] = $cliente['firstRow']->statusPropostaBanco;
 			
             $data['txtNumeroProposta'] = $txtNumeroProposta;
             $data['txtBanco'] = $txtBanco;

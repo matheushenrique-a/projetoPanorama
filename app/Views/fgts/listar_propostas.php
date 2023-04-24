@@ -269,7 +269,7 @@
 														<th class="min-w-150px">Cliente</th>
 														<th class="min-w-150px">CPF / Opção</th>
 														<th class="min-w-25">Celular</th>
-														<th class="min-w-50">Atual.</th>
+														<th class="min-w-50">DATAS</th>
 														<th class="min-w-50px">Oper.</th>
 														<th class="min-w-125px">Status</th>
 														<th class="min-w-25px">AÇÃO</th>
@@ -337,9 +337,9 @@
 																	echo ($row->celular_failed == "Y"  ? '<span class="badge badge-light-danger">erro</span>' : '');
 																	echo ($row->celular_alertas == "N"  ? '<span class="badge badge-light-danger">block</span>' : '');?> 
 															</td>
-															<td><?php echo time_elapsed_string($row->last_update)?></td>
+															<td><?php echo time_elapsed_string($row->last_update) . "<br>" . date('d-M', strtotime($row->data_criacao))?></td>
 															<td><?php echo $row->OperadorCCenter;?> <i class="bi bi-chat-dots fs-4" title="<?php echo $row->ocorrencias;?>"></i></td>
-															<td><?php echo propostaFaseFormat($row->statusProposta);?></td>
+															<td><?php echo propostaFaseFormat($row->statusProposta) . "<br>" . propostaFaseBancoFormat($row->statusPropostaBanco);?></td>
 															<td>
 																<div><!--begin::PopUp menu-->
 																	<a href="#" class="btn btn-sm btn-icon btn-light btn-active-light-primary" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" data-bs-toggle="tooltip" data-bs-placement="top" title=""><!--begin::Svg Icon | path: icons/duotune/general/gen052.svg--><span class="svg-icon svg-icon-2 m-0"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="10" y="10" width="4" height="4" rx="2" fill="currentColor"/><rect x="17" y="10" width="4" height="4" rx="2" fill="currentColor"/><rect x="3" y="10" width="4" height="4" rx="2" fill="currentColor"/></svg></span><!--end::Svg Icon--></a>
