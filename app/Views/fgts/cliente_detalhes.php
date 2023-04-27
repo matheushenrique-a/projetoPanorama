@@ -60,11 +60,53 @@
 															<div class="accordion-item">
 																<h2 class="accordion-header" id="kt_accordion_1_header_1">
 																	<button class="accordion-button fs-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#kt_accordion_1_body_133" aria-expanded="true" aria-controls="kt_accordion_1_body_1">
-																		HISTÓRICO OCORRÊNCIAS
+																		DADOS PESSOAIS E BANCÁRIOS
 																	</button>
 																</h2>
 																<div id="kt_accordion_1_body_133" class="accordion-collapse collapse show" aria-labelledby="kt_accordion_1_header_1" data-bs-parent="#kt_accordion_1">
 																	<div class="accordion-body">
+																		<div class="input-group">
+																			<span class="input-group-text" style="width: 155px">Nome</span>
+																			<input type="text" class="form-control" placeholder="" name="txtnomeCompleto" value="<?php echo $nomeCompleto;?>" />
+																		</div>
+																		<div class="input-group">
+																			<span class="input-group-text" style="width: 155px">Mãe</span>
+																			<input type="text" class="form-control" placeholder="" name="txtnomeMae" value="<?php echo $nomeMae;?>" />
+																		</div>
+																		<div class="input-group">
+																			<span class="input-group-text" style="width: 155px">Pai</span>
+																			<input type="text" class="form-control" placeholder="" name="txtnomePai" value="<?php echo $nomePai;?>" />
+																		</div>
+																		<div class="input-group">
+																			<span class="input-group-text" style="width: 155px">Banco</span>
+																			<input type="text" class="form-control" placeholder="" name="txtnumBanco" value="<?php echo $numBanco;?>" />
+																		</div>
+																		<div class="input-group">
+																			<span class="input-group-text bg-color: $ffffff" style="width: 100%"><input class="form-check-input" type="radio" name="rdTipoConta" <?php echo $rdTipoConta == "PP" ? "checked" : ""?> value="PP" />&nbsp;Poupança</span>
+																		</div>
+																		<div class="input-group">
+																			<span class="input-group-text bg-color: $ffffff" style="width: 100%"><input class="form-check-input" type="radio" name="rdTipoConta"  <?php echo $rdTipoConta == "CC" ? "checked" : ""?> value="CC" />&nbsp;Conta Corrente</span>
+																		</div>
+																		<div class="input-group">
+																			<span class="input-group-text" style="width: 155px">Agência-Dígito</span>
+																			<input type="text" class="form-control" placeholder="" name="txtagencia" value="<?php echo $agencia;?>" />
+																			<input type="text" class="form-control" placeholder="" name="txtnumDigitoAgencia" value="<?php echo $numDigitoAgencia;?>" />
+																		</div>
+																		<div class="input-group">
+																			<span class="input-group-text" style="width: 155px">Conta-Dígito</span>
+																			<input type="text" class="form-control" placeholder="" name="txtnumConta" value="<?php echo $numConta;?>" />
+																			<input type="text" class="form-control" placeholder="" name="txtnumDigito" value="<?php echo $numDigito;?>" />
+																		</div>
+																		<div class="input-group">
+																			<span class="input-group-text" style="width: 155px">CEP:</span>
+																			<input type="text" class="form-control" placeholder="" name="txtnumeroCep" value="<?php echo $numeroCep;?>" />
+																		</div>
+																		<div class="input-group">
+																			<span class="input-group-text bg-color: $ffffff" style="width: 100%"><input class="form-check-input" type="checkbox" name="celular_failed" <?php echo $celular_failed == "Y" ? "checked" : ""?> value="<?php echo $celular_failed;?>" />&nbsp;Solicitar validação telefone do cliente</span>
+																		</div>
+																		<div class="input-group">
+																			<span class="input-group-text bg-color: $ffffff" style="width: 100%"><input class="form-check-input" type="checkbox" name="celular_alertas" <?php echo $celular_alertas == "Y" ? "checked" : ""?> value="<?php echo $celular_alertas;?>" />&nbsp;Bloqueio de notificações via WhatsApp</span>
+																		</div>
 																		<div class="input-group">
 																			<span class="input-group-text" style="width: 155px">Ocorrências</span>
 																			<textarea class="form-control" aria-label="Ocorrências" rows=6 name="ocorrencias"><?php echo $ocorrencias;?></textarea>
@@ -104,7 +146,7 @@
 																		</div>
 																		<div class="input-group">
 																			<span class="input-group-text" style="width: 155px">Erro Integração</span>
-																			<textarea class="form-control" aria-label="Ocorrências" rows=3 name="txtErroIntegracao"><?php echo $txtErroIntegracao;?></textarea>
+																			<textarea class="form-control" aria-label="Ocorrências" rows=1 name="txtErroIntegracao"><?php echo $txtErroIntegracao;?></textarea>
 																		</div>
 																		<div class="d-flex align-items-center position-relative my-1 mt-5 mb-0">
 																			<button type="submit" class="btn btn-primary" name="btnSalvarProposta" value="btnSalvarProposta">Salvar</button>										

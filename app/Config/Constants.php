@@ -31,6 +31,10 @@ define('emailMsg', false);
 define('whatAppMsg', false);
 define('telegramAlerts', false);
 
+//Na tela de listar propostas carrega ou nao os valores (pesado)
+define('exibir_valores_proposta', false);
+
+
 /*
  | --------------------------------------------------------------------
  | App Namespace

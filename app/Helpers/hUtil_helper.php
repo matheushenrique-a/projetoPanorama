@@ -45,7 +45,7 @@
             // array('faseCode' => 'RES', 'faseName' => 'PASSO 04 - DADOS RESIDENCIAIS', 'color' => 'light-danger', 'categoria' => 'acao'),
             // array('faseCode' => 'BAN', 'faseName' => 'PASSO 05 - DADOS BANCÁRIOS', 'color' => 'light-danger', 'categoria' => 'acao'),
             // array('faseCode' => 'REV', 'faseName' => 'PASSO 06 - REVISAO FINAL', 'color' => 'light-danger', 'categoria' => 'acao'),
-            array('faseCode' => 'CAD', 'faseName' => 'PASSO 06 - CADASTRO PENDENTE', 'faseCliente' => "AGUARDANDO DADOS P/ DEPÓSITO", 'color' => 'light-danger', 'categoria' => 'acao'),
+            array('faseCode' => 'CAD', 'faseName' => 'PASSO 06 - CADASTRO PENDENTE', 'faseCliente' => "AGUARDANDO DADOS P/ DEPÓSITO", 'color' => 'light-danger', 'categoria' => 'acompanhar'),
             array('faseCode' => 'GRF', 'faseName' => 'PASSO 07 - GRAVADA OFFLINE', 'faseCliente' => "VERIFICAÇÃO SALDO FGTS", 'color' => 'light-info', 'categoria' => 'acompanhar'),
             array('faseCode' => 'GRO', 'faseName' => 'PASSO 07 - GRAVADA ONLINE', 'faseCliente' => "AGUARDANDO ACEITE PROPOSTA", 'color' => 'light-success', 'categoria' => 'acao'),
             array('faseCode' => 'DIS', 'faseName' => 'PASSO 08 - PROPOSTA DISPONÍVEL', 'faseCliente' => "PROPOSTA LIBERADA", 'color' => 'light-success', 'categoria' => 'acompanhar'),
@@ -85,6 +85,51 @@
 		//"PASSO 07 - GRAVADA OFFLINE" = "PASSO 07 - AGUARDANDO ROBÔ";
 		
     }
+
+	function translate_telegram($categoria){
+
+		$emoji = "";
+
+		if ($categoria == "FINAL"){
+			$emoji = "🚨🚨🚨";
+		} else if ($categoria == "DIGITANDO"){
+			$emoji = "💾💾💾";
+		} else if ($categoria == "ENTENDI"){
+			$emoji = "🤦🏻‍♂️🤦🏻‍♂️🤦🏻‍♂️";
+		} else if ($categoria == "AFL"){
+			$emoji = "🔥🔥🔥";
+		} else if ($categoria == "CSAT"){
+			$emoji = "🙉🙉🙉";
+		} else if ($categoria == "FASE"){
+			$emoji = "👾👾👾";
+		} else if ($categoria == "STATUS"){
+			$emoji = "♻️♻️♻️";
+		} else if ($categoria == "FORMALIZA"){
+			$emoji = "🦁🦁🦁";
+		} else if ($categoria == "PAINEL"){
+			$emoji = "🕹️🕹️🕹️";
+		} else if ($categoria == "VISUALIZA"){
+			$emoji = "👀👀👀";
+		} else if ($categoria == "FORMALIZADA"){
+			$emoji = "🔔🔔🔔";
+		} else if ($categoria == "ACEITA"){
+			$emoji = "⭐️⭐️⭐️";
+		}
+
+		return $emoji;
+
+	}	
+
+	function telegram_message_adjust($categoria, $msg) {
+		$emoji = translate_telegram($categoria);
+
+		$msg = str_replace("\n", '<br>', $msg);
+		$msg = str_replace("?", '', $msg);
+		$msg = str_replace($emoji, '', $msg);
+
+		return $msg;
+	}
+
 
 	function dataUsPt($dateEntry, $barSeparator = false){
 		$date = str_replace('/', '-', $dateEntry);

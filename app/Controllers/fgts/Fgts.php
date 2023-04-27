@@ -79,10 +79,43 @@ class Fgts extends BaseController
         $btnMensagemDireta = $this->getpost('btnMensagemDireta');
         $btnCidadesListar = $this->getpost('btnCidadesListar');
         $btnGravarFacta = $this->getpost('btnGravarFacta');
+        
+        //DADOS PESSOAIS
+        $txtnomeCompleto = $this->getpost('txtnomeCompleto');
+        $txtnomeMae = $this->getpost('txtnomeMae');
+        $txtnomePai = $this->getpost('txtnomePai');
+        $txtnumBanco = $this->getpost('txtnumBanco');
+        $rdTipoConta = $this->getpost('rdTipoConta');
+        $txtagencia = $this->getpost('txtagencia');
+        $txtnumDigitoAgencia = $this->getpost('txtnumDigitoAgencia');
+        $txtnumConta = $this->getpost('txtnumConta');
+        $txtnumDigito = $this->getpost('txtnumDigito');
+        $txtnumeroCep = $this->getpost('txtnumeroCep');
+        $txtnomeCompleto = $this->getpost('txtnomeCompleto');
+        $celular_alertas = (empty($this->getpost('celular_alertas')) ? 'N' : 'Y');
+        $celular_failed = (empty($this->getpost('celular_failed')) ? 'N' : 'Y');
 
+        
         if (!empty($btnSalvar)){
             $where = array('id_proposta' => $id_proposta);
-            $fields = array('ocorrencias' => $ocorrencias);
+            
+            $fields = array('ocorrencias' => $ocorrencias
+                            , 'mae' => $txtnomeMae
+                            , 'pai' => $txtnomePai
+                            , 'banco_numero' => $txtnumBanco
+                            , 'forma_credito' => $rdTipoConta
+                            , 'agencia_numero' => $txtagencia
+                            , 'agencia_digito' => $txtnumDigitoAgencia
+                            , 'conta_numero' => $txtnumConta
+                            , 'conta_digito' => $txtnumDigito
+                            , 'cep' => $txtnumeroCep
+                            , 'nome' => $txtnomeCompleto
+                            , 'celular_alertas' => $celular_alertas
+                            , 'celular_failed' => $celular_failed
+                            );
+
+            //echo '13:46:16 - <h3>Dump 54 </h3> <br><br>' . var_dump($fields); exit;					//<-------DEBUG
+
             $fieldsDynamic = array('last_update' => 'current_timestamp()');
             $this->dbMaster->update('proposta_fgts', $fields, $where, $fieldsDynamic);
         } else if (!empty($btnMensagemDireta)){
@@ -155,6 +188,8 @@ class Fgts extends BaseController
 
 			$data['ddd'] = $cliente['firstRow']->ddd;
 			$data['celular'] = $cliente['firstRow']->celular;
+			$data['celular_alertas'] = $cliente['firstRow']->celular_alertas;
+			$data['celular_failed'] = $cliente['firstRow']->celular_failed;
 			$data['nomePai'] = $cliente['firstRow']->pai;
 			$data['dataEmissao'] = $cliente['firstRow']->data_emissao;
 			$data['estadoCivil'] = $cliente['firstRow']->estado_civil;
@@ -207,7 +242,6 @@ class Fgts extends BaseController
                 }
                 $this->dbMaster->setLimit(500);
             }
-
         }
 
         $db =  $this->dbMaster->getDB();
@@ -250,10 +284,21 @@ class Fgts extends BaseController
         return $indicadores;
     }
 
+    public function listarEventos(){
+        $whereCheck['fonte'] = 'telegram';
+        $this->dbMaster->setOrderBy(array('last_update', 'DESC'));
+        $this->dbMaster->setLimit(100);
+        $eventos = $this->dbMaster->select('log_eventos', $whereCheck);
+        return $eventos;
+    }
+
+
     public function listarPropostas(){
         $fases = $this->fasesProposta();
         $users = $this->listaOPeradores();
         $buscarProp = $this->getpost('buscarProp');
+
+        $eventos = $this->listarEventos();
 
         if (!empty($buscarProp)){
             helper('cookie');
@@ -334,8 +379,10 @@ class Fgts extends BaseController
 
         foreach ($propostas['result']->getResult() as $row) {
             $simulacao_detalhes = null;
-            //$simulacao_detalhes = $this->json_proposta_any($row->id_proposta);
-            //echo '17:11:44 - <h3>Dump 91 </h3> <br><br>' . var_dump($simulacao_detalhes); exit;					//<-------DEBUG
+
+            if (exibir_valores_proposta){
+                $simulacao_detalhes = $this->json_proposta_any($row->id_proposta);
+            }
             $row->id_simulacao =  $simulacao_detalhes;
             // if (!is_null($row->id_simulacao)){
             //     echo $row->id_simulacao['banco'] . " - " . simpleRound($row->id_simulacao['valor_liquido']);exit;
@@ -358,6 +405,8 @@ class Fgts extends BaseController
         $dados['users'] = $users;
         $dados['flag'] = $flag;
         
+        $dados['eventos'] = $eventos;
+
         return $this->loadpage('fgts/listar_propostas', $dados);
     }
 

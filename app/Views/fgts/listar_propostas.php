@@ -240,11 +240,6 @@
 																<button type="submit" class="btn btn-primary"  name="buscarProp" value="buscarProp">Buscar Proposta</button>										
 															</div>
 														</div>													
-														<div class="mb-0 mx-3">
-															<div class="d-flex align-items-center position-relative my-1 mt-0 mb-0">
-																<a href="<?php echo FGTSUrl;?>fgts/batch-check/DEeDeqqew234deT45" target="_blank" class="btn btn-info">Batch check</a>										
-															</div>
-														</div>													
 													</div>
 													<!--end::Card toolbar-->
 												</div>												
@@ -255,6 +250,22 @@
 										<!--begin::Card body-->
 										<div class="card-body p-10 table-responsive">
 											<!--begin::Table-->
+
+											<script>
+												function showHideRow($linha){
+													//alert ($linha);
+													let element = document.getElementById($linha);
+													let hidden = element.getAttribute("hidden");
+													
+													if (hidden) {
+														element.removeAttribute("hidden");
+														//button.innerText = "Hide tr";
+													} else {
+														element.setAttribute("hidden", "hidden");
+														//button.innerText = "Show tr";
+													}
+												}
+											</script>
 											<table class="table align-middle table-row-dashed table-hover fs-6 gy-5" id="kt_widget_table_3" data-kt-table-widget-3="all" >
 												<!--begin::Table head-->
 												<thead>
@@ -273,7 +284,6 @@
 														<th class="min-w-50px">Oper.</th>
 														<th class="min-w-125px">Status</th>
 														<th class="min-w-25px">AÇÃO</th>
-														<th class="min-w-25px"></th>
 													</tr>
 													<!--end::Table row-->
 												</thead>
@@ -302,96 +312,100 @@
 																		<div class="separator my-5"></div>
 																		<div class="menu-item px-3"><a href="#" onclick="copyText('<?php echo dataUsPt($row->data_nascimento, true);?>'); return false;"class="menu-link px-2"><i class="bi bi-card-text fs-2"></i><span class="mx-2"><?php echo dataUsPt($row->data_nascimento, true);?></span></a></div>
 																	</div>
-																</div><!--end::PopUp menu-->																
+																</div><!--end::PopUp menu-->	
 															</td>
-															<!--end::Checkbox-->
-															<!--begin::User=-->
+															<!--begin::VERIFICADOR=-->
 															<td>
-																	<?php echo $row->id_proposta;?>
+																	<?php echo $row->id_proposta;?><br>
 																	<a href="<?php echo FGTSUrl ?>fgts/proposta-status/<?php echo $row->verificador;?>/DEeDeqqew234deT45" target="_blank"><?php echo strtoupper($row->verificador);?></a>	
 															</td>
+															<!--begin::NOME-->
 															<td>
-																<!--begin::User details-->
 																<div class="d-flex flex-column"> 
 																	<a href="<?php echo FGTSUrl ?>fgts/proposta/<?php echo $row->verificador;?>/<?php echo createToken();?>" target="_blank" class="text-gray-800 text-hover-primary mb-1">
 																		<?php echo substr($row->nome, 0, 15) . "...";?>
 																	</a>
 																	<span><?php echo substr($row->email, 0, 13) . "...";?></span>	
 																</div>
-																<!--begin::User details-->
 															</td>
+															<!--begin::VALORES-->
 															<td>
 																<a href="<?php echo assetfolder;?>fgts-cliente-detalhes/<?php echo $row->id_proposta;?>" target="_blank" class="text-gray-800 text-hover-primary mb-1">	
 																	<?php echo $row->cpf;?><br>
 																	<?php 
 																	if (!is_null($row->id_simulacao)){
-																		echo $row->id_simulacao['banco'] . " - " . simpleRound($row->id_simulacao['valor_liquido']);
-
+																		echo $row->id_simulacao['banco'] . " - " . simpleRound((isset($row->id_simulacao['valor_liquido']) ? $row->id_simulacao['valor_liquido'] : 0));
 																	}
-																	
 																	;?>
 																</a>
 															</td>
+															<!--begin::TELEFONE=-->
 															<td>
 																	<?php echo $row->ddd . $row->celular; 
 																	echo ($row->celular_failed == "Y"  ? '<span class="badge badge-light-danger">erro</span>' : '');
 																	echo ($row->celular_alertas == "N"  ? '<span class="badge badge-light-danger">block</span>' : '');?> 
 															</td>
+															<!--begin::DATA CRIACAO=-->
 															<td><?php echo time_elapsed_string($row->last_update) . "<br>" . date('d-M', strtotime($row->data_criacao))?></td>
-															<td><?php echo $row->OperadorCCenter;?> <i class="bi bi-chat-dots fs-4" title="<?php echo $row->ocorrencias;?>"></i></td>
+															<!--begin::OPERADOR-->
+															<td><?php echo $row->OperadorCCenter;?> <i class="bi bi-chat-dots fs-4"></i></td>
+															<!--begin::FASE-->
 															<td><?php echo propostaFaseFormat($row->statusProposta) . "<br>" . propostaFaseBancoFormat($row->statusPropostaBanco);?></td>
 															<td>
 																<div><!--begin::PopUp menu-->
-																	<a href="#" class="btn btn-sm btn-icon btn-light btn-active-light-primary" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" data-bs-toggle="tooltip" data-bs-placement="top" title=""><!--begin::Svg Icon | path: icons/duotune/general/gen052.svg--><span class="svg-icon svg-icon-2 m-0"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="10" y="10" width="4" height="4" rx="2" fill="currentColor"/><rect x="17" y="10" width="4" height="4" rx="2" fill="currentColor"/><rect x="3" y="10" width="4" height="4" rx="2" fill="currentColor"/></svg></span><!--end::Svg Icon--></a>
-																	<div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-250px py-4" data-kt-menu="true">
-																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/GRO" class="menu-link px-2"><i class="bi bi-bookmark-check-fill fs-2"></i><span class="mx-2">Pendente formalização</span></a></div>
-																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/CNH" class="menu-link px-2"><i class="bi bi-bookmark-check-fill fs-2"></i><span class="mx-2">Pendente documento</span></a></div>
-																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/CCN" class="menu-link px-2"><i class="bi bi-bookmark-check-fill fs-2"></i><span class="mx-2">Depósito devolvido</span></a></div>
-																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/RPA" class="menu-link px-2"><i class="bi bi-bookmark-check-fill fs-2"></i><span class="mx-2">Reprovado PAN</span></a></div>
-																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/PEX" class="menu-link px-2"><i class="bi bi-bookmark-check-fill fs-2"></i><span class="mx-2">Exclusividade PAN</span></a></div>
-																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/RFA" class="menu-link px-2"><i class="bi bi-bookmark-check-fill fs-2"></i><span class="mx-2">Reprovado FACTA</span></a></div>
-																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/CAD" class="menu-link px-2"><i class="bi bi-bookmark-check-fill fs-2"></i><span class="mx-2">Pendente cadastro</span></a></div>
-																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/ADE" class="menu-link px-2"><i class="bi bi-bookmark-check-fill text-gray-400 fs-2"></i><span class="mx-2">Pendente Adesão</span></a></div>
-																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/INS" class="menu-link px-2"><i class="bi bi-bookmark-check-fill text-gray-400 fs-2"></i><span class="mx-2">Pendente Banco</span></a></div>
-																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/LCX" class="menu-link px-2"><i class="bi bi-bookmark-check-fill text-gray-400 fs-2"></i><span class="mx-2">Lentidão CAIXA</span></a></div>
-																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/VUL" class="menu-link px-2"><i class="bi bi-bookmark-check-fill text-gray-400 fs-2"></i><span class="mx-2">Cliente Vulnerável</span></a></div>
-																		<div class="separator my-5"></div>
-																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/MDI" class="menu-link px-2"><i class="bi bi-bookmark-check-fill text-gray-400 fs-2"></i><span class="mx-2">Mensagem Direta</span></a></div>
-																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/NIV" class="menu-link px-2"><i class="bi bi-bookmark-check-fill fs-2"></i><span class="mx-2">Aniversário Próximo</span></a></div>
-																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/CAN" class="menu-link px-2"><i class="bi bi-bookmark-check-fill text-gray-400 fs-2"></i><span class="mx-2">Cancelada Perdida </span></a></div>
-																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/PGT" class="menu-link px-2"><i class="bi bi-bookmark-check-fill text-gray-400 fs-2"></i><span class="mx-2">Aguardando Pagamento</span></a></div>
-																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/ATS" class="menu-link px-2"><i class="bi bi-bookmark-check-fill text-gray-400 fs-2"></i><span class="mx-2">Pagamento Atrasado</span></a></div>
-																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/FOR" class="menu-link px-2"><i class="bi bi-bookmark-check-fill text-gray-400 fs-2"></i><span class="mx-2">Formalização feita</span></a></div>
-																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/FIM" class="menu-link px-2"><i class="bi bi-bookmark-check-fill text-gray-400 fs-2"></i><span class="mx-2">Finalizada Paga</span></a></div>
-																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/SAL" class="menu-link px-2"><i class="bi bi-bookmark-check-fill text-gray-400 fs-2"></i><span class="mx-2">Saldo Insuficiente</span></a></div>
-																		<div class="separator my-5"></div>
-																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/SEL" class="menu-link px-2"><i class="bi bi-bookmark-check-fill fs-2"></i><span class="mx-2">Proposta selecionada</span></a></div>
-																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/DIS" class="menu-link px-2"><i class="bi bi-bookmark-check-fill fs-2"></i><span class="mx-2">Proposta disponível</span></a></div>
-																	</div>
-																</div><!--end::PopUp menu-->
-															</td>
-															<td>
-																<div><!--begin::PopUp menu-->
-																	<a href="#" class="btn btn-sm btn-icon btn-light btn-active-light-primary" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" data-bs-toggle="tooltip" data-bs-placement="top" title=""><!--begin::Svg Icon | path: icons/duotune/general/gen052.svg--><span class="svg-icon svg-icon-2 m-0"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="10" y="10" width="4" height="4" rx="2" fill="currentColor"/><rect x="17" y="10" width="4" height="4" rx="2" fill="currentColor"/><rect x="3" y="10" width="4" height="4" rx="2" fill="currentColor"/></svg></span><!--end::Svg Icon--></a>
-																	<div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-250px py-4" data-kt-menu="true">
-																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-operador-owner/<?php echo $row->id_proposta;?>"  class="menu-link px-2"><i class="bi bi-people text-gray-400 fs-2"></i><span class="mx-2">Atuar Proposta</span></a></div>
-																		<div class="menu-item px-3"><a href="<?php echo FGTSUrl ?>fgts/enviar-pesquisa/<?php echo $row->verificador;?>/<?php echo createToken();?>" class="menu-link px-2" target="_blank"><i class="bi bi-info-square-fill text-gray-400 fs-2"></i><span class="mx-2">Enviar Pesquisa</span></a></div>
-																		<div class="menu-item px-3"><a href="<?php echo FGTSUrl ?>fgts/proposta-status/<?php echo $row->verificador;?>/<?php echo createToken();?>" class="menu-link px-2" target="_blank"><i class="bi bi-info-square-fill text-gray-400 fs-2"></i><span class="mx-2">Visualizar Proposta</span><span class="badge badge-light-danger ms-auto">5</span></a></div>
-																		<div class="menu-item px-3"><a href="<?php echo FGTSUrl ?>fgts/proposta/<?php echo $row->verificador;?>/<?php echo createToken();?>" class="menu-link px-2" target="_blank"><i class="bi bi-pencil-square text-gray-400 fs-2"></i><span class="mx-2">Editar Proposta</span></a></div>
-																		<div class="menu-item px-3"><a href="<?php echo assetfolder;?>fgts-cliente-detalhes/<?php echo $row->id_proposta;?>" class="menu-link px-2" target="_blank"><i class="bi bi-pencil-square text-gray-400 fs-2"></i><span class="mx-2">Histórico Proposta</span></a></div>
-																		<div class="menu-item px-3"><a href="<?php echo FGTSUrl ?>fgts/validar-cpf-api/<?php echo $row->id_proposta;?>/0/0/0/0/<?php echo createToken();?>" class="menu-link px-2" target="_blank"><i class="bi bi-info-square-fill text-gray-400 fs-2"></i><span class="mx-2">Validar Adesão PAN</span></a></div>
-																		<div class="menu-item px-3"><a href="<?php echo FGTSUrl ?>fgts/validar-cpf-api-facta/<?php echo $row->id_proposta;?>/A/0/0/<?php echo createToken();?>" class="menu-link px-2" target="_blank"><i class="bi bi-info-square-fill text-gray-400 fs-2"></i><span class="mx-2">Validar Adesão FACTA</span></a></div>
-																		<div class="separator my-5"></div>
-																		<div class="menu-item px-3"><a href="<?php echo FGTSUrl ?>fgts/notificar-cliente/<?php echo $row->verificador;?>/<?php echo createToken();?>" class="menu-link px-2" target="_blank"><i class="fa-brands fa-whatsapp text-gray-400 fs-2"></i><span class="mx-2">Mudança Fase</span></a></div>
-																		<div class="menu-item px-3"><a href="<?php echo FGTSUrl ?>fgts/notificar-cliente-sem-compromisso/<?php echo $row->verificador;?>/<?php echo createToken();?>" class="menu-link px-2" target="_blank"><i class="fa-brands fa-whatsapp text-gray-400 fs-2"></i><span class="mx-2">Sem Compromisso</span></a></div>
-																		<div class="separator my-5"></div>
-																		<div class="menu-item px-3"><a href="<?php echo FGTSUrl ?>fgts/enviar-oferta-indicacao/<?php echo $row->verificador;?>/<?php echo createToken();?>" class="menu-link px-2" target="_blank"><i class="fa-brands fa-whatsapp text-gray-400 fs-2"></i><span class="mx-2">Oferta iFood</span></a></div>
-																		<div class="separator my-5"></div>
-																		<div class="menu-item px-3"><a href="<?php echo FGTSUrl ?>fgts/sacar-fgts/<?php echo $row->id_proposta;?>/<?php echo createToken();?>" class="menu-link px-2" target="_blank"><i class="bi-cash-coin text-gray-400 text-gray-400 fs-2"></i><span class="mx-2">Gravar Proposta</span></a></div>
-																		<div class="menu-item px-3"><a href="<?php echo FGTSUrl ?>fgts/gerar-link-formalizacao/<?php echo $row->id_proposta;?>/<?php echo createToken();?>" class="menu-link px-2" target="_blank"><i class="bi-cash-coin text-gray-400 text-gray-400 fs-2"></i><span class="mx-2">Link Formalização</span></a></div>
-																		<div class="menu-item px-3"><a href="<?php echo FGTSUrl ?>fgts/consulta-proposta-banco/<?php echo $row->id_proposta;?>/<?php echo createToken();?>" class="menu-link px-2" target="_blank"><i class="bi-cash-coin text-gray-400 text-gray-400 fs-2"></i><span class="mx-2">Status Banco</span></a></div>
-																	</div>
+																	<a href="#" class="btn btn-sm btn-icon btn-light btn-active-light-primary" onclick="showHideRow('linha_<?php echo $row->id_proposta;?>'); return false;"><!--begin::Svg Icon | path: icons/duotune/general/gen052.svg--><span class="svg-icon svg-icon-2 m-0"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="10" y="10" width="4" height="4" rx="2" fill="currentColor"/><rect x="17" y="10" width="4" height="4" rx="2" fill="currentColor"/><rect x="3" y="10" width="4" height="4" rx="2" fill="currentColor"/></svg></span><!--end::Svg Icon--></a>
 																</div><!--end::PopUp menu-->																
+															</td>
+														</tr>
+														<tr id="linha_<?php echo $row->id_proposta;?>"  valign="top" hidden="hidden">
+															<td colspan="3">
+																<span class="badge py-3 px-4 fs-7 badge-light-success mb-2 mt-2">AÇÕES: PAN | FACTA</span><br>
+																<a href="<?php echo FGTSUrl ?>fgts/sacar-fgts/<?php echo $row->id_proposta;?>/<?php echo createToken();?>" class="menu-link px-2 mt-3" target="_blank"></i><span class="mx-2">Gravar Proposta PAN</span></a><br>
+																<a href="<?php echo FGTSUrl ?>fgts/gerar-link-formalizacao/<?php echo $row->id_proposta;?>/<?php echo createToken();?>" class="menu-link px-2 mt-3" target="_blank"></i><span class="mx-2">Link Formalização PAN</span></a><br>
+																<a href="<?php echo FGTSUrl ?>fgts/validar-cpf-api/<?php echo $row->id_proposta;?>/0/0/0/0/<?php echo createToken();?>" class="menu-link px-2 mt-3" target="_blank"><span class="mx-2">Validar Adesão PAN</span></a><br>
+																<a href="<?php echo FGTSUrl ?>fgts/validar-cpf-api-facta/<?php echo $row->id_proposta;?>/A/0/0/<?php echo createToken();?>" class="menu-link px-2 mt-3" target="_blank"><span class="mx-2">Validar Adesão FACTA</span></a><br>
+																<a href="<?php echo FGTSUrl ?>fgts/consulta-proposta-banco/<?php echo $row->id_proposta;?>/<?php echo createToken();?>" class="menu-link px-2 mt-3" target="_blank"></i><span class="mx-2">Status Banco</span></a><br>
+																
+																<span class="badge py-3 px-4 fs-7 badge-light-warning mb-2 mt-2">AÇÕES: PROPOSTA</span><br>
+																<a href="<?php echo FGTSUrl ?>fgts/notificar-cliente/<?php echo $row->verificador;?>/<?php echo createToken();?>" class="menu-link px-2 mt-3" target="_blank"><span class="mx-2">Mudança Fase</span></a><br>
+																<a href="<?php echo assetfolder;?>fgts-cliente-detalhes/<?php echo $row->id_proposta;?>" class="menu-link px-2 mt-3" target="_blank"><span class="mx-2">Histórico Proposta</span></a><br>
+																<a href="<?php echo FGTSUrl ?>fgts/proposta-status/<?php echo $row->verificador;?>/<?php echo createToken();?>" class="menu-link px-2 mt-3" target="_blank"><span class="mx-2">Visualizar Proposta</span></a><br>
+																<a href="<?php echo FGTSUrl ?>fgts/proposta/<?php echo $row->verificador;?>/<?php echo createToken();?>" class="menu-link px-2 mt-3" target="_blank"><span class="mx-2">Editar Proposta</span></a><br>
+																<!-- <a href="<?php echo FGTSUrl ?>fgts/notificar-cliente-sem-compromisso/<?php echo $row->verificador;?>/<?php echo createToken();?>" class="menu-link px-2 mt-3" target="_blank"><span class="mx-2">Sem Compromisso</span></a><br> -->
+																<a href="<?php echo FGTSUrl ?>fgts/enviar-pesquisa/<?php echo $row->verificador;?>/<?php echo createToken();?>" class="menu-link px-2 mt-3" target="_blank"><span class="mx-2">Enviar Pesquisa</span></a><br>
+																<a href="<?php echo assetfolder;?>fgts-operador-owner/<?php echo $row->id_proposta;?>"  class="menu-link px-2 py-2 mt-3"><span class="mx-2">Atuar Proposta</span></a><br>
+															</td>
+															<td colspan="2">
+																<span class="badge py-3 px-4 fs-7 badge-light-info mb-2 mt-2">FASES: PENDÊNCIAS</span><br>
+																<a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/MDI" class="menu-link px-2 mt-3"><span class="mx-2">Mensagem Direta</span></a><br>
+																<a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/GRO" class="menu-link px-2 mt-3"><span class="mx-2">Pendente Formalização</span></a><br>
+																<a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/CNH" class="menu-link px-2 mt-3"><span class="mx-2">Pendente Documento</span></a><br>
+																<a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/CAD" class="menu-link px-2 mt-3"><span class="mx-2">Pendente Cadastro</span></a><br>
+																<a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/ADE" class="menu-link px-2 mt-3"><span class="mx-2">Pendente Adesão</span></a><br>
+																<a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/INS" class="menu-link px-2 mt-3"><span class="mx-2">Pendente Banco</span></a><br>
+																
+																<span class="badge py-3 px-4 fs-7 badge-light-danger mb-2 mt-2">FASES: REPROVAÇÕES</span><br>
+																<a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/CCN" class="menu-link px-2 mt-3"><span class="mx-2">Depósito devolvido</span></a><br>
+																<a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/RPA" class="menu-link px-2 mt-3"><span class="mx-2">Reprovado PAN</span></a><br>
+																<a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/PEX" class="menu-link px-2 mt-3"><span class="mx-2">Exclusividade PAN</span></a><br>
+																<a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/RFA" class="menu-link px-2 mt-3"><span class="mx-2">Reprovado FACTA</span></a><br>
+																<a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/CAN" class="menu-link px-2 mt-3"><span class="mx-2">Cancelada Perdida </span></a><br>
+																<a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/SAL" class="menu-link px-2 mt-3"><span class="mx-2">Saldo Insuficiente</span></a><br>
+																
+															</td>
+															<td colspan="3">
+																<span class="badge py-3 px-4 fs-7 badge-light-success mb-2 mt-2">FASES: SUCESSO</span><br>
+																<a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/PGT" class="menu-link px-2 mt-3"><span class="mx-2">Aguardando Pagamento</span></a><br>
+																<a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/FOR" class="menu-link px-2 mt-3"><span class="mx-2">Formalização feita</span></a><br>
+																<a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/FIM" class="menu-link px-2 mt-3"><span class="mx-2">Finalizada Paga</span></a><br>
+																<a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/SEL" class="menu-link px-2 mt-3"><span class="mx-2">Proposta selecionada</span></a><br>
+																<a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/DIS" class="menu-link px-2 mt-3"><span class="mx-2">Proposta disponível</span></a><br>
+																
+																<span class="badge py-3 px-4 fs-7 badge-light-info mb-2 mt-2">FASES: OUTRAS</span><br>
+																<a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/ATS" class="menu-link px-2 mt-3"><span class="mx-2">Pagamento Atrasado</span></a><br>
+																<a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/LCX" class="menu-link px-2 mt-3"><span class="mx-2">Lentidão CAIXA</span></a><br>
+																<a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/VUL" class="menu-link px-2 mt-3"><span class="mx-2">Cliente Vulnerável</span></a><br>
+																<a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/NIV" class="menu-link px-2 mt-3"><span class="mx-2">Aniversário Próximo</span></a><br>
 															</td>
 														</tr>
 													<?php 
