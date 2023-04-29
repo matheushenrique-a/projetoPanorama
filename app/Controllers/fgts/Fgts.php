@@ -83,6 +83,7 @@ class Fgts extends BaseController
         //DADOS PESSOAIS
         $txtnomeCompleto = $this->getpost('txtnomeCompleto');
         $txtnomeMae = $this->getpost('txtnomeMae');
+        $txtDataNascimento = $this->getpost('txtDataNascimento');
         $txtnomePai = $this->getpost('txtnomePai');
         $txtnumBanco = $this->getpost('txtnumBanco');
         $rdTipoConta = $this->getpost('rdTipoConta');
@@ -95,13 +96,13 @@ class Fgts extends BaseController
         $celular_alertas = (empty($this->getpost('celular_alertas')) ? 'N' : 'Y');
         $celular_failed = (empty($this->getpost('celular_failed')) ? 'N' : 'Y');
 
-        
         if (!empty($btnSalvar)){
             $where = array('id_proposta' => $id_proposta);
             
             $fields = array('ocorrencias' => $ocorrencias
                             , 'mae' => $txtnomeMae
                             , 'pai' => $txtnomePai
+                            , 'data_nascimento' => dataPtUs($txtDataNascimento)
                             , 'banco_numero' => $txtnumBanco
                             , 'forma_credito' => $rdTipoConta
                             , 'agencia_numero' => $txtagencia
@@ -156,7 +157,7 @@ class Fgts extends BaseController
 			$data['id_proposta'] = $id_proposta;	
 			$data['verificador'] = $cliente['firstRow']->verificador;
 			$data['cpf']  = $cliente['firstRow']->cpf;
-			$data['dtaNascimento'] = $cliente['firstRow']->data_nascimento;
+			$data['dtaNascimento'] = dataUsPt($cliente['firstRow']->data_nascimento, true);
 			$data['email'] = $cliente['firstRow']->email;
 			$data['ocorrencias'] = $cliente['firstRow']->ocorrencias;
 			$data['txtMensagemDireta'] = $cliente['firstRow']->mensagem_direta;

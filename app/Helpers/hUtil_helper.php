@@ -130,7 +130,11 @@
 		return $msg;
 	}
 
-
+	function dataPtUs($dateEntry){
+		$date = str_replace('/', '-', $dateEntry);
+		return date('Y-m-d H:i:s', strtotime($date));
+	}
+	
 	function dataUsPt($dateEntry, $barSeparator = false){
 		$date = str_replace('/', '-', $dateEntry);
 

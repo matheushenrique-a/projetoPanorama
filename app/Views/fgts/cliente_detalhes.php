@@ -78,6 +78,10 @@
 																			<input type="text" class="form-control" placeholder="" name="txtnomePai" value="<?php echo $nomePai;?>" />
 																		</div>
 																		<div class="input-group">
+																			<span class="input-group-text" style="width: 155px">Data Nascimento</span>
+																			<input type="text" class="form-control" placeholder="" name="txtDataNascimento" value="<?php echo $dtaNascimento;?>" />
+																		</div>
+																		<div class="input-group">
 																			<span class="input-group-text" style="width: 155px">Banco</span>
 																			<input type="text" class="form-control" placeholder="" name="txtnumBanco" value="<?php echo $numBanco;?>" />
 																		</div>
