@@ -375,6 +375,7 @@ class Fgts extends BaseController
 
         $likeCheck = array("likeCheck" => $likeCheck);
 
+        $this->dbMaster->setLimit(500);
         $this->dbMaster->setOrderBy(array('id_proposta', 'DESC'));
         $propostas = $this->dbMaster->select('proposta_fgts', $whereCheck, $whereNotIn + $likeCheck + $whereIn);
 

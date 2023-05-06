@@ -360,11 +360,11 @@
 														<tr id="linha_<?php echo $row->id_proposta;?>"  valign="top" hidden="hidden">
 															<td colspan="3">
 																<span class="badge py-3 px-4 fs-7 badge-light-success mb-2 mt-2">AÇÕES: PAN | FACTA</span><br>
-																<a href="<?php echo FGTSUrl ?>fgts/sacar-fgts/<?php echo $row->id_proposta;?>/<?php echo createToken();?>" class="menu-link px-2 mt-3" target="_blank"></i><span class="mx-2">Gravar Proposta PAN</span></a><br>
-																<a href="<?php echo FGTSUrl ?>fgts/gerar-link-formalizacao/<?php echo $row->id_proposta;?>/<?php echo createToken();?>" class="menu-link px-2 mt-3" target="_blank"></i><span class="mx-2">Link Formalização PAN</span></a><br>
-																<a href="<?php echo FGTSUrl ?>fgts/validar-cpf-api/<?php echo $row->id_proposta;?>/0/0/0/0/<?php echo createToken();?>" class="menu-link px-2 mt-3" target="_blank"><span class="mx-2">Validar Adesão PAN</span></a><br>
-																<a href="<?php echo FGTSUrl ?>fgts/validar-cpf-api-facta/<?php echo $row->id_proposta;?>/A/0/0/<?php echo createToken();?>" class="menu-link px-2 mt-3" target="_blank"><span class="mx-2">Validar Adesão FACTA</span></a><br>
-																<a href="<?php echo FGTSUrl ?>fgts/consulta-proposta-banco/<?php echo $row->id_proposta;?>/<?php echo createToken();?>" class="menu-link px-2 mt-3" target="_blank"></i><span class="mx-2">Status Banco</span></a><br>
+																<a href="<?php echo FGTSUrl ?>fgts/sacar-fgts/<?php echo $row->id_proposta;?>/<?php echo createToken();?>" class="px-2 py-20" target="_blank">Gravar Proposta PAN</a><br>
+																<a href="<?php echo FGTSUrl ?>fgts/gerar-link-formalizacao/<?php echo $row->id_proposta;?>/<?php echo createToken();?>" class="menu-link px-2 mt-3" target="_blank">Link Formalização PAN</a><br>
+																<a href="<?php echo FGTSUrl ?>fgts/validar-cpf-api/<?php echo $row->id_proposta;?>/0/0/0/0/<?php echo createToken();?>" class="menu-link px-2 mt-3" target="_blank">Validar Adesão PAN</a><br>
+																<a href="<?php echo FGTSUrl ?>fgts/validar-cpf-api-facta/<?php echo $row->id_proposta;?>/A/0/0/<?php echo createToken();?>" class="menu-link px-2 mt-3" target="_blank">Validar Adesão FACTA</a><br>
+																<a href="<?php echo FGTSUrl ?>fgts/consulta-proposta-banco/<?php echo $row->id_proposta;?>/<?php echo createToken();?>" class="menu-link px-2 mt-3" target="_blank">Status Banco</a><br>
 																
 																<span class="badge py-3 px-4 fs-7 badge-light-warning mb-2 mt-2">AÇÕES: PROPOSTA</span><br>
 																<a href="<?php echo FGTSUrl ?>fgts/notificar-cliente/<?php echo $row->verificador;?>/<?php echo createToken();?>" class="menu-link px-2 mt-3" target="_blank"><span class="mx-2">Mudança Fase</span></a><br>
@@ -386,11 +386,11 @@
 																
 																<span class="badge py-3 px-4 fs-7 badge-light-danger mb-2 mt-2">FASES: REPROVAÇÕES</span><br>
 																<a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/CCN" class="menu-link px-2 mt-3"><span class="mx-2">Depósito devolvido</span></a><br>
-																<a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/RPA" class="menu-link px-2 mt-3"><span class="mx-2">Reprovado PAN</span></a><br>
 																<a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/PEX" class="menu-link px-2 mt-3"><span class="mx-2">Exclusividade PAN</span></a><br>
+																<a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/RPA" class="menu-link px-2 mt-3"><span class="mx-2">Reprovado PAN</span></a><br>
 																<a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/RFA" class="menu-link px-2 mt-3"><span class="mx-2">Reprovado FACTA</span></a><br>
+																<a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/RGE" class="menu-link px-2 mt-3"><span class="mx-2">Reprovado GERAL</span></a><br>
 																<a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/CAN" class="menu-link px-2 mt-3"><span class="mx-2">Cancelada Perdida </span></a><br>
-																<a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/SAL" class="menu-link px-2 mt-3"><span class="mx-2">Saldo Insuficiente</span></a><br>
 																
 															</td>
 															<td colspan="3">
@@ -406,6 +406,8 @@
 																<a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/LCX" class="menu-link px-2 mt-3"><span class="mx-2">Lentidão CAIXA</span></a><br>
 																<a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/VUL" class="menu-link px-2 mt-3"><span class="mx-2">Cliente Vulnerável</span></a><br>
 																<a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/NIV" class="menu-link px-2 mt-3"><span class="mx-2">Aniversário Próximo</span></a><br>
+																<a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/ARQ" class="menu-link px-2 mt-3"><span class="mx-2">Arquivar Proposta</span></a><br>
+																<a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->id_proposta;?>/SAL" class="menu-link px-2 mt-3"><span class="mx-2">Saldo Insuficiente</span></a><br>
 															</td>
 														</tr>
 													<?php 

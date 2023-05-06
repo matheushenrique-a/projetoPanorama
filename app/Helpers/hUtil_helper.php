@@ -65,6 +65,8 @@
             array('faseCode' => 'RFA', 'faseName' => 'PASSO 08 - REPROVADA FACTA', 'faseCliente' => "RETORNO FACTA", 'color' => 'light-info', 'categoria' => 'acao'),
 			array('faseCode' => 'PEX', 'faseName' => 'PASSO 08 - EXCLUSIVIDADE PAN', 'faseCliente' => "PERÍODO EXCLUSIVIDADE", 'color' => 'light-info', 'categoria' => 'acao'),			
             array('faseCode' => 'FIM', 'faseName' => 'PASSO 09 - PROPOSTA FINALIZADA', 'faseCliente' => "PROPOSTA CONCLUÍDA", 'color' => 'light-success', 'categoria' => 'fim'),
+            array('faseCode' => 'RGE', 'faseName' => 'PASSO 08 - REPROVADA GERAL', 'faseCliente' => "RETORNO BANCO", 'color' => 'light-info', 'categoria' => 'fim'),
+            array('faseCode' => 'ARQ', 'faseName' => 'PASSO 09 - PROPOSTA ARQUIVADA', 'faseCliente' => "ARQUIVADA", 'color' => 'light-success', 'categoria' => 'fim'),
             array('faseCode' => 'SAL', 'faseName' => 'PASSO 09 - SALDO INSUFICIENTE', 'faseCliente' => "SALDO INSUFICIENTE", 'color' => 'light-success', 'categoria' => 'fim'),
             array('faseCode' => 'NIV', 'faseName' => 'PASSO 09 - ANIVERSÁRIO PRÓXIMO', 'faseCliente' => "DATA ANIVERSÁRIO PRÓXIMO", 'color' => 'light-success', 'categoria' => 'fim'),
             array('faseCode' => 'CAN', 'faseName' => 'PASSO 09 - CANCELADA', 'faseCliente' => "PROPOSTA CONCLUÍDA", 'color' => 'light-success', 'categoria' => 'fim'),
