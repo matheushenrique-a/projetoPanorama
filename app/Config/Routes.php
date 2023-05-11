@@ -37,6 +37,7 @@ $routes->setAutoRoute(true);
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
 $routes->get('/', 'Home::index');
+
 //FGTS
 $routes->match(['get', 'post'], '/fgts-adm-simulacao/(:any)/(:any)/(:any)', 'Fgts\Fgts::adm_simulacao/$1/$2/$3');
 $routes->match(['get', 'post'], '/fgts-proposta-disponivel/(:any)/(:any)', 'Fgts\Fgts::atualizarStatusProposta/$1/$2');
@@ -45,6 +46,13 @@ $routes->match(['get', 'post'], '/fgts-listar-propostas', 'Fgts\Fgts::listarProp
 $routes->match(['get', 'post'], '/fgts-cliente-detalhes/(:any)', 'Fgts\Fgts::clienteDetalhes/$1');
 $routes->match(['get', 'post'], '/indicadores-diarios', 'Fgts\Indicadores::indicadores_diarios');
 $routes->match(['get', 'post'], '/indicadores-esteira', 'Fgts\Indicadores::indicadores_esteira');
+
+
+//CONSORCIO
+$routes->match(['get', 'post'], '/consorcio-listar-propostas', 'Consorcio\Consorcio::listarPropostas');
+$routes->match(['get', 'post'], '/consorcio-cliente-detalhes/(:any)', 'Consorcio\Consorcio::clienteDetalhes/$1');
+$routes->match(['get', 'post'], '/consorcio-adm-simulacao/(:any)/(:any)/(:any)', 'Consorcio\Consorcio::adm_simulacao/$1/$2/$3');
+$routes->match(['get', 'post'], '/consorcio-atualizar-proposta/(:any)/(:any)', 'Consorcio\Consorcio::consorcio_atualizar_proposta/$1/$2');
 
 //DATALAKE
 $routes->match(['get', 'post'], '/datalake-buscar', 'DataLake\DataLake::buscarCliente');

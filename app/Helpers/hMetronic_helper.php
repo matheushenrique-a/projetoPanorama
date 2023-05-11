@@ -16,9 +16,24 @@ function propostaFaseFormatSimples($texto){
     return  $fasename;
 }
 
+function propostaFaseFormatSimplesConsorcio($texto){
+    if (strpos($texto, "- ") !== false){
+        $fasename = substr($texto, strpos($texto, "- ")+1);
+    } else {
+        $fasename = $texto;
+    }
+
+    return  $fasename;
+}
+
 function propostaFaseFormat($texto){
     $textoSimples = propostaFaseFormatSimples($texto);
     return '<span class="badge py-3 px-4 fs-7 badge-' . lookupFasesByName($texto)['color'] . '">' . $textoSimples . '</span>';
+}
+
+function propostaFaseFormatConsorcio($texto){
+    $textoSimples = propostaFaseFormatSimples($texto);
+    return '<span class="badge py-3 px-4 fs-7 badge-' . lookupFasesByNameConsorcio($texto)['color'] . '">' . $textoSimples . '</span>';
 }
 
 function propostaFaseBancoFormat($texto){

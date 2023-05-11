@@ -22,9 +22,33 @@
         }
     }
 
+    function lookupFasesConsorcio($search){
+        $search = strtolower($search);
+        $data = getFasesConsorcio();
+  
+        //modo lookup
+        foreach ($data as $item){
+            if (strtolower($item['faseCode']) == $search){
+                return $item;
+            }
+        }
+    }
+
 	function lookupFasesByName($search){
         $search = strtolower($search);
         $data = getFases();
+  
+        //modo lookup
+        foreach ($data as $item){
+            if (strtolower($item['faseName']) == $search){
+                return $item;
+            }
+        }
+    }
+
+	function lookupFasesByNameConsorcio($search){
+        $search = strtolower($search);
+        $data = getFasesConsorcio();
   
         //modo lookup
         foreach ($data as $item){
@@ -86,6 +110,26 @@
 		//"PASSO 07 - GRAVADA ONLINE" = "PASSO 07 - FORMALIZAÇÃO CLIENTE";
 		//"PASSO 07 - GRAVADA OFFLINE" = "PASSO 07 - AGUARDANDO ROBÔ";
 		
+    }
+
+
+
+	function getFasesConsorcio(){
+        $data = array(
+            array('faseCode' => 'ZAP', 'faseName' => 'WHATSAPP', 'faseCliente' => "REGISTRO INTERNO", 'color' => 'light-danger', 'categoria' => 'fim'),
+            array('faseCode' => 'CRD', 'faseName' => 'CRIADA', 'faseCliente' => "AGUARDANDO PROPOSTA", 'color' => 'light-danger', 'categoria' => 'acao'),
+            array('faseCode' => 'DIS', 'faseName' => 'PASSO 01 - PROPOSTA DIPONÍVEL', 'faseCliente' => "PROPOSTA LIBERADA P/ ACEITE", 'color' => 'light-success', 'categoria' => 'acao'),
+            array('faseCode' => 'ACE', 'faseName' => 'PASSO 02 - PROPOSTA ACEITA', 'faseCliente' => "EM REGISTRO JUNTO AO BANCO", 'color' => 'light-info', 'categoria' => 'acao'),
+            array('faseCode' => 'PGT', 'faseName' => 'PASSO 02 - AGUARDANDO PAGAMENTO', 'faseCliente' => "AGUARDANDO PAGAMENTO BOLETO", 'color' => 'light-info', 'categoria' => 'acao'),
+			array('faseCode' => 'MDI', 'faseName' => 'PASSO 02 - MENSAGEM DIRETA', 'faseCliente' => "REVISÃO DA PROPOSTA", 'color' => 'light-info', 'categoria' => 'acao'),
+			array('faseCode' => 'RGE', 'faseName' => 'PASSO 02 - REPROVADA GERAL', 'faseCliente' => "RETORNO BANCO", 'color' => 'light-info', 'categoria' => 'fim'),
+			array('faseCode' => 'CAD', 'faseName' => 'PASSO 02 - CADASTRO PENDENTE', 'faseCliente' => "AGUARDANDO DADOS P/ ENVIAR PROPOSTA", 'color' => 'light-danger', 'categoria' => 'acompanhar'),
+			array('faseCode' => 'ARQ', 'faseName' => 'PASSO 02 - PROPOSTA ARQUIVADA', 'faseCliente' => "PROPOSTA ARQUIVADA", 'color' => 'light-info', 'categoria' => 'fim'),
+            array('faseCode' => 'ARQ', 'faseName' => 'PASSO 02 - BOLETO PAGO', 'faseCliente' => "PAGAMENTO REGISTRADO", 'color' => 'light-success', 'categoria' => 'acao'),
+            array('faseCode' => 'FIM', 'faseName' => 'PASSO 03 - FINALIZADA', 'faseCliente' => "PROPOSTA CONCLUÍDA", 'color' => 'light-success', 'categoria' => 'fim'),
+            array('faseCode' => 'CAN', 'faseName' => 'PASSO 03 - CANCELADA', 'faseCliente' => "PROPOSTA CANCELADA", 'color' => 'light-success', 'categoria' => 'fim'),
+        );
+        return $data;
     }
 
 	function translate_telegram($categoria){
@@ -150,6 +194,21 @@
 	function getFasesCategory($category){
 		$category = strtolower($category);
 		$fases = getFases();
+		
+		$fasesResult = [];
+
+		foreach ($fases as $key => $value) {
+			if (strtolower($value["categoria"]) == $category){
+				$fasesResult[] = $value["faseName"];
+			}
+		}
+
+        return $fasesResult;
+    }
+
+	function getFasesCategoryConsorcio($category){
+		$category = strtolower($category);
+		$fases = getFasesConsorcio();
 		
 		$fasesResult = [];
 

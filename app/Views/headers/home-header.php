@@ -5299,20 +5299,37 @@ License: For each use you must have a valid license purchased only from above li
 													<span class="menu-bullet">
 														<span class="bullet bullet-dot"></span>
 													</span>
-													<span class="menu-title">Propostas</span>
+													<span class="menu-title">Ferramentas</span>
 													<span class="menu-arrow"></span>
 												</span>
-												<!--end:Menu link-->
-												<!--begin:Menu sub-->
 												<div class="menu-sub menu-sub-accordion menu-active-bg">
-													<!--begin:Menu item-->
 													<div class="menu-item">
 														<!--begin:Menu link-->
-														<a class="menu-link" href="../../demo1/dist/authentication/layouts/corporate/sign-in.html">
+														<a class="menu-link" href="https://frontline.twilio.com/" target="_blank">
 															<span class="menu-bullet">
 																<span class="bullet bullet-dot"></span>
 															</span>
-															<span class="menu-title">Recebidas</span>
+															<span class="menu-title">Frontline</span>
+														</a>
+													</div>
+													<div class="menu-item">
+														<!--begin:Menu link-->
+														<a class="menu-link" href="http://cep.la/" target="_blank">
+															<span class="menu-bullet">
+																<span class="bullet bullet-dot"></span>
+															</span>
+															<span class="menu-title">Consultar CEP</span>
+														</a>
+													</div>
+													<!--end:Menu item-->
+													<!--begin:Menu item-->
+													<div class="menu-item">
+														<!--begin:Menu link-->
+														<a class="menu-link" href="https://panconsig.pansolucoes.com.br/" target="_blank">
+															<span class="menu-bullet">
+																<span class="bullet bullet-dot"></span>
+															</span>
+															<span class="menu-title">PAN CONSIG</span>
 														</a>
 														<!--end:Menu link-->
 													</div>
@@ -5320,11 +5337,11 @@ License: For each use you must have a valid license purchased only from above li
 													<!--begin:Menu item-->
 													<div class="menu-item">
 														<!--begin:Menu link-->
-														<a class="menu-link" href="../../demo1/dist/authentication/layouts/corporate/sign-up.html">
+														<a class="menu-link" href="https://desenv.facta.com.br/sistemaNovo/index.php"  target="_blank">
 															<span class="menu-bullet">
 																<span class="bullet bullet-dot"></span>
 															</span>
-															<span class="menu-title">Pendentes</span>
+															<span class="menu-title">FACTA CONSIG</span>
 														</a>
 														<!--end:Menu link-->
 													</div>
@@ -5332,23 +5349,11 @@ License: For each use you must have a valid license purchased only from above li
 													<!--begin:Menu item-->
 													<div class="menu-item">
 														<!--begin:Menu link-->
-														<a class="menu-link" href="../../demo1/dist/authentication/layouts/corporate/two-steps.html">
+														<a class="menu-link" href="https://nordvpn.com/pt-br/ip-lookup/"  target="_blank">
 															<span class="menu-bullet">
 																<span class="bullet bullet-dot"></span>
 															</span>
-															<span class="menu-title">Canceladas</span>
-														</a>
-														<!--end:Menu link-->
-													</div>
-													<!--end:Menu item-->
-													<!--begin:Menu item-->
-													<div class="menu-item">
-														<!--begin:Menu link-->
-														<a class="menu-link" href="../../demo1/dist/authentication/layouts/corporate/reset-password.html">
-															<span class="menu-bullet">
-																<span class="bullet bullet-dot"></span>
-															</span>
-															<span class="menu-title">Históricas</span>
+															<span class="menu-title">Consulta IP</span>
 														</a>
 														<!--end:Menu link-->
 													</div>
@@ -5356,7 +5361,26 @@ License: For each use you must have a valid license purchased only from above li
 												</div>
 												<!--end:Menu sub-->
 											</div>
-											<!--end:Menu item-->
+											<!--start:BLOCK URLS-->
+											<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
+												<span class="menu-link"><span class="menu-bullet"><span class="bullet bullet-dot"></span></span><span class="menu-title">Úteis</span><span class="menu-arrow"></span></span>
+												<div class="menu-sub menu-sub-accordion menu-active-bg">
+													<div class="menu-item"><a class="menu-link" href="https://pravc.io/book" target="_blank"><span class="menu-bullet"><span class="bullet bullet-dot"></span></span><span class="menu-title">E-Book</span></a></div>
+													<div class="menu-item"><a class="menu-link" href="https://pravc.io/chat" target="_blank"><span class="menu-bullet"><span class="bullet bullet-dot"></span></span><span class="menu-title">Chat WhatsApp</span></a></div>
+													<div class="menu-item"><a class="menu-link" href="https://pravc.io/sacar-fgts" target="_blank"><span class="menu-bullet"><span class="bullet bullet-dot"></span></span><span class="menu-title">Sacar FGTS</span></a></div>
+													<div class="menu-item"><a class="menu-link" href="https://pravc.io/ola" target="_blank"><span class="menu-bullet"><span class="bullet bullet-dot"></span></span><span class="menu-title">Site FGTS</span></a></div>
+													<div class="menu-item"><a class="menu-link" href="https://pravc.io/android" target="_blank"><span class="menu-bullet"><span class="bullet bullet-dot"></span></span><span class="menu-title">App Android</span></a></div>
+													<div class="menu-item"><a class="menu-link" href="https://pravc.io/iphone" target="_blank"><span class="menu-bullet"><span class="bullet bullet-dot"></span></span><span class="menu-title">App iPhone</span></a></div>
+													<div class="menu-item"><a class="menu-link" href="https://pravc.io/app-ajuda" target="_blank"><span class="menu-bullet"><span class="bullet bullet-dot"></span></span><span class="menu-title">Dúvidas App FGTS</span></a></div>
+													<div class="menu-item"><a class="menu-link" href="https://pravc.io/fgts" target="_blank"><span class="menu-bullet"><span class="bullet bullet-dot"></span></span><span class="menu-title">Video App FGTS</span></a></div>
+													<div class="menu-item"><a class="menu-link" href="https://pravc.io/app-ajuda" target="_blank"><span class="menu-bullet"><span class="bullet bullet-dot"></span></span><span class="menu-title">Dúvidas App FGTS</span></a></div>
+													<div class="menu-item"><a class="menu-link" href="https://www.youtube.com/shorts/9Sl1b0sqmVs" target="_blank"><span class="menu-bullet"><span class="bullet bullet-dot"></span></span><span class="menu-title">Adicionar FACTA</span></a></div>
+													<div class="menu-item"><a class="menu-link" href="https://www.youtube.com/shorts/MilvwPpAcNw" target="_blank"><span class="menu-bullet"><span class="bullet bullet-dot"></span></span><span class="menu-title">Empréstimos Atuais</span></a></div>
+													<div class="menu-item"><a class="menu-link" href="https://www.youtube.com/shorts/wczI943T040" target="_blank"><span class="menu-bullet"><span class="bullet bullet-dot"></span></span><span class="menu-title">Adicionar PAN</span></a></div>
+													<div class="menu-item"><a class="menu-link" href="https://www.youtube.com/shorts/kM3ic3H2vs0" target="_blank"><span class="menu-bullet"><span class="bullet bullet-dot"></span></span><span class="menu-title">Adesão Saque</span></a></div>
+												</div>
+											</div>
+											<!--end:BLOCK URLS-->
 										</div>
 										<!--end:Menu sub-->
 									</div>
@@ -5375,7 +5399,7 @@ License: For each use you must have a valid license purchased only from above li
 												</span>
 												<!--end::Svg Icon-->
 											</span>
-											<span class="menu-title">Auxilio Brasil</span>
+											<span class="menu-title">CONSÓRCIO</span>
 											<span class="menu-arrow"></span>
 										</span>
 										<!--end:Menu link-->										
@@ -5384,7 +5408,7 @@ License: For each use you must have a valid license purchased only from above li
 											<!--begin:Menu item-->
 											<div class="menu-item">
 												<!--begin:Menu link-->
-												<a class="menu-link" href="../../demo1/dist/authentication/general/error-500.html">
+												<a class="menu-link" href="<?php echo assetfolder;?>consorcio-listar-propostas">
 													<span class="menu-bullet">
 														<span class="bullet bullet-dot"></span>
 													</span>
@@ -5392,72 +5416,14 @@ License: For each use you must have a valid license purchased only from above li
 												</a>
 												<!--end:Menu link-->
 											</div>
-											<!--end:Menu item-->
-											<!--begin:Menu item-->
+											<!--start:BLOCK URLS-->
 											<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-												<!--begin:Menu link-->
-												<span class="menu-link">
-													<span class="menu-bullet">
-														<span class="bullet bullet-dot"></span>
-													</span>
-													<span class="menu-title">Propostas</span>
-													<span class="menu-arrow"></span>
-												</span>
-												<!--end:Menu link-->
-												<!--begin:Menu sub-->
+												<span class="menu-link"><span class="menu-bullet"><span class="bullet bullet-dot"></span></span><span class="menu-title">Feramentas</span><span class="menu-arrow"></span></span>
 												<div class="menu-sub menu-sub-accordion menu-active-bg">
-													<!--begin:Menu item-->
-													<div class="menu-item">
-														<!--begin:Menu link-->
-														<a class="menu-link" href="../../demo1/dist/authentication/layouts/corporate/sign-in.html">
-															<span class="menu-bullet">
-																<span class="bullet bullet-dot"></span>
-															</span>
-															<span class="menu-title">Recebidas</span>
-														</a>
-														<!--end:Menu link-->
-													</div>
-													<!--end:Menu item-->
-													<!--begin:Menu item-->
-													<div class="menu-item">
-														<!--begin:Menu link-->
-														<a class="menu-link" href="../../demo1/dist/authentication/layouts/corporate/sign-up.html">
-															<span class="menu-bullet">
-																<span class="bullet bullet-dot"></span>
-															</span>
-															<span class="menu-title">Pendentes</span>
-														</a>
-														<!--end:Menu link-->
-													</div>
-													<!--end:Menu item-->
-													<!--begin:Menu item-->
-													<div class="menu-item">
-														<!--begin:Menu link-->
-														<a class="menu-link" href="../../demo1/dist/authentication/layouts/corporate/two-steps.html">
-															<span class="menu-bullet">
-																<span class="bullet bullet-dot"></span>
-															</span>
-															<span class="menu-title">Canceladas</span>
-														</a>
-														<!--end:Menu link-->
-													</div>
-													<!--end:Menu item-->
-													<!--begin:Menu item-->
-													<div class="menu-item">
-														<!--begin:Menu link-->
-														<a class="menu-link" href="../../demo1/dist/authentication/layouts/corporate/reset-password.html">
-															<span class="menu-bullet">
-																<span class="bullet bullet-dot"></span>
-															</span>
-															<span class="menu-title">Históricas</span>
-														</a>
-														<!--end:Menu link-->
-													</div>
-													<!--end:Menu item-->
+													<div class="menu-item"><a class="menu-link" href="https://www.bmgconsig.com.br/" target="_blank"><span class="menu-bullet"><span class="bullet bullet-dot"></span></span><span class="menu-title">BMG CONSIG</span></a></div>
 												</div>
-												<!--end:Menu sub-->
 											</div>
-											<!--end:Menu item-->
+											<!--end:BLOCK URLS-->
 										</div>
 										<!--end:Menu sub-->
 									</div>
