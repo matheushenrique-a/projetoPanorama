@@ -52,15 +52,15 @@ class Database extends Config
 
      public $fgtsDB = [
         'DSN'      => '',
-        'hostname' => 'localhost',
-        'username' => 'root',
-        'password' => '',
-        'database' => 'fintech',  
+        // 'hostname' => 'localhost',
+        // 'username' => 'root',
+        // 'password' => '',
+        // 'database' => 'fintech',  
         //producao SiteGround
-        // 'hostname' => 'us231.siteground.us',
-        // 'username' => 'uecqu4bzohwbb',
-        // 'password' => 'tbhvch8oczcw',
-        // 'database' => 'dbrxcsrf1hku99',
+        'hostname' => 'us231.siteground.us',
+        'username' => 'uecqu4bzohwbb',
+        'password' => 'tbhvch8oczcw',
+        'database' => 'dbrxcsrf1hku99',
         // 'hostname' => '35.208.178.233',
         // 'username' => 'uecqu4bzohwbb',
         // 'password' => 'tbhvch8oczcw',
