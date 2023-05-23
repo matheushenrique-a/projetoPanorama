@@ -193,15 +193,20 @@ class Consorcio extends BaseController
 			$data['data_criacao'] = $cliente['firstRow']->data_criacao;
         }
 
-        $db =  $this->dbMaster->getDB();
-        $builder = $db->table('whatsapp_log');
-        $builder->Like('whatsapp_log.To', substr($to,-8)); //bug do número 9 no whatsapp
-        $builder->orLike('whatsapp_log.From', substr($to,-8));
-        $builder->orderBy('id', 'DESC');
-        $builder->select('*');
-		//echo $builder->getCompiledSelect();exit;
-		$chat = $this->dbMaster->resultfy($builder->get());
-        $data['chat'] = $chat;
+        //echo '07:51:47 - <h3>Dump 55 </h3> <br><br>' . var_dump(strlen($to)); exit;					//<-------DEBUG
+        if (strlen($to) > 10){
+            $db =  $this->dbMaster->getDB();
+            $builder = $db->table('whatsapp_log');
+            $builder->Like('whatsapp_log.To', substr($to,-8)); //bug do número 9 no whatsapp
+            $builder->orLike('whatsapp_log.From', substr($to,-8));
+            $builder->orderBy('id', 'DESC');
+            $builder->select('*');
+            //echo $builder->getCompiledSelect();exit;
+            $chat = $this->dbMaster->resultfy($builder->get());
+            $data['chat'] = $chat;
+        } else {
+            $data['chat'] = null;
+        }
 
 
         $db =  $this->dbMaster->getDB();

@@ -428,7 +428,7 @@
 																
 																<?php 
 																
-																if ($chat['num_rows'] > 0 ){
+																if ((!is_null($chat)) and ($chat['num_rows'] > 0 )){
 																	foreach ($chat["result"]->getResult() as $row){
 																		if (strtolower($row->ProfileName) != "chatbot"){
 																?>
