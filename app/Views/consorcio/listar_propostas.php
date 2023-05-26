@@ -332,13 +332,19 @@
 															<td>
 																<a href="<?php echo assetfolder;?>consorcio-cliente-detalhes/<?php echo $row->id_proposta;?>" target="_blank" class="text-gray-800 text-hover-primary mb-1">	
 																	<?php echo $row->cpf;?><br>
+																	<?php echo dataUsPt($row->data_nascimento, true);?>
 																</a>
 															</td>
 															<!--begin::TELEFONE=-->
 															<td>
-																	<?php echo $row->ddd . $row->celular; 
+																	<?php 
+																	
+																	echo $row->ddd . $row->celular . "<br> " . $row->categoria . " - R$ " . $row->parcela_valor; 
 																	echo ($row->celular_failed == "Y"  ? '<span class="badge badge-light-danger">erro</span>' : '');
-																	echo ($row->celular_alertas == "N"  ? '<span class="badge badge-light-danger">block</span>' : '');?> 
+																	echo ($row->celular_alertas == "N"  ? '<span class="badge badge-light-danger">block</span>' : '');
+																	
+																	?>
+																	 
 															</td>
 															<!--begin::DATA CRIACAO=-->
 															<td><?php echo time_elapsed_string($row->last_update) . "<br>" . date('d-M', strtotime($row->data_criacao))?></td>
