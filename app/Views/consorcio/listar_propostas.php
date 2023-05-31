@@ -280,7 +280,7 @@
 														<th class="min-w-150px">Cliente</th>
 														<th class="min-w-150px">CPF / Opção</th>
 														<th class="min-w-25">Celular</th>
-														<th class="min-w-50">DATAS</th>
+														<th class="min-w-50">Carta Crédito</th>
 														<th class="min-w-50px">Oper.</th>
 														<th class="min-w-125px">Status</th>
 														<th class="min-w-25px">AÇÃO</th>
@@ -317,12 +317,12 @@
 															<!--begin::VERIFICADOR=-->
 															<td>
 																	<?php echo $row->id_proposta;?><br>
-																	<a href="<?php echo FGTSUrl ?>consorcio/meu-consorcio-status/<?php echo $row->verificador;?>/DEeDeqqew234deT45" target="_blank"><?php echo strtoupper($row->verificador);?></a>	
+																	<a href="<?php echo ConsorcioUrl ?>consorcio/meu-consorcio-status/<?php echo $row->verificador;?>/DEeDeqqew234deT45" target="_blank"><?php echo strtoupper($row->verificador);?></a>	
 															</td>
 															<!--begin::NOME-->
 															<td>
 																<div class="d-flex flex-column"> 
-																	<a href="<?php echo FGTSUrl ?>fgts/proposta/<?php echo $row->verificador;?>/<?php echo createToken();?>" target="_blank" class="text-gray-800 text-hover-primary mb-1">
+																	<a href="<?php echo ConsorcioUrl ?>fgts/proposta/<?php echo $row->verificador;?>/<?php echo createToken();?>" target="_blank" class="text-gray-800 text-hover-primary mb-1">
 																		<?php echo substr($row->nome, 0, 15) . "...";?>
 																	</a>
 																	<span><?php echo substr($row->email, 0, 13) . "...";?></span>	
@@ -347,7 +347,7 @@
 																	 
 															</td>
 															<!--begin::DATA CRIACAO=-->
-															<td><?php echo time_elapsed_string($row->last_update) . "<br>" . date('d-M', strtotime($row->data_criacao))?></td>
+															<td>R$ <?php echo simpleRound($row->carta_valor);?><br><?php echo date('d-M', strtotime($row->data_criacao))?></td>
 															<!--begin::OPERADOR-->
 															<td><?php echo $row->OperadorCCenter;?> <i class="bi bi-chat-dots fs-4"></i></td>
 															<!--begin::FASE-->
@@ -361,12 +361,13 @@
 														<tr id="linha_<?php echo $row->id_proposta;?>"  valign="top" hidden="hidden">
 															<td colspan="3">
 																<span class="badge py-3 px-4 fs-7 badge-light-warning mb-2 mt-2">AÇÕES: PROPOSTA</span><br>
-																<a href="<?php echo FGTSUrl ?>consorcio/notificar-mudanca-fase/<?php echo $row->verificador;?>/<?php echo createToken();?>" class="menu-link px-2 mt-3" target="_blank"><span class="mx-2">Mudança Fase</span></a><br>
+																<a href="<?php echo ConsorcioUrl ?>consorcio/notificar-mudanca-fase/<?php echo $row->verificador;?>/<?php echo createToken();?>" class="menu-link px-2 mt-3" target="_blank"><span class="mx-2">Mudança Fase</span></a><br>
+																<a href="<?php echo ConsorcioUrl ?>consorcio/lembrar-cliente/<?php echo $row->verificador;?>/<?php echo createToken();?>" class="menu-link px-2 mt-3" target="_blank"><span class="mx-2">Lembrar cliente</span></a><br>
 																<a href="<?php echo assetfolder;?>consorcio-cliente-detalhes/<?php echo $row->id_proposta;?>" class="menu-link px-2 mt-3" target="_blank"><span class="mx-2">Histórico Proposta</span></a><br>
-																<a href="<?php echo FGTSUrl ?>consorcio/meu-consorcio-status/<?php echo $row->verificador;?>/<?php echo createToken();?>" class="menu-link px-2 mt-3" target="_blank"><span class="mx-2">Visualizar Proposta</span></a><br>
-																<a href="<?php echo FGTSUrl ?>consorcio/proposta/<?php echo $row->verificador;?>/<?php echo createToken();?>" class="menu-link px-2 mt-3" target="_blank"><span class="mx-2">Editar Proposta</span></a><br>
-																<!-- <a href="<?php echo FGTSUrl ?>fgts/notificar-cliente-sem-compromisso/<?php echo $row->verificador;?>/<?php echo createToken();?>" class="menu-link px-2 mt-3" target="_blank"><span class="mx-2">Sem Compromisso</span></a><br> -->
-																<!-- <a href="<?php echo FGTSUrl ?>consorcio/enviar-pesquisa/<?php echo $row->verificador;?>/<?php echo createToken();?>" class="menu-link px-2 mt-3" target="_blank"><span class="mx-2">Enviar Pesquisa</span></a><br> -->
+																<a href="<?php echo ConsorcioUrl ?>consorcio/meu-consorcio-status/<?php echo $row->verificador;?>/<?php echo createToken();?>" class="menu-link px-2 mt-3" target="_blank"><span class="mx-2">Visualizar Proposta</span></a><br>
+																<a href="<?php echo ConsorcioUrl ?>consorcio/proposta/<?php echo $row->verificador;?>/<?php echo createToken();?>" class="menu-link px-2 mt-3" target="_blank"><span class="mx-2">Editar Proposta</span></a><br>
+																<!-- <a href="<?php echo ConsorcioUrl ?>fgts/notificar-cliente-sem-compromisso/<?php echo $row->verificador;?>/<?php echo createToken();?>" class="menu-link px-2 mt-3" target="_blank"><span class="mx-2">Sem Compromisso</span></a><br> -->
+																<!-- <a href="<?php echo ConsorcioUrl ?>consorcio/enviar-pesquisa/<?php echo $row->verificador;?>/<?php echo createToken();?>" class="menu-link px-2 mt-3" target="_blank"><span class="mx-2">Enviar Pesquisa</span></a><br> -->
 																<!-- <a href="<?php echo assetfolder;?>fgts-operador-owner/<?php echo $row->id_proposta;?>"  class="menu-link px-2 py-2 mt-3"><span class="mx-2">Atuar Proposta</span></a><br> -->
 															</td>
 															<td colspan="2">

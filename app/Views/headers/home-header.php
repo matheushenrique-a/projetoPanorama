@@ -5416,6 +5416,17 @@ License: For each use you must have a valid license purchased only from above li
 												</a>
 												<!--end:Menu link-->
 											</div>
+											<!--begin:Menu item-->
+											<div class="menu-item">
+												<!--begin:Menu link-->
+												<a class="menu-link" href="<?php echo assetfolder;?>carregar-proposta-bmg">
+													<span class="menu-bullet">
+														<span class="bullet bullet-dot"></span>
+													</span>
+													<span class="menu-title">Carga BMG</span>
+												</a>
+												<!--end:Menu link-->
+											</div>
 											<!--start:BLOCK URLS-->
 											<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
 												<span class="menu-link"><span class="menu-bullet"><span class="bullet bullet-dot"></span></span><span class="menu-title">Feramentas</span><span class="menu-arrow"></span></span>

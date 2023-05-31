@@ -310,7 +310,7 @@ class Fgts extends BaseController
             $email = $this->getpost('email', false);
             //echo '22:16:13 - <h3>Dump 87 </h3> <br><br>' . var_dump($email); exit;					//<-------DEBUG
             $statusPropostaFiltro = $this->getpost('statusPropostaFiltro', false);
-            $offlineMode = $this->getpost('offlineMode', false);
+            $paginas = $this->getpost('paginas', false);
             $operadorFiltro = $this->getpost('operadorFiltro', false);
             $flag = $this->getpost('flag',false);
                
@@ -320,7 +320,7 @@ class Fgts extends BaseController
             Services::response()->setCookie('nome', $nome);
             Services::response()->setCookie('email', $email);
             Services::response()->setCookie('statusPropostaFiltro', $statusPropostaFiltro);
-            Services::response()->setCookie('offlineMode', $offlineMode);
+            Services::response()->setCookie('paginas', $paginas);
             Services::response()->setCookie('operadorFiltro', $operadorFiltro);
             Services::response()->setCookie('flag', $flag);
 
@@ -333,7 +333,7 @@ class Fgts extends BaseController
             $email = $this->getpost('email', true);
             //echo '22:16:13 - <h3>Dump 22 </h3> <br><br>' . var_dump($email); exit;					//<-------DEBUG
             $statusPropostaFiltro = $this->getpost('statusPropostaFiltro', true);
-            $offlineMode = $this->getpost('offlineMode', true);
+            $paginas = $this->getpost('paginas', true);
             $operadorFiltro = $this->getpost('operadorFiltro', true);
             $flag = $this->getpost('flag',true);
         }
@@ -346,7 +346,7 @@ class Fgts extends BaseController
         $whereIn = [];
         
         if (!empty($cpf)) $likeCheck['cpf'] = $cpf;
-        if (!empty($offlineMode)) $whereCheck['offlineMode'] = $offlineMode;
+        //if (!empty($paginas)) $whereCheck['paginas'] = $paginas;
         if (!empty($verificador)) $likeCheck['verificador'] = $verificador;
         if (!empty($celular)) $likeCheck['celular'] = $celular;
         if (!empty($statusPropostaFiltro)) $whereCheck['statusProposta'] = $statusPropostaFiltro;
@@ -375,7 +375,8 @@ class Fgts extends BaseController
 
         $likeCheck = array("likeCheck" => $likeCheck);
 
-        $this->dbMaster->setLimit(500);
+        $paginas = (empty($paginas)  ? 10 : $paginas); 
+        $this->dbMaster->setLimit($paginas);
         $this->dbMaster->setOrderBy(array('id_proposta', 'DESC'));
         $propostas = $this->dbMaster->select('proposta_fgts', $whereCheck, $whereNotIn + $likeCheck + $whereIn);
 
@@ -397,7 +398,7 @@ class Fgts extends BaseController
         $dados['propostas'] = $propostas;
         $dados['cpf'] = $cpf;
         $dados['nome'] = $nome;
-        $dados['offlineMode'] = $offlineMode;
+        $dados['paginas'] = $paginas;
         $dados['verificador'] = $verificador;
         $dados['celular'] = $celular;
         $dados['email'] = $email;

@@ -335,7 +335,7 @@
 																			<div class="row"><div class="col-12"><label class="font-size-h3 font-weight-bolder text-dark">Criação Proposta: </label> <label class="font-size-h3 font-weight-light text-dark"><?php echo str_replace("-", "/", ($data_criacao))?></label></div></div>
 																		</div>
 																	</div>
-																</div></div></div>
+															</div></div></div>
 															<!--end::Block-->
 															<!--end::Block-->
 															<!--begin::Block-->

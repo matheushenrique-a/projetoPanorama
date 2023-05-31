@@ -5,7 +5,7 @@ namespace App\Libraries;
 class dbMaster {
 	protected $db;
 	protected $orderby;
-	protected $limit = 500;
+	protected $limit = 50;
 
 	public function setOrderBy($value) {$this->orderby = $value;}
 	public function getOrderBy() {return $this->orderby;}
@@ -166,6 +166,11 @@ class dbMaster {
 	public function runQuery($sql){
 		$builder = $this->db->query($sql);
 		return $this->resultfy($builder);
+	}
+
+	public function runQueryGeneric($sql){
+		$builder = $this->db->query($sql);
+		return $builder;
 	}
 
 	public function forceUpdate($table, $whereArray)

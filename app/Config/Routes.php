@@ -53,6 +53,7 @@ $routes->match(['get', 'post'], '/consorcio-listar-propostas', 'Consorcio\Consor
 $routes->match(['get', 'post'], '/consorcio-cliente-detalhes/(:any)', 'Consorcio\Consorcio::clienteDetalhes/$1');
 $routes->match(['get', 'post'], '/consorcio-adm-simulacao/(:any)/(:any)/(:any)', 'Consorcio\Consorcio::adm_simulacao/$1/$2/$3');
 $routes->match(['get', 'post'], '/consorcio-atualizar-proposta/(:any)/(:any)', 'Consorcio\Consorcio::consorcio_atualizar_proposta/$1/$2');
+$routes->match(['get', 'post'], '/carregar-proposta-bmg', 'Consorcio\Consorcio::carregar_proposta_bmg');
 
 //DATALAKE
 $routes->match(['get', 'post'], '/datalake-buscar', 'DataLake\DataLake::buscarCliente');

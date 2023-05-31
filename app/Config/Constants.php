@@ -14,9 +14,11 @@ define ('shortURL', 'https://pravc.io/');
 if (IsProduction){
     define ('assetfolder', '/');
     define ('FGTSUrl', '/');
+    define ('ConsorcioUrl', '/');
 } else {
     define ('assetfolder', '/InsightSuite/public/');
     define ('FGTSUrl', 'http://localhost/fintech/');
+    define ('ConsorcioUrl', 'http://localhost/fintech/');
 }
 
 //TELEGRAM NOTIFICAÇÕES PRA VOCE (GRUPO INTERNO DE ALERTAS)
