@@ -347,7 +347,7 @@
 																	 
 															</td>
 															<!--begin::DATA CRIACAO=-->
-															<td>R$ <?php echo simpleRound($row->carta_valor);?><br><?php echo date('d-M', strtotime($row->data_criacao))?></td>
+															<td>R$ <?php echo simpleRound($row->carta_valor);?><br><?php echo date('d-M', strtotime($row->data_criacao)) . ' - ' . time_elapsed_string($row->last_update, false)?></td>
 															<!--begin::OPERADOR-->
 															<td><?php echo $row->OperadorCCenter;?> <i class="bi bi-chat-dots fs-4"></i></td>
 															<!--begin::FASE-->

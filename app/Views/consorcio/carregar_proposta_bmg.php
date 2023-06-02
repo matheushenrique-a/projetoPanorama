@@ -48,6 +48,24 @@
 								
 								<!--begin::Content container-->
 								<div id="kt_app_content_container" class="app-container container-xxl">
+								<div class="alert alert-primary d-flex align-items-center p-5">
+															<!--begin::Icon-->
+															<i class="ki-duotone ki-shield-tick fs-2hx text-success me-4"><span class="path1"></span><span class="path2"></span></i>
+															<!--end::Icon-->
+
+															<!--begin::Wrapper-->
+															<div class="d-flex flex-column">
+																<!--begin::Title-->
+																<h4 class="mb-1 text-dark">This is an alert</h4>
+																<!--end::Title-->
+
+																<!--begin::Content-->
+																<span>The alert component can be used to highlight certain parts of your page for higher content visibility.</span>
+																<!--end::Content-->
+															</div>
+															<!--end::Wrapper-->
+														</div>
+														<!--end::Alert-->
 								<div class="row g-5 g-xl-8">
 										<div class="col-xl-12">
 											<form id="frmDataLake" class="form" action="<?php echo assetfolder;?>carregar-proposta-bmg" method="POST">
@@ -55,8 +73,11 @@
 												<div class="flex-lg-row-fluid">
 													<!--begin::Messenger-->
 													<div class="card" id="kt_chat_messenger">
+														<!--begin::Alert-->
+
 														<!--begin::Accordion-->
 														<div class="accordion" id="kt_accordion_1  ms-lg-7 ms-xl-10">
+															
 															<div class="accordion-item">
 																<h2 class="accordion-header" id="kt_accordion_1_header_1">
 																	<button class="accordion-button fs-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#kt_accordion_1_body_133" aria-expanded="true" aria-controls="kt_accordion_1_body_1">
@@ -87,6 +108,7 @@
 																</div>
 															</div>
 														</div>
+														
 													</div>
 												</div>
 												<!-- Fim: detalhes -->

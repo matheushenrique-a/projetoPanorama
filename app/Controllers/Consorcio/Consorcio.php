@@ -45,49 +45,54 @@ class Consorcio extends BaseController
         $propostas = $this->getpost('propostas');
         $tipo = $this->getpost('tipo');
 
+        $retorno = "";
        // echo '15:50:13 - <h3>Dump 80 </h3> <br><br>' . var_dump($propostas); exit;					//<-------DEBUG
         if (!empty($propostas)){
+            //LIMPA TABELA ANTES
+            $this->dbMaster->runQueryGeneric("delete from consorcio_pre_proposta where tipo_consorcio = '$tipo';");
+            $results = explode("\r\n", $propostas);
+        
+            $countAdd = 0;
+            foreach ($results as $key => $value) {
+                $line = explode("\t", $value);
 
-                //LIMPA TABELA ANTES
-                $this->dbMaster->runQueryGeneric("delete from consorcio_pre_proposta where tipo_consorcio = '$tipo';");
-                $results = explode("\r\n", $propostas);
-            
-                foreach ($results as $key => $value) {
-                    $line = explode("\t", $value);
+                if (count($line)> 0){
+                    //CARTA CREDITO
+                    $line[2] = str_replace(".", "", $line[2]);
+                    $line[2] = str_replace(",", ".", $line[2]);
+                    
+                    //PARCELA
+                    $line[8] = str_replace(".", "", $line[8]);
+                    $line[8] = str_replace(",", ".", $line[8]);
 
-                    if (count($line)> 0){
-                        //CARTA CREDITO
-                        $line[2] = str_replace(".", "", $line[2]);
-                        $line[2] = str_replace(",", ".", $line[2]);
-                        
-                        //PARCELA
-                        $line[8] = str_replace(".", "", $line[8]);
-                        $line[8] = str_replace(",", ".", $line[8]);
+                    if (is_numeric($line[1])){
+                        // echo '15:48:59 - <h3>Dump 25 </h3> <br><br>' . var_dump($line[1]); exit;					//<-------DEBUG
+                        $fieldsInsert = array('grupo' => $line[1]
+                        , 'tipo_consorcio' => $tipo
+                        , 'carta_valor' => $line[2]
+                        , 'taxa_adm' => $line[3]
+                        , 'parcelas' => $line[4]
+                        , 'prazo_original' => $line[5]
+                        , 'vagas' => $line[6]
+                        , 'participantes' => $line[7]
+                        , 'valor_parcela' => $line[8]
+                        , 'vencimento' => dataPtUs($line[9])
+                        , 'proxima_assembleia' => dataPtUs($line[10])
+                        , 'lance_medio' => $line[11]
+                        );
 
-                        if (is_numeric($line[1])){
-                            // echo '15:48:59 - <h3>Dump 25 </h3> <br><br>' . var_dump($line[1]); exit;					//<-------DEBUG
-                            $fieldsInsert = array('grupo' => $line[1]
-                            , 'tipo_consorcio' => $tipo
-                            , 'carta_valor' => $line[2]
-                            , 'taxa_adm' => $line[3]
-                            , 'parcelas' => $line[4]
-                            , 'prazo_original' => $line[5]
-                            , 'vagas' => $line[6]
-                            , 'participantes' => $line[7]
-                            , 'valor_parcela' => $line[8]
-                            , 'vencimento' => dataPtUs($line[9])
-                            , 'proxima_assembleia' => dataPtUs($line[10])
-                            , 'lance_medio' => $line[11]
-                            );
-
-                            $this->dbMaster->insert('consorcio_pre_proposta', $fieldsInsert);
-                        }
+                        $this->dbMaster->insert('consorcio_pre_proposta', $fieldsInsert);
+                        $countAdd++;
                     }
                 }
-           
+            } 
+            
+            $retorno = "O total de $countAdd registros foram carregados.";
         }
 
+       
 
+        $data['retorno'] = $retorno;	
         $data['propostas'] = $propostas;	
         $data['tipo'] = $tipo;	
 

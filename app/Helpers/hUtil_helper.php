@@ -244,7 +244,7 @@
 			'm' => 'mês',
 			'w' => 'semana',
 			'd' => 'dia',
-			'h' => 'hora',
+			'h' => 'h',
 			'i' => 'minuto',
 			's' => 'segundo'
 		);
