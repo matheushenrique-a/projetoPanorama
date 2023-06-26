@@ -70,6 +70,10 @@
 																			<input type="text" class="form-control" placeholder="" name="txtnomeCompleto" value="<?php echo $nomeCompleto;?>" />
 																		</div>
 																		<div class="input-group">
+																			<span class="input-group-text" style="width: 155px">CPF</span>
+																			<input type="text" class="form-control" placeholder="" name="cpf" value="<?php echo $cpf;?>" />
+																		</div>
+																		<div class="input-group">
 																			<span class="input-group-text" style="width: 155px">Mãe</span>
 																			<input type="text" class="form-control" placeholder="" name="txtnomeMae" value="<?php echo $nomeMae;?>" />
 																		</div>

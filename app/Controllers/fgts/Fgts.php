@@ -82,6 +82,7 @@ class Fgts extends BaseController
         
         //DADOS PESSOAIS
         $txtnomeCompleto = $this->getpost('txtnomeCompleto');
+        $cpf = $this->getpost('cpf');
         $txtnomeMae = $this->getpost('txtnomeMae');
         $txtDataNascimento = $this->getpost('txtDataNascimento');
         $txtnomePai = $this->getpost('txtnomePai');
@@ -111,6 +112,7 @@ class Fgts extends BaseController
                             , 'conta_digito' => $txtnumDigito
                             , 'cep' => $txtnumeroCep
                             , 'nome' => $txtnomeCompleto
+                            , 'cpf' => $cpf
                             , 'celular_alertas' => $celular_alertas
                             , 'celular_failed' => $celular_failed
                             );

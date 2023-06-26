@@ -49,23 +49,25 @@
 								<!--begin::Content container-->
 								<div id="kt_app_content_container" class="app-container container-xxl">
 								<div class="alert alert-primary d-flex align-items-center p-5">
-															<!--begin::Icon-->
-															<i class="ki-duotone ki-shield-tick fs-2hx text-success me-4"><span class="path1"></span><span class="path2"></span></i>
-															<!--end::Icon-->
+									<!--begin::Icon-->
+									<i class="ki-duotone ki-shield-tick fs-2hx text-success me-4"><span class="path1"></span><span class="path2"></span></i>
+									<!--end::Icon-->
 
-															<!--begin::Wrapper-->
-															<div class="d-flex flex-column">
-																<!--begin::Title-->
-																<h4 class="mb-1 text-dark">This is an alert</h4>
-																<!--end::Title-->
+									<?php if(!empty($retorno)){?>
+									<!--begin::Wrapper-->
+									<div class="d-flex flex-column">
+										<!--begin::Title-->
+										<h4 class="mb-1 text-dark">Notificação</h4>
+										<!--end::Title-->
 
-																<!--begin::Content-->
-																<span>The alert component can be used to highlight certain parts of your page for higher content visibility.</span>
-																<!--end::Content-->
-															</div>
-															<!--end::Wrapper-->
-														</div>
-														<!--end::Alert-->
+										<!--begin::Content-->
+										<span><?php echo $retorno;?></span>
+										<!--end::Content-->
+									</div>
+									<!--end::Wrapper-->
+									<?php }?>
+								</div>
+								<!--end::Alert-->
 								<div class="row g-5 g-xl-8">
 										<div class="col-xl-12">
 											<form id="frmDataLake" class="form" action="<?php echo assetfolder;?>carregar-proposta-bmg" method="POST">
