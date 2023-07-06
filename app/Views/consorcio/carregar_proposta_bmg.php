@@ -96,6 +96,8 @@
 																					echo '<option value="IMOVEL" ' . ($tipo == 'IMOVEL' ? 'selected' : '') . '>IMOVEL</option>';
 																					echo '<option value="AUTO" ' . ($tipo == 'AUTO' ? 'selected' : '') . '>AUTO</option>';
 																					echo '<option value="MOTO" ' . ($tipo == 'MOTO' ? 'selected' : '') . '>MOTO</option>';
+																					echo '<option value="MOTO" ' . ($tipo == 'MOTO' ? 'selected' : '') . '>MOTO</option>';
+																					echo '<option value="PESADOS" ' . ($tipo == 'PESADOS' ? 'selected' : '') . '>PESADOS</option>';
 																				?>																			
 																			</select>
 																		</div>
