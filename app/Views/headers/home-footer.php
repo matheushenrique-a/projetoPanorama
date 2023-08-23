@@ -741,7 +741,7 @@
 									</div>
 									<div class="ms-3">
 										<?php 
-											$dataEv = date("d/M H:i:s", strtotime($row->last_update . ' +2 hours'));
+											$dataEv = date("d/M H:i:s", strtotime($row->last_update . ' -3 hours'));
 										
 										?>
 										<a href="#" class="fs-5 fw-bold text-gray-900 text-hover-primary me-1">PRAVOCE</a>

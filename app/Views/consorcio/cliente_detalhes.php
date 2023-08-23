@@ -454,7 +454,7 @@
 																				<div class="d-flex flex-column align-items-end">
 																					<div class="d-flex align-items-center mb-2">
 																						<div class="me-3">
-																							<span class="text-muted fs-7 mb-1"><?php echo time_elapsed_string($row->last_updated) . ' - ' . date("d/M H:i:s", strtotime($row->last_updated . ' +2 hours')) . '<span class="badge badge-light-' . ($row->SmsStatus == 'failed'  ? 'danger' : 'success') .  ' ms-auto">' . $row->SmsStatus . '</span>'?></span>
+																							<span class="text-muted fs-7 mb-1"><?php echo time_elapsed_string($row->last_updated) . ' - ' . date("d/M H:i:s", strtotime($row->last_updated . ' -3 hours')) . '<span class="badge badge-light-' . ($row->SmsStatus == 'failed'  ? 'danger' : 'success') .  ' ms-auto">' . $row->SmsStatus . '</span>'?></span>
 																							<a href="#" class="fs-5 fw-bold text-gray-900 text-hover-primary ms-1"><?php echo strtoupper($row->ProfileName);?></a>  
 																						</div>
 																						<div class="symbol  symbol-35px symbol-circle "><div class="symbol-label fs-3 bg-light-info text-info">P</div></div><!--end::Avatar-->                 
@@ -496,7 +496,7 @@
 													?>
 													<div class="timeline-label mb-5">
 														<div class="timeline-item">
-															<div class="timeline-label fw-bold text-gray-800 fs-6"><?php echo date("d/m H:i", strtotime($row->last_update . ' +2 hours'))?></div>
+															<div class="timeline-label fw-bold text-gray-800 fs-6"><?php echo date("d/m H:i", strtotime($row->last_update . ' -3 hours'))?></div>
 															<div class="timeline-badge"><i class="fa fa-genderless text-<?php echo ($row->direction == "SAIDA"  ? 'danger' : 'success'); ?> fs-1"></i></div>
 															<div class="fw-semibold text-gray-700 ps-3 fs-7"><?php echo "<b>via " . $row->channel . "</b> - " . $row->descricao;?></div>
 														</div>

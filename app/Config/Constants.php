@@ -11,6 +11,13 @@ define('AppName', "Grupo QUID");
 
 define ('shortURL', 'https://pravc.io/');
 
+//AMBEC
+define('PATH_SAVE_AMBEC', "/Applications/XAMPP/xamppfiles/htdocs/InsightSuite/public/assets/media/ambec/");
+
+//ELEVENLABS
+define('ELEVENLABS_URL', "https://api.elevenlabs.io");
+define('ELEVENLABS_KEY', "f667e9cb53d20abfbe878eb1d7bd0229");
+
 if (IsProduction){
     define ('assetfolder', '/');
     define ('FGTSUrl', '/');

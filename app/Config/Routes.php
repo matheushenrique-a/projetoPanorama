@@ -38,6 +38,9 @@ $routes->setAutoRoute(true);
 // route since we don't have to scan directories.
 $routes->get('/', 'Home::index');
 
+//AMBEC
+$routes->match(['get', 'post'], '/ambec-script', 'Ambec\Ambec::ambec_script');
+
 //FGTS
 $routes->match(['get', 'post'], '/fgts-adm-simulacao/(:any)/(:any)/(:any)', 'Fgts\Fgts::adm_simulacao/$1/$2/$3');
 $routes->match(['get', 'post'], '/fgts-proposta-disponivel/(:any)/(:any)', 'Fgts\Fgts::atualizarStatusProposta/$1/$2');

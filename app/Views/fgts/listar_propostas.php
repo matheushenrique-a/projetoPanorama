@@ -212,6 +212,7 @@
 																	echo '<option value="10" ' .  ($paginas == "" ? 'selected' : '') . '> 10 </option>';
 																	echo '<option value="50" ' .  ($paginas == "50" ? 'selected' : '') . '> 50 </option>';
 																	echo '<option value="500" ' .  ($paginas == "500" ? 'selected' : '') . '> 500 </option>';
+																	echo '<option value="1000" ' .  ($paginas == "1000" ? 'selected' : '') . '> 1000 </option>';
 																?>
 																</select>													
 															</div>								
@@ -363,6 +364,7 @@
 																<a href="<?php echo FGTSUrl ?>fgts/sacar-fgts/<?php echo $row->id_proposta;?>/<?php echo createToken();?>" class="px-2 py-20" target="_blank">Gravar Proposta PAN</a><br>
 																<a href="<?php echo FGTSUrl ?>fgts/gerar-link-formalizacao/<?php echo $row->id_proposta;?>/<?php echo createToken();?>" class="menu-link px-2 mt-3" target="_blank">Link Formalização PAN</a><br>
 																<a href="<?php echo FGTSUrl ?>fgts/validar-cpf-api/<?php echo $row->id_proposta;?>/0/0/0/0/<?php echo createToken();?>" class="menu-link px-2 mt-3" target="_blank">Validar Adesão PAN</a><br>
+																<a href="<?php echo FGTSUrl ?>fgts/validar-cpf-optin/<?php echo $row->cpf;?>/<?php echo createToken();?>" class="menu-link px-2 mt-3" target="_blank">Validar Optin PAN</a><br>
 																<a href="<?php echo FGTSUrl ?>fgts/validar-cpf-api-facta/<?php echo $row->id_proposta;?>/A/0/0/<?php echo createToken();?>" class="menu-link px-2 mt-3" target="_blank">Validar Adesão FACTA</a><br>
 																<a href="<?php echo FGTSUrl ?>fgts/consulta-proposta-banco/<?php echo $row->id_proposta;?>/<?php echo createToken();?>" class="menu-link px-2 mt-3" target="_blank">Status Banco</a><br>
 																

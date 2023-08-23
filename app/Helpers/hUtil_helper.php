@@ -260,6 +260,25 @@
 		if (!$full) $string = array_slice($string, 0, 1);
 		return $string ? implode(', ', $string) . ' atrás' : 'agora pouco';
 	}
+
+	 //recebe um texto com espaços, caracteres e acentos e remove tudo
+	 function textToSlug($text, $spacer_underscor = true) {
+
+		if ($spacer_underscor){
+			$spacer = "_";
+		} else {
+			$spacer = "-";
+		}
+
+		$text = remove_accents($text);
+		$text = str_replace(" ", "xxxxxxx", $text);
+		$text = str_replace(".", "fffff", $text);
+		$text = preg_replace("/[^a-zA-Z]+/", "", $text);
+		$text = str_replace("xxxxxxx", $spacer, $text);
+		$text = str_replace("fffff", $spacer, $text);
+
+		return strtolower($text);
+	}
    
 	//verifica se numa string tem alguma das opções existentes
 	function checkStringOptions($body, $data, $exactCompare = false){

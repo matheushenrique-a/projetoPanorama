@@ -11,6 +11,7 @@ use Psr\Log\LoggerInterface;
 use App\Libraries\dbMaster;
 use Config\Services;
 use App\Models\m_telegram;
+use App\Models\M_seguranca;
 
 /**
  * Class BaseController
@@ -32,6 +33,7 @@ abstract class BaseController extends Controller
     protected $request;
     protected $dbMaster;
     protected $my_session;
+    protected $my_security;
 
     protected $dbProfile = null; // usa conexão padrão no Config/Database.php
     /**
@@ -54,6 +56,7 @@ abstract class BaseController extends Controller
         // Preload any models, libraries, etc, here.
         $this->dbMaster = new dbMaster($this->dbProfile); // create an instance of Library class
         $this->my_session = session();
+        $this->my_security = new M_seguranca();
     }
 
     //permite escolher uma configuração de banco diferente no arquivo Confi/Database
@@ -63,8 +66,9 @@ abstract class BaseController extends Controller
 	}
 
 	public function loadpage($page, $dados){
+        $globals = ["my_security" => $this->my_security];
         
-        return view('headers/home-header', $dados)
+        return view('headers/home-header', $dados + $globals)
             . view($page, $dados)
             . view('headers/home-footer', $dados);
 	}
