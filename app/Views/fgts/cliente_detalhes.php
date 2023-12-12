@@ -116,6 +116,9 @@
 																			<span class="input-group-text bg-color: $ffffff" style="width: 100%"><input class="form-check-input" type="checkbox" name="celular_alertas" <?php echo $celular_alertas == "Y" ? "checked" : ""?> value="<?php echo $celular_alertas;?>" />&nbsp;Bloqueio de notificações via WhatsApp</span>
 																		</div>
 																		<div class="input-group">
+																			<span class="input-group-text bg-color: $ffffff" style="width: 100%"><input class="form-check-input" type="checkbox" name="fora_politica" <?php echo $fora_politica == "Y" ? "checked" : ""?> value="Y" />&nbsp;Fora política PRAVOCE</span>
+																		</div>
+																		<div class="input-group">
 																			<span class="input-group-text" style="width: 155px">Ocorrências</span>
 																			<textarea class="form-control" aria-label="Ocorrências" rows=6 name="ocorrencias"><?php echo $ocorrencias;?></textarea>
 																		</div>
@@ -221,12 +224,22 @@
 																				?>		
 																			</select>
 																		</div>
+																		<div class="input-group">
+																			<span class="input-group-text" style="width: 155px">Tabela FACTA</span>
+																			<input type="text" class="form-control" placeholder="" name="txtTabelaFacta" value="<?php echo $txtTabelaFacta;?>" />
+																		</div>
+																		<div class="input-group">
+																			<span class="input-group-text" style="width: 155px">Taxa FACTA</span>
+																			<input type="text" class="form-control" placeholder="" name="txtTaxaFacta" value="<?php echo $txtTaxaFacta;?>" />
+																		</div>
 																		<div class="d-flex align-items-center position-relative my-1 mt-5 mb-0">
 																			<button type="submit" class="btn btn-primary me-5" name="btnCidadesListar" value="btnCidadesListar">Listar Cidades</button>										
-																			<button type="button" onclick="goFactaBtn('<?php echo FGTSUrl ?>fgts/validar-cpf-api-facta/<?php echo $id_proposta;?>/G/xxx/yyy/<?php echo createToken();?>')" class="btn btn-primary" name="btnGravarFacta" value="btnGravarFacta">Gravar Proposta Facta</button>
+																			<button type="button" onclick="goFactaBtn('<?php echo FGTSUrl ?>fgts/validar-cpf-api-facta/<?php echo $id_proposta;?>/G/xxx/yyy/<?php echo createToken();?>/<?php echo $txtTabelaFacta;?>/<?php echo $txtTaxaFacta;?>')" class="btn btn-primary" name="btnGravarFacta" value="btnGravarFacta">Gravar Proposta Facta</button>
 																		</div>
 																	</div>
+																	
 																</div>
+																
 															</div>
 														</div>
 														<!--begin::Accordion-->

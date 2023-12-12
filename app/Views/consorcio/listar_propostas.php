@@ -196,7 +196,7 @@
 																<select class="form-select form-control-solid" aria-label="" name="statusPropostaFiltro">
 																	<?php
 																		echo '<option value="" ' .  ($statusPropostaFiltro == "" ? 'selected' : '') . '></option>';
-																		foreach (getFases() as $row){
+																		foreach (getFasesConsorcio() as $row){
 																			//echo '19:21:04 - <h3>Dump 34 da variável $row </h3> <br><br>' . var_dump($row); exit;					//<-------DEBUG
 																			echo '<option value="' . $row['faseName'] . '" ' .  ($statusPropostaFiltro == $row['faseName'] ? 'selected' : '') . '>' . $row['faseName'] . '</option>';
 																		}
@@ -205,13 +205,14 @@
 															</div>												
 														</div>
 														<div class="mb-3  mx-3">
-															<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Ocultas:</label>
+															<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Registros:</label>
 															<div class="d-flex align-items-center position-relative my-1">
-																<select class="form-select form-control-solid" aria-label="" name="offlineMode">
+																<select class="form-select form-control-solid" aria-label="" name="paginas">
 																<?php
-																	// echo '<option value="" ' .  ($offlineMode == "" ? 'selected' : '') . '> TODAS </option>';
-																	// echo '<option value="Y" ' .  ($offlineMode == "Y" ? 'selected' : '') . '> NÃO </option>';
-																	// echo '<option value="N" ' .  ($offlineMode == "N" ? 'selected' : '') . '> SIM </option>';
+																	echo '<option value="10" ' .  ($paginas == "" ? 'selected' : '') . '> 10 </option>';
+																	echo '<option value="50" ' .  ($paginas == "50" ? 'selected' : '') . '> 50 </option>';
+																	echo '<option value="500" ' .  ($paginas == "500" ? 'selected' : '') . '> 500 </option>';
+																	echo '<option value="1000" ' .  ($paginas == "1000" ? 'selected' : '') . '> 1000 </option>';
 																?>
 																</select>													
 															</div>								

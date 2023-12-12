@@ -18,6 +18,11 @@ define('PATH_SAVE_AMBEC', "/Applications/XAMPP/xamppfiles/htdocs/InsightSuite/pu
 define('ELEVENLABS_URL', "https://api.elevenlabs.io");
 define('ELEVENLABS_KEY', "f667e9cb53d20abfbe878eb1d7bd0229");
 
+define('facta_taxa', 2.04);
+define('facta_tabela', 40797);
+define('facta_tabela_light', 48291); //fgts plus rb
+define('facta_taxa_ligjt', 1.80);
+
 if (IsProduction){
     define ('assetfolder', '/');
     define ('FGTSUrl', '/');

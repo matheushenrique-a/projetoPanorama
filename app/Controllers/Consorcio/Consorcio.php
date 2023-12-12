@@ -333,6 +333,7 @@ class Consorcio extends BaseController
             $statusPropostaFiltro = $this->getpost('statusPropostaFiltro', false);
             $operadorFiltro = $this->getpost('operadorFiltro', false);
             $flag = $this->getpost('flag',false);
+            $paginas = $this->getpost('paginas', false);
                
             Services::response()->setCookie('cpf', $cpf);
             Services::response()->setCookie('verificador', $verificador);
@@ -353,6 +354,7 @@ class Consorcio extends BaseController
             $statusPropostaFiltro = $this->getpost('statusPropostaFiltro', true);
             $operadorFiltro = $this->getpost('operadorFiltro', true);
             $flag = $this->getpost('flag',true);
+            $paginas = $this->getpost('paginas', true);
         }
 
         $flag = (empty($flag) ? 'ACAO' : $flag);
@@ -369,6 +371,7 @@ class Consorcio extends BaseController
         if (!empty($nome)) $likeCheck['nome'] = $nome;
         if (!empty($email)) $likeCheck['email'] = $email;
 
+        
         if ((count($likeCheck) == 0) and (count($whereCheck) == 0)){
             if ($flag == "ACAO"){
                 $fasesAdd = getFasesCategoryConsorcio('acao');
@@ -380,8 +383,9 @@ class Consorcio extends BaseController
         }
 
         $likeCheck = array("likeCheck" => $likeCheck);
-
-        $this->dbMaster->setLimit(500);
+        
+        $paginas = (empty($paginas)  ? 10 : $paginas); 
+        $this->dbMaster->setLimit($paginas);
         $this->dbMaster->setOrderBy(array('id_proposta', 'DESC'));
         $propostas = $this->dbMaster->select('proposta_consorcio', $whereCheck, $whereNotIn + $likeCheck + $whereIn);
 
@@ -394,6 +398,7 @@ class Consorcio extends BaseController
         $dados['nome'] = $nome;
         $dados['verificador'] = $verificador;
         $dados['celular'] = $celular;
+        $dados['paginas'] = $paginas;
         $dados['email'] = $email;
         $dados['statusPropostaFiltro'] = $statusPropostaFiltro;
         $dados['operadorFiltro'] = $operadorFiltro;

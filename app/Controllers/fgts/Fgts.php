@@ -79,6 +79,14 @@ class Fgts extends BaseController
         $btnMensagemDireta = $this->getpost('btnMensagemDireta');
         $btnCidadesListar = $this->getpost('btnCidadesListar');
         $btnGravarFacta = $this->getpost('btnGravarFacta');
+
+
+        //TABELA FACTA
+        $txtTabelaFacta = $this->getpost('txtTabelaFacta');
+        $txtTaxaFacta = $this->getpost('txtTaxaFacta');
+
+        if (empty($txtTabelaFacta)) $txtTabelaFacta = facta_tabela;
+        if (empty($txtTaxaFacta)) $txtTaxaFacta = facta_taxa;
         
         //DADOS PESSOAIS
         $txtnomeCompleto = $this->getpost('txtnomeCompleto');
@@ -95,7 +103,10 @@ class Fgts extends BaseController
         $txtnumeroCep = $this->getpost('txtnumeroCep');
         $txtnomeCompleto = $this->getpost('txtnomeCompleto');
         $celular_alertas = (empty($this->getpost('celular_alertas')) ? 'N' : 'Y');
+        $fora_politica = (empty($this->getpost('fora_politica')) ? 'N' : 'Y');
         $celular_failed = (empty($this->getpost('celular_failed')) ? 'N' : 'Y');
+
+        //echo '10:28:18 - <h3>Dump 71 </h3> <br><br>' . var_dump($fora_politica); exit;					//<-------DEBUG
 
         if (!empty($btnSalvar)){
             $where = array('id_proposta' => $id_proposta);
@@ -114,6 +125,7 @@ class Fgts extends BaseController
                             , 'nome' => $txtnomeCompleto
                             , 'cpf' => $cpf
                             , 'celular_alertas' => $celular_alertas
+                            , 'fora_politica' => $fora_politica
                             , 'celular_failed' => $celular_failed
                             );
 
@@ -192,6 +204,7 @@ class Fgts extends BaseController
 			$data['ddd'] = $cliente['firstRow']->ddd;
 			$data['celular'] = $cliente['firstRow']->celular;
 			$data['celular_alertas'] = $cliente['firstRow']->celular_alertas;
+			$data['fora_politica'] = $cliente['firstRow']->fora_politica;
 			$data['celular_failed'] = $cliente['firstRow']->celular_failed;
 			$data['nomePai'] = $cliente['firstRow']->pai;
 			$data['dataEmissao'] = $cliente['firstRow']->data_emissao;
@@ -228,6 +241,9 @@ class Fgts extends BaseController
 			$data['header'] = $cliente['firstRow']->header;
 			$data['data_emissao'] = $cliente['firstRow']->data_emissao;
 			$data['data_criacao'] = $cliente['firstRow']->data_criacao;
+
+			$data['txtTabelaFacta'] = $txtTabelaFacta;
+			$data['txtTaxaFacta'] = $txtTaxaFacta;
 
             if (!empty($btnCidadesListar)){
                 $this->dbMaster->setOrderBy(array("nome", "ASC"));
@@ -446,7 +462,37 @@ class Fgts extends BaseController
                 } else {
                     $output = $this->telegram->notifyTelegramGroup("⭐️⭐️⭐️ FASE - $verificador - <b>PROPOSTA PAGA</b>");
                 }
+
+                $numeroPropostaGerada = $jsonGravacao['firstRow']->numeroPropostaGerada;
+                $data_pagamento = $jsonGravacao['firstRow']->last_update;
+                $valor_pago = $jsonGravacao['firstRow']->valor_pago;
+                $banco_proposta = $jsonGravacao['firstRow']->banco;
+            } else {
+                $numeroPropostaGerada = 0;
+                $data_pagamento = null;
+                $valor_pago = 0;
+                $banco_proposta = 'NA';
             }
+
+            //faz backup da proposta
+            $finalizada = array(
+                'verificador' => $cliente['firstRow']->verificador
+                , 'chave_indicacao' => $cliente['firstRow']->chave_indicacao
+                , 'chave_acompanhamento' => $cliente['firstRow']->chave_acompanhamento
+                , 'chave_origem' => $cliente['firstRow']->chave_origem
+                , 'chave_paga' => $cliente['firstRow']->chave_paga
+                , 'cpf' => $cliente['firstRow']->cpf
+                , 'OperadorCCenter' => $cliente['firstRow']->OperadorCCenter
+                , 'statusProposta' => $cliente['firstRow']->statusProposta
+                , 'nome' => $cliente['firstRow']->nome
+                , 'banco_proposta' => $banco_proposta
+                , 'numeroPropostaGerada' => $numeroPropostaGerada
+                , 'data_pagamento' => $data_pagamento
+                , 'valor_pago' => $valor_pago
+            );
+
+            $result = $this->dbMaster->insert('proposta_fgts_finalizadas', $finalizada);
+            
         } else {
             $output = $this->telegram->notifyTelegramGroup("👾👾👾 FASE $verificador - " . $faseSimples);
         }
