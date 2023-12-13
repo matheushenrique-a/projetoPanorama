@@ -38,7 +38,7 @@ class Indicadores extends BaseController
         select '- TOTAL GERAL - ' titulo, count(valor_pago) propostas, sum(valor_pago) valor from proposta_fgts_finalizadas;");
 
         $top5FontesPagamento = $this->dbMaster->runQuery("select chave_origem, count(*) total from proposta_fgts where DATE(last_update) = DATE_SUB(CURDATE(), INTERVAL 1 DAY) and chave_origem is not null and statusProposta = 'PASSO 09 - PROPOSTA FINALIZADA' group by chave_origem order by total desc LIMIT 10;");
-        $top5FontesTrafego = $this->dbMaster->runQuery("select slug, count(*) total from campanha_click_count where DATE(last_updated) = DATE_SUB(CURDATE(), INTERVAL 1 DAY) group by slug order by total desc LIMIT 10;");
+        $top5FontesTrafego = $this->dbMaster->runQuery("select utm_campaign, count(*) total from campanha_click_count where DATE(last_updated) = DATE_SUB(CURDATE(), INTERVAL 1 DAY) group by utm_campaign order by total desc LIMIT 10;");
         $apiPAN = $this->dbMaster->runQuery("select status, count(*) total from api_log where banco='PAN' and DATE(last_update) = DATE_SUB(CURDATE(), INTERVAL 1 DAY) group by status, banco order by total;");
         $apiFACTA = $this->dbMaster->runQuery("select status, count(*) total from api_log where banco='FACTA' and DATE(last_update) = DATE_SUB(CURDATE(), INTERVAL 1 DAY) group by status, banco order by total;");
  
@@ -105,7 +105,7 @@ class Indicadores extends BaseController
         $propostasPagasHoje = $this->dbMaster->runQuery("select p.statusProposta, count(p.statusProposta) numero, sum(valor_pago) valor from proposta_fgts p inner join proposta_fgts_gravacao_json g on p.id_proposta = g.id_proposta where p.statusProposta = 'PASSO 09 - PROPOSTA FINALIZADA' and DATE(p.last_update) = CURDATE() group by p.statusProposta;");
         $apiPAN = $this->dbMaster->runQuery("select status, count(*) total from api_log where banco='PAN' and DATE(last_update) = DATE_SUB(CURDATE(), INTERVAL 1 DAY) group by status, banco order by total;");
         $apiFACTA = $this->dbMaster->runQuery("select status, count(*) total from api_log where banco='FACTA' and DATE(last_update) = DATE_SUB(CURDATE(), INTERVAL 1 DAY) group by status, banco order by total;");
-        $top5FontesTrafego = $this->dbMaster->runQuery("select slug, count(*) total from campanha_click_count where DATE(last_updated) = CURDATE() group by slug order by total desc LIMIT 10;");
+        $top5FontesTrafego = $this->dbMaster->runQuery("select utm_campaign, count(*) total from campanha_click_count where DATE(last_updated) = CURDATE() group by utm_campaign order by total desc LIMIT 10;");
         
         $strFilaAgora = "⭐️⭐️⭐️ <b> PRODUÇÃO </b> ⭐️⭐️⭐️\n\n";
         $strFilaAgora .= "<b>📦📦📦 ESTEIRA AGORA:</b>\n";
