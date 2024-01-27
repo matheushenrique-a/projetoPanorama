@@ -50,6 +50,8 @@ $routes->match(['get', 'post'], '/fgts-cliente-detalhes/(:any)', 'Fgts\Fgts::cli
 $routes->match(['get', 'post'], '/indicadores-diarios', 'Fgts\Indicadores::indicadores_diarios');
 $routes->match(['get', 'post'], '/indicadores-esteira', 'Fgts\Indicadores::indicadores_esteira');
 
+$routes->match(['get', 'post'], '/metricas-semanais', 'Fgts\Indicadores::metricas_semanais');
+$routes->match(['get', 'post'], '/metricas-semanais/(:any)/(:any)', 'Fgts\Indicadores::metricas_semanais/$1/$2');
 
 //CONSORCIO
 $routes->match(['get', 'post'], '/consorcio-listar-propostas', 'Consorcio\Consorcio::listarPropostas');

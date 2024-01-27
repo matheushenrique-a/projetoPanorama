@@ -43,7 +43,7 @@ define ('telegramPraVoceGroupLogErrors', '-587867421');
 define('smsMsg', false);
 define('emailMsg', false);
 define('whatAppMsg', false);
-define('telegramAlerts', false);
+define('telegramAlerts', true);
 
 //Na tela de listar propostas carrega ou nao os valores (pesado)
 define('exibir_valores_proposta', false);
