@@ -163,10 +163,10 @@ class Indicadores extends BaseController
             $data_final = date("Y-m-d", strtotime("-7 days"));
 
         }
-        $clicksCpg = $this->dbMaster->runQuery("select slug, count(*) total from campanha_click_count where (last_updated >= '$data_final 00:00:01' and last_updated <= '$data_inicial 23:59:59') group by slug order by slug, total desc limit 100;");
-        $numPropostas = $this->dbMaster->runQuery("select 'Total Propostas' slug, count(*) total from proposta_fgts where data_criacao > '$data_final 00:00:01' and data_criacao < '$data_inicial 23:59:59';");
-        $numPropostasPagas = $this->dbMaster->runQuery("select 'Número Propostas pagas' slug, count(*) total from proposta_fgts_finalizadas where data_criacao > '$data_final 00:00:01' and data_criacao < '$data_inicial 23:59:59' order by data_criacao asc limit 500 ;");
-        $vlrPropostasPagas = $this->dbMaster->runQuery("select 'Valor Propostas pagas' slug, sum(valor_pago) total from proposta_fgts_finalizadas where data_criacao > '2024-01-01 00:00:01' and data_criacao < '2024-01-07 23:59:59' order by data_criacao asc limit 500 ;");
+        $clicksCpg = $this->dbMaster->runQuery("select slug, count(*) total from campanha_click_count where (last_updated >= '$data_inicial 00:00:01' and last_updated <= '$data_final 23:59:59') group by slug order by slug, total desc limit 100;");
+        $numPropostas = $this->dbMaster->runQuery("select 'Total Propostas' slug, count(*) total from proposta_fgts where data_criacao > '$data_inicial 00:00:01' and data_criacao < '$data_final 23:59:59';");
+        $numPropostasPagas = $this->dbMaster->runQuery("select 'Número Propostas pagas' slug, count(*) total from proposta_fgts_finalizadas where data_criacao > '$data_inicial 00:00:01' and data_criacao < '$data_final 23:59:59' order by data_criacao asc limit 500 ;");
+        $vlrPropostasPagas = $this->dbMaster->runQuery("select 'Valor Propostas pagas' slug, sum(valor_pago) total from proposta_fgts_finalizadas where data_criacao > '$data_inicial 00:00:01' and data_criacao < '$data_final 23:59:59' order by data_criacao asc limit 500 ;");
 
         $strFilaAgora = "<b><h2>🔗🔗🔗 CLICKS CAMPANHAS - DE $data_inicial A $data_final</h2><br>";
         foreach ($clicksCpg["result"]->getResult() as $row){
