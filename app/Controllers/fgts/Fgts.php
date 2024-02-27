@@ -370,6 +370,7 @@ class Fgts extends BaseController
         if (!empty($statusPropostaFiltro)) $whereCheck['statusProposta'] = $statusPropostaFiltro;
         if (!empty($nome)) $likeCheck['nome'] = $nome;
         if (!empty($email)) $likeCheck['email'] = $email;
+        if ($flag == "OPTIN") $whereCheck['Optin_pan'] = "V";
 
         if ((count($likeCheck) == 0) and (count($whereCheck) == 0)){
             if ($flag == "ADESAO"){
@@ -384,8 +385,6 @@ class Fgts extends BaseController
             } else if ($flag == "OCULTAS"){
                 $fasesAdd = getFasesCategory('fim');
                 $whereIn = array("whereIn" => array('statusProposta', $fasesAdd)); 
-                // $fasesRemove = [lookupFases('CAN')['faseName'], lookupFases('FIM')['faseName']];
-                // $whereNotIn = array("whereNotIn" => array('statusProposta', $fasesRemove));        
             }
         }
         

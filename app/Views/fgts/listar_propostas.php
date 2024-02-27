@@ -227,6 +227,7 @@
 																	echo '<option value="ACAO" ' .  ($flag == "ACAO" ? 'selected' : '') . '> Acompanhamento e Ação </option>';
 																	echo '<option value="ACOMPANHAR" ' .  ($flag == "ACOMPANHAR" ? 'selected' : '') . '> Proposta disponível </option>';
 																	echo '<option value="OCULTAS" ' .  ($flag == "OCULTAS" ? 'selected' : '') . '> Finalizadas </option>';
+																	echo '<option value="OPTIN" ' .  ($flag == "OPTIN" ? 'selected' : '') . '> Optin PAN </option>';
 																?>
 																</select>													
 															</div>								

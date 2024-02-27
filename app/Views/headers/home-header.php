@@ -5362,6 +5362,17 @@ License: For each use you must have a valid license purchased only from above li
 											</div>
 											<!--start:BLOCK URLS-->
 											<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
+												<span class="menu-link"><span class="menu-bullet"><span class="bullet bullet-dot"></span></span><span class="menu-title">OptIn PAN</span><span class="menu-arrow"></span></span>
+												<div class="menu-sub menu-sub-accordion menu-active-bg">
+													<div class="menu-item"><a class="menu-link" href="https://simulacao.fgtspravoce.com.br/index.php/cron/checkOptinPrepare" target="_blank"><span class="menu-bullet"><span class="bullet bullet-dot"></span></span><span class="menu-title">Iniciar Dia</span></a></div>
+													<div class="menu-item"><a class="menu-link" href="https://simulacao.fgtspravoce.com.br/index.php/cron/optinStatus" target="_blank"><span class="menu-bullet"><span class="bullet bullet-dot"></span></span><span class="menu-title">Status Atual Optin</span></a></div>
+													<div class="menu-item"><a class="menu-link" href="https://simulacao.fgtspravoce.com.br/index.php/cron/checkOptin" target="_blank"><span class="menu-bullet"><span class="bullet bullet-dot"></span></span><span class="menu-title">Buscar Novos Clientes</span></a></div>
+													<div class="menu-item"><a class="menu-link" href="https://simulacao.fgtspravoce.com.br/index.php/cron/SMSOptin" target="_blank"><span class="menu-bullet"><span class="bullet bullet-dot"></span></span><span class="menu-title">Enviar SMSs Optin</span></a></div>
+												</div>
+											</div>
+											<!--end:BLOCK URLS-->
+											<!--start:BLOCK URLS-->
+											<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
 												<span class="menu-link"><span class="menu-bullet"><span class="bullet bullet-dot"></span></span><span class="menu-title">Úteis</span><span class="menu-arrow"></span></span>
 												<div class="menu-sub menu-sub-accordion menu-active-bg">
 													<div class="menu-item"><a class="menu-link" href="https://pravc.io/book" target="_blank"><span class="menu-bullet"><span class="bullet bullet-dot"></span></span><span class="menu-title">E-Book</span></a></div>
