@@ -115,44 +115,6 @@ class Indicadores extends BaseController
         $output = $this->telegram->notifyTelegramGroup($strFilaAgora, telegramPraVoceDiretoria);    
         //echo "<br><br>" . $strFilaAgora;
         //exit;
-
-
-        // $apiPAN = $this->dbMaster->runQuery("select status, count(*) total from api_log where banco='PAN' and DATE(last_update) = DATE_SUB(CURDATE(), INTERVAL 1 DAY) group by status, banco order by total;");
-        // $apiFACTA = $this->dbMaster->runQuery("select status, count(*) total from api_log where banco='FACTA' and DATE(last_update) = DATE_SUB(CURDATE(), INTERVAL 1 DAY) group by status, banco order by total;");
- 
-        
-
-
-        // $strFilaAgora = "⭐️⭐️⭐️ <b> PRODUÇÃO </b> ⭐️⭐️⭐️\n\n";
-        // $strFilaAgora .= "<b>📦📦📦 ESTEIRA - AGORA:</b>\n";
-        
-        // foreach ($statusFilaAgora["result"]->getResult() as $row){
-        //     $strFilaAgora .= "- " . propostaFaseFormatSimples($row->statusProposta) . " - " . $row->total . "\n";
-        // }
-        // $output = $this->telegram->notifyTelegramGroup($strFilaAgora, telegramPraVoceDiretoria);
-
-
-        
-    
-
-
-
-
-
-        // $output = $this->telegram->notifyTelegramGroup($strFilaAgora, telegramPraVoceDiretoria);
-
-        // $strApi = "<b>🏦🏦🏦 API PAN - ONTEM </b>\n";
-        // foreach ($apiPAN["result"]->getResult() as $row){
-        //     $strApi .= "- " . strtoupper($row->status) . ' - ' . $row->total . "\n";
-        // }
-        // $output = $this->telegram->notifyTelegramGroup($strApi, telegramPraVoceDiretoria);
-
-        // $strApi = "<b>🏦🏦🏦 API FACTA - ONTEM </b>\n";
-        // foreach ($apiFACTA["result"]->getResult() as $row){
-        //     $strApi .= "- " . strtoupper($row->status) . ' - ' . $row->total . "\n";
-        // }
-        // $output = $this->telegram->notifyTelegramGroup($strApi, telegramPraVoceDiretoria);
-
     }
 
     //http://localhost/InsightSuite/public/metricas-semanais
@@ -191,7 +153,33 @@ class Indicadores extends BaseController
             $strFilaAgora .= strtoupper($row->slug . ' - ' . $row->total . "<br>");
         }
         echo $strFilaAgora;
-    }    
+
+        ///// ORIGEM PAGAS
+        $top5FontesTrafego = $this->dbMaster->runQuery("select UPPER((case when (utm_campaign = '' or utm_campaign is null) then 'DIRECT' ELSE utm_campaign end)) utm_campaign, count(*) total from campanha_click_count where (last_updated >= '$data_inicial 00:00:01' and last_updated <= '$data_final 23:59:59') group by utm_campaign order by total desc LIMIT 15;");
+        $strFilaAgora = "<br><br><b>🔗🔗🔗 CLICK COUNT </b><br>";
+        foreach ($top5FontesTrafego["result"]->getResult() as $row){
+            $strFilaAgora .= "- " . strtoupper($row->utm_campaign) . ' - ' . $row->total . "<br>";
+        }
+        echo $strFilaAgora;
+
+        ///// ORIGEM DOS NOVOS CLIENTES
+        $top20OriCli = $this->dbMaster->runQuery("select UPPER((case when (chave_origem = '' or chave_origem is null) then 'DIRECT' ELSE chave_origem end)) chave_origem, count(verificador) total from proposta_fgts where (data_criacao >= '$data_inicial 00:00:01' and data_criacao <= '$data_final 23:59:59') group by chave_origem order by total desc LIMIT 15;");
+        $strFilaAgora = "<br><br><b>✅✅✅ ORIGEM N.CLI. </b><br>";
+        foreach ($top20OriCli["result"]->getResult() as $row){
+            $strFilaAgora .= "- " . strtoupper($row->chave_origem) . ' - ' . $row->total . "<br>";
+        }
+        echo $strFilaAgora;
+        
+        $top5FontesPagamento = $this->dbMaster->runQuery("select UPPER((case when (chave_origem = '' or chave_origem is null) then 'DIRECT' ELSE chave_origem end)) chave_origem, count(valor_pago) total from proposta_fgts_finalizadas where (data_criacao >= '$data_inicial 00:00:01' and data_criacao <= '$data_final 23:59:59') group by chave_origem order by total desc LIMIT 15;");
+        $strFilaAgora = "<br><br><b>📈📈📈 ORIGEM PAGAS</b><br>";
+        foreach ($top5FontesPagamento["result"]->getResult() as $row){
+            $strFilaAgora .= "- " . strtoupper($row->chave_origem) . ' - ' . $row->total . "<br>";
+        }
+        echo $strFilaAgora;
+    }
+
+
+
 
     public function indicadores_esteira(){
         $statusFilaAgora = $this->dbMaster->runQuery("select statusProposta, count(*) total from proposta_fgts where statusProposta IN ('CRIADA', 'PASSO 02 - SIMULACAO ONLINE', 'PASSO 02 - SIMULACAO OFFLINE', 'PASSO 03 - DADOS PESSOAIS', 'PASSO 03.1 - DADOS PESSOAIS DOCUMENTOS', 'PASSO 04 - DADOS RESIDENCIAIS', 'PASSO 05 - DADOS BANCÁRIOS', 'PASSO 06 - REVISAO FINAL', 'PASSO 06 - CADASTRO PENDENTE', 'PASSO 07 - GRAVADA OFFLINE', 'PASSO 07 - GRAVADA ONLINE', 'PASSO 08 - PROPOSTA DISPONÍVEL', 'PASSO 08 - FORMALIZAÇÃO FEITA', 'PASSO 08 - AGUARDANDO PAGAMENTO', 'PASSO 08 - PAGAMENTO EM ATRASO', 'PASSO 08 - PENDENTE DOCUMENTO', 'PASSO 08 - LENTIDÃO CAIXA', 'PASSO 08 - CLIENTE VULNERÁVEL', 'PASSO 08 - MENSAGEM DIRETA', 'PASSO 08 - BANCO INVÁLIDO', 'PASSO 08 - PROPOSTA SELECIONADA', 'PASSO 08 - APP CONFIGURADO') group by statusProposta order by total desc;");

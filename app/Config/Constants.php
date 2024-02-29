@@ -11,6 +11,10 @@ define('AppName', "Grupo QUID");
 
 define ('shortURL', 'https://pravc.io/');
 
+//FACEBOOK ADS
+define('META_GRAPH_API', "https://graph.facebook.com/v18.0/");
+define('META_TOKEN', "EAAMqjXZAxYiUBO1TS7ZACcUiPtuUO7ehiZAzWNl6P72emh5ohWqSyot3x7AP6ef1uLExt6ssCPe6eInRYinrTAexuqhUjsk2IJxeUnP8jgbNM3jBS6GCHoKAY8n8qD9K3xs5QAVEgeQR4WKGI7VfwYumZAZB3ZACmeHVQG0fMatwoihZBABp3dDTRCZC");
+
 //AMBEC
 define('PATH_SAVE_AMBEC', "/Applications/XAMPP/xamppfiles/htdocs/InsightSuite/public/assets/media/ambec/");
 

@@ -65,6 +65,10 @@ $routes->match(['get', 'post'], '/datalake-buscar', 'DataLake\DataLake::buscarCl
 $routes->match(['get', 'post'], '/vanguard-decode', 'DataLake\DataLake::vanguardDecode');
 $routes->match(['get', 'post'], '/datalake-carregar-inss', 'DataLake\DataLake::load_INSS_Batch');
 $routes->match(['get', 'post'], '/sign-in', 'Seguranca\Login::autenticar');
+
+//ADS
+$routes->match(['get', 'post'], '/ad-miner', 'Ads\Ads::listarAds');
+
 /*
  * --------------------------------------------------------------------
  * Additional Routing

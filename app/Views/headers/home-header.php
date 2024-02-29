@@ -5515,6 +5515,17 @@ License: For each use you must have a valid license purchased only from above li
 												</a>
 												<!--end:Menu link-->
 											</div>
+											<!--begin:Menu item-->
+											<div class="menu-item">
+												<!--begin:Menu link-->
+												<a class="menu-link" href="<?php echo assetfolder;?>ad-miner" target="">
+													<span class="menu-bullet">
+														<span class="bullet bullet-dot"></span>
+													</span>
+													<span class="menu-title">Ad Miner</span>
+												</a>
+												<!--end:Menu link-->
+											</div>
 										</div>
 										<!--end:Menu sub-->
 									</div>
