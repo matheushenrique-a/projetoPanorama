@@ -48,29 +48,30 @@
 								<!--begin::Content container-->
 								<div id="kt_app_content_container" class="app-container container-xxl">
 								<div class="row g-5 g-xl-8">
-									
 									<!--begin::Card-->
-									<div class="card" style="justify-content: start;">
+									<div class="card px-2" style="justify-content: start;">
 										<!--begin::Card header-->
 										<!--begin::Form-->
 										<form id="frmDataLake" class="form" action="<?php echo assetfolder;?>ad-miner" method="POST">
-											<div class="card-header border-0 pt-6" style="justify-content: start;">
+											<div class="card-header border-0 pt-6 px-2" style="justify-content: start;">
 												<!--begin::Card title-->
 												<div class="card-title">
 													<div class="d-flex align-items-center position-relative my-1 mx-3">
-														<div class="mb-3">
+														<div class="mb-0">
 															<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Keyword:</label>
 															<input type="text" class="form-control" placeholder="Palavra Chave" name="keyword" value="<?php echo $keyword;?>" />
 														</div>													
 													</div>
-													<div class="d-flex align-items-center position-relative my-1 mx-3">
-														<div class="mb-3">
+													<div class="d-flex align-items-center position-relative my-1 mx-0">
+														<div class="mb-0">
 															<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Pade Id:</label>
 															<input type="text" class="form-control" placeholder="Id Anunciante" name="pageId" value="<?php echo $pageId;?>" />
 														</div>													
 													</div>
+												</div>
+												<div class="card-title">
 													<div class="d-flex align-items-center position-relative my-1 mx-3">
-														<div class="mb-3">
+														<div class="mb-0">
 															<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Ad Type:</label>
 															<div class="d-flex align-items-center position-relative my-1">
 																<select class="form-select form-control-solid" aria-label="" name="adType">
@@ -85,18 +86,55 @@
 															</div>	
 														</div>													
 													</div>
+												</div>
+												<div class="card-title">
 													<div class="d-flex align-items-center position-relative my-1 mx-3">
-														<div class="mb-3">
+														<div class="mb-0">
+															<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Pre-Filters:</label>
+															<div class="d-flex align-items-center position-relative my-1">
+																<select class="form-select form-control-solid" aria-label="" name="preFilter">
+																<?php
+																	echo '<option value="" ' .  ($preFilter == "" ? 'selected' : '') . '> ALL</option>';
+																	echo '<option value="BRAIP-BR-PT" ' .  ($preFilter == "BRAIP-BR-PT" ? 'selected' : '') . '> BRAIP-BR-PT</option>';
+																	echo '<option value="EDUZZ-BR-PT" ' .  ($preFilter == "EDUZZ-BR-PT" ? 'selected' : '') . '> EDUZZ-BR-PT</option>';
+																	echo '<option value="HOTMART-BR-PT" ' .  ($preFilter == "HOTMART-BR-PT" ? 'selected' : '') . '> HOTMART-BR-PT</option>';
+																	echo '<option value="HOTMART-US-EN" ' .  ($preFilter == "HOTMART-US-EN" ? 'selected' : '') . '> HOTMART-US-EN</option>';
+																	echo '<option value="HOTMART-ES-ES" ' .  ($preFilter == "HOTMART-ES-ES" ? 'selected' : '') . '> HOTMART-ES-ES</option>';
+																	echo '<option value="KIWIFY-BR-PT" ' .  ($preFilter == "KIWIFY-BR-PT" ? 'selected' : '') . '> KIWIFY-BR-PT</option>';
+																	echo '<option value="KIWIFY-US-EN" ' .  ($preFilter == "KIWIFY-US-EN" ? 'selected' : '') . '> KIWIFY-US-EN</option>';
+																	echo '<option value="KIWIFY-ES-ES" ' .  ($preFilter == "KIWIFY-ES-ES" ? 'selected' : '') . '> KIWIFY-US-EN</option>';
+																	echo '<option value="CORTEXI-US-EN" ' .  ($preFilter == "CORTEXI-US-EN" ? 'selected' : '') . '> CORTEXI-US-EN</option>';
+																?>
+																</select>													
+															</div>	
+														</div>													
+													</div>
+												</div>
+												<div class="card-title">
+													<div class="d-flex align-items-center position-relative my-1 mx-3">
+														<div class="mb-0">
+															<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Ad Status:</label>
+															<div class="d-flex align-items-center position-relative my-1">
+																<select class="form-select form-control-solid" aria-label="" name="status">
+																<?php
+																	echo '<option value="ACTIVE" ' .  ($status == "" ? 'selected' : '') . '> ACTIVE</option>';
+																	echo '<option value="ALL" ' .  ($status == "ALL" ? 'selected' : '') . '> ALL</option>';
+																	echo '<option value="INACTIVE" ' .  ($status == "INACTIVE" ? 'selected' : '') . '> INACTIVE</option>';
+																?>
+																</select>													
+															</div>
+														</div>													
+													</div>
+													<div class="d-flex align-items-center position-relative my-1 mx-3">
+														<div class="mb-0">
 															<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Pais:</label>
 															<div class="d-flex align-items-center position-relative my-1">
 																<select class="form-select form-control-solid" aria-label="" name="country">
 																<?php
-																	echo '<option value="ALL" ' .  ($country == "" ? 'selected' : '') . '> ALL</option>';
-																	echo '<option value="BR" ' .  ($country == "BR" ? 'selected' : '') . '> Brazil</option>';
-																	echo '<option value="US" ' .  ($country == "US" ? 'selected' : '') . '> USA</option>';
+																	echo '<option value="BR" ' .  ($country == "" ? 'selected' : '') . '> Brazil</option>';
+																	echo '<option value="US" ' .  ($country == "US" ? 'selected' : '') . '>United States</option>';
 																	echo '<option value="IN" ' .  ($country == "IN" ? 'selected' : '') . '>India</option>';
 																	echo '<option value="GB" ' .  ($country == "GB" ? 'selected' : '') . '>United Kingdom</option>';
-																	echo '<option value="US" ' .  ($country == "US" ? 'selected' : '') . '>United States</option>';
 																	echo '<option value="CA" ' .  ($country == "CA" ? 'selected' : '') . '>Canada</option>';
 																	echo '<option value="AR" ' .  ($country == "AR" ? 'selected' : '') . '>Argentina</option>';
 																	echo '<option value="AU" ' .  ($country == "AU" ? 'selected' : '') . '>Australia</option>';
@@ -152,37 +190,58 @@
 															</div>
 														</div>													
 													</div>
-													<div class="d-flex align-items-center position-relative my-1 mx-3">
-														<div class="mb-3">
-															<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Ad Status:</label>
-															<div class="d-flex align-items-center position-relative my-1">
-																<select class="form-select form-control-solid" aria-label="" name="status">
-																<?php
-																	echo '<option value="ACTIVE" ' .  ($status == "" ? 'selected' : '') . '> ACTIVE</option>';
-																	echo '<option value="ALL" ' .  ($status == "ALL" ? 'selected' : '') . '> ALL</option>';
-																	echo '<option value="INACTIVE" ' .  ($status == "INACTIVE" ? 'selected' : '') . '> INACTIVE</option>';
-																?>
-																</select>													
-															</div>
-														</div>													
-													</div>
 												</div>
 												<!--begin::Card title-->
 												<div class="card-title">
 													<div class="d-flex align-items-center position-relative my-1">
-														<div class="mb-3  mx-3">
+														<div class="mb-0 mx-3">
 															<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Língua:</label>
 															<div class="d-flex align-items-center position-relative my-1">
 																<select class="form-select form-control-solid" aria-label="" name="language">
 																<?php
-																	echo '<option value="PT" ' .  ($language == "" ? 'selected' : '') . '> Português</option>';
-																	echo '<option value="EN" ' .  ($language == "EN" ? 'selected' : '') . '> Inglês</option>';
-																	echo '<option value="ES" ' .  ($language == "ES" ? 'selected' : '') . '> Espanhol</option>';
+																	$options = [
+																		'EN' => 'English',
+																		'ZH' => 'Chinese',
+																		'HI' => 'Hindi',
+																		'ES' => 'Spanish',
+																		'FR' => 'French',
+																		'AR' => 'Arabic',
+																		'BN' => 'Bengali',
+																		'RU' => 'Russian',
+																		'PT' => 'Portuguese',
+																		'ID' => 'Indonesian',
+																		'UR' => 'Urdu',
+																		'DE' => 'German',
+																		'JA' => 'Japanese',
+																		'SW' => 'Swahili',
+																		'TE' => 'Telugu',
+																		'MR' => 'Marathi',
+																		'TR' => 'Turkish',
+																		'TA' => 'Tamil',
+																		'VI' => 'Vietnamese',
+																		'KO' => 'Korean',
+																		'IT' => 'Italian',
+																		'YUE' => 'Cantonese',
+																		'TH' => 'Thai',
+																		'GU' => 'Gujarati',
+																		'FA' => 'Persian',
+																		'PL' => 'Polish',
+																		'UK' => 'Ukrainian',
+																		'RO' => 'Romanian',
+																		'NL' => 'Dutch',
+																		'EL' => 'Greek',
+																	];
+																																
+																	echo '<option value="PT" ' .  ($language == "" ? 'selected' : '') . '> Portuguese </option>';
+																	
+																	foreach ($options as $code => $name) {
+																		echo '<option value="' . $code . '" ' .  (strtoupper($language) == $code ? 'selected' : '') . '>' . $name . '</option>';
+																	}
 																?>
 																</select>													
 															</div>									
 														</div>
-														<div class="mb-3 mx-3">
+														<div class="mb-0 mx-3">
 															<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Tipo Media:</label>
 															<div class="d-flex align-items-center position-relative my-1">
 																<select class="form-select form-control-solid" aria-label="" name="type">
@@ -196,7 +255,11 @@
 																</select>													
 															</div>											
 														</div>
-														<div class="mb-3 mx-3">
+													</div>
+												</div>
+												<div class="card-title">
+													<div class="d-flex align-items-center position-relative my-1">
+														<div class="mb-0 mx-3">
 															<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Plataforma:</label>
 															<div class="d-flex align-items-center position-relative my-1">
 																<select class="form-select form-control-solid" aria-label="" name="platform">
@@ -211,7 +274,7 @@
 																</select>													
 															</div>											
 														</div>
-														<div class="mb-3 mx-3">
+														<div class="mb-0 mx-3">
 															<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Tipo Busca:</label>
 															<div class="d-flex align-items-center position-relative my-1">
 																<select class="form-select form-control-solid" aria-label="" name="searchType">
@@ -222,16 +285,20 @@
 																</select>													
 															</div>											
 														</div>
-														<div class="mb-3  mx-3">
+													</div>
+												</div>
+												<div class="card-title">
+													<div class="d-flex align-items-center position-relative my-1">
+														<div class="mb-0  mx-3">
 															<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Data Inicial:</label>
 															<input type="text" class="form-control" placeholder="2024-02-29" name="initialDate" value="<?php echo $initialDate;?>" />					
 														</div>												
-														<div class="mb-3  mx-3">
+														<div class="mb-0  mx-3">
 															<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Resultados:</label>
 															<div class="d-flex align-items-center position-relative my-1">
 																<select class="form-select form-control-solid" aria-label="" name="paginas">
 																<?php
-																	echo '<option value="50" ' .  ($paginas == "" ? 'selected' : '') . '> 10 </option>';
+																	echo '<option value="10" ' .  ($paginas == "" ? 'selected' : '') . '> 10 </option>';
 																	echo '<option value="50" ' .  ($paginas == "50" ? 'selected' : '') . '> 50 </option>';
 																	echo '<option value="100" ' .  ($paginas == "100" ? 'selected' : '') . '> 100 </option>';
 																	echo '<option value="200" ' .  ($paginas == "500" ? 'selected' : '') . '> 200 </option>';
@@ -247,7 +314,10 @@
 													<div class="d-flex align-items-center position-relative my-1">
 													<div class="mb-0 mx-3">
 															<div class="d-flex align-items-center position-relative my-1 mt-4 mb-0">
-																<button type="submit" class="btn btn-primary"  name="buscarProp" value="buscarProp">Buscar Ads</button>										
+																<button type="submit" class="btn btn-primary mt-3"  name="buscarProp" value="buscarProp">Buscar Ads</button>										
+																<button type="submit" class="btn btn-primary ms-2 mt-3"  name="favoritos" value="favoritos">
+																	<i class='las la-heart fs-2'></i>
+																</button>										
 															</div>
 														</div>													
 													</div>
@@ -276,15 +346,16 @@
 													}
 												}
 											</script>
-											<table class="table align-middle table-row-dashed table-hover fs-6 gy-5" id="kt_widget_table_3" data-kt-table-widget-3="all" >
+											<table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_widget_table_3" data-kt-table-widget-3="all" >
 												<!--begin::Table head-->
 												<thead>
 													<!--begin::Table row-->
 													<tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
-														<th class="min-w-25px">Ad Id</th>
-														<th class="min-w-150px">Page Id</th>
-														<th class="min-w-150px">URL</th>
-														<th class="min-w-25">Data Start</th>
+														<th class="min-w-20px">Data</th>
+														<th class="min-w-100px">Page Id</th>
+														<th class="min-w-30px">Act</th>
+														<th class="min-w-30px">Like</th>
+														<th class="min-w-30px">URL</th>
 													</tr>
 													<!--end::Table row-->
 												</thead>
@@ -292,10 +363,27 @@
 												<!--begin::Table body-->
 												<tbody class="text-gray-600 fw-semibold">
 													<?php 
-														
-													if ((!is_null($adList)) and ($adList['sucesso'])){
 
-														$adListResult = json_decode($adList['retorno'], true);
+													if (!empty($favoritos)) {
+														foreach ($adList['result']->getResult() as $row) {
+															$dataObjeto = new DateTime($row->createDate);
+															$dataFormatada = $dataObjeto->format('d/M');
+
+															echo '<tr style="background-color: #cef7ff">';
+															echo '<td>' . $dataFormatada  . '</td>';
+															echo '<td onclick="copyText(' .  $row->pageId . '); return false;">' . substr($row->pageId, 0, 3)?>...<?php echo substr($row->pageId, -3) . '</td>';
+															echo '<td>'. $row->keyword . '</td>';
+															echo '<td></td>';
+															echo '<td>';
+																echo '<a href="' . $row->url . '" target="_blank" class="text-gray-800 text-hover-primary mb-1">';
+																echo '	<i class="las la-eye fs-2"></i>';
+																echo '</a>';
+															echo '</td>';
+															echo '</tr>';
+														}
+													} else  if ((!is_null($adList)) and ($adList['sucesso'])){
+
+														//$adListResult = json_decode($adList['retorno'], true);
 
 														if (isset($adListResult['data'])){
 														
@@ -307,27 +395,35 @@
 																$lastPageId = $adListResult['data'][$key]['page_id'];
 																$rootLine = true;
 															}
-
 													?>
-														<tr onclick="this.style.backgroundColor = '#f6f8fa';">
+														<tr style="<?php echo ($adListResult['data'][$key]['id']['action'] == "saved"  ? 'background-color: #cef7ff' : '');?><?php echo ($adListResult['data'][$key]['id']['action'] == "view"  ? 'background-color: #e5fae8' : '');?><?php echo ($adListResult['data'][$key]['id']['action'] == "dislike"  ? 'background-color: #f9dde7' : '');?>">
 															<td>
-																<?php echo $adListResult['data'][$key]['id']?>
+																<?php 
+																 	$dataObjeto = new DateTime($adListResult['data'][$key]['ad_delivery_start_time']);
+																	$dataFormatada = $dataObjeto->format('d/M');
+																	echo $dataFormatada;
+																?>
 															</td>
-															<td>
+															<td onclick="copyText('<?php echo $adListResult['data'][$key]['page_id'];?>'); return false;">
 																<i class='las <?php echo ($rootLine  ? '' : 'la-angle-double-right');?> fs-2'></i>
 																<?php echo ($rootLine  ? '<b>' : '');?>
-																<?php echo $adListResult['data'][$key]['page_id']?>
+																<?php echo substr($adListResult['data'][$key]['page_id'], 0, 3)?>...<?php echo substr($adListResult['data'][$key]['page_id'], -3)?>
 																<?php echo ($rootLine  ? '</b>' : '');?>
 															</td>
 															<td>
-																<div class="d-flex flex-column"> 
-																	<a href="<?php echo $adListResult['data'][$key]['ad_snapshot_url'];?>" target="_blank" class="text-gray-800 text-hover-primary mb-1">
-																		Ver Anúncio
-																	</a>
-																</div>
+																<a href="<?php echo $adListResult['data'][$key]['ad_snapshot_url'];?>" onclick="registerAction(this, 'dislike', '<?php echo strtoupper($keyword) .  "-" . $country;?>', '<?php echo $adListResult['data'][$key]['id']['id'];?>', '<?php echo $adListResult['data'][$key]['page_id'];?>', '<?php echo $adListResult['data'][$key]['ad_snapshot_url'];?>', '<?php echo $adListResult['data'][$key]['ad_delivery_start_time'];?>'); return false;" target="_blank" class="text-gray-800 text-hover-primary mb-1">
+																	<i class='las la-thumbs-down fs-2x'></i>
+																</a>
 															</td>
 															<td>
-																<?php echo $adListResult['data'][$key]['ad_delivery_start_time']?>
+																<a href="<?php echo $adListResult['data'][$key]['ad_snapshot_url'];?>" target="_blank" onclick="registerAction(this, 'view', '<?php echo strtoupper($keyword) .  "-" . $country;?>', '<?php echo $adListResult['data'][$key]['id']['id'];?>', '<?php echo $adListResult['data'][$key]['page_id'];?>', '<?php echo $adListResult['data'][$key]['ad_snapshot_url'];?>', '<?php echo $adListResult['data'][$key]['ad_delivery_start_time'];?>'); return true;" class="text-gray-800 text-hover-primary mb-1">
+																	<i class='las la-eye fs-2x'></i>
+																</a>
+															</td>
+															<td>
+																<a href="<?php echo $adListResult['data'][$key]['ad_snapshot_url'];?>" onclick="registerAction(this, 'saved', '<?php echo strtoupper($keyword) .  "-" . $country;?>', '<?php echo $adListResult['data'][$key]['id']['id'];?>', '<?php echo $adListResult['data'][$key]['page_id'];?>', '<?php echo $adListResult['data'][$key]['ad_snapshot_url'];?>', '<?php echo $adListResult['data'][$key]['ad_delivery_start_time'];?>'); return false;" target="_blank" class="text-gray-800 text-hover-primary mb-1">
+																	<i class='las la-thumbs-up fs-2x'></i>
+																</a>
 															</td>
 														</tr>
 														<tr id="linha_<?php echo $adListResult['data'][$key]['page_id']?>"  valign="top" hidden="hidden">
@@ -349,6 +445,41 @@
 												<!--end::Table body-->
 											</table>
 											<!--end::Table-->
+											<script>
+												function registerAction(obj, action, keyword, adId, pageId, AdUrl, createDate){
+													
+													//alert (adId);
+													var url = '<?php echo assetfolder ?>ads-like';
+													var formData = new FormData();
+													
+													formData.append('action', action);
+													formData.append('keyword', keyword);
+													formData.append('adId', adId);
+													formData.append('pageId', pageId);
+													formData.append('url', AdUrl);
+													formData.append('createDate', createDate);
+													
+													fetch(url, { method: 'POST', body: formData })
+													.then(response => {return response.json();})
+													.then(saida => {
+														//console.log(html);
+														console.log(saida.debug);
+														if (saida.newStatus == "saved"){
+															obj.parentNode.parentNode.style.backgroundColor = '#cef7ff'
+														} else if (saida.newStatus == "view"){ 
+															obj.parentNode.parentNode.style.backgroundColor = '#e5fae8'
+														} else if (saida.newStatus == "dislike"){ 
+															obj.parentNode.parentNode.style.backgroundColor = '#f9dde7'
+														};
+													})
+													.then(() => {
+														// do something else;
+													})
+													.catch(function(err) {console.log("Failed to fetch page: ", err);});
+
+													return true;
+												}
+											</script>
 										</div>
 										<!--end::Card body-->
 									</div>

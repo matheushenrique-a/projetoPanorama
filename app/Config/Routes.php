@@ -68,6 +68,7 @@ $routes->match(['get', 'post'], '/sign-in', 'Seguranca\Login::autenticar');
 
 //ADS
 $routes->match(['get', 'post'], '/ad-miner', 'Ads\Ads::listarAds');
+$routes->match(['get', 'post'], '/ads-like', 'Ads\Ads::adsLike');
 
 /*
  * --------------------------------------------------------------------

@@ -65,6 +65,14 @@ abstract class BaseController extends Controller
         //echo "xx" . $this->dbProfile;exit;
 	}
 
+    public function loadpageads($page, $dados){
+        $globals = ["my_security" => $this->my_security];
+        
+        return view('ads/home-header', $dados + $globals)
+            . view($page, $dados)
+            . view('ads/home-footer', $dados);
+	}
+
 	public function loadpage($page, $dados){
         $globals = ["my_security" => $this->my_security];
         
