@@ -37,7 +37,7 @@ class Ads extends BaseController
         $createDate = $this->getpost('createDate');
         header('Content-Type: application/json');
 
-        $actionTaken = $this->isSaved($adId, $pageId, false);
+        $actionTaken = $this->isSaved($adId, $pageId, false)["action"];
         $newStatus = "";
         
         if ($actionTaken == "none"){
@@ -86,27 +86,38 @@ class Ads extends BaseController
         echo json_encode($saida); 
     }
 
+    public function adsNicho(){
+        $adId = $this->getpost('adId');
+        $nicho = $this->getpost('nicho');
+        header('Content-Type: application/json');
+
+        $this->dbMaster->update('ads_saved', ['nicho' => $nicho], ['adId' => $adId], ['last_update' => 'current_timestamp()']);
+
+        $saida = ["result" => "ok"];
+        echo json_encode($saida); 
+    }
+
     public function isSaved($adId, $pageId, $checkPageLevel){
-        $actionTaken = $this->dbMaster->select('ads_saved', ['adId' => $adId]);
+        $actionTaken = $this->dbMaster->select('ads_saved', ['adId' => $adId, 'userId' => $this->session->userId]);
 
         if (!$actionTaken['existRecord']){
             if ($checkPageLevel) {
-                $actionTakenPageLevel = $this->dbMaster->select('ads_saved', ['pageId' => $pageId]);
+                $actionTakenPageLevel = $this->dbMaster->select('ads_saved', ['pageId' => $pageId, 'userId' => $this->session->userId]);
 
                 if ($actionTakenPageLevel['existRecord']){
-                    return  $actionTakenPageLevel['firstRow']->action;
+                    return  ["level" => "page", "action" => $actionTakenPageLevel['firstRow']->action];
                 } else {
-                    return "none";
+                    return  ["level" => "none", "action" => "none"];
                 }    
             } else {
-                return "none";
+                return  ["level" => "direct", "action" => "none"];
             }
         } else {
-            return  $actionTaken['firstRow']->action;
+            return  ["level" => "direct", "action" => $actionTaken['firstRow']->action];
         }
 	}
 
-    public function listarAds(){
+    public function listarAds($pageIdRoot = null){
         $buscarProp = $this->getpost('buscarProp');
         $favoritos = $this->getpost('favoritos');
 
@@ -116,6 +127,7 @@ class Ads extends BaseController
 
         if (!empty($favoritos)){
             $this->dbMaster->setOrderBy(array("last_update", "DESC"));
+            $this->dbMaster->setLimit(500);
             $adList = $this->dbMaster->select('ads_saved', ['userId' => $this->session->userId, 'action' => 'saved']);
 
             $keyword = $this->getpost('keyword', true);
@@ -130,11 +142,21 @@ class Ads extends BaseController
             $platform = $this->getpost('platform', true);
             $searchType = $this->getpost('searchType',true);
             $initialDate = $this->getpost('initialDate',true);
+            $ad_delivery_date_max = $this->getpost('ad_delivery_date_max',true);
             $paginas = $this->getpost('paginas',true);
-        } else if (!empty($buscarProp)){
+        } else if ((!empty($buscarProp)) or (!empty($pageIdRoot))){
             helper('cookie');
 
             $preFilter = $this->getpost('preFilter', false);
+            $pageId = $this->getpost('pageId', false);
+            $keyword = $this->getpost('keyword', false);
+            $preFilter = $this->getpost('preFilter', false);
+            
+            $keyword = $this->getpost('keyword', false);
+            $language = $this->getpost('language', false);
+            $status = $this->getpost('status', true);   
+            $country = $this->getpost('country', true);
+
             if (!empty($preFilter)) {
                 $preFilterPars = explode("-", strtolower($preFilter));
                 $keyword = $preFilterPars[0];
@@ -143,17 +165,28 @@ class Ads extends BaseController
 
                 //echo "$keyword, $country, $language"; exit;
             } else {
-                $keyword = $this->getpost('keyword', false);
-                $country = $this->getpost('country', false);
-                $language = $this->getpost('language', false);
+
             }
-            $pageId = $this->getpost('pageId', false);
+            
+            if (!empty($pageIdRoot)) {
+                $pageId = $pageIdRoot;
+                $keyword = "";
+                $preFilter = "";
+                $status = "ALL";
+            } else {
+               
+            }
+
+            //$pageId = $this->getpost('pageId', false);
+            //$status = $this->getpost('status', false);
+            //$country = $this->getpost('country', true);
+            //$language = $this->getpost('language', true);
             $adType = $this->getpost('adType', false);
-            $status = $this->getpost('status', false);
             $type = $this->getpost('type', false);
             $platform = $this->getpost('platform', false);
             $searchType = $this->getpost('searchType',false);
             $initialDate = $this->getpost('initialDate',false);
+            $ad_delivery_date_max = $this->getpost('ad_delivery_date_max',false);
             $paginas = $this->getpost('paginas',false);
 
             
@@ -168,12 +201,13 @@ class Ads extends BaseController
             Services::response()->setCookie('platform', $platform);
             Services::response()->setCookie('searchType', $searchType);
             Services::response()->setCookie('initialDate', $initialDate);
+            Services::response()->setCookie('ad_delivery_date_max', $ad_delivery_date_max);
             Services::response()->setCookie('paginas', $paginas);
 
             $urlFinal = "";
 
             if (!empty($keyword)) {
-                $urlFinal .= "&search_terms=$keyword";
+                $urlFinal .= "&search_terms=" . urlencode($keyword);
                 if (!empty($searchType)) $urlFinal .= "&search_type=$searchType";
             }
             if (!empty($adType)) $urlFinal .= "&ad_type=$adType";
@@ -183,7 +217,7 @@ class Ads extends BaseController
             if (!empty($language)) $urlFinal .= "&languages=" . strtolower($language);
             if (!empty($type)) $urlFinal .= "&media_type=$type";
             if (!empty($platform)) $urlFinal .= "&publisher_platforms=$platform";
-            if (!empty($initialDate)) $urlFinal .= "&initialDate=$initialDate";
+            if (!empty($ad_delivery_date_max)) $urlFinal .= "&ad_delivery_date_max=$ad_delivery_date_max";
             if (!empty($initialDate)) $urlFinal .= "&ad_delivery_date_min=$initialDate";
             if (!empty($paginas)) $urlFinal .= "&limit=$paginas";
             
@@ -195,6 +229,7 @@ class Ads extends BaseController
 
             if ((!is_null($adList)) and ($adList['sucesso'])){
                 $adListResult = json_decode($adList['retorno'], true);
+                //echo '18:59:43 - <h3>Dump 35 </h3> <br><br>' . var_dump($adListResult); exit;					//<-------DEBUG
 
                 if (isset($adListResult['data'])){
                     foreach ($adListResult['data'] as $key => $value) {
@@ -204,18 +239,23 @@ class Ads extends BaseController
                 }
             }
         } else {
-            $keyword = $this->getpost('keyword', true);
-            $preFilter = $this->getpost('preFilter', true);
-            $pageId = $this->getpost('pageId', true);
+            
+           
+                $pageId = $this->getpost('pageId', false);
+                $keyword = $this->getpost('keyword', true);
+                $preFilter = $this->getpost('preFilter', true);
+                $status = $this->getpost('status', true);
+            
+
             $adType = $this->getpost('adType', true);
             $country = $this->getpost('country', true);
-            $status = $this->getpost('status', true);
-            //echo '22:16:13 - <h3>Dump 22 </h3> <br><br>' . var_dump($status); exit;					//<-------DEBUG
+            
             $language = $this->getpost('language', true);
             $type = $this->getpost('type', true);
             $platform = $this->getpost('platform', true);
             $searchType = $this->getpost('searchType',true);
             $initialDate = $this->getpost('initialDate',true);
+            $ad_delivery_date_max = $this->getpost('ad_delivery_date_max',true);
             $paginas = $this->getpost('paginas',true);
         }
 
@@ -231,6 +271,7 @@ class Ads extends BaseController
         $dados['platform'] = $platform;
         $dados['searchType'] = $searchType;
         $dados['initialDate'] = $initialDate;
+        $dados['ad_delivery_date_max'] = $ad_delivery_date_max;
         $dados['paginas'] = $paginas;
         $dados['adList'] = $adList;
         $dados['adListResult'] = $adListResult;
@@ -244,7 +285,9 @@ class Ads extends BaseController
 
     public function getAds($params){
         $headers = $this->getHeader();
-		$url = META_GRAPH_API . "ads_archive?access_token=". META_TOKEN . $params;
+		$url = META_GRAPH_API . "ads_archive?access_token=". META_TOKEN . ($params);
+		//echo $url;exit;
+        //$url = urlencode($url);
 		//echo $url;exit;
         $result =  $this->http_request('GET', $url, $headers);
         //echo '18:18:12 - <h3>Dump 26 </h3> <br><br>' . var_dump($result); exit;					//<-------DEBUG

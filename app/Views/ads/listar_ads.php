@@ -97,6 +97,7 @@
 																	echo '<option value="" ' .  ($preFilter == "" ? 'selected' : '') . '> ALL</option>';
 																	echo '<option value="BRAIP-BR-PT" ' .  ($preFilter == "BRAIP-BR-PT" ? 'selected' : '') . '> BRAIP-BR-PT</option>';
 																	echo '<option value="EDUZZ-BR-PT" ' .  ($preFilter == "EDUZZ-BR-PT" ? 'selected' : '') . '> EDUZZ-BR-PT</option>';
+																	echo '<option value="MONETIZZE-BR-PT" ' .  ($preFilter == "MONETIZZE-BR-PT" ? 'selected' : '') . '> MONETIZZE-BR-PT</option>';
 																	echo '<option value="HOTMART-BR-PT" ' .  ($preFilter == "HOTMART-BR-PT" ? 'selected' : '') . '> HOTMART-BR-PT</option>';
 																	echo '<option value="HOTMART-US-EN" ' .  ($preFilter == "HOTMART-US-EN" ? 'selected' : '') . '> HOTMART-US-EN</option>';
 																	echo '<option value="HOTMART-ES-ES" ' .  ($preFilter == "HOTMART-ES-ES" ? 'selected' : '') . '> HOTMART-ES-ES</option>';
@@ -232,7 +233,7 @@
 																		'EL' => 'Greek',
 																	];
 																																
-																	echo '<option value="PT" ' .  ($language == "" ? 'selected' : '') . '> Portuguese </option>';
+																	echo '<option value="" ' .  ($language == "" ? 'selected' : '') . '> ALL </option>';
 																	
 																	foreach ($options as $code => $name) {
 																		echo '<option value="' . $code . '" ' .  (strtoupper($language) == $code ? 'selected' : '') . '>' . $name . '</option>';
@@ -290,7 +291,11 @@
 												<div class="card-title">
 													<div class="d-flex align-items-center position-relative my-1">
 														<div class="mb-0  mx-3">
-															<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Data Inicial:</label>
+															<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Ads Antes de:</label>
+															<input type="text" class="form-control" placeholder="2024-02-29" name="ad_delivery_date_max" value="<?php echo $ad_delivery_date_max;?>" />					
+														</div>												
+														<div class="mb-0  mx-3">
+															<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Ads Depois de:</label>
 															<input type="text" class="form-control" placeholder="2024-02-29" name="initialDate" value="<?php echo $initialDate;?>" />					
 														</div>												
 														<div class="mb-0  mx-3">
@@ -346,7 +351,7 @@
 													}
 												}
 											</script>
-											<table class="table align-middle table-row-dashed fs-6 gy-5" id="kt_widget_table_3" data-kt-table-widget-3="all" >
+											<table class="table align-middle table-row-dashed table-hover fs-6 gy-5" id="kt_widget_table_3" data-kt-table-widget-3="all" >
 												<!--begin::Table head-->
 												<thead>
 													<!--begin::Table row-->
@@ -356,6 +361,7 @@
 														<th class="min-w-30px">Act</th>
 														<th class="min-w-30px">Like</th>
 														<th class="min-w-30px">URL</th>
+														<th class="min-w-30px">Act</th>
 													</tr>
 													<!--end::Table row-->
 												</thead>
@@ -365,21 +371,38 @@
 													<?php 
 
 													if (!empty($favoritos)) {
+														$linhe = 0;
 														foreach ($adList['result']->getResult() as $row) {
 															$dataObjeto = new DateTime($row->createDate);
-															$dataFormatada = $dataObjeto->format('d/M');
+															$dataFormatada = $dataObjeto->format('d/M/y');
+															$linhe++;
 
-															echo '<tr style="background-color: #cef7ff">';
-															echo '<td>' . $dataFormatada  . '</td>';
+															echo '<tr style="background-color: #cef7ff" onclick="this.style.backgroundColor = \'#f4f6fa\'">';
+															echo '<td class="ps-2"> ' . $linhe . "-" . $row->id_ads . ": " . $dataFormatada  . '</td>';
 															echo '<td onclick="copyText(' .  $row->pageId . '); return false;">' . substr($row->pageId, 0, 3)?>...<?php echo substr($row->pageId, -3) . '</td>';
 															echo '<td>'. $row->keyword . '</td>';
-															echo '<td></td>';
-															echo '<td>';
+															echo '<td colspan="2">';
 																echo '<a href="' . $row->url . '" target="_blank" class="text-gray-800 text-hover-primary mb-1">';
 																echo '	<i class="las la-eye fs-2"></i>';
 																echo '</a>';
 															echo '</td>';
+															echo '<td><div>
+																	<a href="#" class="btn btn-sm btn-icon btn-light btn-active-light-primary" onclick="showHideRow(\'linha_' . $row->id_ads . '\'); return false;"><!--begin::Svg Icon | path: icons/duotune/general/gen052.svg--><span class="svg-icon svg-icon-2 m-0"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="10" y="10" width="4" height="4" rx="2" fill="currentColor"/><rect x="17" y="10" width="4" height="4" rx="2" fill="currentColor"/><rect x="3" y="10" width="4" height="4" rx="2" fill="currentColor"/></svg></span><!--end::Svg Icon--></a>
+																	</div>														
+																</td>';
 															echo '</tr>';
+															echo '<tr id="linha_' . $row->id_ads . '"  valign="top" hidden="hidden">
+																	<td colspan="6" class="mt-0 pt-0 ps-2">
+																		<span class="badge py-3 px-4 fs-7 badge-light-success mb-2 mt-2">Defina o Nicho:</span><br>
+																		<a href=""  class="menu-link px-2 py-2 mt-3"><span class="mx-2" onclick="registerNicho(\'' . $row->id_ads . '\', \'Saúde\'); this.innerHTML = this.innerHTML + \'<i class=' . "\'las la-check-double text-success\'></i>"  . '\'; return false;">Saúde</span></a><br>
+																		<a href=""  class="menu-link px-2 py-2 mt-3"><span class="mx-2" onclick="registerNicho(\'' . $row->id_ads . '\', \'Maternidade\'); this.innerHTML = this.innerHTML + \'<i class=' . "\'las la-check-double text-success\'></i>"  . '\'; return false;">Maternidade</span></a><br>
+																		<a href=""  class="menu-link px-2 py-2 mt-3"><span class="mx-2" onclick="registerNicho(\'' . $row->id_ads . '\', \'Dinheiro\'); this.innerHTML = this.innerHTML + \'<i class=' . "\'las la-check-double text-success\'></i>"  . '\'; return false;">Dinheiro</span></a><br>
+																		<a href=""  class="menu-link px-2 py-2 mt-3"><span class="mx-2" onclick="registerNicho(\'' . $row->id_ads . '\', \'Nutrição\'); this.innerHTML = this.innerHTML + \'<i class=' . "\'las la-check-double text-success\'></i>"  . '\'; return false;">Nutrição</span></a><br>
+																		<a href=""  class="menu-link px-2 py-2 mt-3"><span class="mx-2" onclick="registerNicho(\'' . $row->id_ads . '\', \'Digital\'); this.innerHTML = this.innerHTML + \'<i class=' . "\'las la-check-double text-success\'></i>"  . '\'; return false;">Digital</span></a><br>
+																		<a href=""  class="menu-link px-2 py-2 mt-3"><span class="mx-2" onclick="registerNicho(\'' . $row->id_ads . '\', \'Beleza\'); this.innerHTML = this.innerHTML + \'<i class=' . "\'las la-check-double text-success\'></i>"  . '\'; return false;">Beleza</span></a><br>
+																		<a href=""  class="menu-link px-2 py-2 mt-3"><span class="mx-2" onclick="registerNicho(\'' . $row->id_ads . '\', \'Outros\'); this.innerHTML = this.innerHTML + \'<i class=' . "\'las la-check-double text-success\'></i>"  . '\'; return false;">Outros</span></a><br>
+																	</td>
+																</tr>';
 														}
 													} else  if ((!is_null($adList)) and ($adList['sucesso'])){
 
@@ -389,6 +412,9 @@
 														
 														$lastPageId = 0;
 														foreach ($adListResult['data'] as $key => $value) {
+															
+															$adId = $adListResult['data'][$key]['id']['id'];
+
 															if ($lastPageId == $adListResult['data'][$key]['page_id']){
 																$rootLine = false;
 															} else {
@@ -396,43 +422,76 @@
 																$rootLine = true;
 															}
 													?>
-														<tr style="<?php echo ($adListResult['data'][$key]['id']['action'] == "saved"  ? 'background-color: #cef7ff' : '');?><?php echo ($adListResult['data'][$key]['id']['action'] == "view"  ? 'background-color: #e5fae8' : '');?><?php echo ($adListResult['data'][$key]['id']['action'] == "dislike"  ? 'background-color: #f9dde7' : '');?>">
+														<tr onclick="lineClean();this.style.borderTop = '2px'; this.style.borderBottom = '2px'; this.style.borderStyle = 'dotted'; this.style.borderColor = '#2b9ef7';" style="<?php echo ($adListResult['data'][$key]['id']['action']['action'] == "saved"  ? 'background-color: #cef7ff' : '');?><?php echo ($adListResult['data'][$key]['id']['action']['action'] == "view"  ? 'background-color: #e5fae8' : '');?><?php echo ($adListResult['data'][$key]['id']['action']['action'] == "dislike"  ? 'background-color: #f9dde7' : '');?>">
 															<td>
 																<?php 
 																 	$dataObjeto = new DateTime($adListResult['data'][$key]['ad_delivery_start_time']);
-																	$dataFormatada = $dataObjeto->format('d/M');
+																	$dataFormatada = $dataObjeto->format('d/M/y');
 																	echo $dataFormatada;
 																?>
 															</td>
-															<td onclick="copyText('<?php echo $adListResult['data'][$key]['page_id'];?>'); return false;">
+															<td onclick="copyText('<?php echo $adListResult['data'][$key]['page_id'];?>'); return true;">
 																<i class='las <?php echo ($rootLine  ? '' : 'la-angle-double-right');?> fs-2'></i>
-																<?php echo ($rootLine  ? '<b>' : '');?>
-																<?php echo substr($adListResult['data'][$key]['page_id'], 0, 3)?>...<?php echo substr($adListResult['data'][$key]['page_id'], -3)?>
-																<?php echo ($rootLine  ? '</b>' : '');?>
+
+																<a href="<?php echo assetfolder ?>ad-miner/<?php echo $adListResult['data'][$key]['page_id'];?>" xonclick="registerAction(this, 'dislike', '<?php echo strtoupper($keyword) .  "-" . $country;?>', '<?php echo $adId;?>', '<?php echo $adListResult['data'][$key]['page_id'];?>', '<?php echo $adListResult['data'][$key]['ad_snapshot_url'];?>', '<?php echo $adListResult['data'][$key]['ad_delivery_start_time'];?>'); return false;" target="_blank" class="text-gray-800 text-hover-primary mb-1">
+																	<?php echo ($rootLine  ? '<b>' : '');?>
+																	<?php echo substr($adListResult['data'][$key]['page_id'], 0, 3)?>...<?php echo substr($adListResult['data'][$key]['page_id'], -3)?>
+																	<?php echo ($rootLine  ? '</b>' : '');?>
+																</a>
+																<?php echo ($adListResult['data'][$key]['id']['action']['level'] == "page"  ? '<i class="las la-tint"></i>' : ''); ?>
 															</td>
 															<td>
-																<a href="<?php echo $adListResult['data'][$key]['ad_snapshot_url'];?>" onclick="registerAction(this, 'dislike', '<?php echo strtoupper($keyword) .  "-" . $country;?>', '<?php echo $adListResult['data'][$key]['id']['id'];?>', '<?php echo $adListResult['data'][$key]['page_id'];?>', '<?php echo $adListResult['data'][$key]['ad_snapshot_url'];?>', '<?php echo $adListResult['data'][$key]['ad_delivery_start_time'];?>'); return false;" target="_blank" class="text-gray-800 text-hover-primary mb-1">
+																<a href="<?php echo $adListResult['data'][$key]['ad_snapshot_url'];?>" onclick="registerAction(this, 'dislike', '<?php echo strtoupper($keyword) .  "-" . $country;?>', '<?php echo $adId;?>', '<?php echo $adListResult['data'][$key]['page_id'];?>', '<?php echo $adListResult['data'][$key]['ad_snapshot_url'];?>', '<?php echo $adListResult['data'][$key]['ad_delivery_start_time'];?>'); return false;" target="_blank" class="text-gray-800 text-hover-primary mb-1">
 																	<i class='las la-thumbs-down fs-2x'></i>
 																</a>
 															</td>
 															<td>
-																<a href="<?php echo $adListResult['data'][$key]['ad_snapshot_url'];?>" target="_blank" onclick="registerAction(this, 'view', '<?php echo strtoupper($keyword) .  "-" . $country;?>', '<?php echo $adListResult['data'][$key]['id']['id'];?>', '<?php echo $adListResult['data'][$key]['page_id'];?>', '<?php echo $adListResult['data'][$key]['ad_snapshot_url'];?>', '<?php echo $adListResult['data'][$key]['ad_delivery_start_time'];?>'); return true;" class="text-gray-800 text-hover-primary mb-1">
+																<a href="<?php echo $adListResult['data'][$key]['ad_snapshot_url'];?>" target="_blank" onclick="registerAction(this, 'view', '<?php echo strtoupper($keyword) .  "-" . $country;?>', '<?php echo $adId;?>', '<?php echo $adListResult['data'][$key]['page_id'];?>', '<?php echo $adListResult['data'][$key]['ad_snapshot_url'];?>', '<?php echo $adListResult['data'][$key]['ad_delivery_start_time'];?>'); return true;" class="text-gray-800 text-hover-primary mb-1">
 																	<i class='las la-eye fs-2x'></i>
 																</a>
 															</td>
 															<td>
-																<a href="<?php echo $adListResult['data'][$key]['ad_snapshot_url'];?>" onclick="registerAction(this, 'saved', '<?php echo strtoupper($keyword) .  "-" . $country;?>', '<?php echo $adListResult['data'][$key]['id']['id'];?>', '<?php echo $adListResult['data'][$key]['page_id'];?>', '<?php echo $adListResult['data'][$key]['ad_snapshot_url'];?>', '<?php echo $adListResult['data'][$key]['ad_delivery_start_time'];?>'); return false;" target="_blank" class="text-gray-800 text-hover-primary mb-1">
+																<a href="<?php echo $adListResult['data'][$key]['ad_snapshot_url'];?>" onclick="registerAction(this, 'saved', '<?php echo strtoupper($keyword) .  "-" . $country;?>', '<?php echo $adId;?>', '<?php echo $adListResult['data'][$key]['page_id'];?>', '<?php echo $adListResult['data'][$key]['ad_snapshot_url'];?>', '<?php echo $adListResult['data'][$key]['ad_delivery_start_time'];?>'); return false;" target="_blank" class="text-gray-800 text-hover-primary mb-1">
 																	<i class='las la-thumbs-up fs-2x'></i>
 																</a>
 															</td>
+															<td>
+																<div>
+																	<a href="#" class="btn btn-sm btn-icon btn-light btn-active-light-primary" onclick="showHideRow('linha_<?php echo $adId;?>'); return false;"><!--begin::Svg Icon | path: icons/duotune/general/gen052.svg--><span class="svg-icon svg-icon-2 m-0"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="10" y="10" width="4" height="4" rx="2" fill="currentColor"/><rect x="17" y="10" width="4" height="4" rx="2" fill="currentColor"/><rect x="3" y="10" width="4" height="4" rx="2" fill="currentColor"/></svg></span><!--end::Svg Icon--></a>
+																</div>														
+															</td>
 														</tr>
-														<tr id="linha_<?php echo $adListResult['data'][$key]['page_id']?>"  valign="top" hidden="hidden">
-															<td colspan="3">
-																<span class="badge py-3 px-4 fs-7 badge-light-success mb-2 mt-2">AÇÕES: PAN | FACTA</span><br>
-																<a href="<?php echo FGTSUrl ?>fgts/sacar-fgts/;?>" class="px-2 py-20" target="_blank">Gravar Proposta PAN</a><br>
-																
-																<span class="badge py-3 px-4 fs-7 badge-light-warning mb-2 mt-2">AÇÕES: PROPOSTA</span><br>
-																<a href=""  class="menu-link px-2 py-2 mt-3"><span class="mx-2">Atuar Proposta</span></a><br>
+														<tr id="linha_<?php echo $adId?>"  valign="top" hidden="hidden">
+															<td class="mt-0 pt-0 ps-2">
+																<span class="badge py-3 px-4 fs-7 badge-light-success mb-2 mt-2">NICHO:</span><br>
+																<a href=""  class="menu-link px-2 py-2 mt-3"><span class="mx-2" onclick="registerNicho('<?php echo $adId;?>', 'Saúde'); this.innerHTML = this.innerHTML + ' <i class=\'las la-check-double text-success\'></i>'; return false;">Saúde</span></a><br>
+																<a href=""  class="menu-link px-2 py-2 mt-3"><span class="mx-2" onclick="registerNicho('<?php echo $adId;?>', 'Maternidade'); this.innerHTML = this.innerHTML + ' <i class=\'las la-check-double text-success\'></i>'; return false;">Maternidade</span></a><br>
+																<a href=""  class="menu-link px-2 py-2 mt-3"><span class="mx-2" onclick="registerNicho('<?php echo $adId;?>', 'Dinheiro'); this.innerHTML = this.innerHTML + ' <i class=\'las la-check-double text-success\'></i>'; return false;">Dinheiro</span></a><br>
+																<a href=""  class="menu-link px-2 py-2 mt-3"><span class="mx-2" onclick="registerNicho('<?php echo $adId;?>', 'Nutrição'); this.innerHTML = this.innerHTML + ' <i class=\'las la-check-double text-success\'></i>'; return false;">Nutrição</span></a><br>
+																<a href=""  class="menu-link px-2 py-2 mt-3"><span class="mx-2" onclick="registerNicho('<?php echo $adId;?>', 'Digital'); this.innerHTML = this.innerHTML + ' <i class=\'las la-check-double text-success\'></i>'; return false;">Digital</span></a><br>
+																<a href=""  class="menu-link px-2 py-2 mt-3"><span class="mx-2" onclick="registerNicho('<?php echo $adId;?>', 'Beleza'); this.innerHTML = this.innerHTML + ' <i class=\'las la-check-double text-success\'></i>'; return false;">Beleza</span></a><br>
+																<a href=""  class="menu-link px-2 py-2 mt-3"><span class="mx-2" onclick="registerNicho('<?php echo $adId;?>', 'Outros'); this.innerHTML = this.innerHTML + ' <i class=\'las la-check-double text-success\'></i>'; return false;">Outros</span></a><br>
+															</td>
+															<td colspan="5" class="mt-0 pt-0 ps-2 pe-4">
+																<span class="badge py-3 px-4 fs-7 badge-light-info mb-2 mt-2">DETALHES:</span><br>
+																<span class="d-flex">
+																	<input type="text" class="form-control d-flex" placeholder="Título" name="salePage" style="width: 60%" />
+																	<a class="d-flex pt-3" href="<?php echo $adListResult['data'][$key]['ad_snapshot_url'];?>" onclick="registerAction(this, 'saved', '<?php echo strtoupper($keyword) .  "-" . $country;?>', '<?php echo $adId;?>', '<?php echo $adListResult['data'][$key]['page_id'];?>', '<?php echo $adListResult['data'][$key]['ad_snapshot_url'];?>', '<?php echo $adListResult['data'][$key]['ad_delivery_start_time'];?>'); return false;" target="_blank" class="text-gray-800 text-hover-primary mb-1">
+																		<i class='las la-save fs-2x'></i>
+																	</a>
+																</span>
+																<span class="d-flex">
+																	<input type="text" class="form-control d-flex" placeholder="Página Vendas" name="salePage" style="width: 60%" />
+																	<a class="d-flex pt-3" href="<?php echo $adListResult['data'][$key]['ad_snapshot_url'];?>" onclick="registerAction(this, 'saved', '<?php echo strtoupper($keyword) .  "-" . $country;?>', '<?php echo $adId;?>', '<?php echo $adListResult['data'][$key]['page_id'];?>', '<?php echo $adListResult['data'][$key]['ad_snapshot_url'];?>', '<?php echo $adListResult['data'][$key]['ad_delivery_start_time'];?>'); return false;" target="_blank" class="text-gray-800 text-hover-primary mb-1">
+																		<i class='las la-save fs-2x'></i>
+																	</a>
+																</span>
+																<span class="d-flex">
+																	<input type="text" class="form-control d-flex" placeholder="Página Vendas" name="salePage" style="width: 60%" />
+																	<a class="d-flex pt-3" href="<?php echo $adListResult['data'][$key]['ad_snapshot_url'];?>" onclick="registerAction(this, 'saved', '<?php echo strtoupper($keyword) .  "-" . $country;?>', '<?php echo $adId;?>', '<?php echo $adListResult['data'][$key]['page_id'];?>', '<?php echo $adListResult['data'][$key]['ad_snapshot_url'];?>', '<?php echo $adListResult['data'][$key]['ad_delivery_start_time'];?>'); return false;" target="_blank" class="text-gray-800 text-hover-primary mb-1">
+																		<i class='las la-save fs-2x'></i>
+																	</a>
+																</span>
 															</td>
 														</tr>
 													<?php 
@@ -479,6 +538,55 @@
 
 													return true;
 												}
+
+												function registerNicho(adId, nicho){
+													
+													//alert (adId);
+													var url = '<?php echo assetfolder ?>ads-nicho';
+													var formData = new FormData();
+													
+													formData.append('nicho', nicho);
+													formData.append('adId', adId);
+													
+													fetch(url, { method: 'POST', body: formData })
+													.then(response => {return response.json();})
+													.then(saida => {
+														console.log(saida.debug);													
+													})
+													.then(() => {
+														// do something else;
+													})
+													.catch(function(err) {console.log("Failed to fetch page: ", err);});
+
+													return true;
+												}
+
+												function lineClean() {
+													var table = document.getElementById('kt_widget_table_3');
+													var rows = table.getElementsByTagName('tr');
+													for (var i = 0; i < rows.length; i++) {
+														//rows[i].classList.remove(className);
+														rows[i].style.borderTop = '1px'; 
+														rows[i].style.borderBottom = '1px'; 
+														rows[i].style.borderStyle = 'solid'; 
+														rows[i].style.borderColor = '#ffffff';
+													}
+												}
+
+												function showHideRow($linha){
+													//alert ($linha);
+													let element = document.getElementById($linha);
+													let hidden = element.getAttribute("hidden");
+													
+													if (hidden) {
+														element.removeAttribute("hidden");
+														//button.innerText = "Hide tr";
+													} else {
+														element.setAttribute("hidden", "hidden");
+														//button.innerText = "Show tr";
+													}
+												}
+												
 											</script>
 										</div>
 										<!--end::Card body-->

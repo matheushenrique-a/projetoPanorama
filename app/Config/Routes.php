@@ -50,6 +50,10 @@ $routes->match(['get', 'post'], '/fgts-cliente-detalhes/(:any)', 'Fgts\Fgts::cli
 $routes->match(['get', 'post'], '/indicadores-diarios', 'Fgts\Indicadores::indicadores_diarios');
 $routes->match(['get', 'post'], '/indicadores-esteira', 'Fgts\Indicadores::indicadores_esteira');
 
+//FL
+$routes->match(['get', 'post'], '/fgts-templates-frontlne', 'Fgts\Fgts::listarTemplates');
+$routes->match(['get', 'post'], '/criar-template/(:any)/(:any)', 'Fgts\Fgts::criarTemplates/$1/$2');
+
 $routes->match(['get', 'post'], '/metricas-semanais', 'Fgts\Indicadores::metricas_semanais');
 $routes->match(['get', 'post'], '/metricas-semanais/(:any)/(:any)', 'Fgts\Indicadores::metricas_semanais/$1/$2');
 
@@ -68,7 +72,9 @@ $routes->match(['get', 'post'], '/sign-in', 'Seguranca\Login::autenticar');
 
 //ADS
 $routes->match(['get', 'post'], '/ad-miner', 'Ads\Ads::listarAds');
+$routes->match(['get', 'post'], '/ad-miner/(:any)', 'Ads\Ads::listarAds/$1');
 $routes->match(['get', 'post'], '/ads-like', 'Ads\Ads::adsLike');
+$routes->match(['get', 'post'], '/ads-nicho', 'Ads\Ads::adsNicho');
 
 /*
  * --------------------------------------------------------------------
