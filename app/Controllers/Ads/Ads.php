@@ -88,10 +88,13 @@ class Ads extends BaseController
 
     public function adsNicho(){
         $adId = $this->getpost('adId');
+        $salePage = $this->getpost('salePage');
+        $checkOut = $this->getpost('checkOut');
+        $description = $this->getpost('description');
         $nicho = $this->getpost('nicho');
-        header('Content-Type: application/json');
 
-        $this->dbMaster->update('ads_saved', ['nicho' => $nicho], ['adId' => $adId], ['last_update' => 'current_timestamp()']);
+        header('Content-Type: application/json');
+        $this->dbMaster->update('ads_saved', ['salePage' => $salePage, 'checkOut' => $checkOut, 'description' => $description, 'nicho' => $nicho], ['adId' => $adId], ['last_update' => 'current_timestamp()']);
 
         $saida = ["result" => "ok"];
         echo json_encode($saida); 
@@ -102,18 +105,18 @@ class Ads extends BaseController
 
         if (!$actionTaken['existRecord']){
             if ($checkPageLevel) {
-                $actionTakenPageLevel = $this->dbMaster->select('ads_saved', ['pageId' => $pageId, 'userId' => $this->session->userId]);
+                $actPage = $this->dbMaster->select('ads_saved', ['pageId' => $pageId, 'userId' => $this->session->userId]);
 
-                if ($actionTakenPageLevel['existRecord']){
-                    return  ["level" => "page", "action" => $actionTakenPageLevel['firstRow']->action];
+                if ($actPage['existRecord']){
+                    return  ["level" => "page", "action" => $actPage['firstRow']->action, "salePage" => $actPage['firstRow']->salePage, "checkOut" => $actPage['firstRow']->checkOut, "description" => $actPage['firstRow']->description, "nicho" => $actPage['firstRow']->nicho];
                 } else {
-                    return  ["level" => "none", "action" => "none"];
+                    return  ["level" => "none", "action" => "none", "salePage" => "", "checkOut" => "", "description" => "", "nicho" => ""];
                 }    
             } else {
-                return  ["level" => "direct", "action" => "none"];
+                return  ["level" => "direct", "action" => "none", "salePage" => "", "checkOut" => "", "description" => "", "nicho" => ""];
             }
         } else {
-            return  ["level" => "direct", "action" => $actionTaken['firstRow']->action];
+            return  ["level" => "direct", "action" => $actionTaken['firstRow']->action, "salePage" => $actionTaken['firstRow']->salePage, "checkOut" => $actionTaken['firstRow']->checkOut, "description" => $actionTaken['firstRow']->description, "nicho" => $actionTaken['firstRow']->nicho];
         }
 	}
 
@@ -150,7 +153,6 @@ class Ads extends BaseController
             $preFilter = $this->getpost('preFilter', false);
             $pageId = $this->getpost('pageId', false);
             $keyword = $this->getpost('keyword', false);
-            $preFilter = $this->getpost('preFilter', false);
             
             $keyword = $this->getpost('keyword', false);
             $language = $this->getpost('language', false);
@@ -233,8 +235,8 @@ class Ads extends BaseController
 
                 if (isset($adListResult['data'])){
                     foreach ($adListResult['data'] as $key => $value) {
-                        $actionTaken = $this->isSaved($adListResult['data'][$key]['id'], $adListResult['data'][$key]['page_id'], true);
-                        $adListResult['data'][$key]['id'] = ["id" => $adListResult['data'][$key]['id'], "action" => $actionTaken];
+                        $adDetails = $this->isSaved($adListResult['data'][$key]['id'], $adListResult['data'][$key]['page_id'], true);
+                        $adListResult['data'][$key]['id'] = ["id" => $adListResult['data'][$key]['id'], "adDetails" => $adDetails];
                     }
                 }
             }
