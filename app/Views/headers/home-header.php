@@ -4820,6 +4820,7 @@ License: For each use you must have a valid license purchased only from above li
 													<div class="menu-item"><a class="menu-link" href="https://simulacao.fgtspravoce.com.br/index.php/cron/optinStatus" target="_blank"><span class="menu-bullet"><span class="bullet bullet-dot"></span></span><span class="menu-title">Status Atual Optin</span></a></div>
 													<div class="menu-item"><a class="menu-link" href="https://simulacao.fgtspravoce.com.br/index.php/cron/checkOptin" target="_blank"><span class="menu-bullet"><span class="bullet bullet-dot"></span></span><span class="menu-title">Buscar Novos Clientes</span></a></div>
 													<div class="menu-item"><a class="menu-link" href="https://simulacao.fgtspravoce.com.br/index.php/cron/SMSOptin" target="_blank"><span class="menu-bullet"><span class="bullet bullet-dot"></span></span><span class="menu-title">Enviar SMSs Optin</span></a></div>
+													<div class="menu-item"><a class="menu-link" href="https://simulacao.fgtspravoce.com.br/index.php/cron/SMSDiario" target="_blank"><span class="menu-bullet"><span class="bullet bullet-dot"></span></span><span class="menu-title">Enviar SMSs Diario</span></a></div>
 												</div>
 											</div>
 											<!--end:BLOCK URLS-->

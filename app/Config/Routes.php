@@ -75,6 +75,7 @@ $routes->match(['get', 'post'], '/ad-miner', 'Ads\Ads::listarAds');
 $routes->match(['get', 'post'], '/ad-miner/(:any)', 'Ads\Ads::listarAds/$1');
 $routes->match(['get', 'post'], '/ads-like', 'Ads\Ads::adsLike');
 $routes->match(['get', 'post'], '/ads-nicho', 'Ads\Ads::adsNicho');
+$routes->match(['get', 'post'], '/ads-load', 'Ads\Ads::loadMiner');
 
 /*
  * --------------------------------------------------------------------

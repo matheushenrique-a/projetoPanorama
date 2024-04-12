@@ -300,7 +300,7 @@
 														<div class="mb-0  mx-3">
 															<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Ads Depois de:</label>
 															<input type="text" class="form-control" placeholder="2024-02-29" name="initialDate" value="<?php echo $initialDate;?>" />					
-														</div>												
+														</div>
 														<div class="mb-0  mx-3">
 															<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Resultados:</label>
 															<div class="d-flex align-items-center position-relative my-1">
@@ -315,6 +315,20 @@
 																</select>													
 															</div>						
 														</div>
+														<div class="mb-0  mx-3">
+															<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Status:</label>
+															<div class="d-flex align-items-center position-relative my-1">
+																<select class="form-select form-control-solid" aria-label="" name="statusView">
+																<?php
+																	echo '<option value="all" ' .  ($statusView == "all" ? 'selected' : '') . '> Todos </option>';
+																	echo '<option value="view" ' .  ($statusView == "view" ? 'selected' : '') . '> Vistos </option>';
+																	echo '<option value="null" ' .  ($statusView == "null" ? 'selected' : '') . '> Não Vistos </option>';
+																	echo '<option value="saved" ' .  ($statusView == "saved" ? 'selected' : '') . '> Likes </option>';
+																	echo '<option value="dislike" ' .  ($statusView == "dislike" ? 'selected' : '') . '> Dislikes </option>';
+																?>
+																</select>													
+															</div>						
+														</div>
 													</div>
 													<!--end::Card toolbar-->
 												</div>
@@ -325,6 +339,9 @@
 																<button type="submit" class="btn btn-primary mt-3"  name="buscarProp" value="buscarProp">Buscar Ads</button>										
 																<button type="submit" class="btn btn-primary ms-2 mt-3"  name="favoritos" value="favoritos">
 																	<i class='las la-heart fs-2'></i>
+																</button>										
+																<button type="submit" class="btn btn-primary ms-2 mt-3"  name="pages" value="pages">
+																	<i class='las la-file-alt fs-2'></i>
 																</button>										
 															</div>
 														</div>													
@@ -373,7 +390,65 @@
 												<tbody class="text-gray-600 fw-semibold">
 													<?php 
 
-													if (!empty($favoritos)) {
+													if (!empty($pages)) {
+														$linhe = 0;
+														foreach ($adList['result']->getResult() as $row) {
+															$dataObjeto = new DateTime($row->last_update);
+															$dataFormatada = $dataObjeto->format('d/m/y');
+															$linhe++;
+															$keyword = 'miner';
+															$url = 'https://www.facebook.com/ads/library/?active_status=active&ad_type=all&country=ALL&view_all_page_id=' . $row->pageId . '&search_type=page&media_type=all';
+
+															$color = "#ffffff";
+															if ($row->action == 'saved') {
+																$color = '#cef7ff';
+															} else if ($row->action == 'view') {
+																$color = '#e5fae8';
+															} else if ($row->action == 'dislike') {
+																$color = '#f9dde7';
+															} else if ($row->action == 'star') {
+																$color = '#EBE9AF';
+															}
+
+															echo '<tr onclick="lineClean();this.style.borderTop = \'2px\'; this.style.borderBottom = \'2px\'; this.style.borderStyle = \'dotted\'; this.style.borderColor = \'#2b9ef7\';" style="background-color: ' . $color . '">';
+															echo '<td class="ps-2"> ' . $linhe . ". " . $dataFormatada  . '</td>';
+															echo '<td class="px-1" onclick="copyText(' .  $row->pageId . '); return false;">' . substr($row->pageId, 0, 3)?>...<?php echo substr($row->pageId, -3) . '</td>';
+															echo '<td class="px-1" colspan="3">
+															<a href="#" onclick="registerAction(this, \'dislike\', \'' . strtoupper($keyword) . '\', \'' . $row->pageId . '\', \'' . $row->pageId . '\', \'' . $url . '\', \'' . $row->last_update . '\'); return false;" target="_blank" class="text-gray-800 text-hover-primary mb-1">
+																<i class=\'las la-thumbs-down fs-2x\'></i>
+															</a>';
+
+															echo '<a href="' . $url . '" target="_blank" onclick="registerAction(this, \'view\', \'' . strtoupper($keyword) . '\', \'' . $row->pageId . '\', \'' . $row->pageId . '\', \'' . $url . '\', \'' . $row->last_update . '\'); return true;" class="text-gray-800 text-hover-primary mb-1">';
+															echo '	<i class="lab la-instagram text-gray-800 fs-3x"></i>';
+															echo '</a>';
+
+
+															echo '<a href="#" onclick="registerAction(this, \'saved\', \'' . strtoupper($keyword) . '\', \'' . $row->pageId . '\', \'' . $row->pageId . '\', \'' . $url . '\', \'' . $row->last_update . '\'); return false;" target="_blank" class="text-gray-800 text-hover-primary mb-1">
+																		<i class=\'las la-thumbs-up fs-2x\'></i>
+																	</a>
+																	<a href="#" onclick="registerAction(this, \'star\', \'' . strtoupper($keyword) . '\', \'' . $row->pageId . '\', \'' . $row->pageId . '\', \'' . $url . '\', \'' . $row->last_update . '\'); return false;" target="_blank" class="text-gray-800 text-hover-primary mb-1">
+																		<i class=\'las la-star fs-2x\'></i>
+																	</a>
+																</td>';
+															echo '<td class="px-1"><div>
+																	<a href="#" class="btn btn-sm btn-icon btn-light btn-active-light-primary" onclick="showHideRow(\'linha_' . $row->pageId . '\'); return false;"><!--begin::Svg Icon | path: icons/duotune/general/gen052.svg--><span class="svg-icon svg-icon-2 m-0"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="10" y="10" width="4" height="4" rx="2" fill="currentColor"/><rect x="17" y="10" width="4" height="4" rx="2" fill="currentColor"/><rect x="3" y="10" width="4" height="4" rx="2" fill="currentColor"/></svg></span><!--end::Svg Icon--></a>
+																	</div>														
+																</td>';
+															echo '</tr>';
+															echo '<tr id="linha_' . $row->pageId . '"  valign="top" hidden="hidden">
+																	<td colspan="6" class="mt-0 pt-0 ps-2">
+																		<span class="badge py-3 px-4 fs-7 badge-light-success mb-2 mt-2">Defina o Nicho:</span><br>
+																		<a href=""  class="menu-link px-2 py-2 mt-3"><span class="mx-2" onclick="registerNicho(\'' . $row->pageId . '\', \'Saúde\'); this.innerHTML = this.innerHTML + \'<i class=' . "\'las la-check-double text-success\'></i>"  . '\'; return false;">Saúde</span></a><br>
+																		<a href=""  class="menu-link px-2 py-2 mt-3"><span class="mx-2" onclick="registerNicho(\'' . $row->pageId . '\', \'Maternidade\'); this.innerHTML = this.innerHTML + \'<i class=' . "\'las la-check-double text-success\'></i>"  . '\'; return false;">Maternidade</span></a><br>
+																		<a href=""  class="menu-link px-2 py-2 mt-3"><span class="mx-2" onclick="registerNicho(\'' . $row->pageId . '\', \'Dinheiro\'); this.innerHTML = this.innerHTML + \'<i class=' . "\'las la-check-double text-success\'></i>"  . '\'; return false;">Dinheiro</span></a><br>
+																		<a href=""  class="menu-link px-2 py-2 mt-3"><span class="mx-2" onclick="registerNicho(\'' . $row->pageId . '\', \'Nutrição\'); this.innerHTML = this.innerHTML + \'<i class=' . "\'las la-check-double text-success\'></i>"  . '\'; return false;">Nutrição</span></a><br>
+																		<a href=""  class="menu-link px-2 py-2 mt-3"><span class="mx-2" onclick="registerNicho(\'' . $row->pageId . '\', \'Digital\'); this.innerHTML = this.innerHTML + \'<i class=' . "\'las la-check-double text-success\'></i>"  . '\'; return false;">Digital</span></a><br>
+																		<a href=""  class="menu-link px-2 py-2 mt-3"><span class="mx-2" onclick="registerNicho(\'' . $row->pageId . '\', \'Beleza\'); this.innerHTML = this.innerHTML + \'<i class=' . "\'las la-check-double text-success\'></i>"  . '\'; return false;">Beleza</span></a><br>
+																		<a href=""  class="menu-link px-2 py-2 mt-3"><span class="mx-2" onclick="registerNicho(\'' . $row->pageId . '\', \'Outros\'); this.innerHTML = this.innerHTML + \'<i class=' . "\'las la-check-double text-success\'></i>"  . '\'; return false;">Outros</span></a><br>
+																	</td>
+																</tr>';
+														}
+													} else if (!empty($favoritos)) {
 														$linhe = 0;
 														foreach ($adList['result']->getResult() as $row) {
 															$dataObjeto = new DateTime($row->createDate);
@@ -553,6 +628,8 @@
 															obj.parentNode.parentNode.style.backgroundColor = '#e5fae8'
 														} else if (saida.newStatus == "dislike"){ 
 															obj.parentNode.parentNode.style.backgroundColor = '#f9dde7'
+														} else if (saida.newStatus == "star"){ 
+															obj.parentNode.parentNode.style.backgroundColor = '#EBE9AF'
 														};
 													})
 													.then(() => {

@@ -44,42 +44,71 @@ class Ads extends BaseController
             $newStatus = $action;
             $this->dbMaster->insert('ads_saved', array('userId' => $this->session->userId, "adId" => $adId, "keyword" => $keyword, "action" => $action, "pageId" => $pageId, "url" => $url, "createDate" => $createDate));
         
+        } else if (($actionTaken == "dislike") and ($action == "star")){ 
+            $newStatus = 'star';
+            $this->dbMaster->update('ads_saved', ['action' => $newStatus], ['adId' => $adId, 'userId' => $this->session->userId], ['last_update' => 'current_timestamp()']);
         } else if (($actionTaken == "dislike") and ($action == "dislike")){ 
             $newStatus = 'view';
-            $this->dbMaster->update('ads_saved', ['action' => $newStatus], ['adId' => $adId], ['last_update' => 'current_timestamp()']);
+            $this->dbMaster->update('ads_saved', ['action' => $newStatus], ['adId' => $adId, 'userId' => $this->session->userId], ['last_update' => 'current_timestamp()']);
 
         } else if (($actionTaken == "dislike") and ($action == "saved")){ 
             $newStatus = 'saved';
-            $this->dbMaster->update('ads_saved', ['action' => $newStatus], ['adId' => $adId], ['last_update' => 'current_timestamp()']);
+            $this->dbMaster->update('ads_saved', ['action' => $newStatus], ['adId' => $adId, 'userId' => $this->session->userId], ['last_update' => 'current_timestamp()']);
 
         } else if (($actionTaken == "dislike") and ($action == "view")){ 
             $newStatus = 'dislike';
-        
+
+            
+        } else if (($actionTaken == "saved") and ($action == "star")){
+            $newStatus = 'star';
+            $this->dbMaster->update('ads_saved', ['action' => $newStatus], ['adId' => $adId, 'userId' => $this->session->userId], ['last_update' => 'current_timestamp()']);
         } else if (($actionTaken == "saved") and ($action == "saved")){
             $newStatus = 'view';
-            $this->dbMaster->update('ads_saved', ['action' => $newStatus], ['adId' => $adId], ['last_update' => 'current_timestamp()']);
+            $this->dbMaster->update('ads_saved', ['action' => $newStatus], ['adId' => $adId, 'userId' => $this->session->userId], ['last_update' => 'current_timestamp()']);
             
         } else if (($actionTaken == "saved") and ($action == "view")){
             //nothing
             $newStatus = "saved";
-
         } else if (($actionTaken == "saved") and ($action == "dislike")){
             $newStatus = 'dislike';
-            $this->dbMaster->update('ads_saved', ['action' => $newStatus], ['adId' => $adId], ['last_update' => 'current_timestamp()']);
+            $this->dbMaster->update('ads_saved', ['action' => $newStatus], ['adId' => $adId, 'userId' => $this->session->userId], ['last_update' => 'current_timestamp()']);
         
+
+
+        } else if (($actionTaken == "view") and ($action == "star")){
+            $newStatus = 'star';
+            $this->dbMaster->update('ads_saved', ['action' => $newStatus], ['adId' => $adId, 'userId' => $this->session->userId], ['last_update' => 'current_timestamp()']);
+
         } else if (($actionTaken == "view") and ($action == "saved")){
             $newStatus = 'saved';
-            $this->dbMaster->update('ads_saved', ['action' => $newStatus], ['adId' => $adId], ['last_update' => 'current_timestamp()']);
+            $this->dbMaster->update('ads_saved', ['action' => $newStatus], ['adId' => $adId, 'userId' => $this->session->userId], ['last_update' => 'current_timestamp()']);
 
         } else if (($actionTaken == "view") and ($action == "dislike")){
             $newStatus = 'dislike';
-            $this->dbMaster->update('ads_saved', ['action' => $newStatus], ['adId' => $adId], ['last_update' => 'current_timestamp()']);
+            $this->dbMaster->update('ads_saved', ['action' => $newStatus], ['adId' => $adId, 'userId' => $this->session->userId], ['last_update' => 'current_timestamp()']);
         
         } else if (($actionTaken == "view") and ($action == "view")){
             //nothing
             $newStatus = $action;
+
+
+
+
+        } else if (($actionTaken == "star") and ($action == "view")){
+            $newStatus = 'star';
+        } else if (($actionTaken == "star") and ($action == "star")){
+            $newStatus = 'saved';
+            $this->dbMaster->update('ads_saved', ['action' => $newStatus], ['adId' => $adId, 'userId' => $this->session->userId], ['last_update' => 'current_timestamp()']);
+        } else if (($actionTaken == "star") and ($action == "dislike")){
+            $newStatus = 'dislike';
+            $this->dbMaster->update('ads_saved', ['action' => $newStatus], ['adId' => $adId, 'userId' => $this->session->userId], ['last_update' => 'current_timestamp()']);
+        } else if (($actionTaken == "star") and ($action == "saved")){
+            $newStatus = 'saved';
+            $this->dbMaster->update('ads_saved', ['action' => $newStatus], ['adId' => $adId, 'userId' => $this->session->userId], ['last_update' => 'current_timestamp()']);
         }
     
+
+        
         //echo  $result;exit;
 
         $saida = ["newStatus" => $newStatus, "debug" => "AdId: $adId, Keyword: $keyword, Era: $actionTaken, Quer Virar: $action"];
@@ -123,12 +152,52 @@ class Ads extends BaseController
     public function listarAds($pageIdRoot = null){
         $buscarProp = $this->getpost('buscarProp');
         $favoritos = $this->getpost('favoritos');
+        $pages = $this->getpost('pages');
+        $statusView = $this->getpost('statusView');
 
         $adList = null;
         $adListResult = null;
         
+        if (!empty($pages)){
+            $this->dbMaster->setOrderBy(array("last_update", "DESC"));
+            $this->dbMaster->setLimit(400);
+            $adList = $this->dbMaster->select('ads_pages', null);
+            $sql = 'select p.pageId, p.last_update, s.action from ads_pages p left join ads_saved s on p.pageId = s.pageId and s.userId = ' . $this->session->userId;
+//            $sql = 'select p.pageId, p.last_update, s.action from ads_pages p left join ads_saved s on (p.pageId = s.pageId and (s.userId = ' . $this->session->userId . ' or s.userId is null)) ';
+            
+            if ($statusView == "view") {
+                $sql .= ' where action = "view" ';
+            } else if ($statusView == "saved") {
+                $sql .= ' where action = "saved" ';
+            } else if ($statusView == "dislike") {
+                $sql .= ' where action = "dislike" ';
+            } else if ($statusView == "all") {
+                //nada
+            } else if ($statusView == "null") {
+                $sql .= ' where action is null ';
+            }
+            
+            $sql .= ' order by p.last_update desc;';
+            //echo $sql;exit;
+            $adList = $this->dbMaster->runQuery($sql);
 
-        if (!empty($favoritos)){
+            $keyword = $this->getpost('keyword', true);
+            $preFilter = $this->getpost('preFilter', true);
+            $pageId = $this->getpost('pageId', true);
+            $adType = $this->getpost('adType', true);
+            $country = $this->getpost('country', true);
+            $status = $this->getpost('status', true);
+            //echo '22:16:13 - <h3>Dump 22 </h3> <br><br>' . var_dump($status); exit;					//<-------DEBUG
+            $language = $this->getpost('language', true);
+            $type = $this->getpost('type', true);
+            $platform = $this->getpost('platform', true);
+            $searchType = $this->getpost('searchType',true);
+            $initialDate = $this->getpost('initialDate',true);
+            $ad_delivery_date_max = $this->getpost('ad_delivery_date_max',true);
+            $paginas = $this->getpost('paginas',true);
+
+
+        } else if (!empty($favoritos)){
             $this->dbMaster->setOrderBy(array("last_update", "DESC"));
             $this->dbMaster->setLimit(500);
             $adList = $this->dbMaster->select('ads_saved', ['userId' => $this->session->userId, 'action' => 'saved']);
@@ -191,7 +260,6 @@ class Ads extends BaseController
             $ad_delivery_date_max = $this->getpost('ad_delivery_date_max',false);
             $paginas = $this->getpost('paginas',false);
 
-            
             Services::response()->setCookie('keyword', $keyword);
             Services::response()->setCookie('preFilter', $preFilter);
             Services::response()->setCookie('pageId', $pageId);
@@ -241,14 +309,10 @@ class Ads extends BaseController
                 }
             }
         } else {
-            
-           
-                $pageId = $this->getpost('pageId', false);
-                $keyword = $this->getpost('keyword', true);
-                $preFilter = $this->getpost('preFilter', true);
-                $status = $this->getpost('status', true);
-            
-
+            $pageId = $this->getpost('pageId', false);
+            $keyword = $this->getpost('keyword', true);
+            $preFilter = $this->getpost('preFilter', true);
+            $status = $this->getpost('status', true);
             $adType = $this->getpost('adType', true);
             $country = $this->getpost('country', true);
             
@@ -262,6 +326,7 @@ class Ads extends BaseController
         }
 
         $dados['pageTitle'] = "Ads - Listar Ads";
+        $dados['statusView'] = $statusView;
         $dados['keyword'] = $keyword;
         $dados['preFilter'] = $preFilter;
         $dados['country'] = $country;
@@ -278,12 +343,10 @@ class Ads extends BaseController
         $dados['adList'] = $adList;
         $dados['adListResult'] = $adListResult;
         $dados['favoritos'] = $favoritos;
+        $dados['pages'] = $pages;
 
         return $this->loadpage('ads/listar_ads', $dados);
     }
-
-
-
 
     public function getAds($params){
         $headers = $this->getHeader();
@@ -342,6 +405,68 @@ class Ads extends BaseController
     
         curl_close($curl);
         return $retorno;
+    }
+
+
+    //http://localhost/InsightSuite/public/ads-load
+    //https://insightsuite.pravoce.io/ads-load
+    public function loadMiner(){
+        ini_set('max_execution_time', 320); 
+        //$file_path = fopen('/home/customer/www/insightsuite.pravoce.io/writable/miner.html', 'r');
+        $file_path = '/Applications/XAMPP/xamppfiles/htdocs/InsightSuite/writable/miner.html';
+        //$file_path = '/home/customer/www/insightsuite.pravoce.io/writable/miner.html';
+        $html = file_get_contents($file_path);
+
+        //Create a new DOM document
+        $dom = new \DOMDocument;
+
+        //Parse the HTML. The @ is used to suppress any parsing errors
+        //that will be thrown if the $html string isn't valid XHTML.
+        @$dom->loadHTML($html);
+
+        //Get all links. You could also use any other tag name here,
+        //like 'img' or 'table', to extract other tags.
+        $links = $dom->getElementsByTagName('a');
+
+        //Iterate over the extracted links and display their URLs
+        $count = 0;
+        $added = 0;
+        $existent = 0;
+        foreach ($links as $link){
+            //Extract and show the "href" attribute. 
+            $url = $link->getAttribute('href');
+
+            $inicio = substr($url, 0, 51);
+
+            if ($inicio == 'https://www.facebook.com/ads/library/?active_status'){
+                $count++;
+                $queryParams = [];
+                parse_str(parse_url($url, PHP_URL_QUERY), $queryParams);
+
+                //$url = str_replace("active_status=all", "active_status=active", $url);
+                //echo '<a href="'. $url . '" target="_blank">' . $count . '- View Page </a><br>';
+                
+                if (isset($queryParams['view_all_page_id'])) {
+                	$pageId = $queryParams['view_all_page_id'];
+                	
+                    $actionTaken = $this->dbMaster->select('ads_pages', ['pageId' => $pageId]);
+
+                    if (!$actionTaken['existRecord']){
+                        $this->dbMaster->insert('ads_pages', array("pageId" => $pageId));
+                        $added++;
+                        echo "Page ID Added: $pageId <br>";
+                    } else {
+                        echo "Page ID Existent: $pageId <br>";
+                        $existent++;
+                    }
+                    
+                } else {
+                	echo "view_all_page_id parameter not found in the URL.<br>";
+                }
+            }
+        }
+        echo "<br><br>Pages Added: $added <br>";
+        echo "Pages Existent: $existent <br>";
     }
 
 }
