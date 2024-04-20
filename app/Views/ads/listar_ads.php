@@ -324,6 +324,7 @@
 																	echo '<option value="view" ' .  ($statusView == "view" ? 'selected' : '') . '> Vistos </option>';
 																	echo '<option value="null" ' .  ($statusView == "null" ? 'selected' : '') . '> Não Vistos </option>';
 																	echo '<option value="saved" ' .  ($statusView == "saved" ? 'selected' : '') . '> Likes </option>';
+																	echo '<option value="star" ' .  ($statusView == "star" ? 'selected' : '') . '> Favoritos </option>';
 																	echo '<option value="dislike" ' .  ($statusView == "dislike" ? 'selected' : '') . '> Dislikes </option>';
 																?>
 																</select>													

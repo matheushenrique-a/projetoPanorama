@@ -168,13 +168,15 @@ class Ads extends BaseController
             if ($statusView == "view") {
                 $sql .= ' where action = "view" ';
             } else if ($statusView == "saved") {
-                $sql .= ' where action = "saved" ';
+                $sql .= ' where action = "saved" or action = "star" ';
             } else if ($statusView == "dislike") {
                 $sql .= ' where action = "dislike" ';
-            } else if ($statusView == "all") {
+            } else if (($statusView == "all") or (empty($statusView))) {
                 //nada
             } else if ($statusView == "null") {
                 $sql .= ' where action is null ';
+            } else if ($statusView == "star") {
+                $sql .= ' where action = "star" ';
             }
             
             $sql .= ' order by p.last_update desc;';
