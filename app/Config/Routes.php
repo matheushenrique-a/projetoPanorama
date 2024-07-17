@@ -77,6 +77,10 @@ $routes->match(['get', 'post'], '/ads-like', 'Ads\Ads::adsLike');
 $routes->match(['get', 'post'], '/ads-nicho', 'Ads\Ads::adsNicho');
 $routes->match(['get', 'post'], '/ads-load', 'Ads\Ads::loadMiner');
 
+//META
+$routes->match(['get', 'post'], '/ad-manager', 'Meta\Meta::manager');
+
+
 /*
  * --------------------------------------------------------------------
  * Additional Routing

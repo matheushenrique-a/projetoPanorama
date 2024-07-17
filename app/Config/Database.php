@@ -79,6 +79,26 @@ class Database extends Config
         'port'     => 3306,
     ];
 
+     public $vsl = [
+        'DSN'      => '',
+        'hostname' => 'c126621.sgvps.net',
+        'username' => 'ucxdrotutl1iw',
+        'password' => '6gwsifnsxo7w',
+        'database' => 'db6up2n6i7qph9',  
+        'DBDriver' => 'MySQLi',
+        'DBPrefix' => '',
+        'pConnect' => false,
+        'DBDebug'  => (ENVIRONMENT !== 'production'),
+        'charset'  => 'utf8',
+        'DBCollat' => 'utf8_general_ci',
+        'swapPre'  => '',
+        'encrypt'  => false,
+        'compress' => false,
+        'strictOn' => false,
+        'failover' => [],
+        'port'     => 3306,
+    ];
+
     /**
      * This database connection is used when
      * running PHPUnit database tests.
