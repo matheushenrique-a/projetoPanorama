@@ -79,6 +79,7 @@ $routes->match(['get', 'post'], '/ads-load', 'Ads\Ads::loadMiner');
 
 //META
 $routes->match(['get', 'post'], '/ad-manager', 'Meta\Meta::manager');
+$routes->match(['get', 'post'], '/ad-action/(:any)/(:any)', 'Meta\Meta::action/$1/$2');
 
 
 /*

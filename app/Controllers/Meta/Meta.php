@@ -8,12 +8,14 @@ use Psr\Log\LoggerInterface;
 use App\Libraries\dbMaster;
 use App\Models\M_telegram;
 use Config\Services;
+use App\Models\M_chatGpt;
 
 class Meta extends BaseController
 {
     protected $session;
     protected $dbMasterDefault;
     protected $telegram;
+    protected $chatgpt;
 
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger) {
         parent::setDB("vsl"); //passa o banco de dados diferente do default (opcional) antes de iniciar o controler
@@ -26,11 +28,20 @@ class Meta extends BaseController
         $this->dbMasterDefault = new dbMaster();
         $this->session = session();
         $this->telegram =  new M_telegram();
+        $this->chatgpt =  new m_chatGpt();
+    }
+
+    public function action($id, $action){
+        if ((!empty($id)) and (($action == "ACTIVE") or ($action == "PAUSE"))) {
+            $result = $this->changeStatusCpg($id, $action);
+            echo "<h1>Resultado:<br>" . var_dump($result) . "</h1>";
+        }
     }
 
     public function manager($pageIdRoot = null){
         
         $buscarProp = $this->getpost('buscarProp');
+        $iaExpert = $this->getpost('iaExpert');
         $favoritos = $this->getpost('favoritos');
         $pages = $this->getpost('pages');
         $statusView = $this->getpost('statusView');
@@ -40,7 +51,7 @@ class Meta extends BaseController
         $data_inicial = date("Y-m-d");
         $data_final = date("Y-m-d");
         
-        if ((!empty($buscarProp))){
+        if ((!empty($buscarProp)) or (!empty($iaExpert))){
             helper('cookie');
 
             $account = $this->getpost('account', false);
@@ -62,14 +73,6 @@ class Meta extends BaseController
             $keyword = $this->getpost('keyword', false);
             $language = $this->getpost('language', false);
             $exibir = $this->getpost('exibir', false);
-
-            //$pageId = $this->getpost('pageId', false);
-            //$status = $this->getpost('status', false);
-            //$exibir = $this->getpost('exibir', true);
-            //$language = $this->getpost('language', true);
-            $type = $this->getpost('type', false);
-            $platform = $this->getpost('platform', false);
-            $searchType = $this->getpost('searchType',false);
             $data_final = $this->getpost('data_final',false);
             $data_inicial = $this->getpost('data_inicial',false);
           
@@ -80,13 +83,7 @@ class Meta extends BaseController
             Services::response()->setCookie('dataPreset', $dataPreset);
             Services::response()->setCookie('status', $status);
             Services::response()->setCookie('exibir', $exibir);
-
             Services::response()->setCookie('keyword', $keyword);
-            Services::response()->setCookie('pageId', $pageId);
-            Services::response()->setCookie('language', $language);
-            Services::response()->setCookie('type', $type);
-            Services::response()->setCookie('platform', $platform);
-            Services::response()->setCookie('searchType', $searchType);
             Services::response()->setCookie('data_final', $data_final);
             Services::response()->setCookie('data_inicial', $data_inicial);
             Services::response()->setCookie('paginas', $paginas);
@@ -94,24 +91,13 @@ class Meta extends BaseController
             $urlFinal = "act_$account/campaigns?access_token=" . META_TOKEN;
             $urlFinal .= "&fields=" . urlencode("name,daily_budget,budget_remaining,configured_status,start_time,updated_time");
             $urlFinal .= "&date_preset=$dataPreset&effective_status=" . urlencode($statusArray);
-            
-            // if (!empty($dataPreset)) $urlFinal .= "&ad_type=$dataPreset";
-            // if (!empty($pageId)) $urlFinal .= "&search_page_ids=$pageId";
-            // if (!empty($exibir)) $urlFinal .= "&ad_reached_countries=$exibir";
-            // if (!empty($status)) $urlFinal .= "&ad_active_status=$status";
-            // if (!empty($language)) $urlFinal .= "&languages=" . strtolower($language);
-            // if (!empty($type)) $urlFinal .= "&media_type=$type";
-            // if (!empty($platform)) $urlFinal .= "&publisher_platforms=$platform";
-            // if (!empty($data_inicial)) $urlFinal .= "&data_inicial=$data_inicial";
-            // if (!empty($data_final)) $urlFinal .= "&ad_delivery_date_min=$data_final";
-            //if (!empty($paginas)) $urlFinal .= "&limit=$paginas";
-            
+                        
            // echo '11:00:27 - <h3>Dump 20 </h3> <br><br>' . var_dump($urlFinal); exit;					//<-------DEBUG
 
             //$urlFinal = "&ad_type=ALL&ad_reached_countries=BR&ad_active_status=ACTIVE&ad_delivery_date_min=2024-01-01&media_type=ALL&limit=100";
             //echo '' . var_dump($urlFinal); exit;					//<-------DEBUG
             $cpgList = $this->getCpgs($urlFinal);
-
+            $IAPrompt = "";
             //echo '22:50:23 - <h3>Dump 21 </h3> <br><br>' . var_dump($cpgList['retorno']); exit;					//<-------DEBUG
 
             if ((!is_null($cpgList)) and ($cpgList['sucesso'])){
@@ -121,22 +107,20 @@ class Meta extends BaseController
                 if (isset($cpgListResult['data'])){
                     foreach ($cpgListResult['data'] as $key => $value) {
                         $cpgName = $cpgListResult['data'][$key]['name'];
-                        
+                        $id = $cpgListResult['data'][$key]['id'];
+
+                        $budget_remaining = $cpgListResult['data'][$key]['budget_remaining'];
+                        $budget_remaining = $budget_remaining / 100;
+                        $daily_budget = (isset($cpgListResult['data'][$key]['daily_budget'])  ? $cpgListResult['data'][$key]['daily_budget'] : '0');
+                        $daily_budget = $daily_budget / 100;
+                        $configured_status = $cpgListResult['data'][$key]['configured_status'];
+
                         if ((!empty($keyword)) and (strpos(strtoupper($cpgName), strtoupper($keyword)) === false)) continue;
 
                         $cpgArray = explode("|", $cpgName);
                         $utmContent =  trim($cpgArray[count($cpgArray)-1]); //ultima parte do nome da campanha precis ter o UTM Content 
                         $UtmContentDetails = explode("-", $utmContent);
                         $ticketSale = ($UtmContentDetails[count($UtmContentDetails)-1]);
-
-                        // $sqlQuery = "select event, count(*) total, sum(cId) renda from vsl_campanha_tracker 
-                        // where (last_updated >= '2024-07-11 00:00:01' and last_updated <= '2024-07-13 23:59:59')
-                        // group by event;";
-
-                        // $sqlQuery = "select event, count(*) total, sum(cId) renda from vsl_campanha_tracker 
-                        // where (last_updated >= '$data_inicial 00:00:01' and last_updated <= '$data_final 23:59:59')
-                        // and utm_content = '$utmContent'
-                        // group by event;";
 
                         $sqlQuery = "select event, count(*) total, sum(renda) renda from (
                         select event, ip, count(*) total, sum(cId) renda from vsl_campanha_tracker 
@@ -187,8 +171,70 @@ class Meta extends BaseController
                         //echo '20:55:09 - <h3>Dump 29 </h3> <br><br>' . var_dump($eventosCgp); exit;					//<-------DEBUG
 
                         $adDetails = $this->getCpgsInsights($cpgListResult['data'][$key]['id'], $data_inicial, $data_final);
+                        $detailsFull = json_decode($adDetails['retorno'], true);
+
+                        $impressions = 0;
+                        $cpm = 0;
+                        $ctr = 0;
+                        $costInsight = 0;
+                        $cost_per_unique_click = 0;
+
+                        //impressions, reach, website_ctr, cpm, cpc, unique_clicks, clicks, inline_link_clicks
+                        if (isset($detailsFull['data'][0])){
+                            $impressions = $detailsFull['data'][0]['impressions'];
+                            $ctr = (isset($detailsFull['data'][0]['website_ctr'])  ? $detailsFull['data'][0]['website_ctr'][0]['value'] : 0);
+                            //$cost_per_unique_click = (isset($detailsFull['data'][0]['cost_per_unique_click'])  ? $detailsFull['data'][0]['cost_per_unique_click'] : 0);
+                            $cpm = (isset($detailsFull['data'][0]['cpm'])  ? $detailsFull['data'][0]['cpm'] : 0);
+                        }
+
+                        //cost de dias antigos não vem na API então da prioridade ao calculo manual quando existe cpm
+                        if (($cpm > 0)) {
+                            $costPerImpression = $cpm / 1000;
+                            $cost = $costPerImpression * $impressions;														
+                        } else {
+                            $cost = $daily_budget-$budget_remaining;
+                        }
+
+                        if (($configured_status == "ACTIVE") and ($impressions > 0)) {
+                            $IAPrompt .= "<br>Id: $id\n";
+                            $IAPrompt .= "<br>Nome: $utmContent\n";
+                            $IAPrompt .= "<br>Orçamento Diário: $daily_budget\n";
+                            $IAPrompt .= "<br>Orçamento Utilizado: $cost\n";
+                            $IAPrompt .= "<br>Impressões: $impressions\n";
+                            $IAPrompt .= "<br>CTR: " . simpleround($ctr) . "\n";
+                            $IAPrompt .= "<br>CPM: $cpm\n";
+                            $IAPrompt .= "<br>Initiated Checkouts: " . $eventosCgp['pay'] . "\n";
+                            $IAPrompt .= "<br>Vendas: " . $eventosCgp['sales'] . "\n";
+                            $IAPrompt .= "<br>Receita: " . $eventosCgp['revenue'] . "\n\n";
+                            $IAPrompt .= "<br><br>";
+                        } 
+
                         $cpgListResult['data'][$key]['id'] = ["id" => $cpgListResult['data'][$key]['id'], "adDetails" => $adDetails, "sales" => $eventosCgp] ;
                         //break;
+                    }
+                    $basePrompt = "Você é um gestor de tráfego pago com 10 anos de experiência em análise de campanhas para facebook e instagram. Sua missão é analisar dados de campanhas e realizar recomendações com base em indicadores chaves como custo, cpm, ctr, vendas, initiated checkout e outros. Considere na análise que Initiated Checkout é um forte indicador de interesse e compra. CPM baixo é um bom sinal de custo menor para exibição da campanha e alto número de impressões é bom sinal de entrega da campanha ao público. Você recebeu a lista de resultados de campanhas abaixo e precisa identificar campanhas de baixa conversão (ROI) e classifica-las em 3 status:
+                    <br>- PAUSE: campanhas de baixa performance;\n
+                    <br>- KEEP: campanhas com indicadores promissores apesar da baixa performance;\n
+                    <br>- INCREASE: campanhas com resultados bons que merecem mais orçamento.\n
+
+                    <br><br>\n\nJustifque e explique sua decisão citando os indicadores usados e seus respectivos valores considerados.
+
+                    <br><br>\n\nAo final liste apenas o resultado em formato CSV abaixo sem nenhuma outra informação:
+                    <br>\nId; Nome; CTR; CPM; Vendas; Receita; Initiated Checkouts; Status; Justificativa\n
+                    <br><br>\nAgora faça a análise das campanhas abaixo:\n";
+                    $basePrompt .= $IAPrompt;
+                    //$basePrompt .= "\n\n Por fim, com base na análise de todas as campanhas identifique padrões de comportamento geral dos números e liste recomendações gerais para melhoria da performance das campanhas.";
+                    //echo $basePrompt;exit;
+
+                    $resultGpt = $this->chatgpt->runQuery($basePrompt);
+                    //echo '23:13:25 - <h3>Dump 24 </h3> <br><br>' . var_dump($resultGpt); exit;					//<-------DEBUG
+
+                    if (!empty($iaExpert)) {
+                        $dados['iaExpert'] = $resultGpt;
+                        $dados['pageTitle'] = "Ads - Gerenciar";
+
+                        return $this->loadpage('ads/ia_expert', $dados);
+                        exit;
                     }
                 }
             }
@@ -214,19 +260,12 @@ class Meta extends BaseController
 
         $dados['statusView'] = $statusView;
         $dados['keyword'] = $keyword;
-        $dados['type'] = $type;
-        $dados['pageId'] = $pageId;
-        $dados['dataPreset'] = $dataPreset;
         $dados['status'] = $status;
-        $dados['language'] = $language;
-        $dados['platform'] = $platform;
-        $dados['searchType'] = $searchType;
         $dados['data_final'] = $data_final;
         $dados['data_inicial'] = $data_inicial;
         $dados['paginas'] = $paginas;
         $dados['cpgList'] = $cpgList;
         $dados['cpgListResult'] = $cpgListResult;
-        $dados['favoritos'] = $favoritos;
         $dados['pages'] = $pages;
 
         return $this->loadpage('ads/manager', $dados);
@@ -239,6 +278,17 @@ class Meta extends BaseController
         //$url = urlencode($url);
 		//echo $url;exit;
         $result =  $this->http_request('GET', $url, $headers);
+        //echo '18:18:12 - <h3>Dump 26 </h3> <br><br>' . var_dump($result); exit;					//<-------DEBUG
+		return $result;
+	}
+
+    public function changeStatusCpg($id, $status){
+        $headers = $this->getHeader();
+		$url = META_GRAPH_API . ($id) . "?access_token=" . META_TOKEN . "&status=" . $status;
+		//echo $url;exit;
+        //$url = urlencode($url);
+		//echo $url;exit;
+        $result =  $this->http_request('POST', $url, $headers);
         //echo '18:18:12 - <h3>Dump 26 </h3> <br><br>' . var_dump($result); exit;					//<-------DEBUG
 		return $result;
 	}

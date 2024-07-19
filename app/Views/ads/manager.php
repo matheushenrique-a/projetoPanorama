@@ -131,6 +131,7 @@
 													<div class="mb-0 mx-3">
 															<div class="d-flex align-items-center position-relative my-1 mt-4 mb-0">
 																<button type="submit" class="btn btn-primary mt-3"  name="buscarProp" value="buscarProp">Buscar Ads</button>										
+																<button type="submit" class="btn btn-primary mt-3 ms-2"  name="iaExpert" value="iaExpert">IA Expert</button>										
 															</div>
 														</div>													
 													</div>
@@ -181,6 +182,7 @@
 														<th class=" px-1">Revenue</th>
 														<th class=" px-1">ROI</th>
 														<th class=" px-1">Result</th>
+														<th class=" px-1">Act</th>
 													</tr>
 													<!--end::Table row-->
 												</thead>
@@ -210,7 +212,6 @@
 																$name = $cpgListResult['data'][$key]['name'];
 																if ((!empty($keyword)) and (strpos(strtoupper($name), strtoupper($keyword)) === false)) continue;
 																
-
 																$budget_remaining = $cpgListResult['data'][$key]['budget_remaining'];
 																$budget_remaining = $budget_remaining / 100;
 																$daily_budget = (isset($cpgListResult['data'][$key]['daily_budget'])  ? $cpgListResult['data'][$key]['daily_budget'] : '0');
@@ -310,13 +311,15 @@
 															<td class="px-1"><span class="p-2 <?php echo ($revenue > 0 ? 'badge-light-success' : 'badge-light-warning');?>"><?php echo simpleRound($revenue)?></span></td>
 															<td class="px-1"><span class="p-2 <?php echo ($roi > 0.75 ? 'badge-light-success' : 'badge-light-warning');?>"><?php echo simpleRound($roi)?></span></td>
 															<td class="px-1"><span class="p-2 <?php echo ($result > 0 ? 'badge-light-success' : 'badge-light-danger');?>"><?php echo simpleRound($result)?></span></td>
+															<td class="px-1"><a href="<?php echo assetfolder;?>ad-action/<?php echo $id;?>/<?php echo ($configured_status == "ACTIVE"  ? 'PAUSE' : 'ACTIVE');?>" target="_blank" class="p-3 fs-6 <?php echo ($configured_status == "ACTIVE"  ? 'badge-light-danger' : 'badge-light-primary');?>" style="border-radius: 10px; text-decoration: underline"><?php echo ($configured_status == "ACTIVE"  ? 'STOP' : 'START');?></a></td>
 														</tr>
 													<?php 
-														}}
-
-														$roiTotal = 
+														}
 														$roiTotal = ($costTotal != 0 ? $revenueTotal/$costTotal : '0');
+
+														if (count($cpgListResult['data'])>0){
 													?>
+
 														<tr style="background: #f6f6f6; font-weight: bold;">
 															<td class="px-1">TOTAL GERAL</td>
 															<td class="px-1"><?php echo simpleRound($budgetTotal);?></td>
@@ -335,8 +338,10 @@
 															<td class="px-1"><span class="p-2 <?php echo ($revenueTotal > 0 ? 'badge-light-success' : 'badge-light-warning');?>"><?php echo simpleRound($revenueTotal)?></span></td>
 															<td class="px-1"><span class="p-2 <?php echo ($roiTotal > 0.75 ? 'badge-light-success' : 'badge-light-warning');?>"><?php echo simpleRound($roiTotal)?></span></td>
 															<td class="px-1"><span class="p-2 <?php echo ($revenueTotal-$costTotal > 0 ? 'badge-light-success' : 'badge-light-danger');?>"><?php echo simpleRound($revenueTotal-$costTotal)?></span></td>
+															<td class="px-1"></td>
 														</tr>
-													<?php 
+													<?php
+													}}
 														} //End:Foreach
 													?>
 

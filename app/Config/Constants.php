@@ -15,6 +15,12 @@ define ('shortURL', 'https://pravc.io/');
 define('META_GRAPH_API', "https://graph.facebook.com/v20.0/");
 define('META_TOKEN', "EAAMqjXZAxYiUBOye2ux6U3sTlh7XH3KxPnjcWlHLmAA1kiuZC9sMQisY0rxXrC0V8QBVVkWGjVomLlRUuTOHYYuQvL7oVtLHnuRh36JjhDfBNvWn4m408oCq7OF0CnRLKwADpgXMmdCpmPUrSs8gZBhsZC9IRjaRS091p9FZCgivYn3nEfpzDHXwR");
 
+//CHAT_GPT
+define('API_KEY_CHATGPT','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');
+define('API_URL_CHATGPT', 'https://api.openai.com/v1/chat/completions');
+define('API_URL_CHATGPT_TTS', 'https://api.openai.com/v1/audio/speech');
+define('API_ORG_CHATGPT', 'org-LX3hOOlJya2XI2D3JVcgmS91');
+
 //AMBEC
 define('PATH_SAVE_AMBEC', "/Applications/XAMPP/xamppfiles/htdocs/InsightSuite/public/assets/media/ambec/");
 
