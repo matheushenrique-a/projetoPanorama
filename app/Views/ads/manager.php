@@ -9,7 +9,7 @@
 									<!--begin::Page title-->
 									<div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
 										<!--begin::Title-->
-										<h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">Ads - Listar Ads</h1>
+										<h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">Ads - Ad Manager</h1>
 										<!--end::Title-->
 										<!--begin::Breadcrumb-->
 										<ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
@@ -32,7 +32,7 @@
 											</li>
 											<!--end::Item-->
 											<!--begin::Item-->
-											<li class="breadcrumb-item text-muted">Listar Ads</li>
+											<li class="breadcrumb-item text-muted">Ad Manager</li>
 											<!--end::Item-->
 										</ul>
 										<!--end::Breadcrumb-->
@@ -311,7 +311,7 @@
 															<td class="px-1"><span class="p-2 <?php echo ($revenue > 0 ? 'badge-light-success' : 'badge-light-warning');?>"><?php echo simpleRound($revenue)?></span></td>
 															<td class="px-1"><span class="p-2 <?php echo ($roi > 0.75 ? 'badge-light-success' : 'badge-light-warning');?>"><?php echo simpleRound($roi)?></span></td>
 															<td class="px-1"><span class="p-2 <?php echo ($result > 0 ? 'badge-light-success' : 'badge-light-danger');?>"><?php echo simpleRound($result)?></span></td>
-															<td class="px-1"><a href="<?php echo assetfolder;?>ad-action/<?php echo $id;?>/<?php echo ($configured_status == "ACTIVE"  ? 'PAUSE' : 'ACTIVE');?>" target="_blank" class="p-3 fs-6 <?php echo ($configured_status == "ACTIVE"  ? 'badge-light-danger' : 'badge-light-primary');?>" style="border-radius: 10px; text-decoration: underline"><?php echo ($configured_status == "ACTIVE"  ? 'STOP' : 'START');?></a></td>
+															<td class="px-1"><a href="<?php echo assetfolder;?>ad-action/<?php echo $id;?>/<?php echo ($configured_status == "ACTIVE"  ? 'PAUSED' : 'ACTIVE');?>" target="_blank" class="p-3 fs-6 <?php echo ($configured_status == "ACTIVE"  ? 'badge-light-danger' : 'badge-light-primary');?>" style="border-radius: 10px; text-decoration: underline"><?php echo ($configured_status == "ACTIVE"  ? 'STOP' : 'START');?></a></td>
 														</tr>
 													<?php 
 														}

@@ -32,7 +32,7 @@ class Meta extends BaseController
     }
 
     public function action($id, $action){
-        if ((!empty($id)) and (($action == "ACTIVE") or ($action == "PAUSE"))) {
+        if ((!empty($id)) and (($action == "ACTIVE") or ($action == "PAUSED"))) {
             $result = $this->changeStatusCpg($id, $action);
             echo "<h1>Resultado:<br>" . var_dump($result) . "</h1>";
         }
@@ -194,12 +194,14 @@ class Meta extends BaseController
                         } else {
                             $cost = $daily_budget-$budget_remaining;
                         }
+                        $used = simpleRound($daily_budget != 0 ? (($daily_budget-$budget_remaining)/$daily_budget)*100 : '0');
 
                         if (($configured_status == "ACTIVE") and ($impressions > 0)) {
                             $IAPrompt .= "<br>Id: $id\n";
                             $IAPrompt .= "<br>Nome: $utmContent\n";
                             $IAPrompt .= "<br>Orçamento Diário: $daily_budget\n";
                             $IAPrompt .= "<br>Orçamento Utilizado: $cost\n";
+                            $IAPrompt .= "<br>Orçamento Usado: $used%\n";
                             $IAPrompt .= "<br>Impressões: $impressions\n";
                             $IAPrompt .= "<br>CTR: " . simpleround($ctr) . "\n";
                             $IAPrompt .= "<br>CPM: $cpm\n";
@@ -212,7 +214,7 @@ class Meta extends BaseController
                         $cpgListResult['data'][$key]['id'] = ["id" => $cpgListResult['data'][$key]['id'], "adDetails" => $adDetails, "sales" => $eventosCgp] ;
                         //break;
                     }
-                    $basePrompt = "Você é um gestor de tráfego pago com 10 anos de experiência em análise de campanhas para facebook e instagram. Sua missão é analisar dados de campanhas e realizar recomendações com base em indicadores chaves como custo, cpm, ctr, vendas, initiated checkout e outros. Considere na análise que Initiated Checkout é um forte indicador de interesse e compra. CPM baixo é um bom sinal de custo menor para exibição da campanha e alto número de impressões é bom sinal de entrega da campanha ao público. Você recebeu a lista de resultados de campanhas abaixo e precisa identificar campanhas de baixa conversão (ROI) e classifica-las em 3 status:
+                    $basePrompt = "Você é um gestor de tráfego pago com 10 anos de experiência em análise de campanhas para facebook e instagram. Sua missão é analisar dados de campanhas e realizar recomendações com base em indicadores chaves como custo, cpm, ctr, vendas, initiated checkout e outros. Considere na análise que Initiated Checkout é um forte indicador de interesse e compra. CPM baixo é um bom sinal de custo menor para exibição da campanha e alto número de impressões é bom sinal de entrega da campanha ao público. Também evita parar campanhas cujo orçamento usado seja menor de 35%. Você recebeu a lista de resultados de campanhas abaixo e precisa identificar campanhas de baixa conversão (ROI) e classifica-las em 3 status:
                     <br>- PAUSE: campanhas de baixa performance;\n
                     <br>- KEEP: campanhas com indicadores promissores apesar da baixa performance;\n
                     <br>- INCREASE: campanhas com resultados bons que merecem mais orçamento.\n
@@ -220,7 +222,7 @@ class Meta extends BaseController
                     <br><br>\n\nJustifque e explique sua decisão citando os indicadores usados e seus respectivos valores considerados.
 
                     <br><br>\n\nAo final liste apenas o resultado em formato CSV abaixo sem nenhuma outra informação:
-                    <br>\nId; Nome; CTR; CPM; Vendas; Receita; Initiated Checkouts; Status; Justificativa\n
+                    <br>\nId; Nome; Orçamento Usado;CTR; CPM; Vendas; Receita; Initiated Checkouts; Status; Justificativa\n
                     <br><br>\nAgora faça a análise das campanhas abaixo:\n";
                     $basePrompt .= $IAPrompt;
                     //$basePrompt .= "\n\n Por fim, com base na análise de todas as campanhas identifique padrões de comportamento geral dos números e liste recomendações gerais para melhoria da performance das campanhas.";
