@@ -47,6 +47,7 @@ if (IsProduction){
 define ('telegramToken', '5947884925:AAG35Bq2edQTVd3Uxw5TIzPmjGGk71xr2tI'); //webhook https://www.beppig.com/index.php/telegram/webhook",
 define ('telegramPraVoceGroup', '-481159474');
 define ('telegramPraVoceDiretoria', '-992723690');
+define ('telegramPraVoceDigital', '-4003072193');
 define ('telegramPraVoceGroupLogErrors', '-587867421');
 
 //DEFINE NOTIFICAÇÕES ATIVAS

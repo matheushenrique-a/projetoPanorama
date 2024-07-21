@@ -244,7 +244,6 @@
 																	$impressions = $detailsFull['data'][0]['impressions'];
 																	$reach = $detailsFull['data'][0]['reach'];
 																	$ctr = (isset($detailsFull['data'][0]['website_ctr'])  ? $detailsFull['data'][0]['website_ctr'][0]['value'] : 0);
-																	//$cost_per_unique_click = (isset($detailsFull['data'][0]['cost_per_unique_click'])  ? $detailsFull['data'][0]['cost_per_unique_click'] : 0);
 																	$cpm = (isset($detailsFull['data'][0]['cpm'])  ? $detailsFull['data'][0]['cpm'] : 0);
 																	$cpc = (isset($detailsFull['data'][0]['cpc'])  ? $detailsFull['data'][0]['cpc'] : 0); 
 																	$clicks = (isset($detailsFull['data'][0]['inline_link_clicks'])  ? $detailsFull['data'][0]['inline_link_clicks'] : 0); 
