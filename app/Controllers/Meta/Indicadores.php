@@ -43,7 +43,7 @@ class Indicadores extends BaseController
 
         $urlFinal = "act_$account/campaigns?access_token=" . META_TOKEN;
         $urlFinal .= "&fields=" . urlencode("name,daily_budget,budget_remaining,configured_status,start_time,updated_time");
-        $urlFinal .= "&date_preset=$dataPreset&effective_status=" . urlencode($statusArray);           
+        $urlFinal .= "&date_preset=$dataPreset&&limit=30&effective_status=" . urlencode($statusArray);           
         // echo '11:00:27 - <h3>Dump 20 </h3> <br><br>' . var_dump($urlFinal); exit;					//<-------DEBUG
 
         $cpgList = $this->getCpgs($urlFinal);
@@ -83,7 +83,7 @@ class Indicadores extends BaseController
                     $UtmContentDetails = explode("-", $utmContent);
                     $ticketSale = ($UtmContentDetails[count($UtmContentDetails)-1]);
 
-                    $sqlQuery = "select event, count(*) total, sum(renda) renda from (
+                    $sqlQuery = "select event, sum(total) total, sum(renda) renda from (
                     select event, ip, count(*) total, sum(cId) renda from vsl_campanha_tracker 
                     where (last_updated >= '$data_inicial 00:00:01' and last_updated <= '$data_final 23:59:59') 
                     and utm_content = '$utmContent' 
