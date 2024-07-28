@@ -39,6 +39,7 @@ if (IsProduction){
     define ('ConsorcioUrl', '/');
 } else {
     define ('assetfolder', '/InsightSuite/public/');
+    define ('urlInstitucional', '/InsightSuite/public/');
     define ('FGTSUrl', 'http://localhost/fintech/');
     define ('ConsorcioUrl', 'http://localhost/fintech/');
 }

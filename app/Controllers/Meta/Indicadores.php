@@ -39,182 +39,225 @@ class Indicadores extends BaseController
 
         $statusArray = '["ACTIVE", "PAUSED"]';
         $dataPreset = 'today';
-        $account = "328587016319669";
+        //$account = "328587016319669";
 
-        $urlFinal = "act_$account/campaigns?access_token=" . META_TOKEN;
-        $urlFinal .= "&fields=" . urlencode("name,daily_budget,budget_remaining,configured_status,start_time,updated_time");
-        $urlFinal .= "&date_preset=$dataPreset&&limit=30&effective_status=" . urlencode($statusArray);           
-        // echo '11:00:27 - <h3>Dump 20 </h3> <br><br>' . var_dump($urlFinal); exit;					//<-------DEBUG
+        $account = [];
+        $account[] = ['conta' => 'MGPT', 'id' => '328587016319669'];
+        $account[] = ['conta' => 'OFC', 'id' => '397934202905061'];
+        $account[] = ['conta' => 'PVC', 'id' => '1557752151343685'];
+        $account[] = ['conta' => 'VAN', 'id' => '339022398063345'];
 
-        $cpgList = $this->getCpgs($urlFinal);
-        //echo '22:50:23 - <h3>Dump 21 </h3> <br><br>' . var_dump($cpgList['retorno']); exit;					//<-------DEBUG
+        $gastoGeral = 0;
+        $receitaGeral = 0;
+        $roasGeral = 0;
+        $itemsGeral = 0;
+        $vendasGeral = 0;
 
-        if ((!is_null($cpgList)) and ($cpgList['sucesso'])){
-            $cpgListResult = json_decode($cpgList['retorno'], true);
-            //echo '18:59:43 - <h3>Dump 35 </h3> <br><br>' . var_dump($cpgListResult); exit;					//<-------DEBUG
+        foreach ($account as $key => $value) {
+            $actTitulo = $account[$key]['conta'];
+            $actId = $account[$key]['id'];
 
-            if (isset($cpgListResult['data'])){
-                $items = 0;
-                $budgetTotal = 0;
-                $costTotal = 0;
-                $impressionsTotal = 0;
-                $clicksTotal = 0;
-                $ctrTotal = 0;
-                $cpmTotal = 0;
-                $lpTotal = 0;
-                $icsTotal = 0;
-                $RejectTotal = 0;
-                $pixbolTotal = 0;
-                $salesTotal = 0;
-                $revenueTotal = 0;
-                $lastPageId = 0;
-                
-                foreach ($cpgListResult['data'] as $key => $value) {
-                    $cpgName = $cpgListResult['data'][$key]['name'];
-                    $id = $cpgListResult['data'][$key]['id'];
-                    $budget_remaining = $cpgListResult['data'][$key]['budget_remaining'];
-                    $budget_remaining = $budget_remaining / 100;
-                    $daily_budget = (isset($cpgListResult['data'][$key]['daily_budget'])  ? $cpgListResult['data'][$key]['daily_budget'] : '0');
-                    $daily_budget = $daily_budget / 100;
-                    $configured_status = $cpgListResult['data'][$key]['configured_status'];
+            $urlFinal = "act_$actId/campaigns?access_token=" . META_TOKEN;
+            $urlFinal .= "&fields=" . urlencode("name,daily_budget,budget_remaining,configured_status,start_time,updated_time");
+            $urlFinal .= "&date_preset=$dataPreset&&limit=30&effective_status=" . urlencode($statusArray);           
+            // echo '11:00:27 - <h3>Dump 20 </h3> <br><br>' . var_dump($urlFinal); exit;					//<-------DEBUG
 
-                    $cpgArray = explode("|", $cpgName);
-                    $utmContent =  trim($cpgArray[count($cpgArray)-1]); //ultima parte do nome da campanha precis ter o UTM Content 
-                    $UtmContentDetails = explode("-", $utmContent);
-                    $ticketSale = ($UtmContentDetails[count($UtmContentDetails)-1]);
+            $cpgList = $this->getCpgs($urlFinal);
+            //echo '22:50:23 - <h3>Dump 21 </h3> <br><br>' . var_dump($cpgList['retorno']); exit;					//<-------DEBUG
 
-                    $sqlQuery = "select event, sum(total) total, sum(renda) renda from (
-                    select event, ip, count(*) total, sum(cId) renda from vsl_campanha_tracker 
-                    where (last_updated >= '$data_inicial 00:00:01' and last_updated <= '$data_final 23:59:59') 
-                    and utm_content = '$utmContent' 
-                    and referrer not like '%facebookexternalhit%'
-                    group by event, ip) data
-                    group by event;";
+            if ((!is_null($cpgList)) and ($cpgList['sucesso'])){
+                $cpgListResult = json_decode($cpgList['retorno'], true);
+                //echo '18:59:43 - <h3>Dump 35 </h3> <br><br>' . var_dump($cpgListResult); exit;					//<-------DEBUG
 
-                    //echo '00:39:15 - <h3>Dump 48 </h3> <br><br>' . var_dump($sqlQuery); exit;					//<-------DEBUG
-
-                    $eventos = $this->dbMaster->runQuery($sqlQuery);
-
-                    $eventosCgp['lp'] = 0; //Vsl-Product-Pass
-                    $eventosCgp['pay'] = 0; //Vsl-Pay-oracao-L0-171
-                    $eventosCgp['pix'] = 0; //Vsl-Product-Pix-Created
-                    $eventosCgp['sales'] = 0; //Vsl-Product-Order-Approved
-                    $eventosCgp['card'] = 0; //Vsl-Product-Cart-Abandoned
-                    $eventosCgp['billet'] = 0; //Vsl-Product-Billet-Created
-                    $eventosCgp['declined'] = 0; //Vsl-Product-Order-Rejected
-                    $eventosCgp['pixbol'] = 0; //Vsl-Product-Order-Rejected
-                    $eventosCgp['ticket'] = 0; //Vsl-Product-Order-Rejected
-                    $eventosCgp['revenue'] = 0; //Vsl-Product-Order-Rejected
-        
-                    foreach ($eventos["result"]->getResult() as $row){
-                        $evento = strtoupper($row->event);
-
-                        if ($evento == 'VSL-PRODUCT-PASS'){
-                            $eventosCgp['lp'] = $row->total;
-                        } else if (strpos($evento, "VSL-PAY-") !== false){
-                            $eventosCgp['pay'] += $row->total;
-                        } else if ($evento == 'VSL-PRODUCT-PIX-CREATED'){
-                            $eventosCgp['pix'] = $row->total;
-                        } else if ($evento == 'VSL-PRODUCT-ORDER-APPROVED'){
-                            $eventosCgp['sales'] = $row->total;
-                            $eventosCgp['revenue'] = $row->renda;
-                        } else if ($evento == 'VSL-PRODUCT-CART-ABANDONED'){
-                            $eventosCgp['card'] = $row->total;
-                        } else if ($evento == 'VSL-PRODUCT-BILLET-CREATED'){
-                            $eventosCgp['billet'] = $row->total;
-                        } else if ($evento == 'VSL-PRODUCT-ORDER-REJECTED'){
-                            $eventosCgp['declined'] = $row->total;
-                        }
-                        //echo $evento . "-" . $row->total . '<br>';
-                    }
-                    $eventosCgp['pixbol'] = $eventosCgp['pix'] + $eventosCgp['billet'];
-                    $eventosCgp['ticket'] = $ticketSale;
-                    //echo '20:55:09 - <h3>Dump 29 </h3> <br><br>' . var_dump($eventosCgp); exit;					//<-------DEBUG
-
-                    $adDetails = $this->getCpgsInsights($cpgListResult['data'][$key]['id'], $data_inicial, $data_final);
-                    $detailsFull = json_decode($adDetails['retorno'], true);
-
-                    $impressions = 0;
-                    $cpm = 0;
-                    $clicks = 0;
-                    $cpc = 0;
-                    $ctr = 0;
-                    $costInsight = 0;
-                    $cost_per_unique_click = 0;
-
-                    //impressions, reach, website_ctr, cpm, cpc, unique_clicks, clicks, inline_link_clicks
-                    if (isset($detailsFull['data'][0])){
-                        $impressions = $detailsFull['data'][0]['impressions'];
-                        $reach = $detailsFull['data'][0]['reach'];
-                        $ctr = (isset($detailsFull['data'][0]['website_ctr'])  ? $detailsFull['data'][0]['website_ctr'][0]['value'] : 0);
-                        $cpm = (isset($detailsFull['data'][0]['cpm'])  ? $detailsFull['data'][0]['cpm'] : 0);
-                        $cpc = (isset($detailsFull['data'][0]['cpc'])  ? $detailsFull['data'][0]['cpc'] : 0); 
-                        $clicks = (isset($detailsFull['data'][0]['inline_link_clicks'])  ? $detailsFull['data'][0]['inline_link_clicks'] : 0); 
-                    }
-
-                    if ($impressions ==0) continue;
-
-                    //cost de dias antigos não vem na API então da prioridade ao calculo manual quando existe cpm
-                    if (($cpm > 0)) {
-                        $costPerImpression = $cpm / 1000;
-                        $cost = $costPerImpression * $impressions;														
-                    } else {
-                        $cost = $daily_budget-$budget_remaining;
-                    }
-                    $revenue = $eventosCgp['revenue'];
-                    $ics = $eventosCgp['pay'];
-                    $Reject = $eventosCgp['declined'];
-                    $sales = $eventosCgp['sales'];
-                    $roi = ($cost != 0 ? $revenue/$cost : '0');
-                    $result = $revenue - $cost;
-                    $pixbol = $eventosCgp['pixbol'];
-                    $used = ($daily_budget != 0 ? (($daily_budget-$budget_remaining)/$daily_budget)*100 : '0');
-                    $lp = $eventosCgp['lp'];
-
-                    $items +=1;
-                    $budgetTotal += $daily_budget;
-                    $costTotal += $cost;
-                    $impressionsTotal += $impressions;
-                    $clicksTotal += $clicks;
-                    $ctrTotal += $ctr;
-                    $cpmTotal += $cpm;
-                    $lpTotal += $lp;
-                    $icsTotal += $ics;
-                    $RejectTotal += $Reject;
-                    $pixbolTotal += $pixbol;
-                    $salesTotal += $sales;
-                    $revenueTotal += $revenue;
+                if (isset($cpgListResult['data'])){
+                    $items = 0;
+                    $budgetTotal = 0;
+                    $costTotal = 0;
+                    $impressionsTotal = 0;
+                    $clicksTotal = 0;
+                    $ctrTotal = 0;
+                    $cpmTotal = 0;
+                    $lpTotal = 0;
+                    $icsTotal = 0;
+                    $RejectTotal = 0;
+                    $pixbolTotal = 0;
+                    $salesTotal = 0;
+                    $revenueTotal = 0;
+                    $lastPageId = 0;
                     
-                    //break; //DEBUG
+                    foreach ($cpgListResult['data'] as $key => $value) {
+                        $cpgName = $cpgListResult['data'][$key]['name'];
+                        $id = $cpgListResult['data'][$key]['id'];
+                        $budget_remaining = $cpgListResult['data'][$key]['budget_remaining'];
+                        $budget_remaining = $budget_remaining / 100;
+                        $daily_budget = (isset($cpgListResult['data'][$key]['daily_budget'])  ? $cpgListResult['data'][$key]['daily_budget'] : '0');
+                        $daily_budget = $daily_budget / 100;
+                        $configured_status = $cpgListResult['data'][$key]['configured_status'];
+                        $updated_time = $cpgListResult['data'][$key]['updated_time'];
+
+                        $date = new \DateTime($updated_time);
+                        $today = new \DateTime();
+                        $interval = $date->diff($today);
+                        $daysUpdated = $interval->format('%a');
+
+                        //echo "$cpgName -->" . $interval->format('%a') . "<br>"; continue;					//<-------DEBUG
+
+                        $cpgArray = explode("|", $cpgName);
+                        $utmContent =  trim($cpgArray[count($cpgArray)-1]); //ultima parte do nome da campanha precis ter o UTM Content 
+                        $UtmContentDetails = explode("-", $utmContent);
+                        $ticketSale = ($UtmContentDetails[count($UtmContentDetails)-1]);
+
+                        //para campanhas antigas com mais de 5 dias sem atualização não precisa consultar detalhes
+                        if ($daysUpdated > 7) continue;
+
+                        $sqlQuery = "select event, sum(total) total, sum(renda) renda from (
+                        select event, ip, count(*) total, sum(cId) renda from vsl_campanha_tracker 
+                        where (last_updated >= '$data_inicial 00:00:01' and last_updated <= '$data_final 23:59:59') 
+                        and utm_content = '$utmContent' 
+                        and referrer not like '%facebookexternalhit%'
+                        group by event, ip) data
+                        group by event;";
+
+                        //echo '00:39:15 - <h3>Dump 48 </h3> <br><br>' . var_dump($sqlQuery); exit;					//<-------DEBUG
+
+                        $eventos = $this->dbMaster->runQuery($sqlQuery);
+
+                        $eventosCgp['lp'] = 0; //Vsl-Product-Pass
+                        $eventosCgp['pay'] = 0; //Vsl-Pay-oracao-L0-171
+                        $eventosCgp['pix'] = 0; //Vsl-Product-Pix-Created
+                        $eventosCgp['sales'] = 0; //Vsl-Product-Order-Approved
+                        $eventosCgp['card'] = 0; //Vsl-Product-Cart-Abandoned
+                        $eventosCgp['billet'] = 0; //Vsl-Product-Billet-Created
+                        $eventosCgp['declined'] = 0; //Vsl-Product-Order-Rejected
+                        $eventosCgp['pixbol'] = 0; //Vsl-Product-Order-Rejected
+                        $eventosCgp['ticket'] = 0; //Vsl-Product-Order-Rejected
+                        $eventosCgp['revenue'] = 0; //Vsl-Product-Order-Rejected
+            
+                        foreach ($eventos["result"]->getResult() as $row){
+                            $evento = strtoupper($row->event);
+
+                            if ($evento == 'VSL-PRODUCT-PASS'){
+                                $eventosCgp['lp'] = $row->total;
+                            } else if (strpos($evento, "VSL-PAY-") !== false){
+                                $eventosCgp['pay'] += $row->total;
+                            } else if ($evento == 'VSL-PRODUCT-PIX-CREATED'){
+                                $eventosCgp['pix'] = $row->total;
+                            } else if ($evento == 'VSL-PRODUCT-ORDER-APPROVED'){
+                                $eventosCgp['sales'] = $row->total;
+                                $eventosCgp['revenue'] = $row->renda;
+                            } else if ($evento == 'VSL-PRODUCT-CART-ABANDONED'){
+                                $eventosCgp['card'] = $row->total;
+                            } else if ($evento == 'VSL-PRODUCT-BILLET-CREATED'){
+                                $eventosCgp['billet'] = $row->total;
+                            } else if ($evento == 'VSL-PRODUCT-ORDER-REJECTED'){
+                                $eventosCgp['declined'] = $row->total;
+                            }
+                            //echo $evento . "-" . $row->total . '<br>';
+                        }
+                        $eventosCgp['pixbol'] = $eventosCgp['pix'] + $eventosCgp['billet'];
+                        $eventosCgp['ticket'] = $ticketSale;
+                        //echo '20:55:09 - <h3>Dump 29 </h3> <br><br>' . var_dump($eventosCgp); exit;					//<-------DEBUG
+
+                        $adDetails = $this->getCpgsInsights($cpgListResult['data'][$key]['id'], $data_inicial, $data_final);
+                        $detailsFull = json_decode($adDetails['retorno'], true);
+
+                        $impressions = 0;
+                        $cpm = 0;
+                        $clicks = 0;
+                        $cpc = 0;
+                        $ctr = 0;
+                        $costInsight = 0;
+                        $cost_per_unique_click = 0;
+
+                        //impressions, reach, website_ctr, cpm, cpc, unique_clicks, clicks, inline_link_clicks
+                        if (isset($detailsFull['data'][0])){
+                            $impressions = $detailsFull['data'][0]['impressions'];
+                            $reach = $detailsFull['data'][0]['reach'];
+                            $ctr = (isset($detailsFull['data'][0]['website_ctr'])  ? $detailsFull['data'][0]['website_ctr'][0]['value'] : 0);
+                            $cpm = (isset($detailsFull['data'][0]['cpm'])  ? $detailsFull['data'][0]['cpm'] : 0);
+                            $cpc = (isset($detailsFull['data'][0]['cpc'])  ? $detailsFull['data'][0]['cpc'] : 0); 
+                            $clicks = (isset($detailsFull['data'][0]['inline_link_clicks'])  ? $detailsFull['data'][0]['inline_link_clicks'] : 0); 
+                        }
+
+                        if ($impressions ==0) continue;
+
+                        //cost de dias antigos não vem na API então da prioridade ao calculo manual quando existe cpm
+                        if (($cpm > 0)) {
+                            $costPerImpression = $cpm / 1000;
+                            $cost = $costPerImpression * $impressions;														
+                        } else {
+                            $cost = $daily_budget-$budget_remaining;
+                        }
+                        $revenue = $eventosCgp['revenue'];
+                        $ics = $eventosCgp['pay'];
+                        $Reject = $eventosCgp['declined'];
+                        $sales = $eventosCgp['sales'];
+                        $roi = ($cost != 0 ? $revenue/$cost : '0');
+                        $result = $revenue - $cost;
+                        $pixbol = $eventosCgp['pixbol'];
+                        $used = ($daily_budget != 0 ? (($daily_budget-$budget_remaining)/$daily_budget)*100 : '0');
+                        $lp = $eventosCgp['lp'];
+
+                        $items +=1;
+                        $budgetTotal += $daily_budget;
+                        $costTotal += $cost;
+                        $impressionsTotal += $impressions;
+                        $clicksTotal += $clicks;
+                        $ctrTotal += $ctr;
+                        $cpmTotal += $cpm;
+                        $lpTotal += $lp;
+                        $icsTotal += $ics;
+                        $RejectTotal += $Reject;
+                        $pixbolTotal += $pixbol;
+                        $salesTotal += $sales;
+                        $revenueTotal += $revenue;
+                        
+                        //break; //DEBUG
+                    }
+
+                    $usedPecent = ($budgetTotal != 0  ? simpleRound(($costTotal/$budgetTotal)*100) . "%" : '-');
+                    $roiTotal = ($costTotal != 0 ? $revenueTotal/$costTotal : '0');
+
+                    $strFilaAgora = "<b>🌟🌟🌟 $actTitulo - CPGS $items </b>\n";
+//                    $strFilaAgora .= "Orçamento: R$ " . simpleRound($budgetTotal) . "\n";
+//                   $strFilaAgora .= "Gasto: R$ " . simpleRound($costTotal) . " - " . $usedPecent .  "%\n";
+//                    $strFilaAgora .= "-----\n";
+                    $strFilaAgora .= "Impressões: " . $impressionsTotal . "\n";
+                    $strFilaAgora .= "Clicks: " . $clicksTotal . "\n";
+                    $strFilaAgora .= "CTR: " . simpleRound(($items > 0  ? $ctrTotal/$items : '0')) . "%\n";
+                    $strFilaAgora .= "CPM: R$ " . simpleRound(($items > 0  ? $cpmTotal/$items : '0')) . "\n";
+                    //$strFilaAgora .= "-----\n";
+                    //$strFilaAgora .= "LP: " . $lpTotal . "\n";
+                    $strFilaAgora .= "ICs: " . $icsTotal . "\n";
+                    //$strFilaAgora .= "Declines: " . $RejectTotal . "\n";
+                    //$strFilaAgora .= "PIXBOL: " . $pixbolTotal . "\n";
+                    $strFilaAgora .= "-----\n";
+                    $strFilaAgora .= "Vendas: " . $salesTotal . "\n";
+                    $strFilaAgora .= "Receita: R$ " . simpleRound($revenueTotal) . "\n";
+                    $strFilaAgora .= "ROAS: " . simpleRound($roiTotal) . "\n";
+                    $strFilaAgora .= "Resultado: R$ " . simpleRound($revenueTotal-$costTotal) . "\n";
+
+                    $gastoGeral += ($revenueTotal-$costTotal);
+                    $receitaGeral += $revenueTotal;
+                    $itemsGeral += $items;
+                    $vendasGeral += $salesTotal;
+
+                    //echo $strFilaAgora;exit;
+                    $output = $this->telegram->notifyTelegramGroup($strFilaAgora, telegramPraVoceDigital);
                 }
-
-                $usedPecent = ($budgetTotal != 0  ? simpleRound(($costTotal/$budgetTotal)*100) . "%" : '-');
-                $roiTotal = ($costTotal != 0 ? $revenueTotal/$costTotal : '0');
-
-                $strFilaAgora = "<b>🌟🌟🌟 CPG - STATUS - $account </b>\n";
-                $strFilaAgora .= "Campanhas: $items\n";
-                $strFilaAgora .= "Orçamento Total: R$ " . simpleRound($budgetTotal) . "\n";
-                $strFilaAgora .= "Gasto Total: R$ " . simpleRound($costTotal) . "\n";
-                $strFilaAgora .= "Orçamento Usado: " . $usedPecent . "\n";
-                $strFilaAgora .= "Impressões: " . $impressionsTotal . "\n";
-                $strFilaAgora .= "Clicks: " . $clicksTotal . "\n";
-                $strFilaAgora .= "CTR Médio: " . simpleRound(($items > 0  ? $ctrTotal/$items : '0')) . "%\n";
-                $strFilaAgora .= "CPM Médio: R$ " . simpleRound(($items > 0  ? $cpmTotal/$items : '0')) . "\n";
-                $strFilaAgora .= "-----\n";
-                $strFilaAgora .= "LP: " . $lpTotal . "\n";
-                $strFilaAgora .= "ICs: " . $icsTotal . "\n";
-                $strFilaAgora .= "Declines: " . $RejectTotal . "\n";
-                $strFilaAgora .= "PIXBOL: " . $pixbolTotal . "\n";
-                $strFilaAgora .= "Vendas: " . $salesTotal . "\n";
-                $strFilaAgora .= "Receita: R$ " . simpleRound($revenueTotal) . "\n";
-                $strFilaAgora .= "ROI: " . simpleRound($roiTotal) . "\n";
-                $strFilaAgora .= "Resultado: R$ " . simpleRound($revenueTotal-$costTotal) . "\n";
-
-                //echo $strFilaAgora;exit;
-                $output = $this->telegram->notifyTelegramGroup($strFilaAgora, telegramPraVoceDigital);
             }
-        }
+        } //for account
 
+
+        $roasGeral = ($gastoGeral != 0 ? $receitaGeral/$gastoGeral : '0');
+
+        $strFilaAgora = "<b>🌟🌟🌟 GERAL - CPGs $itemsGeral </b>\n";
+        $strFilaAgora .= "Vendas: " . $vendasGeral . "\n";
+        $strFilaAgora .= "Receita: " . simpleRound($receitaGeral) . "\n";
+        $strFilaAgora .= "Resultado: R$ " . simpleRound($gastoGeral) . "\n";
+        $strFilaAgora .= "ROAS: " . simpleRound($roasGeral) . "\n";
+
+        $output = $this->telegram->notifyTelegramGroup($strFilaAgora, telegramPraVoceDigital);
 
     }
 

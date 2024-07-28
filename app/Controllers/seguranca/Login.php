@@ -21,7 +21,7 @@ class Login extends BaseController
         if (empty($email) or empty($password)){
             return $this->loadSinglePage('seguranca/login', $dados);
         } else if ($security->auth($email, $password)){
-            return redirect()->to('');
+            return redirect()->to(urlInstitucional);
         } else {
             $dados['error'] = 'Usuário e senha inválidos.';
             return $this->loadSinglePage('seguranca/login', $dados);
