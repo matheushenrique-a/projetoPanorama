@@ -37,8 +37,12 @@ class Indicadores extends BaseController
         $data_inicial = date("Y-m-d");
         $data_final = date("Y-m-d");
 
+        //$data_inicial = '2024-07-30';
+        //$data_final = '2024-07-30';
+
         $statusArray = '["ACTIVE", "PAUSED"]';
         $dataPreset = 'today';
+        //$dataPreset = 'yesterday';
         //$account = "328587016319669";
 
         $account = [];
@@ -52,6 +56,9 @@ class Indicadores extends BaseController
         $roasGeral = 0;
         $itemsGeral = 0;
         $vendasGeral = 0;
+        $icsGeral = 0;
+        $impressaoGeral = 0;
+        $clickGeral = 0;
 
         foreach ($account as $key => $value) {
             $actTitulo = $account[$key]['conta'];
@@ -59,7 +66,7 @@ class Indicadores extends BaseController
 
             $urlFinal = "act_$actId/campaigns?access_token=" . META_TOKEN;
             $urlFinal .= "&fields=" . urlencode("name,daily_budget,budget_remaining,configured_status,start_time,updated_time");
-            $urlFinal .= "&date_preset=$dataPreset&&limit=30&effective_status=" . urlencode($statusArray);           
+            $urlFinal .= "&date_preset=$dataPreset&limit=50&effective_status=" . urlencode($statusArray);           
             // echo '11:00:27 - <h3>Dump 20 </h3> <br><br>' . var_dump($urlFinal); exit;					//<-------DEBUG
 
             $cpgList = $this->getCpgs($urlFinal);
@@ -100,15 +107,16 @@ class Indicadores extends BaseController
                         $interval = $date->diff($today);
                         $daysUpdated = $interval->format('%a');
 
+                        //para campanhas antigas com mais de 5 dias sem atualização não precisa consultar detalhes
+                        if ($daysUpdated > 7) continue;
+
                         //echo "$cpgName -->" . $interval->format('%a') . "<br>"; continue;					//<-------DEBUG
 
                         $cpgArray = explode("|", $cpgName);
                         $utmContent =  trim($cpgArray[count($cpgArray)-1]); //ultima parte do nome da campanha precis ter o UTM Content 
                         $UtmContentDetails = explode("-", $utmContent);
                         $ticketSale = ($UtmContentDetails[count($UtmContentDetails)-1]);
-
-                        //para campanhas antigas com mais de 5 dias sem atualização não precisa consultar detalhes
-                        if ($daysUpdated > 7) continue;
+                        //echo $utmContent . "<br>";continue;
 
                         $sqlQuery = "select event, sum(total) total, sum(renda) renda from (
                         select event, ip, count(*) total, sum(cId) renda from vsl_campanha_tracker 
@@ -224,7 +232,7 @@ class Indicadores extends BaseController
 //                    $strFilaAgora .= "-----\n";
                     $strFilaAgora .= "Impressões: " . $impressionsTotal . "\n";
                     $strFilaAgora .= "Clicks: " . $clicksTotal . "\n";
-                    $strFilaAgora .= "CTR: " . simpleRound(($items > 0  ? $ctrTotal/$items : '0')) . "%\n";
+                    $strFilaAgora .= "CTR: " . simpleRound(($impressionsTotal > 0  ? ($clicksTotal/$impressionsTotal) * 100 : '0')) . "%\n";
                     $strFilaAgora .= "CPM: R$ " . simpleRound(($items > 0  ? $cpmTotal/$items : '0')) . "\n";
                     //$strFilaAgora .= "-----\n";
                     //$strFilaAgora .= "LP: " . $lpTotal . "\n";
@@ -233,28 +241,69 @@ class Indicadores extends BaseController
                     //$strFilaAgora .= "PIXBOL: " . $pixbolTotal . "\n";
                     $strFilaAgora .= "-----\n";
                     $strFilaAgora .= "Vendas: " . $salesTotal . "\n";
+                    $strFilaAgora .= "Custo: R$ " . simpleRound($costTotal) . "\n";
                     $strFilaAgora .= "Receita: R$ " . simpleRound($revenueTotal) . "\n";
                     $strFilaAgora .= "ROAS: " . simpleRound($roiTotal) . "\n";
                     $strFilaAgora .= "Resultado: R$ " . simpleRound($revenueTotal-$costTotal) . "\n";
 
-                    $gastoGeral += ($revenueTotal-$costTotal);
+                    $gastoGeral += ($costTotal);
                     $receitaGeral += $revenueTotal;
                     $itemsGeral += $items;
                     $vendasGeral += $salesTotal;
+                    $icsGeral += $icsTotal;
+                    $impressaoGeral += $impressionsTotal;
+                    $clickGeral += $clicksTotal;
 
                     //echo $strFilaAgora;exit;
-                    $output = $this->telegram->notifyTelegramGroup($strFilaAgora, telegramPraVoceDigital);
+                    if ($items > 0) {
+                        $output = $this->telegram->notifyTelegramGroup($strFilaAgora, telegramPraVoceDigital);
+                    }
                 }
             }
         } //for account
 
 
+        //RECUPERAÇÕES:
+        $sqlQuery = "select event, sum(cId) revenue, count(cId) vendas from vsl_campanha_tracker 
+            where (last_updated >= '$data_inicial 00:00:01' and last_updated <= '$data_final 23:59:59')
+            and (event = 'Vsl-Product-Order-Approved')
+            and utm_campaign = 'recuperacao'
+            group by event;";
+
+        $recuperacao = $this->dbMaster->runQuery($sqlQuery);
+
+        $recRevenue = 0;
+        $recVendas = 0;
+
+        if ($recuperacao['existRecord']){
+            $recRevenue = $recuperacao['firstRow']->revenue;
+            $recVendas = $recuperacao['firstRow']->vendas;
+        }
+
+        $vendasGeral += $recVendas;
+        $receitaGeral += $recRevenue;
+
+        $strFilaAgora = "<b>🌟🌟🌟 RECUPERACOES </b>\n";
+        $strFilaAgora .= "Vendas: " . $recVendas . "\n";
+        $strFilaAgora .= "Receita: " . simpleRound($recRevenue) . "\n";
+
+        if ($recVendas > 0){
+            $output = $this->telegram->notifyTelegramGroup($strFilaAgora, telegramPraVoceDigital);
+        }
+
         $roasGeral = ($gastoGeral != 0 ? $receitaGeral/$gastoGeral : '0');
+        $ctrGeral = ($impressaoGeral != 0 ? $clickGeral/$impressaoGeral : '0');
+        $resultadoGeral = $receitaGeral-abs($gastoGeral);
 
         $strFilaAgora = "<b>🌟🌟🌟 GERAL - CPGs $itemsGeral </b>\n";
+        $strFilaAgora .= "Impressoes: " . $impressaoGeral . "\n";
+        $strFilaAgora .= "Clicks: " . $clickGeral . "\n";
+        $strFilaAgora .= "CTR: " . simpleRound($ctrGeral*100) . "%\n";
+        $strFilaAgora .= "ICs: " . $icsGeral . "\n";
         $strFilaAgora .= "Vendas: " . $vendasGeral . "\n";
         $strFilaAgora .= "Receita: " . simpleRound($receitaGeral) . "\n";
-        $strFilaAgora .= "Resultado: R$ " . simpleRound($gastoGeral) . "\n";
+        $strFilaAgora .= "Custo: R$ " . simpleRound($gastoGeral) . "\n";
+        $strFilaAgora .= "Resultado: R$ " . simpleRound($resultadoGeral) . "\n";
         $strFilaAgora .= "ROAS: " . simpleRound($roasGeral) . "\n";
 
         $output = $this->telegram->notifyTelegramGroup($strFilaAgora, telegramPraVoceDigital);

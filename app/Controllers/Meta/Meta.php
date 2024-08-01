@@ -50,7 +50,8 @@ class Meta extends BaseController
         $cpgListResult = null;
         $data_inicial = date("Y-m-d");
         $data_final = date("Y-m-d");
-        
+        $account = "";
+
         if ((!empty($buscarProp)) or (!empty($iaExpert))){
             helper('cookie');
 
@@ -61,7 +62,8 @@ class Meta extends BaseController
             if ($status == "") {
                 $status = "ACTIVE";
                 $statusArray = '["ACTIVE"]';
-            } else if ($status == "ALL") {
+            } else if (($status == "ALL")) {
+                $status = "ALL";
                 $statusArray = '["ACTIVE", "PAUSED"]';
             } else {
                 $statusArray = '["' . $status . '"]';
@@ -90,9 +92,9 @@ class Meta extends BaseController
 
             $urlFinal = "act_$account/campaigns?access_token=" . META_TOKEN;
             $urlFinal .= "&fields=" . urlencode("name,daily_budget,budget_remaining,configured_status,start_time,updated_time");
-            $urlFinal .= "&date_preset=$dataPreset&&limit=50&effective_status=" . urlencode($statusArray);
+            $urlFinal .= "&date_preset=$dataPreset&limit=50&effective_status=" . urlencode($statusArray);
                         
-           // echo '11:00:27 - <h3>Dump 20 </h3> <br><br>' . var_dump($urlFinal); exit;					//<-------DEBUG
+            //echo '11:00:27 - <h3>Dump 20 </h3> <br><br>' . var_dump($urlFinal); exit;					//<-------DEBUG
 
             //$urlFinal = "&ad_type=ALL&ad_reached_countries=BR&ad_active_status=ACTIVE&ad_delivery_date_min=2024-01-01&media_type=ALL&limit=100";
             //echo '' . var_dump($urlFinal); exit;					//<-------DEBUG
@@ -114,6 +116,15 @@ class Meta extends BaseController
                         $daily_budget = (isset($cpgListResult['data'][$key]['daily_budget'])  ? $cpgListResult['data'][$key]['daily_budget'] : '0');
                         $daily_budget = $daily_budget / 100;
                         $configured_status = $cpgListResult['data'][$key]['configured_status'];
+                        $updated_time = $cpgListResult['data'][$key]['updated_time'];
+
+                        $date = new \DateTime($updated_time);
+                        $today = new \DateTime();
+                        $interval = $date->diff($today);
+                        $daysUpdated = $interval->format('%a');
+
+                        //para campanhas antigas com mais de 5 dias sem atualização não precisa consultar detalhes
+                        if ($daysUpdated > 7) continue;
 
                         if ((!empty($keyword)) and (strpos(strtoupper($cpgName), strtoupper($keyword)) === false)) continue;
 

@@ -64,6 +64,7 @@
 																	echo '<option value="328587016319669" ' .  ($account == "" ? 'selected' : '') . '> MGPT</option>';
 																	echo '<option value="397934202905061" ' .  ($account == "397934202905061" ? 'selected' : '') . '> OFFICIALs</option>';
 																	echo '<option value="1557752151343685" ' .  ($account == "1557752151343685" ? 'selected' : '') . '> PRAVOCE</option>';
+																	echo '<option value="339022398063345" ' .  ($account == "339022398063345" ? 'selected' : '') . '> VANGOGH</option>';
 																?>
 																</select>													
 															</div>	
@@ -219,6 +220,15 @@
 																$configured_status = $cpgListResult['data'][$key]['configured_status'];
 																$start_time = $cpgListResult['data'][$key]['start_time'];
 																$updated_time = $cpgListResult['data'][$key]['updated_time'];
+
+																$date = new \DateTime($updated_time);
+																$today = new \DateTime();
+																$interval = $date->diff($today);
+																$daysUpdated = $interval->format('%a');
+
+																//para campanhas antigas com mais de 5 dias sem atualização não precisa consultar detalhes
+																if ($daysUpdated > 7) continue;
+																
 																$id = $cpgListResult['data'][$key]['id']['id'];
 																$details = $cpgListResult['data'][$key]['id']['adDetails'];
 																//echo '00:35:52 - <h3>Dump 33 </h3> <br><br>' . var_dump($details['retorno']); exit;					//<-------DEBUG
