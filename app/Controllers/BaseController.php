@@ -55,6 +55,7 @@ abstract class BaseController extends Controller
 
         // Preload any models, libraries, etc, here.
         $this->dbMaster = new dbMaster($this->dbProfile); // create an instance of Library class
+        $this->dbMaster->runQueryGeneric("SET time_zone='-3:00'");
         $this->my_session = session();
         $this->my_security = new M_seguranca();
     }
