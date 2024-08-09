@@ -214,7 +214,7 @@ class Indicadores extends BaseController
         $cpgList = null;
         $cpgListResult = null;
         $data_inicial = date("Y-m-d");
-        $data_final = date("Y-m-d");
+        $data_final = date("Y-m-d");        
 
         // $data_inicial = '2024-08-01';
         // $data_final = '2024-08-03';
@@ -351,11 +351,29 @@ class Indicadores extends BaseController
                 $oferta = strtoupper($row->slug);
                 $vendas = strtoupper($row->vendas);
                 $receita = strtoupper($row->receita);
-                $strFilaAgora .= "$oferta - $vendas - R$ " . simpleRound($receita) . "\n";
+
+                $sqlQueryOffer = "select offer, sum(cost) cost
+                                    from vsl_facebook_data 
+                                    where (last_update >= '$data_inicial 00:00:00' and last_update <= '$data_final 23:59:59') 
+                                    and offer = '$oferta'
+                                    group by offer;";
+
+                $offerCost = $this->dbMaster->runQuery($sqlQueryOffer);
+                $costVendaTotal =  0;
+                $roiOffer = 0;
+
+                if ($offerCost['existRecord']){
+                    $costVendaTotal = $offerCost['firstRow']->cost;
+                    $roiOffer = ($costVendaTotal != 0 ? $vendas/$costVendaTotal : '0');
+                    $roiOffer = simpleRound($roiOffer);
+                }
+
+                $strFilaAgora .= "$oferta - $vendas - R$ " . simpleRound($receita) .  " - (R$ $costVendaTotal) - ROAS $roiOffer% \n";
             }
 
             $output = $this->telegram->notifyTelegramGroup($strFilaAgora, telegramPraVoceDigital);
         }
+         
     }
 
 //     //http://localhost/InsightSuite/public/indicadores-vsl
