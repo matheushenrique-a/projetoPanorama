@@ -111,7 +111,7 @@ class Indicadores extends BaseController
                         $sqlQuery = "select event, sum(total) total, sum(renda) renda from (
                         select event, ip, count(*) total, sum(cId) renda from vsl_campanha_tracker 
                         where (last_updated >= '$data_inicial 00:00:01' and last_updated <= '$data_final 23:59:59') 
-                        and utm_content = '$utmContent' 
+                        and utm_content = '" . $fbData['idCpg'] . "' 
                         and referrer not like '%facebookexternalhit%'
                         group by event, ip) data
                         group by event;";
@@ -291,6 +291,32 @@ class Indicadores extends BaseController
             $output = $this->telegram->notifyTelegramGroup($strFilaAgora, telegramPraVoceDigital);
         }
 
+        //COMPENSACOES:
+        $sqlQuery = "select event, sum(cId) revenue, count(cId) vendas 
+                    from vsl_campanha_tracker
+                    where event = 'Vsl-Product-Order-Approved'
+                    and (inserted_date >= '$data_inicial' and inserted_date <= '$data_final 23:59:59')
+                    and last_updated < '$data_inicial 00:00:00'
+                     group by event;";
+
+        $comp = $this->dbMaster->runQuery($sqlQuery);
+        
+        if ($comp['existRecord']){
+            $compRevenue = $comp['firstRow']->revenue;
+            $compVendas = $comp['firstRow']->vendas;
+        } else {
+            $compRevenue = 0;
+            $compVendas = 0;
+        }
+
+        $strFilaAgora = "<b>🌟🌟🌟 COMPENSACOES </b>\n";
+        $strFilaAgora .= "Vendas: " . $compVendas . "\n";
+        $strFilaAgora .= "Receita: " . simpleRound($compRevenue) . "\n";
+
+        if ($compVendas > 0){
+            $output = $this->telegram->notifyTelegramGroup($strFilaAgora, telegramPraVoceDigital);
+        }
+
         $sqlQuery = "select last_update, sum(impressions) impressions, sum(clicks) clicks, avg(ctr) ctr, 
         avg(cpm) cpm, sum(ic) ic, sum(sales) sales, sum(cost) cost, sum(revenue) revenue, 
         avg(roas) roas, sum(result) result, max(DATE_FORMAT(inserted_date,'%H:%i')) hora, count(actName) cpgs
@@ -324,10 +350,10 @@ class Indicadores extends BaseController
             $strFilaAgora .= "CPM: R$ " . simpleRound($cpm) . "\n";
             $strFilaAgora .= "ICs: " . $ic . "\n";
             $strFilaAgora .= "-----\n";
-            $strFilaAgora .= "Vendas: " . ($sales + $recVendas) . "\n";
+            $strFilaAgora .= "Vendas: " . ($sales + $recVendas + $compVendas) . "\n";
             $strFilaAgora .= "Custo: R$ " . simpleRound($cost) . "\n";
 
-            $receitaGeral = $revenue + $recRevenue;
+            $receitaGeral = $revenue + $recRevenue + $compRevenue;
             $roasGeral = ($cost != 0 ? $receitaGeral/$cost : '0');
 
             $strFilaAgora .= "Receita: R$ " . simpleRound($receitaGeral) . "\n";
@@ -364,11 +390,11 @@ class Indicadores extends BaseController
 
                 if ($offerCost['existRecord']){
                     $costVendaTotal = $offerCost['firstRow']->cost;
-                    $roiOffer = ($costVendaTotal != 0 ? $vendas/$costVendaTotal : '0');
+                    $roiOffer = ($costVendaTotal != 0 ? $receita/$costVendaTotal : '0');
                     $roiOffer = simpleRound($roiOffer);
                 }
 
-                $strFilaAgora .= "$oferta - $vendas - R$ " . simpleRound($receita) .  " - (R$ $costVendaTotal) - ROAS $roiOffer% \n";
+                $strFilaAgora .= "$oferta - $vendas - R$ " . simpleRound($receita) .  " - (R$ $costVendaTotal) - ROAS $roiOffer \n";
             }
 
             $output = $this->telegram->notifyTelegramGroup($strFilaAgora, telegramPraVoceDigital);

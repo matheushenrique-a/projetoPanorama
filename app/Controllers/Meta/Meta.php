@@ -39,7 +39,6 @@ class Meta extends BaseController
     }
 
     public function manager($pageIdRoot = null){
-        
         $buscarProp = $this->getpost('buscarProp');
         $iaExpert = $this->getpost('iaExpert');
         $favoritos = $this->getpost('favoritos');
@@ -136,7 +135,7 @@ class Meta extends BaseController
                         $sqlQuery = "select event, sum(total) total, sum(renda) renda from (
                         select event, ip, count(*) total, sum(cId) renda from vsl_campanha_tracker 
                         where (last_updated >= '$data_inicial 00:00:01' and last_updated <= '$data_final 23:59:59') 
-                        and utm_content = '$utmContent' 
+                        and utm_content = '$id' 
                         and referrer not like '%facebookexternalhit%'
                         group by event, ip) data
                         group by event;";
