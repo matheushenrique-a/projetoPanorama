@@ -82,6 +82,7 @@ $routes->match(['get', 'post'], '/ad-manager', 'Meta\Meta::manager');
 $routes->match(['get', 'post'], '/ad-action/(:any)/(:any)', 'Meta\Meta::action/$1/$2');
 $routes->match(['get', 'post'], '/indicadores-vsl', 'Meta\Indicadores::indicadores_vsl');
 $routes->match(['get', 'post'], '/import-data', 'Meta\Indicadores::importData');
+$routes->match(['get', 'post'], '/ai-manager', 'Meta\Indicadores::aiManager');
 
 /*
  * --------------------------------------------------------------------
