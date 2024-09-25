@@ -29,6 +29,7 @@ class Indicadores extends BaseController
         $this->session = session();
         $this->telegram =  new M_telegram();
         $this->chatgpt =  new m_chatGpt();
+        $this->meta =  new m_meta();
     }
 
     //http://localhost/InsightSuite/public/ai-manager
@@ -64,43 +65,43 @@ class Indicadores extends BaseController
             if ($cpgList['existRecord']){
                 foreach ($cpgList['data']['data'] as $key => $value) {
                     $fbDataCpg = $this->extractCPGAdSetData($cpgList['data'], $key);
- 
                     
-                    if (strpos($fbDataCpg['campanha'], "| ESCALA | PRECE") === false) continue;
+                    //if (strpos($fbDataCpg['campanha'], "| ESCALA | PRECE") === false) continue;
                     if ($fbDataCpg['daysUpdated'] > 7) continue;
-                    if (strpos($fbDataCpg['campanha'], "TESTE") !== false) continue;
+                    //if (strpos($fbDataCpg['campanha'], "TESTE") !== false) continue;
 
                     $fbDataAcct['actName'] = $account[$keyAcct]['conta'];
                     $fbDataAcct['actId'] =  $account[$keyAcct]['id'];
                     $fbDataAcct['cpgType'] =  $fbDataCpg['cpgType'];
 
                     $fbDataPay = $this->getInsights($fbDataCpg['idCpg'],  $fbDataAcct['cpgType'], $fbDataCpg['daily_budget'], $fbDataCpg['budget_remaining'], $data_inicial,  $data_final);
-                    echo "<div style='font-size: 28px; font-weight: 600'>" . $fbDataAcct['cpgType'] . ": " . $fbDataCpg['idCpg'] . " - " . $fbDataCpg['campanha'] . "</div>";
-                    echo "<div>Ticket: " . $fbDataCpg['ticket'] . " | Daily Budget: " . $fbDataPay['daily_budget'] . " | Gasto Atual : " . simpleRound($fbDataCpg['amount_spent']) . " | Impressions: " . $fbDataPay['impressions'] . " | Clicks: " . $fbDataPay['clicks'] . " |  CTR: " . $fbDataPay['ctr'] . " | Sales: " . $fbDataPay['sales'] . " | Result: " . $fbDataPay['result']  . " | ROAS: " . $fbDataPay['roas'] . "</div>";
-                
-                    $ticket = $fbDataCpg['ticket'];
-                    $gasto = abs($fbDataCpg['amount_spent']);
-                    $deltaGasto = $gasto / $ticket;
-                    $deltaGastoPercent = ($gasto / $ticket) * 100;
-                    $roas = $fbDataPay['roas'];
-                    $novoOrcamento = $fbDataPay['daily_budget'] * 1.3;
-
-                    if ($deltaGasto <= 0.75) {
-                        echo "<div style='font-size: 18px;color: green'> Manter orçamento pois a campanha gastou menos de 75% do ticket. Gasto: " . simpleRound($deltaGastoPercent) . "% | Ticket: " . simpleRound($ticket) . "</div>";
-                    } else if ($roas >= 1.15) {
-                        echo "<div style='font-size: 18px;color: blue'> Aumentar orçamento para " . simpleRound($novoOrcamento) . " pois o ROAS está positivo. ROAS: " . simpleRound($roas) . "</div>";
-                    } else if (($roas >= 0.90) and ($roas < 1.15)) {
-                        echo "<div style='font-size: 18px;color: orange'> Manter orçamento pois o ROAS já está comprometido. ROAS: " . simpleRound($roas) . "</div>";
-                    } else if ($roas < 0.90) {
-                        echo "<div style='font-size: 18px;color: red'> Parar campanha por perda de ROAS com gasto suficietne. ROAS: " . simpleRound($roas) . "Gasto: " . simpleRound($deltaGastoPercent) . "%</div>";
-                     
-                        $result = $this->M_meta->changeStatusCpg($fbDataCpg['idCpg'], "PAUSED");
-                        echo "<div style='font-size: 18px;color: red'" . ($result['sucesso'] ? 'SUCESSO' : 'ERRO') . " - "  . $result['retorno'] . "</div>";
-                    }
+                    echo "<div style='font-size: 28px; font-weight: 600'>" . $fbDataCpg['campanha'] . " (" . $fbDataAcct['cpgType'] . ") " . $fbDataCpg['idCpg'] .  "</div>";
 
                     if ($fbDataPay['impressions'] == 0) continue;
                     
-                    if ($fbDataAcct['cpgType'] == "CBO"){    
+                    if ($fbDataAcct['cpgType'] == "CBO"){
+                        echo "<div>Ticket: " . $fbDataCpg['ticket'] . " | Daily Budget: " . $fbDataPay['daily_budget'] . " | Gasto Atual : " . simpleRound($fbDataCpg['amount_spent']) . " | Impressions: " . $fbDataPay['impressions'] . " | Clicks: " . $fbDataPay['clicks'] . " |  CTR: " . $fbDataPay['ctr'] . " | Sales: " . $fbDataPay['sales'] . " | Result: " . simpleRound($fbDataPay['result'])  . " | ROAS: " . $fbDataPay['roas'] . "</div>";
+                
+                        $ticket = $fbDataCpg['ticket'];
+                        $gasto = abs($fbDataCpg['amount_spent']);
+                        $deltaGasto = $gasto / $ticket;
+                        $deltaGastoPercent = ($gasto / $ticket) * 100;
+                        $roas = $fbDataPay['roas'];
+                        $novoOrcamento = $fbDataPay['daily_budget'] * 1.3;
+    
+                        if ($deltaGasto <= 0.75) {
+                            echo "<div style='font-size: 22px;color: green'>MANTER: campanha gastou menos de 75% do ticket. Gasto/Ticket: " . simpleRound($deltaGastoPercent) . "% | Ticket: " . simpleRound($ticket) . "</div>";
+                        } else if ($roas >= 1.15) {
+                            echo "<div style='font-size: 22px;color: blue'>AUMENTAR: orçamento para " . simpleRound($novoOrcamento) . " pois o ROAS está positivo. ROAS: " . simpleRound($roas) . "</div>";
+                        } else if (($roas >= 0.90) and ($roas < 1.15)) {
+                            echo "<div style='font-size: 22px;color: orange'>MANTER: ROAS já está comprometido. ROAS: " . simpleRound($roas) . "</div>";
+                        } else if ($roas < 0.90) {
+                            echo "<div style='font-size: 22px;color: red'>PARAR: perda de ROAS com gasto suficietne. ROAS: " . simpleRound($roas) . ", Gasto/Ticket: " . simpleRound($deltaGastoPercent) . "%</div>";
+                         
+                            //$result = $this->M_meta->changeStatusCpg($fbDataCpg['idCpg'], "PAUSED");
+                            //echo "<div style='font-size: 18px;color: red'" . ($result['sucesso'] ? 'SUCESSO' : 'ERRO') . " - "  . $result['retorno'] . "</div>";
+                        }
+                        
                         $added = $this->dbMaster->insert('vsl_facebook_data', $fbDataAcct + $fbDataCpg + $fbDataPay);
                     } else {
                         $adSetList = $this->listCPGsAdSets("adsets", $fbDataCpg['idCpg'], $dataPreset, $statusArray);
@@ -131,79 +132,6 @@ class Indicadores extends BaseController
 
         //$this->indicadores_vsl();
     }
-
-    public function listCPGsAdSets($idType, $cpgId, $dataPreset, $statusArray){
-        $urlFinal = ($idType == "campaigns"  ? "act_" : '') . $cpgId . "/$idType?access_token=" . META_TOKEN;
-        $urlFinal .= "&fields=" . urlencode("name,daily_budget,budget_remaining,configured_status,start_time,updated_time");
-        $urlFinal .= "&date_preset=$dataPreset&limit=100&effective_status=" . urlencode($statusArray);
-
-        $headers = $this->getHeader();
-		$url = META_GRAPH_API . $urlFinal;
-		///echo $url;exit;
-        //$url = urlencode($url);
-		//echo $url;exit;
-        $result =  $this->http_request('GET', $url, $headers);
-
-        if ((!is_null($result)) and ($result['sucesso'])){
-            $adSetListResult = json_decode($result['retorno'], true);
-
-            if (isset($adSetListResult['data'])){
-                return ['existRecord' => true, 'data' => $adSetListResult];
-            } else {
-                return ['existRecord' => false];
-            }
-        } else {
-            return ['existRecord' => false];
-        }
-	}
-
-    public function extractCPGAdSetData($cpgListResult, $key){
-        //echo '23:10:15 - <h3>Dump 66 </h3> <br><br>' . var_dump($cpgListResult); exit;					//<-------DEBUG
-        $fbData['campanha'] = $cpgListResult['data'][$key]['name'];
-        $fbData['idCpg'] = $cpgListResult['data'][$key]['id'];
-
-        $budget_remaining = $cpgListResult['data'][$key]['budget_remaining'];
-        $budget_remaining = $budget_remaining / 100;
-        $fbData['budget_remaining'] = $budget_remaining;
-
-        $daily_budget = (isset($cpgListResult['data'][$key]['daily_budget'])  ? $cpgListResult['data'][$key]['daily_budget'] : '0');
-        $daily_budget = $daily_budget / 100;
-        $fbData['amount_spent'] = $daily_budget - $budget_remaining;
-
-        $fbData['daily_budget'] = $daily_budget;
-        $fbData['configured_status'] = $cpgListResult['data'][$key]['configured_status'];
-
-        $fbData['cpgType'] = "ABO";
-        if (isset($cpgListResult['data'][$key]['daily_budget'])) $fbData['cpgType'] = "CBO"; //only CBO has daily budget
-
-        $updated_time = $cpgListResult['data'][$key]['updated_time'];
-        
-        $date = new \DateTime($updated_time);
-        $updated_time = $date->format('Y-m-d H:i:s');
-        $fbData['updated_time'] = $updated_time;
-
-        $date = new \DateTime($updated_time);
-        $today = new \DateTime();
-        $interval = $date->diff($today);
-        $daysUpdated = $interval->format('%a');
-        $fbData['daysUpdated'] = $daysUpdated;
-        //echo $cpgListResult['data'][$key]['name'] . "-" . $daysUpdated . "<br>";
-
-        if ($daysUpdated > 7) return $fbData;
-
-        $cpgArray = explode("|", $fbData['campanha']);
-        $utmContent =  trim($cpgArray[count($cpgArray)-1]); //ultima parte do nome da campanha precis ter o UTM Content 
-        $UtmContentDetails = explode("-", $utmContent);
-        $ticketSale = ($UtmContentDetails[count($UtmContentDetails)-1]);
-        $oferta = "-" . strtoupper(($UtmContentDetails[1])) . "-";
-
-        $slugLookUp = $this->dbMaster->select('vsl_product_term', ['term' => $oferta]);
-        if ($slugLookUp['existRecord']) $fbData['offer'] = strtoupper($slugLookUp['firstRow']->slug);
-        
-        $fbData['ticket'] = $ticketSale;
-        return $fbData;
-    }
-
 
     public function getInsights($cpgId, $cpgType, $daily_budget, $budget_remaining, $data_inicial,  $data_final){
         $sqlQuery = "select event, sum(total) total, sum(renda) renda from (
@@ -299,6 +227,79 @@ class Indicadores extends BaseController
 
        
 
+        return $fbData;
+    }
+
+
+    public function listCPGsAdSets($idType, $cpgId, $dataPreset, $statusArray){
+        $urlFinal = ($idType == "campaigns"  ? "act_" : '') . $cpgId . "/$idType?access_token=" . META_TOKEN;
+        $urlFinal .= "&fields=" . urlencode("name,daily_budget,budget_remaining,configured_status,start_time,updated_time");
+        $urlFinal .= "&date_preset=$dataPreset&limit=100&effective_status=" . urlencode($statusArray);
+
+        $headers = $this->getHeader();
+		$url = META_GRAPH_API . $urlFinal;
+		///echo $url;exit;
+        //$url = urlencode($url);
+		//echo $url;exit;
+        $result =  $this->http_request('GET', $url, $headers);
+
+        if ((!is_null($result)) and ($result['sucesso'])){
+            $adSetListResult = json_decode($result['retorno'], true);
+
+            if (isset($adSetListResult['data'])){
+                return ['existRecord' => true, 'data' => $adSetListResult];
+            } else {
+                return ['existRecord' => false];
+            }
+        } else {
+            return ['existRecord' => false];
+        }
+	}
+
+    public function extractCPGAdSetData($cpgListResult, $key){
+        //echo '23:10:15 - <h3>Dump 66 </h3> <br><br>' . var_dump($cpgListResult); exit;					//<-------DEBUG
+        $fbData['campanha'] = $cpgListResult['data'][$key]['name'];
+        $fbData['idCpg'] = $cpgListResult['data'][$key]['id'];
+
+        $budget_remaining = $cpgListResult['data'][$key]['budget_remaining'];
+        $budget_remaining = $budget_remaining / 100;
+        $fbData['budget_remaining'] = $budget_remaining;
+
+        $daily_budget = (isset($cpgListResult['data'][$key]['daily_budget'])  ? $cpgListResult['data'][$key]['daily_budget'] : '0');
+        $daily_budget = $daily_budget / 100;
+        $fbData['amount_spent'] = $daily_budget - $budget_remaining;
+
+        $fbData['daily_budget'] = $daily_budget;
+        $fbData['configured_status'] = $cpgListResult['data'][$key]['configured_status'];
+
+        $fbData['cpgType'] = "ABO";
+        if (isset($cpgListResult['data'][$key]['daily_budget'])) $fbData['cpgType'] = "CBO"; //only CBO has daily budget
+
+        $updated_time = $cpgListResult['data'][$key]['updated_time'];
+        
+        $date = new \DateTime($updated_time);
+        $updated_time = $date->format('Y-m-d H:i:s');
+        $fbData['updated_time'] = $updated_time;
+
+        $date = new \DateTime($updated_time);
+        $today = new \DateTime();
+        $interval = $date->diff($today);
+        $daysUpdated = $interval->format('%a');
+        $fbData['daysUpdated'] = $daysUpdated;
+        //echo $cpgListResult['data'][$key]['name'] . "-" . $daysUpdated . "<br>";
+
+        if ($daysUpdated > 7) return $fbData;
+
+        $cpgArray = explode("|", $fbData['campanha']);
+        $utmContent =  trim($cpgArray[count($cpgArray)-1]); //ultima parte do nome da campanha precis ter o UTM Content 
+        $UtmContentDetails = explode("-", $utmContent);
+        $ticketSale = ($UtmContentDetails[count($UtmContentDetails)-1]);
+        $oferta = "-" . strtoupper(($UtmContentDetails[1])) . "-";
+
+        $slugLookUp = $this->dbMaster->select('vsl_product_term', ['term' => $oferta]);
+        if ($slugLookUp['existRecord']) $fbData['offer'] = strtoupper($slugLookUp['firstRow']->slug);
+        
+        $fbData['ticket'] = $ticketSale;
         return $fbData;
     }
 
