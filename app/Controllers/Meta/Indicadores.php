@@ -9,7 +9,6 @@ use App\Libraries\dbMaster;
 use App\Models\M_telegram;
 use Config\Services;
 use App\Models\M_chatGpt;
-use App\Models\M_meta;
 
 class Indicadores extends BaseController
 {
@@ -29,14 +28,33 @@ class Indicadores extends BaseController
         $this->session = session();
         $this->telegram =  new M_telegram();
         $this->chatgpt =  new m_chatGpt();
-        $this->meta =  new m_meta();
     }
 
-    //http://localhost/InsightSuite/public/ai-manager
-    //http://insightsuite.pravoce.io/ai-manager
-    public function aiManager(){
+    //http://localhost/InsightSuite/public/autoStart
+    //http://insightsuite.pravoce.io/autoStart
+    public function autoStart(){
+        // ABO
+        $id = "120210958927260213"; $name = "CPG 1 | 1-5-1 | ESCALA | PRECE  | ABO | MGPT-ORACAO-97"; 
+
+        //CBO
+        //$id = "120211168876000213"; $name = "CPG 3 | 1-5-1 | ESCALA | PRECE  | CBO | MGPT-ORACAO-85"; 
         
-    } 
+        $status = "ACTIVE"; 
+        //$status = "PAUSED";
+       
+        $output = $this->changeStatusCpg($id, $status);
+        $this->telegram->notifyTelegramGroup("🤖🤖🤖 CAMPANHA INICIADA - Resultado: " . $output['retorno'], telegramPraVoceDigital);
+    }
+
+
+    //http://localhost/InsightSuite/public/serverTime
+    //http://insightsuite.pravoce.io/serverTime
+    public function serverTime(){
+
+        echo date('m/d/Y h:i:s a', time());
+    }
+
+
 
     //http://localhost/InsightSuite/public/import-data
     //http://insightsuite.pravoce.io/import-data
@@ -45,9 +63,11 @@ class Indicadores extends BaseController
         $cpgListResult = null;
         $data_inicial = date("Y-m-d");
         $data_final = date("Y-m-d");
+
+        // $data_inicial = date("2024-08-03");
+        // $data_final = date("2024-08-03");
         
-        //$statusArray = '["ACTIVE", "PAUSED"]';
-        $statusArray = '["ACTIVE"]';
+        $statusArray = '["ACTIVE", "PAUSED"]';
         $dataPreset = 'today';
 
         $account = [];
@@ -59,248 +79,162 @@ class Indicadores extends BaseController
         $cleanQuery = "delete from vsl_facebook_data where (last_update >= '$data_inicial 00:00:00' and last_update <= '$data_final 23:59:59');";                          
         $this->dbMaster->runQueryGeneric($cleanQuery);
 
+        //para cada conta
         foreach ($account as $keyAcct => $value) {
             $fbData = [];
-            $cpgList = $this->listCPGsAdSets("campaigns", $account[$keyAcct]['id'], $dataPreset, $statusArray);
-            if ($cpgList['existRecord']){
-                foreach ($cpgList['data']['data'] as $key => $value) {
-                    $fbDataCpg = $this->extractCPGAdSetData($cpgList['data'], $key);
-                    
-                    //if (strpos($fbDataCpg['campanha'], "| ESCALA | PRECE") === false) continue;
-                    if ($fbDataCpg['daysUpdated'] > 7) continue;
-                    //if (strpos($fbDataCpg['campanha'], "TESTE") !== false) continue;
 
-                    $fbDataAcct['actName'] = $account[$keyAcct]['conta'];
-                    $fbDataAcct['actId'] =  $account[$keyAcct]['id'];
-                    $fbDataAcct['cpgType'] =  $fbDataCpg['cpgType'];
+            $urlFinal = "act_" . $account[$keyAcct]['id'] . "/campaigns?access_token=" . META_TOKEN;
+            $urlFinal .= "&fields=" . urlencode("name,daily_budget,budget_remaining,configured_status,start_time,updated_time");
+            $urlFinal .= "&date_preset=$dataPreset&limit=100&effective_status=" . urlencode($statusArray);
+            $cpgList = $this->getCpgs($urlFinal);
+            //echo '22:50:23 - <h3>Dump 21 </h3> <br><br>' . var_dump($cpgList['retorno']); exit;					//<-------DEBUG
 
-                    $fbDataPay = $this->getInsights($fbDataCpg['idCpg'],  $fbDataAcct['cpgType'], $fbDataCpg['daily_budget'], $fbDataCpg['budget_remaining'], $data_inicial,  $data_final);
-                    echo "<div style='font-size: 28px; font-weight: 600'>" . $fbDataCpg['campanha'] . " (" . $fbDataAcct['cpgType'] . ") " . $fbDataCpg['idCpg'] .  "</div>";
+            if ((!is_null($cpgList)) and ($cpgList['sucesso'])){
+                $cpgListResult = json_decode($cpgList['retorno'], true);
+                //echo '18:59:43 - <h3>Dump 35 </h3> <br><br>' . var_dump($cpgListResult); exit;					//<-------DEBUG
 
-                    if ($fbDataPay['impressions'] == 0) continue;
-                    
-                    if ($fbDataAcct['cpgType'] == "CBO"){
-                        echo "<div>Ticket: " . $fbDataCpg['ticket'] . " | Daily Budget: " . $fbDataPay['daily_budget'] . " | Gasto Atual : " . simpleRound($fbDataCpg['amount_spent']) . " | Impressions: " . $fbDataPay['impressions'] . " | Clicks: " . $fbDataPay['clicks'] . " |  CTR: " . $fbDataPay['ctr'] . " | Sales: " . $fbDataPay['sales'] . " | Result: " . simpleRound($fbDataPay['result'])  . " | ROAS: " . $fbDataPay['roas'] . "</div>";
-                
-                        $ticket = $fbDataCpg['ticket'];
-                        $gasto = abs($fbDataCpg['amount_spent']);
-                        $deltaGasto = $gasto / $ticket;
-                        $deltaGastoPercent = ($gasto / $ticket) * 100;
-                        $roas = $fbDataPay['roas'];
-                        $novoOrcamento = $fbDataPay['daily_budget'] * 1.3;
-    
-                        if ($deltaGasto <= 0.75) {
-                            echo "<div style='font-size: 22px;color: green'>MANTER: campanha gastou menos de 75% do ticket. Gasto/Ticket: " . simpleRound($deltaGastoPercent) . "% | Ticket: " . simpleRound($ticket) . "</div>";
-                        } else if ($roas >= 1.15) {
-                            echo "<div style='font-size: 22px;color: blue'>AUMENTAR: orçamento para " . simpleRound($novoOrcamento) . " pois o ROAS está positivo. ROAS: " . simpleRound($roas) . "</div>";
-                        } else if (($roas >= 0.90) and ($roas < 1.15)) {
-                            echo "<div style='font-size: 22px;color: orange'>MANTER: ROAS já está comprometido. ROAS: " . simpleRound($roas) . "</div>";
-                        } else if ($roas < 0.90) {
-                            echo "<div style='font-size: 22px;color: red'>PARAR: perda de ROAS com gasto suficietne. ROAS: " . simpleRound($roas) . ", Gasto/Ticket: " . simpleRound($deltaGastoPercent) . "%</div>";
-                         
-                            //$result = $this->M_meta->changeStatusCpg($fbDataCpg['idCpg'], "PAUSED");
-                            //echo "<div style='font-size: 18px;color: red'" . ($result['sucesso'] ? 'SUCESSO' : 'ERRO') . " - "  . $result['retorno'] . "</div>";
-                        }
+                if (isset($cpgListResult['data'])){
+                    foreach ($cpgListResult['data'] as $key => $value) {
+                        $fbData['actName'] = $account[$keyAcct]['conta'];
+                        $fbData['actId'] =  $account[$keyAcct]['id'];
+            
+                        $fbData['campanha'] = $cpgListResult['data'][$key]['name'];
+                        $fbData['idCpg'] = $cpgListResult['data'][$key]['id'];
+
+                        $budget_remaining = $cpgListResult['data'][$key]['budget_remaining'];
+                        $budget_remaining = $budget_remaining / 100;
+                        $fbData['budget_remaining'] = $budget_remaining;
+
+                        $daily_budget = (isset($cpgListResult['data'][$key]['daily_budget'])  ? $cpgListResult['data'][$key]['daily_budget'] : '0');
+                        $daily_budget = $daily_budget / 100;
+                        $fbData['daily_budget'] = $daily_budget;
+                        $fbData['configured_status'] = $cpgListResult['data'][$key]['configured_status'];
+
+                        $updated_time = $cpgListResult['data'][$key]['updated_time'];
                         
-                        $added = $this->dbMaster->insert('vsl_facebook_data', $fbDataAcct + $fbDataCpg + $fbDataPay);
-                    } else {
-                        $adSetList = $this->listCPGsAdSets("adsets", $fbDataCpg['idCpg'], $dataPreset, $statusArray);
+                        $date = new \DateTime($updated_time);
+                        $updated_time = $date->format('Y-m-d H:i:s');
+                        $fbData['updated_time'] = $updated_time;
 
-                        if ($adSetList['existRecord']){
-                            foreach ($adSetList['data']['data'] as $key => $value) {       
-                                $fbDataAdSet = $this->extractCPGAdSetData($adSetList['data'], $key);
-                                //if ($fbDataAdSet['daysUpdated'] > 7) continue;
+                        $date = new \DateTime($updated_time);
+                        $today = new \DateTime();
+                        $interval = $date->diff($today);
+                        $daysUpdated = $interval->format('%a');
+                        $fbData['daysUpdated'] = $daysUpdated;
+                        //echo $cpgListResult['data'][$key]['name'] . "-" . $daysUpdated . "<br>";
 
-                                $fbDataAdSet['idAdSet'] =  $fbDataAdSet['idCpg']; //ID ADSET no campo correto
-                                $fbDataAdSet['idCpg'] = $fbDataCpg['idCpg']; //ID da CPG no lugar do ID ADSET
+                        if ($daysUpdated > 7) continue;
 
-                                $fbDataPayAdSet = $this->getInsights($fbDataAdSet['idAdSet'],  $fbDataAcct['cpgType'], $fbDataAdSet['daily_budget'], $fbDataAdSet['budget_remaining'], $data_inicial,  $data_final);
-                                echo "<h4>ADSET: " . $fbDataAdSet['idAdSet'] . " - " . $fbDataAdSet['campanha'] . " - " . $fbDataAdSet['daysUpdated'] . " - " . $fbDataPayAdSet['impressions'] . "</h4>";
+                        $cpgArray = explode("|", $fbData['campanha']);
+                        $utmContent =  trim($cpgArray[count($cpgArray)-1]); //ultima parte do nome da campanha precis ter o UTM Content 
+                        $UtmContentDetails = explode("-", $utmContent);
+                        $ticketSale = ($UtmContentDetails[count($UtmContentDetails)-1]);
+                        $oferta = "-" . strtoupper(($UtmContentDetails[1])) . "-";
 
-                                if ($fbDataPayAdSet['impressions'] == 0) continue;        
-                                $added = $this->dbMaster->insert('vsl_facebook_data', $fbDataAcct + $fbDataAdSet + $fbDataPayAdSet);                                                    
+                        $slugLookUp = $this->dbMaster->select('vsl_product_term', ['term' => $oferta]);
+                        if ($slugLookUp['existRecord']) $fbData['offer'] = strtoupper($slugLookUp['firstRow']->slug);
+                        
+                        $fbData['ticket'] = $ticketSale;
+
+                        $sqlQuery = "select event, sum(total) total, sum(renda) renda from (
+                        select event, ip, count(*) total, sum(cId) renda from vsl_campanha_tracker 
+                        where (last_updated >= '$data_inicial 00:00:01' and last_updated <= '$data_final 23:59:59') 
+                        and utm_content = '" . $fbData['idCpg'] . "' 
+                        and referrer not like '%facebookexternalhit%'
+                        group by event, ip) data
+                        group by event;";
+
+                        //echo '00:39:15 - <h3>Dump 48 </h3> <br><br>' . var_dump($sqlQuery); exit;					//<-------DEBUG
+
+                        $eventos = $this->dbMaster->runQuery($sqlQuery);
+
+                        $fbData['lp'] = 0; //Vsl-Product-Pass
+                        $fbData['ic'] = 0; //Vsl-Pay-oracao-L0-171
+                        $fbData['pix'] = 0; //Vsl-Product-Pix-Created
+                        $fbData['sales'] = 0; //Vsl-Product-Order-Approved
+                        $fbData['abandoned'] = 0; //Vsl-Product-Cart-Abandoned
+                        $fbData['billet'] = 0; //Vsl-Product-Billet-Created
+                        $fbData['declined'] = 0; //Vsl-Product-Order-Rejected
+                        $fbData['pixbol'] = 0; //Vsl-Product-Order-Rejected
+                        $fbData['revenue'] = 0; //VSL-PRODUCT-ORDER-APPROVED
+            
+                        foreach ($eventos["result"]->getResult() as $row){
+                            $evento = strtoupper($row->event);
+
+                            if ($evento == 'VSL-PRODUCT-PASS'){
+                                $fbData['lp'] = $row->total;
+                            } else if (strpos($evento, "VSL-PAY-") !== false){
+                                $fbData['ic'] += $row->total;
+                            } else if ($evento == 'VSL-PRODUCT-PIX-CREATED'){
+                                $fbData['pix'] = $row->total;
+                            } else if ($evento == 'VSL-PRODUCT-ORDER-APPROVED'){
+                                $fbData['sales'] = $row->total;
+                                $fbData['revenue'] = $row->renda;
+                            } else if ($evento == 'VSL-PRODUCT-CART-ABANDONED'){
+                                $fbData['abandoned'] = $row->total;
+                            } else if ($evento == 'VSL-PRODUCT-BILLET-CREATED'){
+                                $fbData['billet'] = $row->total;
+                            } else if ($evento == 'VSL-PRODUCT-ORDER-REJECTED'){
+                                $fbData['declined'] = $row->total;
                             }
+                            //echo $evento . "-" . $row->total . '<br>';
                         }
+                        $fbData['pixbol'] = $fbData['pix'] + $fbData['billet'];
+                        //echo '20:55:09 - <h3>Dump 29 </h3> <br><br>' . var_dump($fbData); exit;					//<-------DEBUG
+
+                        $adDetails = $this->getCpgsInsights($cpgListResult['data'][$key]['id'], $data_inicial, $data_final);
+                        $detailsFull = json_decode($adDetails['retorno'], true);
+
+                        $impressions = 0;
+                        $cpm = 0;
+                        if (isset($detailsFull['data'][0])){
+                            $impressions = $detailsFull['data'][0]['impressions'];
+                            $fbData['impressions'] = $impressions;
+                            $fbData['reach'] = $detailsFull['data'][0]['reach'];
+
+                            $fbData['ctr'] = (isset($detailsFull['data'][0]['website_ctr'])  ? $detailsFull['data'][0]['website_ctr'][0]['value'] : 0);
+                            $cpm = (isset($detailsFull['data'][0]['cpm'])  ? $detailsFull['data'][0]['cpm'] : 0);
+                            $fbData['cpm'] = $cpm;
+                            $fbData['clicks'] = (isset($detailsFull['data'][0]['inline_link_clicks'])  ? $detailsFull['data'][0]['inline_link_clicks'] : 0);
+                        }
+
+                        if ($impressions == 0) continue;
+
+                        //cost de dias antigos não vem na API então da prioridade ao calculo manual quando existe cpm
+                        if (($cpm > 0)) {
+                            $costPerImpression = $cpm / 1000;
+                            $cost = $costPerImpression * $impressions;														
+                        } else {
+                            $cost = $daily_budget-$budget_remaining;
+                        }
+
+                        if ($fbData['clicks'] > 0) {
+                            $fbData['cpc'] = $cost / $fbData['clicks'];
+                        }
+
+                        $revenue = $fbData['revenue'];
+
+                        $fbData['costPerImpression'] = $costPerImpression;
+                        $fbData['cost'] = $cost;
+                        $roas = ($cost != 0 ? $revenue/$cost : '0');
+                        $fbData['roas'] = $roas;
+                        $result = $revenue - $cost;
+                        $fbData['result'] = $result;
+                        $used = ($daily_budget != 0 ? (($daily_budget-$budget_remaining)/$daily_budget)*100 : '0');
+                        $fbData['bugdet_used'] = $used;
+                        $fbData['last_update'] = $data_inicial;
+
+                        $added = $this->dbMaster->insert('vsl_facebook_data',$fbData);
+                        unset($fbData);
+                        //exit;
+                        //break; //DEBUG
                     }
-                    unset($fbDataCpg);
-                    unset($fbDataAdSet);
-                    unset($fbDataPay);
-                    unset($fbDataPayAdSet);
                 }
             }
-        }
+            //exit;
+        } //for account
 
-        //$this->indicadores_vsl();
-    }
-
-    public function getInsights($cpgId, $cpgType, $daily_budget, $budget_remaining, $data_inicial,  $data_final){
-        $sqlQuery = "select event, sum(total) total, sum(renda) renda from (
-            select event, ip, count(*) total, sum(cId) renda from vsl_campanha_tracker 
-            where (last_updated >= '$data_inicial 00:00:01' and last_updated <= '$data_final 23:59:59') 
-            and utm_content = '" . $cpgId . "' 
-            and referrer not like '%facebookexternalhit%'
-            group by event, ip) data
-            group by event;";
-
-            //echo '00:39:15 - <h3>Dump 48 </h3> <br><br>' . var_dump($sqlQuery); exit;					//<-------DEBUG
-            
-        $eventos = $this->dbMaster->runQuery($sqlQuery);
-
-        $fbData['lp'] = 0; //Vsl-Product-Pass
-        $fbData['ic'] = 0; //Vsl-Pay-oracao-L0-171
-        $fbData['pix'] = 0; //Vsl-Product-Pix-Created
-        $fbData['sales'] = 0; //Vsl-Product-Order-Approved
-        $fbData['abandoned'] = 0; //Vsl-Product-Cart-Abandoned
-        $fbData['billet'] = 0; //Vsl-Product-Billet-Created
-        $fbData['declined'] = 0; //Vsl-Product-Order-Rejected
-        $fbData['pixbol'] = 0; //Vsl-Product-Order-Rejected
-        $fbData['revenue'] = 0; //VSL-PRODUCT-ORDER-APPROVED
-
-        foreach ($eventos["result"]->getResult() as $row){
-            $evento = strtoupper($row->event);
-
-            if ($evento == 'VSL-PRODUCT-PASS'){
-                $fbData['lp'] = $row->total;
-            } else if (strpos($evento, "VSL-PAY-") !== false){
-                $fbData['ic'] += $row->total;
-            } else if ($evento == 'VSL-PRODUCT-PIX-CREATED'){
-                $fbData['pix'] = $row->total;
-            } else if ($evento == 'VSL-PRODUCT-ORDER-APPROVED'){
-                $fbData['sales'] = $row->total;
-                $fbData['revenue'] = $row->renda;
-            } else if ($evento == 'VSL-PRODUCT-CART-ABANDONED'){
-                $fbData['abandoned'] = $row->total;
-            } else if ($evento == 'VSL-PRODUCT-BILLET-CREATED'){
-                $fbData['billet'] = $row->total;
-            } else if ($evento == 'VSL-PRODUCT-ORDER-REJECTED'){
-                $fbData['declined'] = $row->total;
-            }
-            //echo $evento . "-" . $row->total . '<br>';
-        }
-        $fbData['pixbol'] = $fbData['pix'] + $fbData['billet'];
-        //echo '20:55:09 - <h3>Dump 29 </h3> <br><br>' . var_dump($fbData); exit;					//<-------DEBUG
-
-        $adDetails = $this->getCpgsInsights($cpgId, $data_inicial, $data_final);
-        $detailsFull = json_decode($adDetails['retorno'], true);
-
-        $impressions = 0;
-        $cpm = 0;
-        if (isset($detailsFull['data'][0])){
-            $impressions = $detailsFull['data'][0]['impressions'];
-            $fbData['impressions'] = $impressions;
-            $fbData['reach'] = $detailsFull['data'][0]['reach'];
-
-            $fbData['ctr'] = (isset($detailsFull['data'][0]['website_ctr'])  ? $detailsFull['data'][0]['website_ctr'][0]['value'] : 0);
-            $cpm = (isset($detailsFull['data'][0]['cpm'])  ? $detailsFull['data'][0]['cpm'] : 0);
-            $fbData['cpm'] = $cpm;
-            $fbData['clicks'] = (isset($detailsFull['data'][0]['inline_link_clicks'])  ? $detailsFull['data'][0]['inline_link_clicks'] : 0);
-        }
-
-        $fbData['impressions'] = $impressions;
-
-        if ($impressions == 0) return $fbData;
-
-        //cost de dias antigos não vem na API então da prioridade ao calculo manual quando existe cpm
-        if (($cpm > 0)) {
-            $costPerImpression = $cpm / 1000;
-            $cost = $costPerImpression * $impressions;														
-        } else {
-            $cost = $daily_budget-$budget_remaining;
-        }
-
-        if ($fbData['clicks'] > 0) {
-            $fbData['cpc'] = $cost / $fbData['clicks'];
-        }
-
-        $revenue = $fbData['revenue'];
-
-        $fbData['costPerImpression'] = $costPerImpression;
-        $fbData['cost'] = $cost;
-        $roas = ($cost != 0 ? $revenue/$cost : '0');
-        $fbData['roas'] = $roas;
-        $result = $revenue - $cost;
-        $fbData['result'] = $result;
-        $used = ($daily_budget != 0 ? (($daily_budget-$budget_remaining)/$daily_budget)*100 : '0');
-        $fbData['daily_budget'] = $daily_budget;
-        $fbData['bugdet_used'] = $used;
-        $fbData['last_update'] = $data_inicial;
-
-       
-
-        return $fbData;
-    }
-
-
-    public function listCPGsAdSets($idType, $cpgId, $dataPreset, $statusArray){
-        $urlFinal = ($idType == "campaigns"  ? "act_" : '') . $cpgId . "/$idType?access_token=" . META_TOKEN;
-        $urlFinal .= "&fields=" . urlencode("name,daily_budget,budget_remaining,configured_status,start_time,updated_time");
-        $urlFinal .= "&date_preset=$dataPreset&limit=100&effective_status=" . urlencode($statusArray);
-
-        $headers = $this->getHeader();
-		$url = META_GRAPH_API . $urlFinal;
-		///echo $url;exit;
-        //$url = urlencode($url);
-		//echo $url;exit;
-        $result =  $this->http_request('GET', $url, $headers);
-
-        if ((!is_null($result)) and ($result['sucesso'])){
-            $adSetListResult = json_decode($result['retorno'], true);
-
-            if (isset($adSetListResult['data'])){
-                return ['existRecord' => true, 'data' => $adSetListResult];
-            } else {
-                return ['existRecord' => false];
-            }
-        } else {
-            return ['existRecord' => false];
-        }
-	}
-
-    public function extractCPGAdSetData($cpgListResult, $key){
-        //echo '23:10:15 - <h3>Dump 66 </h3> <br><br>' . var_dump($cpgListResult); exit;					//<-------DEBUG
-        $fbData['campanha'] = $cpgListResult['data'][$key]['name'];
-        $fbData['idCpg'] = $cpgListResult['data'][$key]['id'];
-
-        $budget_remaining = $cpgListResult['data'][$key]['budget_remaining'];
-        $budget_remaining = $budget_remaining / 100;
-        $fbData['budget_remaining'] = $budget_remaining;
-
-        $daily_budget = (isset($cpgListResult['data'][$key]['daily_budget'])  ? $cpgListResult['data'][$key]['daily_budget'] : '0');
-        $daily_budget = $daily_budget / 100;
-        $fbData['amount_spent'] = $daily_budget - $budget_remaining;
-
-        $fbData['daily_budget'] = $daily_budget;
-        $fbData['configured_status'] = $cpgListResult['data'][$key]['configured_status'];
-
-        $fbData['cpgType'] = "ABO";
-        if (isset($cpgListResult['data'][$key]['daily_budget'])) $fbData['cpgType'] = "CBO"; //only CBO has daily budget
-
-        $updated_time = $cpgListResult['data'][$key]['updated_time'];
-        
-        $date = new \DateTime($updated_time);
-        $updated_time = $date->format('Y-m-d H:i:s');
-        $fbData['updated_time'] = $updated_time;
-
-        $date = new \DateTime($updated_time);
-        $today = new \DateTime();
-        $interval = $date->diff($today);
-        $daysUpdated = $interval->format('%a');
-        $fbData['daysUpdated'] = $daysUpdated;
-        //echo $cpgListResult['data'][$key]['name'] . "-" . $daysUpdated . "<br>";
-
-        if ($daysUpdated > 7) return $fbData;
-
-        $cpgArray = explode("|", $fbData['campanha']);
-        $utmContent =  trim($cpgArray[count($cpgArray)-1]); //ultima parte do nome da campanha precis ter o UTM Content 
-        $UtmContentDetails = explode("-", $utmContent);
-        $ticketSale = ($UtmContentDetails[count($UtmContentDetails)-1]);
-        $oferta = "-" . strtoupper(($UtmContentDetails[1])) . "-";
-
-        $slugLookUp = $this->dbMaster->select('vsl_product_term', ['term' => $oferta]);
-        if ($slugLookUp['existRecord']) $fbData['offer'] = strtoupper($slugLookUp['firstRow']->slug);
-        
-        $fbData['ticket'] = $ticketSale;
-        return $fbData;
+        $this->indicadores_vsl();
     }
 
     //http://localhost/InsightSuite/public/indicadores-vsl
@@ -497,198 +431,316 @@ class Indicadores extends BaseController
          
     }
 
-    //BKP 15/09 - ANTES MUDANÇAS ABO
-    //http://localhost/InsightSuite/public/import-data
-    //http://insightsuite.pravoce.io/import-data
-    // public function importData(){
-    //     $cpgList = null;
-    //     $cpgListResult = null;
-    //     $data_inicial = date("Y-m-d");
-    //     $data_final = date("Y-m-d");
+//     //http://localhost/InsightSuite/public/indicadores-vsl
+//     //http://insightsuite.pravoce.io/indicadores-vsl
+//     public function indicadores_vsl(){
+//         $cpgList = null;
+//         $cpgListResult = null;
+//         $data_inicial = date("Y-m-d");
+//         $data_final = date("Y-m-d");
 
-    //     // $data_inicial = date("2024-08-03");
-    //     // $data_final = date("2024-08-03");
-        
-    //     $statusArray = '["ACTIVE", "PAUSED"]';
-    //     $dataPreset = 'today';
+//         // $data_inicial = '2024-08-01';
+//         // $data_final = '2024-08-03';
 
-    //     $account = [];
-    //     $account[] = ['conta' => 'MGPT', 'id' => '328587016319669'];
-    //     $account[] = ['conta' => 'OFC', 'id' => '397934202905061'];
-    //     $account[] = ['conta' => 'PVC', 'id' => '1557752151343685'];
-    //     $account[] = ['conta' => 'VAN', 'id' => '339022398063345'];
+//         $statusArray = '["ACTIVE", "PAUSED"]';
+//         $dataPreset = 'today';
+//         //$dataPreset = 'yesterday';
+//         //$account = "328587016319669";
 
-    //     $cleanQuery = "delete from vsl_facebook_data where (last_update >= '$data_inicial 00:00:00' and last_update <= '$data_final 23:59:59');";                          
-    //     $this->dbMaster->runQueryGeneric($cleanQuery);
+//         $account = [];
+//         $account[] = ['conta' => 'MGPT', 'id' => '328587016319669'];
+//         $account[] = ['conta' => 'OFC', 'id' => '397934202905061'];
+//         $account[] = ['conta' => 'PVC', 'id' => '1557752151343685'];
+//         $account[] = ['conta' => 'VAN', 'id' => '339022398063345'];
 
-    //     //para cada conta
-    //     foreach ($account as $keyAcct => $value) {
-    //         $fbData = [];
+//         $gastoGeral = 0;
+//         $receitaGeral = 0;
+//         $roasGeral = 0;
+//         $itemsGeral = 0;
+//         $vendasGeral = 0;
+//         $icsGeral = 0;
+//         $impressaoGeral = 0;
+//         $clickGeral = 0;
 
-    //         $urlFinal = "act_" . $account[$keyAcct]['id'] . "/campaigns?access_token=" . META_TOKEN;
-    //         $urlFinal .= "&fields=" . urlencode("name,daily_budget,budget_remaining,configured_status,start_time,updated_time");
-    //         $urlFinal .= "&date_preset=$dataPreset&limit=100&effective_status=" . urlencode($statusArray);
-    //         $cpgList = $this->getCpgs($urlFinal);
-    //         //echo '22:50:23 - <h3>Dump 21 </h3> <br><br>' . var_dump($cpgList['retorno']); exit;					//<-------DEBUG
+//         foreach ($account as $key => $value) {
+//             $actTitulo = $account[$key]['conta'];
+//             $actId = $account[$key]['id'];
 
-    //         if ((!is_null($cpgList)) and ($cpgList['sucesso'])){
-    //             $cpgListResult = json_decode($cpgList['retorno'], true);
-    //             //echo '18:59:43 - <h3>Dump 35 </h3> <br><br>' . var_dump($cpgListResult); exit;					//<-------DEBUG
+//             $urlFinal = "act_$actId/campaigns?access_token=" . META_TOKEN;
+//             $urlFinal .= "&fields=" . urlencode("name,daily_budget,budget_remaining,configured_status,start_time,updated_time");
+//             $urlFinal .= "&date_preset=$dataPreset&limit=50&effective_status=" . urlencode($statusArray);           
+//             // echo '11:00:27 - <h3>Dump 20 </h3> <br><br>' . var_dump($urlFinal); exit;					//<-------DEBUG
 
-    //             if (isset($cpgListResult['data'])){
-    //                 foreach ($cpgListResult['data'] as $key => $value) {
-    //                     $fbData['actName'] = $account[$keyAcct]['conta'];
-    //                     $fbData['actId'] =  $account[$keyAcct]['id'];
+//             $cpgList = $this->getCpgs($urlFinal);
+//             //echo '22:50:23 - <h3>Dump 21 </h3> <br><br>' . var_dump($cpgList['retorno']); exit;					//<-------DEBUG
+
+//             if ((!is_null($cpgList)) and ($cpgList['sucesso'])){
+//                 $cpgListResult = json_decode($cpgList['retorno'], true);
+//                 //echo '18:59:43 - <h3>Dump 35 </h3> <br><br>' . var_dump($cpgListResult); exit;					//<-------DEBUG
+
+//                 if (isset($cpgListResult['data'])){
+//                     $items = 0;
+//                     $budgetTotal = 0;
+//                     $costTotal = 0;
+//                     $impressionsTotal = 0;
+//                     $clicksTotal = 0;
+//                     $ctrTotal = 0;
+//                     $cpmTotal = 0;
+//                     $lpTotal = 0;
+//                     $icsTotal = 0;
+//                     $RejectTotal = 0;
+//                     $pixbolTotal = 0;
+//                     $salesTotal = 0;
+//                     $revenueTotal = 0;
+//                     $lastPageId = 0;
+                    
+//                     foreach ($cpgListResult['data'] as $key => $value) {
+//                         $cpgName = $cpgListResult['data'][$key]['name'];
+//                         $id = $cpgListResult['data'][$key]['id'];
+//                         $budget_remaining = $cpgListResult['data'][$key]['budget_remaining'];
+//                         $budget_remaining = $budget_remaining / 100;
+//                         $daily_budget = (isset($cpgListResult['data'][$key]['daily_budget'])  ? $cpgListResult['data'][$key]['daily_budget'] : '0');
+//                         $daily_budget = $daily_budget / 100;
+//                         $configured_status = $cpgListResult['data'][$key]['configured_status'];
+//                         $updated_time = $cpgListResult['data'][$key]['updated_time'];
+
+//                         $date = new \DateTime($updated_time);
+//                         $today = new \DateTime();
+//                         $interval = $date->diff($today);
+//                         $daysUpdated = $interval->format('%a');
+
+//                         //para campanhas antigas com mais de 5 dias sem atualização não precisa consultar detalhes
+//                         if ($daysUpdated > 7) continue;
+
+//                         //echo "$cpgName -->" . $interval->format('%a') . "<br>"; continue;					//<-------DEBUG
+
+//                         $cpgArray = explode("|", $cpgName);
+//                         $utmContent =  trim($cpgArray[count($cpgArray)-1]); //ultima parte do nome da campanha precis ter o UTM Content 
+//                         $UtmContentDetails = explode("-", $utmContent);
+//                         $ticketSale = ($UtmContentDetails[count($UtmContentDetails)-1]);
+//                         //echo $utmContent . "<br>";continue;
+
+//                         $sqlQuery = "select event, sum(total) total, sum(renda) renda from (
+//                         select event, ip, count(*) total, sum(cId) renda from vsl_campanha_tracker 
+//                         where (last_updated >= '$data_inicial 00:00:01' and last_updated <= '$data_final 23:59:59') 
+//                         and utm_content = '$utmContent' 
+//                         and referrer not like '%facebookexternalhit%'
+//                         group by event, ip) data
+//                         group by event;";
+
+//                         //echo '00:39:15 - <h3>Dump 48 </h3> <br><br>' . var_dump($sqlQuery); exit;					//<-------DEBUG
+
+//                         $eventos = $this->dbMaster->runQuery($sqlQuery);
+
+//                         $eventosCgp['lp'] = 0; //Vsl-Product-Pass
+//                         $eventosCgp['pay'] = 0; //Vsl-Pay-oracao-L0-171
+//                         $eventosCgp['pix'] = 0; //Vsl-Product-Pix-Created
+//                         $eventosCgp['sales'] = 0; //Vsl-Product-Order-Approved
+//                         $eventosCgp['card'] = 0; //Vsl-Product-Cart-Abandoned
+//                         $eventosCgp['billet'] = 0; //Vsl-Product-Billet-Created
+//                         $eventosCgp['declined'] = 0; //Vsl-Product-Order-Rejected
+//                         $eventosCgp['pixbol'] = 0; //Vsl-Product-Order-Rejected
+//                         $eventosCgp['ticket'] = 0; //Vsl-Product-Order-Rejected
+//                         $eventosCgp['revenue'] = 0; //Vsl-Product-Order-Rejected
             
-    //                     $fbData['campanha'] = $cpgListResult['data'][$key]['name'];
-    //                     $fbData['idCpg'] = $cpgListResult['data'][$key]['id'];
+//                         foreach ($eventos["result"]->getResult() as $row){
+//                             $evento = strtoupper($row->event);
 
-    //                     $budget_remaining = $cpgListResult['data'][$key]['budget_remaining'];
-    //                     $budget_remaining = $budget_remaining / 100;
-    //                     $fbData['budget_remaining'] = $budget_remaining;
+//                             if ($evento == 'VSL-PRODUCT-PASS'){
+//                                 $eventosCgp['lp'] = $row->total;
+//                             } else if (strpos($evento, "VSL-PAY-") !== false){
+//                                 $eventosCgp['pay'] += $row->total;
+//                             } else if ($evento == 'VSL-PRODUCT-PIX-CREATED'){
+//                                 $eventosCgp['pix'] = $row->total;
+//                             } else if ($evento == 'VSL-PRODUCT-ORDER-APPROVED'){
+//                                 $eventosCgp['sales'] = $row->total;
+//                                 $eventosCgp['revenue'] = $row->renda;
+//                             } else if ($evento == 'VSL-PRODUCT-CART-ABANDONED'){
+//                                 $eventosCgp['card'] = $row->total;
+//                             } else if ($evento == 'VSL-PRODUCT-BILLET-CREATED'){
+//                                 $eventosCgp['billet'] = $row->total;
+//                             } else if ($evento == 'VSL-PRODUCT-ORDER-REJECTED'){
+//                                 $eventosCgp['declined'] = $row->total;
+//                             }
+//                             //echo $evento . "-" . $row->total . '<br>';
+//                         }
+//                         $eventosCgp['pixbol'] = $eventosCgp['pix'] + $eventosCgp['billet'];
+//                         $eventosCgp['ticket'] = $ticketSale;
+//                         //echo '20:55:09 - <h3>Dump 29 </h3> <br><br>' . var_dump($eventosCgp); exit;					//<-------DEBUG
 
-    //                     $daily_budget = (isset($cpgListResult['data'][$key]['daily_budget'])  ? $cpgListResult['data'][$key]['daily_budget'] : '0');
-    //                     $daily_budget = $daily_budget / 100;
-    //                     $fbData['daily_budget'] = $daily_budget;
-    //                     $fbData['configured_status'] = $cpgListResult['data'][$key]['configured_status'];
+//                         $adDetails = $this->getCpgsInsights($cpgListResult['data'][$key]['id'], $data_inicial, $data_final);
+//                         $detailsFull = json_decode($adDetails['retorno'], true);
 
-    //                     $cpgType = "ABO";
-    //                     if (isset($cpgListResult['data'][$key]['daily_budget'])) $cpgType = "CBO"; //only CBO has daily budget
+//                         $impressions = 0;
+//                         $cpm = 0;
+//                         $clicks = 0;
+//                         $cpc = 0;
+//                         $ctr = 0;
+//                         $costInsight = 0;
+//                         $cost_per_unique_click = 0;
 
-    //                     $updated_time = $cpgListResult['data'][$key]['updated_time'];
+//                         //impressions, reach, website_ctr, cpm, cpc, unique_clicks, clicks, inline_link_clicks
+//                         if (isset($detailsFull['data'][0])){
+//                             $impressions = $detailsFull['data'][0]['impressions'];
+//                             $reach = $detailsFull['data'][0]['reach'];
+//                             $ctr = (isset($detailsFull['data'][0]['website_ctr'])  ? $detailsFull['data'][0]['website_ctr'][0]['value'] : 0);
+//                             $cpm = (isset($detailsFull['data'][0]['cpm'])  ? $detailsFull['data'][0]['cpm'] : 0);
+//                             $cpc = (isset($detailsFull['data'][0]['cpc'])  ? $detailsFull['data'][0]['cpc'] : 0); 
+//                             $clicks = (isset($detailsFull['data'][0]['inline_link_clicks'])  ? $detailsFull['data'][0]['inline_link_clicks'] : 0); 
+//                         }
+
+//                         if ($impressions ==0) continue;
+
+//                         //cost de dias antigos não vem na API então da prioridade ao calculo manual quando existe cpm
+//                         if (($cpm > 0)) {
+//                             $costPerImpression = $cpm / 1000;
+//                             $cost = $costPerImpression * $impressions;														
+//                         } else {
+//                             $cost = $daily_budget-$budget_remaining;
+//                         }
+//                         $revenue = $eventosCgp['revenue'];
+//                         $ics = $eventosCgp['pay'];
+//                         $Reject = $eventosCgp['declined'];
+//                         $sales = $eventosCgp['sales'];
+//                         $roi = ($cost != 0 ? $revenue/$cost : '0');
+//                         $result = $revenue - $cost;
+//                         $pixbol = $eventosCgp['pixbol'];
+//                         $used = ($daily_budget != 0 ? (($daily_budget-$budget_remaining)/$daily_budget)*100 : '0');
+//                         $lp = $eventosCgp['lp'];
+
+//                         $items +=1;
+//                         $budgetTotal += $daily_budget;
+//                         $costTotal += $cost;
+//                         $impressionsTotal += $impressions;
+//                         $clicksTotal += $clicks;
+//                         $ctrTotal += $ctr;
+//                         $cpmTotal += $cpm;
+//                         $lpTotal += $lp;
+//                         $icsTotal += $ics;
+//                         $RejectTotal += $Reject;
+//                         $pixbolTotal += $pixbol;
+//                         $salesTotal += $sales;
+//                         $revenueTotal += $revenue;
                         
-    //                     $date = new \DateTime($updated_time);
-    //                     $updated_time = $date->format('Y-m-d H:i:s');
-    //                     $fbData['updated_time'] = $updated_time;
+//                         //break; //DEBUG
+//                     }
 
-    //                     $date = new \DateTime($updated_time);
-    //                     $today = new \DateTime();
-    //                     $interval = $date->diff($today);
-    //                     $daysUpdated = $interval->format('%a');
-    //                     $fbData['daysUpdated'] = $daysUpdated;
-    //                     //echo $cpgListResult['data'][$key]['name'] . "-" . $daysUpdated . "<br>";
+//                     $usedPecent = ($budgetTotal != 0  ? simpleRound(($costTotal/$budgetTotal)*100) . "%" : '-');
+//                     $roiTotal = ($costTotal != 0 ? $revenueTotal/$costTotal : '0');
 
-    //                     if ($daysUpdated > 7) continue;
+//                     $strFilaAgora = "<b>🌟🌟🌟 $actTitulo - CPGS $items </b>\n";
+// //                    $strFilaAgora .= "Orçamento: R$ " . simpleRound($budgetTotal) . "\n";
+// //                   $strFilaAgora .= "Gasto: R$ " . simpleRound($costTotal) . " - " . $usedPecent .  "%\n";
+// //                    $strFilaAgora .= "-----\n";
+//                     $strFilaAgora .= "Impressões: " . $impressionsTotal . "\n";
+//                     $strFilaAgora .= "Clicks: " . $clicksTotal . "\n";
+//                     $strFilaAgora .= "CTR: " . simpleRound(($impressionsTotal > 0  ? ($clicksTotal/$impressionsTotal) * 100 : '0')) . "%\n";
+//                     $strFilaAgora .= "CPM: R$ " . simpleRound(($items > 0  ? $cpmTotal/$items : '0')) . "\n";
+//                     //$strFilaAgora .= "-----\n";
+//                     //$strFilaAgora .= "LP: " . $lpTotal . "\n";
+//                     $strFilaAgora .= "ICs: " . $icsTotal . "\n";
+//                     //$strFilaAgora .= "Declines: " . $RejectTotal . "\n";
+//                     //$strFilaAgora .= "PIXBOL: " . $pixbolTotal . "\n";
+//                     $strFilaAgora .= "-----\n";
+//                     $strFilaAgora .= "Vendas: " . $salesTotal . "\n";
+//                     $strFilaAgora .= "Custo: R$ " . simpleRound($costTotal) . "\n";
+//                     $strFilaAgora .= "Receita: R$ " . simpleRound($revenueTotal) . "\n";
+//                     $strFilaAgora .= "ROAS: " . simpleRound($roiTotal) . "\n";
+//                     $strFilaAgora .= "Resultado: R$ " . simpleRound($revenueTotal-$costTotal) . "\n";
 
-    //                     $cpgArray = explode("|", $fbData['campanha']);
-    //                     $utmContent =  trim($cpgArray[count($cpgArray)-1]); //ultima parte do nome da campanha precis ter o UTM Content 
-    //                     $UtmContentDetails = explode("-", $utmContent);
-    //                     $ticketSale = ($UtmContentDetails[count($UtmContentDetails)-1]);
-    //                     $oferta = "-" . strtoupper(($UtmContentDetails[1])) . "-";
+//                     $gastoGeral += ($costTotal);
+//                     $receitaGeral += $revenueTotal;
+//                     $itemsGeral += $items;
+//                     $vendasGeral += $salesTotal;
+//                     $icsGeral += $icsTotal;
+//                     $impressaoGeral += $impressionsTotal;
+//                     $clickGeral += $clicksTotal;
 
-    //                     $slugLookUp = $this->dbMaster->select('vsl_product_term', ['term' => $oferta]);
-    //                     if ($slugLookUp['existRecord']) $fbData['offer'] = strtoupper($slugLookUp['firstRow']->slug);
-                        
-    //                     $fbData['ticket'] = $ticketSale;
-
-    //                     if ($cpgType == "ABO"){
-    //                         //GET ADSETS
-    //                     }
-
+//                     //echo $strFilaAgora;exit;
+//                     if ($items > 0) {
+//                         $output = $this->telegram->notifyTelegramGroup($strFilaAgora, telegramPraVoceDigital);
+//                     }
+//                 }
+//             }
+//         } //for account
 
 
+//         //RECUPERAÇÕES:
+//         $sqlQuery = "select event, sum(cId) revenue, count(cId) vendas from vsl_campanha_tracker 
+//             where (last_updated >= '$data_inicial 00:00:01' and last_updated <= '$data_final 23:59:59')
+//             and (event = 'Vsl-Product-Order-Approved')
+//             and utm_campaign = 'recuperacao'
+//             group by event;";
 
-    //                     $sqlQuery = "select event, sum(total) total, sum(renda) renda from (
-    //                     select event, ip, count(*) total, sum(cId) renda from vsl_campanha_tracker 
-    //                     where (last_updated >= '$data_inicial 00:00:01' and last_updated <= '$data_final 23:59:59') 
-    //                     and utm_content = '" . $fbData['idCpg'] . "' 
-    //                     and referrer not like '%facebookexternalhit%'
-    //                     group by event, ip) data
-    //                     group by event;";
+//         $recuperacao = $this->dbMaster->runQuery($sqlQuery);
 
-    //                     //echo '00:39:15 - <h3>Dump 48 </h3> <br><br>' . var_dump($sqlQuery); exit;					//<-------DEBUG
+//         $recRevenue = 0;
+//         $recVendas = 0;
 
-    //                     $eventos = $this->dbMaster->runQuery($sqlQuery);
+//         if ($recuperacao['existRecord']){
+//             $recRevenue = $recuperacao['firstRow']->revenue;
+//             $recVendas = $recuperacao['firstRow']->vendas;
+//         }
 
-    //                     $fbData['lp'] = 0; //Vsl-Product-Pass
-    //                     $fbData['ic'] = 0; //Vsl-Pay-oracao-L0-171
-    //                     $fbData['pix'] = 0; //Vsl-Product-Pix-Created
-    //                     $fbData['sales'] = 0; //Vsl-Product-Order-Approved
-    //                     $fbData['abandoned'] = 0; //Vsl-Product-Cart-Abandoned
-    //                     $fbData['billet'] = 0; //Vsl-Product-Billet-Created
-    //                     $fbData['declined'] = 0; //Vsl-Product-Order-Rejected
-    //                     $fbData['pixbol'] = 0; //Vsl-Product-Order-Rejected
-    //                     $fbData['revenue'] = 0; //VSL-PRODUCT-ORDER-APPROVED
-            
-    //                     foreach ($eventos["result"]->getResult() as $row){
-    //                         $evento = strtoupper($row->event);
+//         $vendasGeral += $recVendas;
+//         $receitaGeral += $recRevenue;
 
-    //                         if ($evento == 'VSL-PRODUCT-PASS'){
-    //                             $fbData['lp'] = $row->total;
-    //                         } else if (strpos($evento, "VSL-PAY-") !== false){
-    //                             $fbData['ic'] += $row->total;
-    //                         } else if ($evento == 'VSL-PRODUCT-PIX-CREATED'){
-    //                             $fbData['pix'] = $row->total;
-    //                         } else if ($evento == 'VSL-PRODUCT-ORDER-APPROVED'){
-    //                             $fbData['sales'] = $row->total;
-    //                             $fbData['revenue'] = $row->renda;
-    //                         } else if ($evento == 'VSL-PRODUCT-CART-ABANDONED'){
-    //                             $fbData['abandoned'] = $row->total;
-    //                         } else if ($evento == 'VSL-PRODUCT-BILLET-CREATED'){
-    //                             $fbData['billet'] = $row->total;
-    //                         } else if ($evento == 'VSL-PRODUCT-ORDER-REJECTED'){
-    //                             $fbData['declined'] = $row->total;
-    //                         }
-    //                         //echo $evento . "-" . $row->total . '<br>';
-    //                     }
-    //                     $fbData['pixbol'] = $fbData['pix'] + $fbData['billet'];
-    //                     //echo '20:55:09 - <h3>Dump 29 </h3> <br><br>' . var_dump($fbData); exit;					//<-------DEBUG
+//         $strFilaAgora = "<b>🌟🌟🌟 RECUPERACOES </b>\n";
+//         $strFilaAgora .= "Vendas: " . $recVendas . "\n";
+//         $strFilaAgora .= "Receita: " . simpleRound($recRevenue) . "\n";
 
-    //                     $adDetails = $this->getCpgsInsights($cpgListResult['data'][$key]['id'], $data_inicial, $data_final);
-    //                     $detailsFull = json_decode($adDetails['retorno'], true);
+//         if ($recVendas > 0){
+//             $output = $this->telegram->notifyTelegramGroup($strFilaAgora, telegramPraVoceDigital);
+//         }
 
-    //                     $impressions = 0;
-    //                     $cpm = 0;
-    //                     if (isset($detailsFull['data'][0])){
-    //                         $impressions = $detailsFull['data'][0]['impressions'];
-    //                         $fbData['impressions'] = $impressions;
-    //                         $fbData['reach'] = $detailsFull['data'][0]['reach'];
+//         $roasGeral = ($gastoGeral != 0 ? $receitaGeral/$gastoGeral : '0');
+//         $ctrGeral = ($impressaoGeral != 0 ? $clickGeral/$impressaoGeral : '0');
+//         $resultadoGeral = $receitaGeral-abs($gastoGeral);
 
-    //                         $fbData['ctr'] = (isset($detailsFull['data'][0]['website_ctr'])  ? $detailsFull['data'][0]['website_ctr'][0]['value'] : 0);
-    //                         $cpm = (isset($detailsFull['data'][0]['cpm'])  ? $detailsFull['data'][0]['cpm'] : 0);
-    //                         $fbData['cpm'] = $cpm;
-    //                         $fbData['clicks'] = (isset($detailsFull['data'][0]['inline_link_clicks'])  ? $detailsFull['data'][0]['inline_link_clicks'] : 0);
-    //                     }
+//         $strFilaAgora = "<b>🌟🌟🌟 GERAL - CPGs $itemsGeral </b>\n";
+//         $strFilaAgora .= "Impressoes: " . $impressaoGeral . "\n";
+//         $strFilaAgora .= "Clicks: " . $clickGeral . "\n";
+//         $strFilaAgora .= "CTR: " . simpleRound($ctrGeral*100) . "%\n";
+//         $strFilaAgora .= "ICs: " . $icsGeral . "\n";
+//         $strFilaAgora .= "Vendas: " . $vendasGeral . "\n";
+//         $strFilaAgora .= "Receita: " . simpleRound($receitaGeral) . "\n";
+//         $strFilaAgora .= "Custo: R$ " . simpleRound($gastoGeral) . "\n";
+//         $strFilaAgora .= "Resultado: R$ " . simpleRound($resultadoGeral) . "\n";
+//         $strFilaAgora .= "ROAS: " . simpleRound($roasGeral) . "\n";
 
-    //                     if ($impressions == 0) continue;
+//         $output = $this->telegram->notifyTelegramGroup($strFilaAgora, telegramPraVoceDigital);
 
-    //                     //cost de dias antigos não vem na API então da prioridade ao calculo manual quando existe cpm
-    //                     if (($cpm > 0)) {
-    //                         $costPerImpression = $cpm / 1000;
-    //                         $cost = $costPerImpression * $impressions;														
-    //                     } else {
-    //                         $cost = $daily_budget-$budget_remaining;
-    //                     }
+//          //PRODUTO:
+//          $sqlQuery = "select pt.slug, count(utm_term) vendas, sum(cid) receita from vsl_campanha_tracker ct inner join vsl_product_term pt on ct.utm_term = pt.term
+//             where (ct.last_updated >= '$data_inicial 00:00:01' and ct.last_updated <= '$data_final 23:59:59')
+//             and (event = 'Vsl-Product-Order-Approved')
+//             group by pt.slug;";
 
-    //                     if ($fbData['clicks'] > 0) {
-    //                         $fbData['cpc'] = $cost / $fbData['clicks'];
-    //                     }
+//         $produto = $this->dbMaster->runQuery($sqlQuery);
 
-    //                     $revenue = $fbData['revenue'];
+//         if ($produto['existRecord']){
+//             $strFilaAgora = "<b>🌟🌟🌟 OFERTAS </b>\n";
+//             foreach ($produto["result"]->getResult() as $row){
+//                 $oferta = strtoupper($row->slug);
+//                 $vendas = strtoupper($row->vendas);
+//                 $receita = strtoupper($row->receita);
+//                 $strFilaAgora .= "$oferta - $vendas - R$ " . simpleRound($receita) . "\n";
+//             }
 
-    //                     $fbData['costPerImpression'] = $costPerImpression;
-    //                     $fbData['cost'] = $cost;
-    //                     $roas = ($cost != 0 ? $revenue/$cost : '0');
-    //                     $fbData['roas'] = $roas;
-    //                     $result = $revenue - $cost;
-    //                     $fbData['result'] = $result;
-    //                     $used = ($daily_budget != 0 ? (($daily_budget-$budget_remaining)/$daily_budget)*100 : '0');
-    //                     $fbData['bugdet_used'] = $used;
-    //                     $fbData['last_update'] = $data_inicial;
+//             $output = $this->telegram->notifyTelegramGroup($strFilaAgora, telegramPraVoceDigital);
+//         }
+//     }
 
-    //                     $added = $this->dbMaster->insert('vsl_facebook_data',$fbData);
-    //                     unset($fbData);
-    //                     //exit;
-    //                     //break; //DEBUG
-    //                 }
-    //             }
-    //         }
-    //         //exit;
-    //     } //for account
-
-    //     $this->indicadores_vsl();
-    // }
-
+    public function getCpgs($params){
+        $headers = $this->getHeader();
+		$url = META_GRAPH_API . ($params);
+		///echo $url;exit;
+        //$url = urlencode($url);
+		//echo $url;exit;
+        $result =  $this->http_request('GET', $url, $headers);
+        //echo '18:18:12 - <h3>Dump 26 </h3> <br><br>' . var_dump($result); exit;					//<-------DEBUG
+		return $result;
+	}
 
     public function changeStatusCpg($id, $status){
         $headers = $this->getHeader();
