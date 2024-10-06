@@ -54,8 +54,6 @@ class Indicadores extends BaseController
         echo date('m/d/Y h:i:s a', time());
     }
 
-
-
     //http://localhost/InsightSuite/public/import-data
     //http://insightsuite.pravoce.io/import-data
     public function importData(){
@@ -161,7 +159,7 @@ class Indicadores extends BaseController
                         foreach ($eventos["result"]->getResult() as $row){
                             $evento = strtoupper($row->event);
 
-                            if ($evento == 'VSL-PRODUCT-PASS'){
+                            if (strpos($evento, "VSL-PRODUCT-PASS-") !== false){
                                 $fbData['lp'] = $row->total;
                             } else if (strpos($evento, "VSL-PAY-") !== false){
                                 $fbData['ic'] += $row->total;
@@ -393,17 +391,17 @@ class Indicadores extends BaseController
         }
 
          //PRODUTO:
-         $sqlQuery = "select pt.slug, count(utm_term) vendas, sum(cid) receita from vsl_campanha_tracker ct inner join vsl_product_term pt on ct.utm_term = pt.term
-            where (ct.last_updated >= '$data_inicial 00:00:01' and ct.last_updated <= '$data_final 23:59:59')
-            and (event = 'Vsl-Product-Order-Approved')
-            group by pt.slug;";
+         $sqlQuery = "select ct.utm_medium, count(utm_term) vendas, sum(cid) receita from vsl_campanha_tracker ct 
+                    where (ct.last_updated >= '$data_inicial 00:00:01' and ct.last_updated <= '$data_final 23:59:59')
+                    and (event = 'Vsl-Product-Order-Approved')
+                    group by ct.utm_medium;";
 
         $produto = $this->dbMaster->runQuery($sqlQuery);
 
         if ($produto['existRecord']){
             $strFilaAgora = "<b>🌟🌟🌟 OFERTAS </b>\n";
             foreach ($produto["result"]->getResult() as $row){
-                $oferta = strtoupper($row->slug);
+                $oferta = strtoupper($row->utm_medium);
                 $vendas = strtoupper($row->vendas);
                 $receita = strtoupper($row->receita);
 
@@ -422,8 +420,12 @@ class Indicadores extends BaseController
                     $roiOffer = ($costVendaTotal != 0 ? $receita/$costVendaTotal : '0');
                     $roiOffer = simpleRound($roiOffer);
                 }
+                $strFilaAgora .= "$oferta - $vendas - R$ " . simpleRound($receita) .  " - (R$ $costVendaTotal) - ROAS $roiOffer - R$ " . simpleRound($receita - $costVendaTotal) . "\n";
 
-                $strFilaAgora .= "$oferta - $vendas - R$ " . simpleRound($receita) .  " - (R$ $costVendaTotal) - ROAS $roiOffer \n";
+                if ($oferta == "FB-BURN"){
+                   
+                    $output = $this->telegram->notifyTelegramGroup("<b>🌟🌟🌟 ROAS MONITOR - $oferta</b>\n" . "Total Vendas: $vendas \nReceita: R$ " . simpleRound($receita) .  "\nCusto Anúncios: (R$ $costVendaTotal)\nROAS Apurado: $roiOffer\nResultado Líquido: R$" . simpleRound($receita - $costVendaTotal), telegramBurnApp);
+                }
             }
 
             $output = $this->telegram->notifyTelegramGroup($strFilaAgora, telegramPraVoceDigital);

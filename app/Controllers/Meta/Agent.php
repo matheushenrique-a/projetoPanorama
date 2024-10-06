@@ -55,12 +55,12 @@ class Agent extends BaseController
                     //echo "Campanha encontrada<br>";
 
                     if ($fbDataCpg['configured_status'] == "ACTIVE"){
-                        $this->telegram->notifyTelegramGroup("🤖🤖🤖 META BOT - CAMPANHA LOCALIZADA, INICIANDO ANÁLISE...", telegramPraVoceDigital);
+                        //$this->telegram->notifyTelegramGroup("🤖🤖🤖 META BOT - CAMPANHA LOCALIZADA, INICIANDO ANÁLISE...", telegramPraVoceDigital);
 
                         $adSetList = $this->listCPGsAdSets("adsets", $fbDataCpg['idCpg'], $dataPreset, $statusArray);
                         //echo '23:51:51 - <h3>Dump 60 </h3> <br><br>' . var_dump($adSetList['data']['data']); exit;					//<-------DEBUG
                         if ($adSetList['existRecord']){
-                            $this->telegram->notifyTelegramGroup("🤖🤖🤖 META BOT - LISTANDO ADSETS DA CAMPANHA...", telegramPraVoceDigital);
+                            //$this->telegram->notifyTelegramGroup("🤖🤖🤖 META BOT - LISTANDO ADSETS DA CAMPANHA...", telegramPraVoceDigital);
 
                             $matchAdSet = false;
 
@@ -69,7 +69,7 @@ class Agent extends BaseController
     
                                 if ($fbDataAdSet['idCpg'] == $adSet) {
                                     $matchAdSet = true;
-                                    $this->telegram->notifyTelegramGroup("🤖🤖🤖 META BOT - ADSET ENCONTRADO, INICIANDO ANÁLISE DE ROAS...", telegramPraVoceDigital);
+                                    //$this->telegram->notifyTelegramGroup("🤖🤖🤖 META BOT - ADSET ENCONTRADO, INICIANDO ANÁLISE DE ROAS...", telegramPraVoceDigital);
 
                                     $fbDataPayAdSet = $this->getInsights($cpg, $adSet,  $fbDataCpg['cpgType'], $fbDataAdSet['daily_budget'], $fbDataAdSet['budget_remaining'], $data_inicial,  $data_final);
                                     //echo "<h4>ADSET FOUND: " . $fbDataAdSet['daysUpdated'] . " - " . $fbDataPayAdSet['impressions'] . " - " . $fbDataAdSet['daily_budget'] . "</h4>";
@@ -105,7 +105,7 @@ class Agent extends BaseController
                                         $strMessage = "🔴 PARAR: limite negativo -500 do dia atingindo. ROAS: " . simpleRound($roas) . ", Gasto: R$ " . simpleRound($gasto) . ", Receita: R$ " . simpleRound($fbDataPayAdSet['revenue']) . ", Resultado: R$ " . simpleRound($fbDataPayAdSet['result']);
                                         $output = "AUTOMÁTICA COM RESULTADO: " . $this->changeStatusCpg($cpg, "PAUSED")['retorno'];
                                     } else  {
-                                        $strMessage = "🟠 MANTER: ROAS comprometido mas dentro do limite de -500 do dia. ROAS: " . simpleRound($roas) . ", Gasto: R$ " . simpleRound($gasto) . ", Receita: R$ " . simpleRound($fbDataPayAdSet['revenue']) . ", Resultado: R$ " . simpleRound($fbDataPayAdSet['result']);
+                                        $strMessage = "🟠 MANTER ATUAL: ROAS comprometido mas dentro do limite de -500 do dia. ROAS: " . simpleRound($roas) . ", Gasto: R$ " . simpleRound($gasto) . ", Receita: R$ " . simpleRound($fbDataPayAdSet['revenue']) . ", Resultado: R$ " . simpleRound($fbDataPayAdSet['result']);
                                         $output = "NENHUMA";
                                     }
                                     //echo "<br>RECOMENDA: $strMessage - $output";                                   
@@ -252,7 +252,7 @@ class Agent extends BaseController
         foreach ($eventos["result"]->getResult() as $row){
             $evento = strtoupper($row->event);
 
-            if ($evento == 'VSL-PRODUCT-PASS'){
+            if (strpos($evento, "VSL-PRODUCT-PASS-") !== false){
                 $fbData['lp'] = $row->total;
             } else if (strpos($evento, "VSL-PAY-") !== false){
                 $fbData['ic'] += $row->total;
@@ -323,7 +323,9 @@ class Agent extends BaseController
         $fbData['cost'] = $cost;
         $roas = ($cost != 0 ? $revenue/$cost : '0');
         $fbData['roas'] = $roas;
-        $result = $revenue - $cost;
+        $result =  abs($revenue) - abs($cost);
+        
+        //echo "cost: $cost, receita: $revenue, resultado: $result";exit;
         $fbData['result'] = $result;
         $used = ($daily_budget != 0 ? (($daily_budget-$budget_remaining)/$daily_budget)*100 : '0');
         

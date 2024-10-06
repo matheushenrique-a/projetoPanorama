@@ -158,7 +158,7 @@ class Meta extends BaseController
                         foreach ($eventos["result"]->getResult() as $row){
                             $evento = strtoupper($row->event);
 
-                            if ($evento == 'VSL-PRODUCT-PASS'){
+                            if (strpos($evento, "VSL-PRODUCT-PASS-") !== false){
                                 $eventosCgp['lp'] = $row->total;
                             } else if (strpos($evento, "VSL-PAY-") !== false){
                                 $eventosCgp['pay'] += $row->total;
