@@ -122,6 +122,6 @@ abstract class BaseController extends Controller
 			}
 		}        
         		
-		return htmlspecialchars($aux, ENT_QUOTES);
+		return htmlspecialchars((is_null($aux)  ? '' : $aux), ENT_QUOTES);
 	}
 }

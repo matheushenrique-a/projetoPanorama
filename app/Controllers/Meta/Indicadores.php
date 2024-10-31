@@ -405,6 +405,8 @@ class Indicadores extends BaseController
                 $vendas = strtoupper($row->vendas);
                 $receita = strtoupper($row->receita);
 
+                if (empty($oferta)) $oferta = "FB-INDEFINIDO";
+
                 $sqlQueryOffer = "select offer, sum(cost) cost
                                     from vsl_facebook_data 
                                     where (last_update >= '$data_inicial 00:00:00' and last_update <= '$data_final 23:59:59') 

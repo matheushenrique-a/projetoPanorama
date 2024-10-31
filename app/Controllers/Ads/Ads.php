@@ -121,9 +121,10 @@ class Ads extends BaseController
         $checkOut = $this->getpost('checkOut');
         $description = $this->getpost('description');
         $nicho = $this->getpost('nicho');
+        $categoria = $this->getpost('categoria');
 
         header('Content-Type: application/json');
-        $this->dbMaster->update('ads_saved', ['salePage' => $salePage, 'checkOut' => $checkOut, 'description' => $description, 'nicho' => $nicho], ['adId' => $adId], ['last_update' => 'current_timestamp()']);
+        $this->dbMaster->update('ads_saved', ['salePage' => $salePage, 'checkOut' => $checkOut, 'description' => $description, 'nicho' => $nicho, 'categoria' => $categoria], ['adId' => $adId], ['last_update' => 'current_timestamp()']);
 
         $saida = ["result" => "ok"];
         echo json_encode($saida); 
@@ -137,15 +138,15 @@ class Ads extends BaseController
                 $actPage = $this->dbMaster->select('ads_saved', ['pageId' => $pageId, 'userId' => $this->session->userId]);
 
                 if ($actPage['existRecord']){
-                    return  ["level" => "page", "action" => $actPage['firstRow']->action, "salePage" => $actPage['firstRow']->salePage, "checkOut" => $actPage['firstRow']->checkOut, "description" => $actPage['firstRow']->description, "nicho" => $actPage['firstRow']->nicho];
+                    return  ["level" => "page", "action" => $actPage['firstRow']->action, "salePage" => $actPage['firstRow']->salePage, "checkOut" => $actPage['firstRow']->checkOut, "description" => $actPage['firstRow']->description, "nicho" => $actPage['firstRow']->nicho, "categoria" => $actPage['firstRow']->categoria];
                 } else {
-                    return  ["level" => "none", "action" => "none", "salePage" => "", "checkOut" => "", "description" => "", "nicho" => ""];
+                    return  ["level" => "none", "action" => "none", "salePage" => "", "checkOut" => "", "description" => "", "nicho" => "", "categoria" => ""];
                 }    
             } else {
-                return  ["level" => "direct", "action" => "none", "salePage" => "", "checkOut" => "", "description" => "", "nicho" => ""];
+                return  ["level" => "direct", "action" => "none", "salePage" => "", "checkOut" => "", "description" => "", "nicho" => "", "categoria" => ""];
             }
         } else {
-            return  ["level" => "direct", "action" => $actionTaken['firstRow']->action, "salePage" => $actionTaken['firstRow']->salePage, "checkOut" => $actionTaken['firstRow']->checkOut, "description" => $actionTaken['firstRow']->description, "nicho" => $actionTaken['firstRow']->nicho];
+            return  ["level" => "direct", "action" => $actionTaken['firstRow']->action, "salePage" => $actionTaken['firstRow']->salePage, "checkOut" => $actionTaken['firstRow']->checkOut, "description" => $actionTaken['firstRow']->description, "nicho" => $actionTaken['firstRow']->nicho, "categoria" => $actionTaken['firstRow']->categoria];
         }
 	}
 
@@ -154,14 +155,15 @@ class Ads extends BaseController
         $favoritos = $this->getpost('favoritos');
         $pages = $this->getpost('pages');
         $statusView = $this->getpost('statusView');
+        $paginas = $this->getpost('paginas');
 
         $adList = null;
         $adListResult = null;
         
         if (!empty($pages)){
             $this->dbMaster->setOrderBy(array("last_update", "DESC"));
-            $this->dbMaster->setLimit(400);
-            $adList = $this->dbMaster->select('ads_pages', null);
+            $this->dbMaster->setLimit($paginas);
+            //$adList = $this->dbMaster->select('ads_pages', null);
             $sql = 'select p.pageId, p.last_update, s.action from ads_pages p left join ads_saved s on p.pageId = s.pageId and s.userId = ' . $this->session->userId;
 //            $sql = 'select p.pageId, p.last_update, s.action from ads_pages p left join ads_saved s on (p.pageId = s.pageId and (s.userId = ' . $this->session->userId . ' or s.userId is null)) ';
             
@@ -237,18 +239,14 @@ class Ads extends BaseController
                 $language = $preFilterPars[2];
 
                 //echo "$keyword, $country, $language"; exit;
-            } else {
-
-            }
+            } 
             
             if (!empty($pageIdRoot)) {
                 $pageId = $pageIdRoot;
                 $keyword = "";
                 $preFilter = "";
                 $status = "ALL";
-            } else {
-               
-            }
+            } 
 
             //$pageId = $this->getpost('pageId', false);
             //$status = $this->getpost('status', false);

@@ -412,7 +412,7 @@
 															}
 
 															echo '<tr onclick="lineClean();this.style.borderTop = \'2px\'; this.style.borderBottom = \'2px\'; this.style.borderStyle = \'dotted\'; this.style.borderColor = \'#2b9ef7\';" style="background-color: ' . $color . '">';
-															echo '<td class="ps-2"> ' . $linhe . ". " . $dataFormatada  . '</td>';
+															echo '<td class="ps-2"> xx' . $linhe . ". " . $dataFormatada  . '</td>';
 															echo '<td class="px-1" onclick="copyText(' .  $row->pageId . '); return false;">' . substr($row->pageId, 0, 3)?>...<?php echo substr($row->pageId, -3) . '</td>';
 															echo '<td class="px-1" colspan="3">
 															<a href="#" onclick="registerAction(this, \'dislike\', \'' . strtoupper($keyword) . '\', \'' . $row->pageId . '\', \'' . $row->pageId . '\', \'' . $url . '\', \'' . $row->last_update . '\'); return false;" target="_blank" class="text-gray-800 text-hover-primary mb-1">
@@ -496,13 +496,15 @@
 																</tr>';
 														}
 													} else  if ((!is_null($adList)) and ($adList['sucesso'])){
-
 														//$adListResult = json_decode($adList['retorno'], true);
 
 														if (isset($adListResult['data'])){
 														
 														$lastPageId = 0;
 														foreach ($adListResult['data'] as $key => $value) {
+															if (($statusView == 'null')) {
+																if (($adListResult['data'][$key]['id']['adDetails']['action'] != 'none')) continue;
+															} 
 															
 															$adId = $adListResult['data'][$key]['id']['id'];
 
@@ -560,20 +562,39 @@
 																<select class="form-select form-control-solid" style="width: 60%" id="frm<?php echo $adId?>_nicho">
 																<?php
 																	$options = [
-																		'Saúde' => 'Saúde',
-																		'Maternidade' => 'Maternidade',
-																		'Dinheiro' => 'Dinheiro',
-																		'Nutrição' => 'Nutrição',
-																		'Digital' => 'Digital',
 																		'Beleza' => 'Beleza',
+																		'Diabetes' => 'Diabetes',
+																		'Dinheiro' => 'Dinheiro',
+																		'Dores' => 'Dores',
+																		'Emagrecimento' => 'Emagrecimento',
+																		'Maternidade' => 'Maternidade',
+																		'Marketing' => 'Marketing',
 																		'Outros' => 'Outros',
+																		'Religião' => 'Religião',
 																	];
 																																
-																	echo '<option value="" ' .  ($adListResult['data'][$key]['id']['adDetails']['nicho'] == "" ? 'selected' : '') . '> ESCOLHA NICHO </option>';
+																	echo '<option value="" ' .  ($adListResult['data'][$key]['id']['adDetails']['nicho'] == "" ? 'selected' : '') . '> NICHO </option>';
 																	
 																	foreach ($options as $code => $name) {
 																		echo '<option value="' . $code . '" ' .  ($adListResult['data'][$key]['id']['adDetails']['nicho'] == $code ? 'selected' : '') . '>' . $name . '</option>';
 																	}
+																	echo '<option>' . $adListResult['data'][$key]['id']['adDetails']['nicho'] . '</option>';
+																?>
+																</select>	
+																<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0 mt-2">Categoria:</label><br>
+																<select class="form-select form-control-solid" style="width: 60%" id="frm<?php echo $adId?>_categoria">
+																<?php
+																	$optionsCategoria = [
+																		'Hook' => 'Hook',
+																		'Criativo' => 'Criativo',
+																		'Produto' => 'Produto',
+																		'Outros' => 'Outros',
+																	];
+																	echo '<option value="" ' .  ($adListResult['data'][$key]['id']['adDetails']['categoria'] == "" ? 'selected' : '') . '> CATEGORIA </option>';
+																	foreach ($optionsCategoria as $code => $name) {
+																		echo '<option value="' . $code . '" ' .  ($adListResult['data'][$key]['id']['adDetails']['categoria'] == $code ? 'selected' : '') . '>' . $name . '</option>';
+																	}
+																	echo '<option>' . $adListResult['data'][$key]['id']['adDetails']['categoria'] . '</option>';
 																?>
 																</select>	
 																<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Página Vendas:</label><br>
@@ -648,6 +669,7 @@
 													var checkOut = document.getElementById('frm' + adId + "_checkOut");
 													var description = document.getElementById('frm' + adId + "_description");
 													var nicho = document.getElementById('frm' + adId + "_nicho");
+													var categoria = document.getElementById('frm' + adId + "_categoria");
 													var btn = document.getElementById('frm' + adId + "_save");
 													
 													var url = '<?php echo assetfolder ?>ads-nicho';
@@ -662,6 +684,7 @@
 													formData.append('checkOut', checkOut.value);
 													formData.append('description', description.value);
 													formData.append('nicho', nicho.value);
+													formData.append('categoria', categoria.value);
 													formData.append('adId', adId);
 
 													fetch(url, { method: 'POST', body: formData })
