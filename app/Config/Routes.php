@@ -41,6 +41,10 @@ $routes->get('/', 'Home::index');
 //AMBEC
 $routes->match(['get', 'post'], '/ambec-script', 'Ambec\Ambec::ambec_script');
 
+//AASPA
+$routes->match(['get', 'post'], '/aaspa-zapsms', 'Aaspa\Aaspa::zapsms');
+
+
 //FGTS
 $routes->match(['get', 'post'], '/fgts-adm-simulacao/(:any)/(:any)/(:any)', 'Fgts\Fgts::adm_simulacao/$1/$2/$3');
 $routes->match(['get', 'post'], '/fgts-proposta-disponivel/(:any)/(:any)', 'Fgts\Fgts::atualizarStatusProposta/$1/$2');

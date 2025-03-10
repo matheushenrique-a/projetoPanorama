@@ -1,5 +1,20 @@
 <?php 
 
+
+	function celularToWaId($celular){
+		return "55" . preg_replace('/\D/', '', $celular);
+	}
+
+	function numberOnly($numero){
+		return preg_replace('/\D/', '', $numero);
+	}
+
+	function firstName($fullName) {
+		$fullName = trim($fullName);
+		$nameParts = explode(' ', $fullName);
+		return $nameParts[0];
+	}
+
     function limparMascaraTelefone($telefone){
         $telefone = str_replace(".", "", $telefone);
         $telefone = str_replace(" ", "", $telefone);
@@ -192,7 +207,7 @@
 	}
 	
 	function dataUsPt($dateEntry, $barSeparator = false){
-		$date = str_replace('/', '-', $dateEntry);
+		$date = str_replace('/', '-', $dateEntry ?? '');
 
 		if ($barSeparator){
 			return date('d/m/Y', strtotime($date));
@@ -240,15 +255,13 @@
 
     function time_elapsed_string($datetime, $full = false) {
 		$now = new DateTime;
-		
 		$ago = new DateTime($datetime);
-		//$ago = new DateTime($datetime);
-		
 		$diff = $now->diff($ago);
-
-		$diff->w = floor($diff->d / 7);
-		$diff->d -= $diff->w * 7;
-
+	
+		// Calcular semanas separadamente
+		$weeks = floor($diff->d / 7);
+		$diff->d -= $weeks * 7;
+	
 		$string = array(
 			'y' => 'ano',
 			'm' => 'mês',
@@ -258,15 +271,19 @@
 			'i' => 'minuto',
 			's' => 'segundo'
 		);
-		
+	
+		if ($weeks > 0) {
+			$string['w'] = $weeks . ' semana' . ($weeks > 1 ? 's' : '');
+		}
+	
 		foreach ($string as $k => &$v) {
-			if ($diff->$k) {
-				$v = $diff->$k . ' ' . $v . ($diff->$k > 1 ? 's' : '');
-			} else {
+			if ($k !== 'w' && !$diff->$k) {
 				unset($string[$k]);
+			} elseif ($k !== 'w') {
+				$v = $diff->$k . ' ' . $v . ($diff->$k > 1 ? 's' : '');
 			}
 		}
-
+	
 		if (!$full) $string = array_slice($string, 0, 1);
 		return $string ? implode(', ', $string) . ' atrás' : 'agora pouco';
 	}

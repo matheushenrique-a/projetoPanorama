@@ -325,7 +325,7 @@
 															<td>
 																<div class="d-flex flex-column"> 
 																	<a href="<?php echo FGTSUrl ?>fgts/proposta/<?php echo $row->verificador;?>/<?php echo createToken();?>" target="_blank" class="text-gray-800 text-hover-primary mb-1">
-																		<?php echo substr($row->nome, 0, 15) . "...";?>
+																		<?php echo substr($row->nome . '', 0, 15) . "...";?>
 																	</a>
 																	<span><?php echo substr($row->email, 0, 13) . "...";?></span>	
 																</div>

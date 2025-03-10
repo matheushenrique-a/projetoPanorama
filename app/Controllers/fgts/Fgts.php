@@ -311,7 +311,7 @@ class Fgts extends BaseController
         return $eventos;
     }
 
-
+    //http://localhost/InsightSuite/public/sign-in
     public function listarPropostas(){
         $fases = $this->fasesProposta();
         $users = $this->listaOPeradores();

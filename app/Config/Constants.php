@@ -11,6 +11,24 @@ define('AppName', "Grupo QUID");
 
 define ('shortURL', 'https://pravc.io/');
 
+//SMS Account - US SMS ONLY
+define('TWILIO_ACCOUNT_SID_SMS','ACbec7bd36bb5c1d809c7fd76c0e06bb5c');
+define('TWILIO_AUTH_TOKEN_SMS','f9b35782bcc14ea689826783314dab9e');
+
+//WHATSAPP Account - BRASIL
+define('TWILIO_ACCOUNT_SID','ACd07f72009069ead82dcf03497b6cb3b1');
+define('TWILIO_AUTH_TOKEN','29e809986eeca0bc9d85716fb8e17596');
+define('TWILIO_MEDIA_PATH','https://insightsuite.pravoce.io/assets/pravoce/media/whatsapp/');
+define('fromWhatsApp','551140402158'); //OPCAO 02
+
+
+//DEFINE NOTIFICAÇÕES ATIVAS
+define('smsMsg', false);
+define('emailMsg', false);
+define('whatAppMsg', true);
+define('telegramAlerts', true);
+
+
 //FACEBOOK ADS
 define('META_GRAPH_API', "https://graph.facebook.com/v20.0/");
 define('META_TOKEN', "EAAMqjXZAxYiUBOxXAUzj9qYwNGRWDQKGdpMAneTRZBK65XDTAHc2hyzZC9mUMk2yWYM66yoDSQZCopNmXSzQmlxNSgy6YYf0yVt8Qkv9PYenDqZBFmjCUREXOU9E4Wxz2MGGbqhdqgye3AEcqnyKkwHFJsPVDK9NhKHRlg657SGvZAO25Y7DfTCA2ZA");
@@ -52,11 +70,6 @@ define ('telegramBurnApp', '-4518699236');
 define ('telegramPraVoceDigital', '-4003072193');
 define ('telegramPraVoceGroupLogErrors', '-587867421');
 
-//DEFINE NOTIFICAÇÕES ATIVAS
-define('smsMsg', false);
-define('emailMsg', false);
-define('whatAppMsg', false);
-define('telegramAlerts', true);
 
 //Na tela de listar propostas carrega ou nao os valores (pesado)
 define('exibir_valores_proposta', false);
