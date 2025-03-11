@@ -77,7 +77,7 @@
 																			<span class="input-group-text" style="width: 155px">Telefone</span>
 																			<input type="text" class="form-control" placeholder="" name="celular" value="<?php echo $celular;?>" />
 																		</div>
-																		<div class="card-header" id="headingOne4"><div class="card-title d" data-toggle="" data-target="#validaBancarios"><i class="flaticon2-checkmark"></i>Mensagem p/ Envio:</div></div>
+																		<div class="card-header p-0" id="headingOne4"><div class="card-title d" data-toggle="" data-target="#validaBancarios"><i class="flaticon2-checkmark"></i>Mensagem de Texto SMS</div></div>
 																		<div class="input-group">
 																			<span class="input-group-text bg-color: $ffffff" style="width: 100%"><input class="form-check-input" type="radio" name="tipoMensagem" <?php echo $tipoMensagem == "SMS-GOOGLE" ? "checked" : ""?> value="SMS-GOOGLE" />&nbsp;SMS Google Meeting</span>
 																		</div>
@@ -88,21 +88,23 @@
 																			<span class="input-group-text" style="width: 155px">Link AASPA</span>
 																			<input type="text" class="form-control" placeholder="" name="linkAaspa" value="<?php echo $linkAaspa;?>" />
 																		</div>
+																		<div class="card-header p-0" id="headingOne4"><div class="card-title d" data-toggle="" data-target="#validaBancarios"><i class="flaticon2-checkmark"></i>Mensagem WhatsApp</div></div>
 																		<div class="input-group">
 																			<span class="input-group-text bg-color: $ffffff" style="width: 100%"><input class="form-check-input" type="radio" name="tipoMensagem"  <?php echo $tipoMensagem == "WPP" ? "checked" : ""?> value="WPP" />&nbsp;WhatsApp Inicial</span>
 																		</div>
-																		<?php if (!empty($error)){?>
+																		<?php if ((!$returnData["status"]) and (!empty($returnData["mensagem"]))){?>
 																			<div class="input-group">
-																				<span class="input-group-text" style="width: 100%; color: #ff0000;"><?php echo $error;?></span>
+																				<span class="input-group-text" style="width: 100%; color: #ff0000;"><?php echo $returnData["mensagem"];?></span>
 																			</div>
 																		<?php }?>
-																		<?php if (!empty($sucesso)){?>
+																		<?php if (($returnData["status"]) and (!empty($returnData["mensagem"]))){?>
 																			<div class="input-group">
-																				<span class="input-group-text" style="width: 100%; color:rgb(29, 212, 32);"><?php echo $sucesso;?></span>
+																				<span class="input-group-text" style="width: 100%; color:rgb(29, 212, 32);"><?php echo $returnData["mensagem"];?></span>
 																			</div>
 																		<?php }?>
 																		<div class="d-flex align-items-center position-relative my-1 mt-5 mb-0">
 																			<button type="submit" class="btn btn-primary" name="btnSalvar" value="btnSalvar">Enviar</button>										
+																			<button type="submit" class="btn btn-primary ms-4" name="btnConsultar" value="btnConsultar" style="background-color:rgb(212, 212, 212);">Consultar Telefone</button>										
 																		</div>
 
 																	</div>
@@ -130,7 +132,7 @@
 																	<!--begin::Info-->
 																	<div class="mb-0 lh-1">
 																		<span class="badge badge-success badge-circle w-10px h-10px me-1"></span>
-																		<span class="fs-7 fw-semibold text-muted"><a href="<?php echo FGTSUrl ?>fgts/proposta-status/<?php echo $nomeCompleto;?>/DEeDeqqew234deT45" target="_blank">Proposta: <?php echo strtoupper($nomeCompleto);?></a></span>
+																		<span class="fs-7 fw-semibold text-muted">Histório de Mensagens:</span>
 																	</div>
 																	<!--end::Info-->
 																</div>
@@ -161,7 +163,7 @@
 																
 																<?php 
 																
-																if ($chat['num_rows'] > 0 ){
+																if ((!is_null($chat)) and ($chat['num_rows'] > 0 )){
 																	foreach ($chat["result"]->getResult() as $row){
 																		if (strtolower($row->ProfileName) != "chatbot"){
 																?>

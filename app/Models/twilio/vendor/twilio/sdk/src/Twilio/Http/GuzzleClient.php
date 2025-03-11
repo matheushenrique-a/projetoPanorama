@@ -22,8 +22,8 @@ final class GuzzleClient implements Client {
 
     public function request(string $method, string $url,
                             array $params = [], array $data = [], array $headers = [],
-                            string $user = null, string $password = null,
-                            int $timeout = null): Response {
+                            ?string $user = null, ?string $password = null,
+                            ?int $timeout = null): Response {
         try {
             $options = [
                 'timeout' => $timeout,
@@ -32,10 +32,10 @@ final class GuzzleClient implements Client {
             ];
 
             if ($params) {
-                $options['query'] = $params;
+                $options['query'] = Query::build($params, PHP_QUERY_RFC1738);
             }
 
-            if ($method === 'POST') {
+            if ($method === 'POST' || $method === 'PUT') {
                 if ($this->hasFile($data)) {
                     $options['multipart'] = $this->buildMultipartParam($data);
                 } else {

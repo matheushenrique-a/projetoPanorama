@@ -3,7 +3,7 @@
         'name' => 'twili/sdk',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'cfd84de84500f86939c496cc3ce14bb29acca254',
+        'reference' => '378ae0118a10ee449597317a1e99846d40450da7',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'twili/sdk' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'cfd84de84500f86939c496cc3ce14bb29acca254',
+            'reference' => '378ae0118a10ee449597317a1e99846d40450da7',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -22,7 +22,7 @@
         'twilio/sdk' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '5c7708a55524c6fb1fa66b45c99d620cbaf4d649',
+            'reference' => '3113e8a672edf5e012120fa6fafc201e013c7ba4',
             'type' => 'library',
             'install_path' => __DIR__ . '/../twilio/sdk',
             'aliases' => array(

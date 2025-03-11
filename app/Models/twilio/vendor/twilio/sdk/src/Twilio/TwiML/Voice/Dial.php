@@ -88,6 +88,17 @@ class Dial extends TwiML {
     }
 
     /**
+     * Add Application child.
+     *
+     * @param string $applicationSid Application sid
+     * @param array $attributes Optional attributes
+     * @return Application Child element.
+     */
+    public function application($applicationSid = null, $attributes = []): Application {
+        return $this->nest(new Application($applicationSid, $attributes));
+    }
+
+    /**
      * Add Action attribute.
      *
      * @param string $action Action URL
@@ -247,5 +258,14 @@ class Dial extends TwiML {
      */
     public function setReferMethod($referMethod): self {
         return $this->setAttribute('referMethod', $referMethod);
+    }
+
+    /**
+     * Add Events attribute.
+     *
+     * @param string $events Subscription to events
+     */
+    public function setEvents($events): self {
+        return $this->setAttribute('events', $events);
     }
 }
