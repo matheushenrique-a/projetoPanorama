@@ -34,7 +34,10 @@ class m_twilio extends Model {
 
 		try {
 			$message = $twilio->messages->create("+" . $telefone, ["body" => $mensagem, "from" => "+13393300703"]);
+			//echo '09:11:00 - <h3>Dump 42 </h3> <br><br>' . var_dump($message); exit;					//<-------DEBUG
+
 			// Suponha que $message seja o objeto retornado pelo Twilio
+			$messageSid = $message->sid;
 			$status = $message->status;
 			$error_code = $message->errorCode; // Pode ser null se não houver erro
 			$error_message = $message->errorMessage; // Pode ser null se não houver erro
@@ -63,7 +66,7 @@ class m_twilio extends Model {
 		$returnData["raw"] = $message;
 
 		//Registra conversa no histórico
-		$data = (array('MessageSid' => $returnData["mensagem"], 'ProfileName' => 'SMS', 'Body' => $mensagem, 'SmsStatus' => 'Sent', 'To' => $telefone, 'WaId' => fromWhatsApp, 'From' => "whatsapp:+" . fromWhatsApp));
+		$data = (array('MessageSid' => $messageSid, 'ProfileName' => 'SMS', 'Body' => $mensagem, 'SmsStatus' => 'Sent', 'To' => $telefone, 'WaId' => fromWhatsApp, 'From' => "whatsapp:+" . fromWhatsApp));
 		$result = $this->dbMasterDefault->insert('whatsapp_log', $data);
 
 		return $returnData;
@@ -113,6 +116,7 @@ class m_twilio extends Model {
 				//echo $template;exit;
 				$message = $twilio->messages->create("whatsapp:" . $to, ["contentSid" => $template, "from" => "whatsapp:+" . fromWhatsApp]);
 
+				$messageSid = $message->sid;
 				$status = $message->status;
 				$body = $message->body;
 				//$messaging_service_sid = $message->messaging_service_sid;
@@ -138,8 +142,7 @@ class m_twilio extends Model {
 			//echo $returnData["mensagem"];exit;
 			
 			//Registra conversa no histórico
-			$MessageSid = substr($message, strpos($message, " sid=")+5, -1);
-			$data = (array('MessageSid' => $MessageSid, 'ProfileName' => 'WHATSAPP', 'Body' => $body, 'SmsStatus' => 'Sent', 'To' => $to, 'WaId' => fromWhatsApp, 'From' => "whatsapp:+" . fromWhatsApp));
+			$data = (array('MessageSid' => $messageSid, 'ProfileName' => 'WHATSAPP', 'Body' => $body, 'SmsStatus' => 'Sent', 'To' => $to, 'WaId' => fromWhatsApp, 'From' => "whatsapp:+" . fromWhatsApp));
 			$result = $this->dbMasterDefault->insert('whatsapp_log', $data);
 
 			return $returnData;
@@ -152,14 +155,11 @@ class m_twilio extends Model {
 		$twilio = new Client($sid, $token);
 
 		try {
-			$participant = $twilio->conversations->conversations($conversationSid)->participants->create(["identity" => $workedEmail]);
+			//$participant = $twilio->conversations->conversations($conversationSid)->participants->create(["identity" => $workedEmail]);
+			$participants = $twilio->conversations->v1->conversations($conversationSid)->participants->create(["identity" => $workedEmail]);
 		} catch (Exception $e) {
 			$this->dbMasterDefault->insert('record_log',['log' => "ROUTING Error Worker:$workedEmail - " . $e->getMessage()]);
-			error_log("Create agent participant: " . $e->getMessage());
 		}
-
-		$participants = $twilio->conversations->v1->conversations($ConversationSid)->participants($ParticipantSid)->update($data);	
-		return $participants;
 	}
 
 	//remove conversas presas no Frontline
@@ -171,6 +171,43 @@ class m_twilio extends Model {
 		//echo "$service, $conversationId";exit;
 		$outpout = $twilio->conversations->v1->services($service)->conversations($conversationId)->delete();
 		return $outpout;
+	}
+
+	//remove conversas presas no Frontline
+	function messageStatus($type, $messageSid){
+
+		if ($type == "SMS") {
+			$sid = TWILIO_ACCOUNT_SID_SMS;
+			$token = TWILIO_AUTH_TOKEN_SMS;	
+		} else {
+			$sid = TWILIO_ACCOUNT_SID;
+			$token = TWILIO_AUTH_TOKEN;
+		}
+
+		$twilio = new Client($sid, $token);
+
+		$returnData = array();
+		$returnData["status"] = "INDEFINIDO";
+		$returnData["erro"] = "INDEFINIDO";
+		$returnData["data_envio"] = "INDEFINIDO";
+
+		try {
+			$message = $twilio->messages($messageSid)->fetch();
+
+			$returnData["status"] = traduzirStatusTwilio($message->status);
+			$returnData["erro"] = ($message->errorCode ? traduzirErroTwilio($message->errorCode . " - " . $message->errorMessage) : "NENHUM");
+			$returnData["data_envio"] = ($message->dateSent ? $message->dateSent->format('d-m-Y H:i:s') : "PENDENTE ENVIO");
+			$this->dbMasterDefault->update('whatsapp_log', ['SmsStatus' => $message->status], ['MessageSid' => $messageSid], ['last_updated' => 'current_timestamp()']);
+
+		} catch (\Exception $e) {
+			$returnData["status"] = "ERROR CONSULTA";
+			$returnData["erro"] = traduzirErroTwilio($e->getMessage());
+			$returnData["data_envio"] = "ERROR CONSULTA";
+	
+			$this->dbMasterDefault->insert('record_log',['log' => "ERRO CONSULTA MESSAGE SID $messageSid - $type" . $e->getMessage()]);
+		}
+		
+		return $returnData;
 	}
 
 	function participantUpdate($ConversationSid, $ParticipantSid, $id_proposta, $display_name){

@@ -77,6 +77,9 @@
 																			<span class="input-group-text" style="width: 155px">Telefone</span>
 																			<input type="text" class="form-control" placeholder="" name="celular" value="<?php echo $celular;?>" />
 																		</div>
+																		<div class="d-flex align-items-center position-relative my-1 mt-5 mb-0">
+																			<button type="submit" class="btn btn-primary" name="btnConsultar" value="btnConsultar" style="background-color:rgb(212, 212, 212);">Atualizar Chat</button>										
+																		</div>
 																		<div class="card-header p-0" id="headingOne4"><div class="card-title d" data-toggle="" data-target="#validaBancarios"><i class="flaticon2-checkmark"></i>Mensagem de Texto SMS</div></div>
 																		<div class="input-group">
 																			<span class="input-group-text bg-color: $ffffff" style="width: 100%"><input class="form-check-input" type="radio" name="tipoMensagem" <?php echo $tipoMensagem == "SMS-GOOGLE" ? "checked" : ""?> value="SMS-GOOGLE" />&nbsp;SMS Google Meeting</span>
@@ -104,7 +107,6 @@
 																		<?php }?>
 																		<div class="d-flex align-items-center position-relative my-1 mt-5 mb-0">
 																			<button type="submit" class="btn btn-primary" name="btnSalvar" value="btnSalvar">Enviar</button>										
-																			<button type="submit" class="btn btn-primary ms-4" name="btnConsultar" value="btnConsultar" style="background-color:rgb(212, 212, 212);">Consultar Telefone</button>										
 																		</div>
 
 																	</div>
@@ -128,7 +130,7 @@
 															<div class="card-title">
 																<!--begin::User-->
 																<div class="d-flex justify-content-center flex-column me-3">
-																	<a href="#" class="fs-4 fw-bold text-gray-900 text-hover-primary me-1 mb-2 lh-1"><?php echo strtoupper((empty($nomeCompleto)  ? $nomeCompleto : $nomeCompleto));?></a>
+																	<span class="fs-4 fw-bold text-gray-900 me-1 mb-2 lh-1"><?php echo strtoupper($nomeCompleto  ?? "NÃO INFORMADO");?> - <?php echo ($cpf  ?? "NÃO INFORMADO");?></span>
 																	<!--begin::Info-->
 																	<div class="mb-0 lh-1">
 																		<span class="badge badge-success badge-circle w-10px h-10px me-1"></span>
@@ -166,6 +168,9 @@
 																if ((!is_null($chat)) and ($chat['num_rows'] > 0 )){
 																	foreach ($chat["result"]->getResult() as $row){
 																		if (strtolower($row->ProfileName) != "chatbot"){
+
+																		$statusMessage = $twilio->messageStatus($row->ProfileName, $row->MessageSid);
+																		//echo '10:39:56 - <h3>Dump 82 </h3> <br><br>' . var_dump($statusMessage); exit;					//<-------DEBUG
 																?>
 																			<!--begin::Message(in)-->
 																			<div class="d-flex justify-content-start mb-10 ">
@@ -174,11 +179,20 @@
 																						<div class="symbol  symbol-35px symbol-circle "><div class="symbol-label fs-3 bg-light-success text-success"><?php echo substr(strtoupper($row->ProfileName),0,1);?></div></div><!--end::Avatar-->
 																						<div class="ms-3">
 																							<a href="#" class="fs-5 fw-bold text-gray-900 text-hover-primary me-1"><?php echo strtoupper($row->ProfileName);?></a>
-																							<span class="text-muted fs-7 mb-1"><?php echo time_elapsed_string($row->last_updated) . ' - ' . date_format(date_create($row->last_updated),"d/M H:i:s") . '<span class="badge badge-light-' . ($row->SmsStatus == 'failed'  ? 'danger' : 'success') .  ' ms-auto">' . $row->SmsStatus . '</span>'?></span>
+																							<span class="text-muted fs-7 mb-1"><?php echo time_elapsed_string($row->last_updated) . ' - ' . date_format(date_create($row->last_updated),"d/M H:i:s") . '<span class="badge badge-light-' . $statusMessage["status"][1] .  ' ms-auto">' . $statusMessage["status"][0] . '</span>'?></span>
 																						</div>
 																					</div>
 																					<div class="p-5 rounded bg-light-success text-dark mw-lg-400px text-start" data-kt-element="message-text">
 																						<?php echo $row->Body;?>      
+																					</div>
+																					<div class="d-flex align-items-center mb-2">
+																						<div class="ms-3">
+																							<span class="text-muted fs-7 mb-1">
+																								<?php echo $row->To;?> - 
+																								<?php echo $row->MessageSid;?>
+																							
+																							</span>
+																						</div>
 																					</div>
 																				</div>
 																			</div>

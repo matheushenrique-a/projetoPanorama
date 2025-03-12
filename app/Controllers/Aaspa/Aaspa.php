@@ -7,7 +7,7 @@ use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use App\Libraries\dbMaster;
 use App\Models\M_telegram;
-use App\Models\m_twilio;
+use App\Models\M_twilio;
 use Config\Services;
 
 class Aaspa extends BaseController
@@ -112,6 +112,7 @@ class Aaspa extends BaseController
         $data['linkAaspa'] = $linkAaspa;
         $data['tipoMensagem'] = $tipoMensagem;
         $data['returnData'] = $returnData;
+        $data['twilio'] = $this->twilio;
 
         return $this->loadpage('aaspa/zapsms', $data);
     }

@@ -1,6 +1,52 @@
 <?php 
 
 
+	function traduzirStatusTwilio($status) {
+		$status = strtoupper($status);
+
+		// Mapeamento de status em inglês para português e cor correspondente
+		$statusMap = [
+			"MESSAGE CREATED" => ["criada", "warning"],
+			"ENQUEUED" => ["na fila", "warning"],
+			"DEQUEUED" => ["na fila", "warning"],
+			"SENT" => ["a caminho", "warning"],
+			"DELIVERED" => ["entregue", "success"],
+			"RECEIVED" => ["recebida", "success"],
+			"SENDING" => ["enviando", "warning"],
+			"READ" => ["vista", "success"],
+			"UNDELIVERED" => ["falha", "danger"],
+		];
+ 
+		// Retorna um array contendo a mensagem e a cor, ou um padrão caso não exista
+		return $statusMap[$status] ?? [$status, "danger"];
+	}
+
+	function traduzirErroTwilio($mensagem) {
+		$mensagem = strtoupper($mensagem);
+
+		// Mapeamento de trechos de erro para mensagens mais claras
+		$errosMap = [
+			"UNABLE TO FETCH RECORD" => "Não foi possível consultar a mensagem. Verifique se código da mensagem está correto.",
+			"INVALID MESSAGE SID" => "O identificador da mensagem (SID) é inválido. Confirme se ele está correto.",
+			"HTTP 400" => "Requisição inválida. Verifique os parâmetros enviados.",
+			"HTTP 401" => "Não autorizado. Verifique suas credenciais do Twilio.",
+			"HTTP 403" => "Acesso negado. Sua conta pode não ter permissão para essa ação.",
+			"HTTP 404" => "Registro não encontrado. Certifique-se de que o SID está correto.",
+			"MESSAGE QUEUE OVERFLOW" => "A fila de mensagens está cheia. Aguarde e tente novamente mais tarde.",
+			"RATE LIMIT EXCEEDED" => "Limite de requisições excedido. Tente novamente em alguns instantes."
+		];
+	
+		// Verifica se algum trecho está na mensagem original e retorna a tradução correspondente
+		foreach ($errosMap as $erroIngles => $erroTraduzido) {
+			if (strpos($mensagem, $erroIngles) !== false) {
+				return $erroTraduzido;
+			}
+		}
+	
+		// Retorno padrão caso nenhum erro seja identificado
+		return "Erro desconhecido: " . $mensagem;
+	}
+
 	function celularToWaId($celular){
 		return "55" . preg_replace('/\D/', '', $celular);
 	}
@@ -257,34 +303,43 @@
 		$now = new DateTime;
 		$ago = new DateTime($datetime);
 		$diff = $now->diff($ago);
-	
-		// Calcular semanas separadamente
-		$weeks = floor($diff->d / 7);
-		$diff->d -= $weeks * 7;
-	
+		
+		// Obtém a diferença total em dias para calcular semanas corretamente
+		$total_days = $diff->days;
+		$weeks = floor($total_days / 7);
+		
 		$string = array(
 			'y' => 'ano',
 			'm' => 'mês',
 			'w' => 'semana',
 			'd' => 'dia',
-			'h' => 'h',
+			'h' => 'hora',
 			'i' => 'minuto',
 			's' => 'segundo'
 		);
 	
-		if ($weeks > 0) {
-			$string['w'] = $weeks . ' semana' . ($weeks > 1 ? 's' : '');
-		}
+		$values = array(
+			'y' => $diff->y,
+			'm' => $diff->m,
+			'w' => $weeks,
+			'd' => $total_days % 7, // Agora os dias restantes após contar semanas
+			'h' => $diff->h,
+			'i' => $diff->i,
+			's' => $diff->s
+		);
 	
-		foreach ($string as $k => &$v) {
-			if ($k !== 'w' && !$diff->$k) {
+		foreach ($values as $k => $v) {
+			if ($v) {
+				$string[$k] = $v . ' ' . $string[$k] . ($v > 1 ? 's' : '');
+			} else {
 				unset($string[$k]);
-			} elseif ($k !== 'w') {
-				$v = $diff->$k . ' ' . $v . ($diff->$k > 1 ? 's' : '');
 			}
 		}
 	
-		if (!$full) $string = array_slice($string, 0, 1);
+		if (!$full) {
+			$string = array_slice($string, 0, 1);
+		}
+		
 		return $string ? implode(', ', $string) . ' atrás' : 'agora pouco';
 	}
 

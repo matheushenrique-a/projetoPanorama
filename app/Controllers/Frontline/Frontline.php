@@ -7,7 +7,7 @@ use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use App\Libraries\dbMaster;
 use App\Models\M_telegram;
-use App\Models\m_twilio;
+use App\Models\M_twilio;
 use Config\Services;
 
 class Frontline extends BaseController
@@ -73,6 +73,7 @@ class Frontline extends BaseController
 	// StateTo	closed
 	// StateUpdated	2023-01-26T14:31:41.305Z
 	//http://localhost/InsightSuite/public/frontline-conversations-webhook
+	//https://insightsuite.pravoce.io/frontline-conversations-webhook
 	public function frontline_conversations_webhook(){
 		$AccountSid = $this->getpost('AccountSid');
 		$MessageSid = $this->getpost('MessageSid');
@@ -154,6 +155,7 @@ class Frontline extends BaseController
 	// Location	GetProxyAddress
 	// Worker	dantas@pravoce.io
 	//http://localhost/InsightSuite/public/frontline-outgoing-conversation
+	//https://insightsuite.pravoce.io/frontline-outgoing-conversation
 	public function frontline_outgoing_conversation(){
 		$ChannelType = $this->getpost('ChannelType');
 		$ChannelValue = $this->getpost('ChannelValue');
@@ -165,6 +167,7 @@ class Frontline extends BaseController
 	}
     
 	//http://localhost/InsightSuite/public/frontline-routing-webhook
+	//https://insightsuite.pravoce.io/frontline-routing-webhook
 	function frontline_routing_webhook(){
 		$Author = $this->getpost('Author');
 		$Body = $this->getpost('Body');
@@ -215,6 +218,7 @@ class Frontline extends BaseController
 	// Worker	dantas@pravoce.io
 
 	//http://localhost/InsightSuite/public/frontline-crm-inbound
+	//https://insightsuite.pravoce.io/frontline-crm-inbound
 	public function frontline_crm_inbound(){
 		
 		$Location = $this->getpost('Location');
@@ -286,6 +290,7 @@ class Frontline extends BaseController
 	// Location	GetTemplatesByCustomerId
 	// Worker	dantas@pravoce.io
 	//http://localhost/InsightSuite/public/frontline-template-inbound
+	//https://insightsuite.pravoce.io/frontline-template-inbound
 	public function frontline_template_inbound()
 	{
 		$ConversationSid = $this->getpost('ConversationSid');
