@@ -156,9 +156,22 @@ class m_twilio extends Model {
 
 		try {
 			//$participant = $twilio->conversations->conversations($conversationSid)->participants->create(["identity" => $workedEmail]);
-			$participants = $twilio->conversations->v1->conversations($conversationSid)->participants->create(["identity" => $workedEmail]);
+			$participant =  $twilio->conversations->v1->conversations($conversationSid)->participants->create(["identity" => $workedEmail]);
+
 		} catch (Exception $e) {
 			$this->dbMasterDefault->insert('record_log',['log' => "ROUTING Error Worker:$workedEmail - " . $e->getMessage()]);
+		}
+	}
+
+	function delete_message($conversationSid, $messageSid){
+		$sid = TWILIO_ACCOUNT_SID;
+		$token = TWILIO_AUTH_TOKEN;
+		$twilio = new Client($sid, $token);
+
+		try {
+			$twilio->conversations->v1->conversations($conversationSid)->messages($messageSid)->delete();
+		} catch (Exception $e) {
+			$this->dbMasterDefault->insert('record_log',['log' => "TWILIO DELETE ERROR Error $conversationSid, $messageSid - " . $e->getMessage()]);
 		}
 	}
 

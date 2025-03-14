@@ -142,9 +142,20 @@ class Frontline extends BaseController
 			//salva mensagem trocada
 			$data = (array('MessageSid' => $MessageSid, 'ProfileName' => $Author, 'Body' => $Body, 'SmsStatus' => 'Sent', 'To' => $To, 'WaId' => null, 'From' => numberOnly($From)));
 			$result = $this->dbMasterDefault->insert('whatsapp_log', $data);
+		} else if (($EventType == 'onMessageAdd')) {
+			$participants = $this->twilio->delete_message($ConversationSid, $MessageSid);
+			$Body = strtoupper($Body);
+			if (strpos($Body, "CLIENTE:") !== false){
+				$extractName = explode(":", $Body);
+				$display_name = $extractName[1] ?? "CLIENTE LIGAÇÃO";
+				$participants = $this->twilio->participantUpdate($ConversationSid, $ParticipantSid, "1234", $display_name);
+				http_response_code(200);
+
+				$this->dbMasterDefault->delete('whatsapp_log', ['MessageSid' => $MessageSid]);
+			}
 		} else if (($EventType == 'onDeliveryUpdated')) {
-			$this->dbMasterDefault->insert('record_log',['log' => "onDeliveryUpdated $MessageSid, $Status, $ErrorCode"]);
-			$this->dbMasterDefault->update('whatsapp_log', ['SmsStatus' => $Status], ['MessageSid' => $MessageSid], ['last_update' => 'current_timestamp()']);
+			//$this->dbMasterDefault->insert('record_log',['log' => "onDeliveryUpdated $MessageSid, $Status, $ErrorCode"]);
+			//$this->dbMasterDefault->update('whatsapp_log', ['SmsStatus' => $Status], ['MessageSid' => $MessageSid], ['last_update' => 'current_timestamp()']);
 		}
 	}
 

@@ -44,6 +44,10 @@ $routes->match(['get', 'post'], '/ambec-script', 'Ambec\Ambec::ambec_script');
 //AASPA
 $routes->match(['get', 'post'], '/aaspa-zapsms', 'Aaspa\Aaspa::zapsms');
 
+//AASPA
+$routes->match(['get', 'post'], '/argus-atendimento-webhook', 'Argus\Argus::argus_atendimento_webhook');
+
+
 //FRONTLINE
 $routes->match(['get', 'post'], '/frontline-routing-webhook', 'Frontline\Frontline::frontline_routing_webhook');
 $routes->match(['get', 'post'], '/frontline-conversations-webhook', 'Frontline\Frontline::frontline_conversations_webhook');
