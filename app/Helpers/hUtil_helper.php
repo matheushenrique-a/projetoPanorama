@@ -1,6 +1,33 @@
 <?php 
 
 
+	function formatarTelefone($numero) {
+		// Remove qualquer caractere não numérico
+		$numero = preg_replace('/\D/', '', $numero);
+
+		// Verifica se tem o DDI e DDD (ex: 55 + 31)
+		if (strlen($numero) === 13 && substr($numero, 0, 2) === "55") {
+			$numero = substr($numero, 2); // Remove o DDI (55)
+		}
+
+		// Captura DDD e número
+		if (strlen($numero) === 11) { // Celular
+			$ddd = substr($numero, 0, 2);
+			$parte1 = substr($numero, 2, 5);
+			$parte2 = substr($numero, 7, 4);
+		} elseif (strlen($numero) === 10) { // Fixo
+			$ddd = substr($numero, 0, 2);
+			$parte1 = substr($numero, 2, 4);
+			$parte2 = substr($numero, 6, 4);
+		} else {
+			return "Número inválido";
+		}
+
+		return "($ddd)$parte1-$parte2";
+	}
+
+
+
 	function traduzirStatusTwilio($status) {
 		$status = strtoupper($status);
 
@@ -15,6 +42,7 @@
 			"SENDING" => ["enviando", "warning"],
 			"READ" => ["vista", "success"],
 			"UNDELIVERED" => ["falha", "danger"],
+			"GRAVADA" => ["gravada", "warning"],
 		];
  
 		// Retorna um array contendo a mensagem e a cor, ou um padrão caso não exista

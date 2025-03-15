@@ -49,27 +49,35 @@ class Argus extends BaseController
     //     "idTipoWebhook": 1
     // }
 
-    //https://1e32-177-73-197-2.ngrok-free.app/InsightSuite/public/argus-atendimento-webhook
+    //https://a613-2804-1b3-6149-9c04-d1cc-cd1c-6041-2e1c.ngrok-free.app/InsightSuite/public/argus-atendimento-webhook
     public function argus_atendimento_webhook(){
-        $idDominio = $this->getpost('idDominio');
-		$idCampanha = $this->getpost('idCampanha');
-		$idSkill = $this->getpost('idSkill');
-		$idLote = $this->getpost('idLote');
-        $idLigacao = $this->getpost('idLigacao');
-		$dataInicioLigacao = $this->getpost('dataInicioLigacao');
-		$idTipoWebhook = $this->getpost('idTipoWebhook');
+        // $idDominio = $this->getpost('idDominio');
+		// $idCampanha = $this->getpost('idCampanha');
+		// $idSkill = $this->getpost('idSkill');
+		// $idLote = $this->getpost('idLote');
+        // $idLigacao = $this->getpost('idLigacao');
+		// $dataInicioLigacao = $this->getpost('dataInicioLigacao');
+		// $idTipoWebhook = $this->getpost('idTipoWebhook');
 
         $codCliente = $this->getpost('codCliente');
 		$nomeCliente = $this->getpost('nomeCliente');
 		$cpfCnpj = $this->getpost('cpfCnpj');
-		$nomeUsuario = $this->getpost('nomeUsuario');
+		$nomeUsuario = strtoupper($this->getpost('nomeUsuario'));
 		$telefone = $this->getpost('telefone');
 		$telefoneE164 = $this->getpost('telefoneE164');
 
+        $codCliente = "_aDmnVGyECSiY9Aza3Qq9YwkhmUQ%3D";
+        $nomeCliente = "PEDRO HENRIQUE DE SOUZA";
+        $cpfCnpj = "";
+        $nomeUsuario = "FERNANDO DANTAS DOS SANTOS JUNIOR";
+        $idLigacao = 107372507;
+        $dataInicioLigacao = "2025-03-14T13:46:00.000Z";
+        $telefoneE164 = "5573981487632";
 
-
-        //$cliente = $this->dbMasterDefault->select('aaspa_cliente', ['cpf' => $cpf]);
-
+        if (!empty($nomeCliente)){
+            $this->dbMasterDefault->insert('aaspa_cliente',['codCliente' => $codCliente, 'nome' => $nomeCliente, 'cpf' => $cpfCnpj, 'celular' => $telefoneE164, 'assessor' => $nomeUsuario, 'dataInicioLigacao' => $dataInicioLigacao, 'idLigacao' => $idLigacao]);
+        }
+        http_response_code(200);
 
     }
 

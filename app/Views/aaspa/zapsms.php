@@ -167,18 +167,18 @@
 																
 																if ((!is_null($chat)) and ($chat['num_rows'] > 0 )){
 																	foreach ($chat["result"]->getResult() as $row){
-																		if (strtolower($row->ProfileName) != "chatbot"){
-
-																		$statusMessage = $twilio->messageStatus($row->ProfileName, $row->MessageSid);
+																		$SmsStatus = $row->SmsStatus;
+																		$statusMessage["status"] = traduzirStatusTwilio($SmsStatus);
+																		
 																		//echo '10:39:56 - <h3>Dump 82 </h3> <br><br>' . var_dump($statusMessage); exit;					//<-------DEBUG
 																?>
 																			<!--begin::Message(in)-->
 																			<div class="d-flex justify-content-start mb-10 ">
 																				<div class="d-flex flex-column align-items-start">
 																					<div class="d-flex align-items-center mb-2">
-																						<div class="symbol  symbol-35px symbol-circle "><div class="symbol-label fs-3 bg-light-success text-success"><?php echo substr(strtoupper($row->ProfileName),0,1);?></div></div><!--end::Avatar-->
+																						<div class="symbol  symbol-35px symbol-circle "><div class="symbol-label fs-3 bg-light-success text-success"><?php echo substr(strtoupper($row->Type),0,1);?></div></div><!--end::Avatar-->
 																						<div class="ms-3">
-																							<a href="#" class="fs-5 fw-bold text-gray-900 text-hover-primary me-1"><?php echo strtoupper($row->ProfileName);?></a>
+																							<a href="#" class="fs-5 fw-bold text-gray-900 text-hover-primary me-1"><?php echo strtoupper($row->Type);?> (<?php echo ($row->ProfileName);?>)</a>
 																							<span class="text-muted fs-7 mb-1"><?php echo time_elapsed_string($row->last_updated) . ' - ' . date_format(date_create($row->last_updated),"d/M H:i:s") . '<span class="badge badge-light-' . $statusMessage["status"][1] .  ' ms-auto">' . $statusMessage["status"][0] . '</span>'?></span>
 																						</div>
 																					</div>
@@ -197,24 +197,7 @@
 																				</div>
 																			</div>
 																			<!--end::Message(in)-->
-																		<?php } else {?>
-																			<!--begin::Message(out)-->
-																			<div class="d-flex justify-content-end mb-10 ">
-																				<div class="d-flex flex-column align-items-end">
-																					<div class="d-flex align-items-center mb-2">
-																						<div class="me-3">
-																							<span class="text-muted fs-7 mb-1"><?php echo time_elapsed_string($row->last_updated) . ' - ' . date("d/M H:i:s", strtotime($row->last_updated . ' -3 hours')) . '<span class="badge badge-light-' . ($row->SmsStatus == 'failed'  ? 'danger' : 'success') .  ' ms-auto">' . $row->SmsStatus . '</span>'?></span>
-																							<a href="#" class="fs-5 fw-bold text-gray-900 text-hover-primary ms-1"><?php echo strtoupper($row->ProfileName);?></a>  
-																						</div>
-																						<div class="symbol  symbol-35px symbol-circle "><div class="symbol-label fs-3 bg-light-info text-info">P</div></div><!--end::Avatar-->                 
-																					</div>
-																					<div class="p-5 rounded bg-light-primary text-dark mw-lg-400px text-end" data-kt-element="message-text">
-																						<?php echo $row->Body  ;?>           
-																					</div>
-																				</div>
-																			</div>
-																			<!--end::Message(out)-->
-																<?php }}}?>
+																<?php }}?>
 															</div>
 															<!--end::Messages-->
 														</div>

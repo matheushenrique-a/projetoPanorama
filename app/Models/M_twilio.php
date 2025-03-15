@@ -19,7 +19,7 @@ class m_twilio extends Model {
 	}
 
 	//SMS Via Twilio
-	function sendSMS($telefone, $mensagem){
+	function sendSMS($telefone, $mensagem, $author = 'INSIGHT'){
 		$sid = TWILIO_ACCOUNT_SID_SMS;
 		$token = TWILIO_AUTH_TOKEN_SMS;
 		$twilio = new Client($sid, $token);
@@ -33,7 +33,7 @@ class m_twilio extends Model {
 		$this->dbMasterDefault->insert('record_log',['log' => "SMS Enviado $telefone - $mensagem"]);
 
 		try {
-			$message = $twilio->messages->create("+" . $telefone, ["body" => $mensagem, "from" => "+13393300703"]);
+			$message = $twilio->messages->create("+" . $telefone, ["body" => $mensagem, "from" => "+13393300703", "statusCallback" => "https://a613-2804-1b3-6149-9c04-d1cc-cd1c-6041-2e1c.ngrok-free.app/InsightSuite/public/frontline-conversations-webhook"]);
 			//echo '09:11:00 - <h3>Dump 42 </h3> <br><br>' . var_dump($message); exit;					//<-------DEBUG
 
 			// Suponha que $message seja o objeto retornado pelo Twilio
@@ -66,7 +66,7 @@ class m_twilio extends Model {
 		$returnData["raw"] = $message;
 
 		//Registra conversa no histórico
-		$data = (array('MessageSid' => $messageSid, 'ProfileName' => 'SMS', 'Body' => $mensagem, 'SmsStatus' => 'Sent', 'To' => $telefone, 'WaId' => fromWhatsApp, 'From' => "whatsapp:+" . fromWhatsApp));
+		$data = (array('MessageSid' => $messageSid, 'Type' => 'SMS', 'ProfileName' => $author, 'Body' => $mensagem, 'SmsStatus' => 'Gravada', 'To' => numberOnly($telefone), 'WaId' => fromWhatsApp, 'From' => fromWhatsApp));
 		$result = $this->dbMasterDefault->insert('whatsapp_log', $data);
 
 		return $returnData;
@@ -88,7 +88,7 @@ class m_twilio extends Model {
 
 			//Registra conversa no histórico
 			$MessageSid = substr($message, strpos($message, " sid=")+5, -1);
-			$data = (array('MessageSid' => $MessageSid, 'ProfileName' => 'ChatBot', 'Body' => $body, 'SmsStatus' => 'Sent', 'To' => $to, 'WaId' => fromWhatsApp, 'From' => "whatsapp:+" . fromWhatsApp));
+			$data = (array('MessageSid' => $MessageSid, 'Type' => 'WHATSAPP', 'ProfileName' => 'INSIGHT', 'Body' => $body, 'SmsStatus' => 'Sent', 'To' => $to, 'WaId' => fromWhatsApp, 'From' => "whatsapp:+" . fromWhatsApp));
 			$result = $this->dbMasterDefault->insert('whatsapp_log', $data);
 
 			return $message;
@@ -142,7 +142,7 @@ class m_twilio extends Model {
 			//echo $returnData["mensagem"];exit;
 			
 			//Registra conversa no histórico
-			$data = (array('MessageSid' => $messageSid, 'ProfileName' => 'WHATSAPP', 'Body' => $body, 'SmsStatus' => 'Sent', 'To' => $to, 'WaId' => fromWhatsApp, 'From' => "whatsapp:+" . fromWhatsApp));
+			$data = (array('MessageSid' => $messageSid, 'Type' => 'WHATSAPP', 'ProfileName' => 'INSIGHT', 'Body' => $body, 'SmsStatus' => 'Sent', 'To' => $to, 'WaId' => fromWhatsApp, 'From' => "whatsapp:+" . fromWhatsApp));
 			$result = $this->dbMasterDefault->insert('whatsapp_log', $data);
 
 			return $returnData;
@@ -172,6 +172,28 @@ class m_twilio extends Model {
 			$twilio->conversations->v1->conversations($conversationSid)->messages($messageSid)->delete();
 		} catch (Exception $e) {
 			$this->dbMasterDefault->insert('record_log',['log' => "TWILIO DELETE ERROR Error $conversationSid, $messageSid - " . $e->getMessage()]);
+		}
+	}
+
+	function participants($ConversationSid){
+		$sid = TWILIO_ACCOUNT_SID;
+		$token = TWILIO_AUTH_TOKEN;
+		$twilio = new Client($sid, $token);
+				
+		$participants = $twilio->conversations->v1->conversations($ConversationSid)->participants->read(5);	
+		return $participants;
+	}
+
+
+	function message_update($conversationSid, $messageSid, $body){
+		$sid = TWILIO_ACCOUNT_SID;
+		$token = TWILIO_AUTH_TOKEN;
+		$twilio = new Client($sid, $token);
+
+		try {
+			$twilio->conversations->v1->conversations($conversationSid)->messages($messageSid)->update(["body" => $body]);
+		} catch (Exception $e) {
+			$this->dbMasterDefault->insert('record_log',['log' => "TWILIO UPDATE MSG ERROR Error $conversationSid, $messageSid - " . $e->getMessage()]);
 		}
 	}
 
@@ -227,10 +249,23 @@ class m_twilio extends Model {
 		$sid = TWILIO_ACCOUNT_SID;
 		$token = TWILIO_AUTH_TOKEN;
 		$twilio = new Client($sid, $token);
-		$data = ["attributes" => json_encode(["avatar" => $display_name, "customer_id" => $id_proposta, "display_name" => $display_name])];
+		//$data = ["attributes" => json_encode(["avatar" => $display_name, "customer_id" => $id_proposta, "display_name" => $display_name])];
 
+		$data = [
+			"identity" => $display_name,
+			"attributes" => json_encode([
+				"avatar" => $display_name, 
+				"customer_id" => $id_proposta, 
+				"display_name" => $display_name
+			])
+		];
+
+		$participants = null;
 		try {
 			$participants = $twilio->conversations->v1->conversations($ConversationSid)->participants($ParticipantSid)->update($data);	
+			//echo '20:56:16 - <h3>Dump 44 </h3> <br><br>' . var_dump($participants); exit;					//<-------DEBUG
+			
+			$this->dbMasterDefault->insert('record_log',['log' => "PARTICIPANTE SUCESSO $ConversationSid, $ParticipantSid, $id_proposta, $display_name - "]);
 		} catch (\Exception $e) {
 			$this->dbMasterDefault->insert('record_log',['log' => "PARTICIPANTE ERROR $ConversationSid, $ParticipantSid, $id_proposta, $display_name - " . $e->getMessage()]);
 		}

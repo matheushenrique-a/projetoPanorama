@@ -51,6 +51,7 @@ $routes->match(['get', 'post'], '/argus-atendimento-webhook', 'Argus\Argus::argu
 //FRONTLINE
 $routes->match(['get', 'post'], '/frontline-routing-webhook', 'Frontline\Frontline::frontline_routing_webhook');
 $routes->match(['get', 'post'], '/frontline-conversations-webhook', 'Frontline\Frontline::frontline_conversations_webhook');
+$routes->match(['get', 'post'], '/frontline-pre-conversations-webhook', 'Frontline\Frontline::frontline_pre_conversations_webhook');
 $routes->match(['get', 'post'], '/frontline-outgoing-conversation', 'Frontline\Frontline::frontline_outgoing_conversation');
 $routes->match(['get', 'post'], '/frontline-crm-inbound', 'Frontline\Frontline::frontline_crm_inbound');
 $routes->match(['get', 'post'], '/frontline-template-inbound', 'Frontline\Frontline::frontline_template_inbound');

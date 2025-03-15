@@ -79,12 +79,12 @@ class Aaspa extends BaseController
     
                 if ($tipoMensagem == "SMS-GOOGLE"){
                     $linkGoogle = $this->dbMasterDefault->select('user_account', ['nickname' => $this->session->nickname])['firstRow']->observacao;
-                    $returnData =  $this->twilio->sendSMS( $celularWaId, "Ola $fname, por favor acessar o endereco $linkGoogle");
+                    $returnData =  $this->twilio->sendSMS($celularWaId, "Ola $fname, por favor acessar o endereco $linkGoogle", $this->session->nickname);
                 } else if ($tipoMensagem == "SMS-AASPA"){
                     if ($linkAaspa == ""){
                         $returnData["mensagem"] = "Informe o link do AASPA";
                     } else {
-                        $returnData =  $this->twilio->sendSMS( $celularWaId, "Ola $fname, por favor acessar o endereco $linkAaspa");
+                        $returnData =  $this->twilio->sendSMS( $celularWaId, "Ola $fname, por favor acessar o endereco $linkAaspa", $this->session->nickname);
                     }
                 }   
             }
