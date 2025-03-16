@@ -20,6 +20,7 @@ define('TWILIO_ACCOUNT_SID','ACd07f72009069ead82dcf03497b6cb3b1');
 define('TWILIO_AUTH_TOKEN','29e809986eeca0bc9d85716fb8e17596');
 define('TWILIO_MEDIA_PATH','https://insightsuite.pravoce.io/assets/pravoce/media/whatsapp/');
 define('fromWhatsApp','551140402158'); //OPCAO 02
+define('fromWhatsAppVap','551140402155'); //OPCAO 02
 
 
 //DEFINE NOTIFICAÇÕES ATIVAS
@@ -53,10 +54,12 @@ define('facta_taxa_ligjt', 1.80);
 
 if (IsProduction){
     define ('assetfolder', '/');
+    define ('rootURL', 'https://a613-2804-1b3-6149-9c04-d1cc-cd1c-6041-2e1c.ngrok-free.app/InsightSuite/public/');
     define ('FGTSUrl', '/');
     define ('ConsorcioUrl', '/');
 } else {
     define ('assetfolder', '/InsightSuite/public/');
+    define ('rootURL', 'https://insightsuite.pravoce.io/');
     define ('urlInstitucional', '/');
     define ('FGTSUrl', 'http://localhost/fintech/');
     define ('ConsorcioUrl', 'http://localhost/fintech/');

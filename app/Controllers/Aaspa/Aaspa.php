@@ -39,6 +39,8 @@ class Aaspa extends BaseController
 
 
     public function zapsms(){
+        //$this->twilio->users();exit;
+
         $data['pageTitle'] = "AASPA - Enviar SMS e WhatsApp";
 
         //DADOS PESSOAIS
@@ -47,30 +49,29 @@ class Aaspa extends BaseController
         $celularWaId = celularToWaId($celular);
         $fname = firstName($nomeCompleto);
 
-        $cpf = numberOnly($this->getpost('cpf'));
+        //$cpf = numberOnly($this->getpost('cpf'));
         $sms = strtoupper($this->getpost('sms'));
         $tipoMensagem = strtoupper($this->getpost('tipoMensagem'));
         $linkAaspa = strtoupper($this->getpost('linkAaspa'));
         $btnSalvar = $this->getpost('btnSalvar');
+        $btnConsultar = $this->getpost('btnConsultar');
 
         $returnData["status"] = false;
 		$returnData["mensagem"] = "";
 
         if (!empty($btnSalvar)){
-            if ((strlen($cpf) != 11) or (empty($nomeCompleto))){
-                $returnData["mensagem"] = "Digite um nome e CPF completos";
-            } else if ((strlen($celularWaId) != 13)){
+            if ((strlen($celularWaId) != 13)){
                 $returnData["mensagem"] = "O telefone deve conter 11 números. Exemplo 31-99999-9999";
             } else {
 
-                $this->dbMasterDefault->insert('record_log',['log' => "ZAPSMS " . $nomeCompleto . " - " . $celular . " - " . $cpf . " - " . $sms . " - " . $tipoMensagem . " - " . $linkAaspa . " - " . $this->session->nickname]);
+                $this->dbMasterDefault->insert('record_log',['log' => "ZAPSMS " . $nomeCompleto . " - " . $celular . " - " . $sms . " - " . $tipoMensagem . " - " . $linkAaspa . " - " . $this->session->nickname]);
 
-                $cliente = $this->dbMasterDefault->select('aaspa_cliente', ['cpf' => $cpf]);
-                if ($cliente['existRecord']){
-                    $this->dbMasterDefault->update('aaspa_cliente', ['celular' => $celularWaId, 'nome' => $nomeCompleto, 'assessor' => $this->session->email], ['cpf' => $cpf], ['last_update' => 'current_timestamp()']);
-                } else {
-                    $added = $this->dbMasterDefault->insert('aaspa_cliente',['nome' => $nomeCompleto, 'cpf' => $cpf, 'celular' => $celularWaId, 'assessor' => $this->session->email]);
-                }
+                // $cliente = $this->dbMasterDefault->select('aaspa_cliente', ['cpf' => $cpf]);
+                // if ($cliente['existRecord']){
+                //     $this->dbMasterDefault->update('aaspa_cliente', ['celular' => $celularWaId, 'nome' => $nomeCompleto, 'assessor' => $this->session->email], ['cpf' => $cpf], ['last_update' => 'current_timestamp()']);
+                // } else {
+                //     $added = $this->dbMasterDefault->insert('aaspa_cliente',['nome' => $nomeCompleto, 'cpf' => $cpf, 'celular' => $celularWaId, 'assessor' => $this->session->email]);
+                // }
     
                 if ($tipoMensagem == "WPP"){
                     //$this->twilio->sendWhatsApp("Olá 👋🏻! Somos da *PRA VOCE* e observamos que recentemente você utilizou nosso site ou WhatsApp. Caso tenha ficado alguma dúvida, responda a essa mensagem para falar com nosso time de atendimento. Desde já agradecemos pela atenção e interesse 🙏🏻!", $celularWaId);
@@ -88,15 +89,29 @@ class Aaspa extends BaseController
                     }
                 }   
             }
-        } 
+        } else if (!empty($btnConsultar)){
+
+        } else {
+            //PEGA ULTIMA LIGACAO DO ASSESSOR
+            $sqlQuery = "SELECT * FROM aaspa_cliente where assessor = '" . $this->session->nickname . "' ORDER BY data_criacao DESC LIMIT 1;";		
+            $cliente = $this->dbMasterDefault->runQuery($sqlQuery);
+    
+            if ($cliente['existRecord']){
+                $nomeCompleto = $cliente['firstRow']->nome;
+                $celular = substr($cliente['firstRow']->celular, 2);
+                $cpf = $cliente['firstRow']->cpf;
+
+                $celularWaId = $celular;
+            }
+        }
 
 
         $chat = null;
-        if ((!empty($cpf)) or (!empty($celular))){
+        if ((!empty($celular))){
             $db =  $this->dbMasterDefault->getDB();
             $builder = $db->table('whatsapp_log');
-            $builder->Like('whatsapp_log.To', substr($celularWaId,-8)); //bug do número 9 no whatsapp
-            $builder->orLike('whatsapp_log.From', substr($celularWaId,-8));
+            $builder->Like('whatsapp_log.To', $celularWaId); //bug do número 9 no whatsapp
+            $builder->orLike('whatsapp_log.From', $celularWaId);
             $builder->orderBy('id', 'DESC');
             $builder->select('*');
             //echo $builder->getCompiledSelect();exit;
@@ -106,7 +121,7 @@ class Aaspa extends BaseController
 
         $db =  $this->dbMasterDefault->getDB();
         $builder = $db->table('customer_journey');
-        $builder->Where('verificador', $cpf);
+        $builder->Where('verificador', $celularWaId);
         $builder->orderBy('id_interaction', 'DESC');
         $builder->select('*');
 		//echo $builder->getCompiledSelect();exit;
@@ -115,7 +130,6 @@ class Aaspa extends BaseController
 
 
         $data['nomeCompleto'] = $nomeCompleto;
-        $data['cpf'] = $cpf;
         $data['celular'] = $celular;
         $data['linkAaspa'] = $linkAaspa;
         $data['tipoMensagem'] = $tipoMensagem;

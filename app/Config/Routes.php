@@ -55,6 +55,16 @@ $routes->match(['get', 'post'], '/frontline-pre-conversations-webhook', 'Frontli
 $routes->match(['get', 'post'], '/frontline-outgoing-conversation', 'Frontline\Frontline::frontline_outgoing_conversation');
 $routes->match(['get', 'post'], '/frontline-crm-inbound', 'Frontline\Frontline::frontline_crm_inbound');
 $routes->match(['get', 'post'], '/frontline-template-inbound', 'Frontline\Frontline::frontline_template_inbound');
+$routes->match(['get', 'post'], '/frontline-cleanup', 'Frontline\Frontline::frontline_cleanup');
+
+//FRONTLINE VAP
+$routes->match(['get', 'post'], '/frontline-vap-routing-webhook', 'Frontline\FrontlineVap::frontline_routing_webhook');
+$routes->match(['get', 'post'], '/frontline-vap-conversations-webhook', 'Frontline\FrontlineVap::frontline_conversations_webhook');
+$routes->match(['get', 'post'], '/frontline-vap-pre-conversations-webhook', 'Frontline\FrontlineVap::frontline_pre_conversations_webhook');
+$routes->match(['get', 'post'], '/frontline-vap-outgoing-conversation', 'Frontline\FrontlineVap::frontline_outgoing_conversation');
+$routes->match(['get', 'post'], '/frontline-vap-crm-inbound', 'Frontline\FrontlineVap::frontline_crm_inbound');
+$routes->match(['get', 'post'], '/frontline-vap-template-inbound', 'Frontline\FrontlineVap::frontline_template_inbound');
+$routes->match(['get', 'post'], '/frontline-vap-cleanup', 'Frontline\FrontlineVap::frontline_cleanup');
 
 
 //FGTS

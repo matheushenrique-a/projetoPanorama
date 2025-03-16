@@ -33,7 +33,7 @@ class m_twilio extends Model {
 		$this->dbMasterDefault->insert('record_log',['log' => "SMS Enviado $telefone - $mensagem"]);
 
 		try {
-			$message = $twilio->messages->create("+" . $telefone, ["body" => $mensagem, "from" => "+13393300703", "statusCallback" => "https://a613-2804-1b3-6149-9c04-d1cc-cd1c-6041-2e1c.ngrok-free.app/InsightSuite/public/frontline-conversations-webhook"]);
+			$message = $twilio->messages->create("+" . $telefone, ["body" => $mensagem, "from" => "+13393300703", "statusCallback" => rootURL . "frontline-conversations-webhook"]);
 			//echo '09:11:00 - <h3>Dump 42 </h3> <br><br>' . var_dump($message); exit;					//<-------DEBUG
 
 			// Suponha que $message seja o objeto retornado pelo Twilio
@@ -66,7 +66,7 @@ class m_twilio extends Model {
 		$returnData["raw"] = $message;
 
 		//Registra conversa no histórico
-		$data = (array('MessageSid' => $messageSid, 'Type' => 'SMS', 'ProfileName' => $author, 'Body' => $mensagem, 'SmsStatus' => 'Gravada', 'To' => numberOnly($telefone), 'WaId' => fromWhatsApp, 'From' => fromWhatsApp));
+		$data = (array('MessageSid' => $messageSid, 'Type' => 'SMS', 'ProfileName' => $author, 'Body' => $mensagem, 'SmsStatus' => 'Gravada', 'To' => normalizePhone(numberOnly($telefone)), 'WaId' => normalizePhone(fromWhatsApp), 'From' => normalizePhone(fromWhatsApp)));
 		$result = $this->dbMasterDefault->insert('whatsapp_log', $data);
 
 		return $returnData;
@@ -88,7 +88,7 @@ class m_twilio extends Model {
 
 			//Registra conversa no histórico
 			$MessageSid = substr($message, strpos($message, " sid=")+5, -1);
-			$data = (array('MessageSid' => $MessageSid, 'Type' => 'WHATSAPP', 'ProfileName' => 'INSIGHT', 'Body' => $body, 'SmsStatus' => 'Sent', 'To' => $to, 'WaId' => fromWhatsApp, 'From' => "whatsapp:+" . fromWhatsApp));
+			$data = (array('MessageSid' => $MessageSid, 'Type' => 'WHATSAPP', 'ProfileName' => 'INSIGHT', 'Body' => $body, 'SmsStatus' => 'Gravada', 'To' => normalizePhone($to), 'WaId' => normalizePhone(fromWhatsApp), 'From' => normalizePhone(fromWhatsApp)));
 			$result = $this->dbMasterDefault->insert('whatsapp_log', $data);
 
 			return $message;
@@ -142,7 +142,7 @@ class m_twilio extends Model {
 			//echo $returnData["mensagem"];exit;
 			
 			//Registra conversa no histórico
-			$data = (array('MessageSid' => $messageSid, 'Type' => 'WHATSAPP', 'ProfileName' => 'INSIGHT', 'Body' => $body, 'SmsStatus' => 'Sent', 'To' => $to, 'WaId' => fromWhatsApp, 'From' => "whatsapp:+" . fromWhatsApp));
+			$data = (array('MessageSid' => $messageSid, 'Type' => 'WHATSAPP', 'ProfileName' => 'INSIGHT', 'Body' => $body, 'SmsStatus' => 'Gravada', 'To' => normalizePhone($to), 'WaId' => normalizePhone(fromWhatsApp), 'From' => normalizePhone(fromWhatsApp)));
 			$result = $this->dbMasterDefault->insert('whatsapp_log', $data);
 
 			return $returnData;
@@ -155,9 +155,9 @@ class m_twilio extends Model {
 		$twilio = new Client($sid, $token);
 
 		try {
-			//$participant = $twilio->conversations->conversations($conversationSid)->participants->create(["identity" => $workedEmail]);
 			$participant =  $twilio->conversations->v1->conversations($conversationSid)->participants->create(["identity" => $workedEmail]);
-
+			//$participant = $twilio->conversations->conversations($conversationSid)->participants->create(["identity" => $workedEmail]);
+			$this->dbMasterDefault->insert('record_log',['log' => "ROUTING OK $conversationSid, Worker:$workedEmail"]);
 		} catch (Exception $e) {
 			$this->dbMasterDefault->insert('record_log',['log' => "ROUTING Error Worker:$workedEmail - " . $e->getMessage()]);
 		}
@@ -271,6 +271,31 @@ class m_twilio extends Model {
 		}
 		
 		return $participants;
+	}
+
+	function users(){
+		$sid = TWILIO_ACCOUNT_SID;
+		$token = TWILIO_AUTH_TOKEN;
+		$twilio = new Client($sid, $token);
+
+		$user = $twilio->frontlineApi->v1->users("MBbc1356caabcf44f7ab49ef172af5d32b")->fetch();
+		echo '05:53:36 - <h3>Dump 63 </h3> <br><br>' . var_dump($user); exit;					//<-------DEBUG
+	}
+
+	// ChatServiceSid	IS94a7787086f64e4995841c514c96c773
+	function FrontLineCleanUp(){
+		$sid = TWILIO_ACCOUNT_SID;
+		$token = TWILIO_AUTH_TOKEN;
+		$twilio = new Client($sid, $token);
+		
+		$conversations = $twilio->conversations->v1->conversations->read([], 20);
+
+		foreach ($conversations as $record) {
+			$out = $record->delete();
+			echo ($out . "-" . $record->sid . "-" . $record->friendlyName . "<BR>");
+		}
+
+		return $conversations;
 	}
 
 	

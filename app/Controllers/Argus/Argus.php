@@ -66,13 +66,13 @@ class Argus extends BaseController
 		$telefone = $this->getpost('telefone');
 		$telefoneE164 = $this->getpost('telefoneE164');
 
-        $codCliente = "_aDmnVGyECSiY9Aza3Qq9YwkhmUQ%3D";
-        $nomeCliente = "PEDRO HENRIQUE DE SOUZA";
-        $cpfCnpj = "";
-        $nomeUsuario = "FERNANDO DANTAS DOS SANTOS JUNIOR";
-        $idLigacao = 107372507;
-        $dataInicioLigacao = "2025-03-14T13:46:00.000Z";
-        $telefoneE164 = "5573981487632";
+        // $codCliente = "_aDmnVGyECSiY9Aza3Qq9YwkhmUQ%3D";
+        // $nomeCliente = "PEDRO HENRIQUE DE SOUZA";
+        // $cpfCnpj = "";
+        // $nomeUsuario = "FERNANDO DANTAS DOS SANTOS JUNIOR";
+        // $idLigacao = 107372507;
+        // $dataInicioLigacao = "2025-03-14T13:46:00.000Z";
+        // $telefoneE164 = "5573981487632";
 
         if (!empty($nomeCliente)){
             $this->dbMasterDefault->insert('aaspa_cliente',['codCliente' => $codCliente, 'nome' => $nomeCliente, 'cpf' => $cpfCnpj, 'celular' => $telefoneE164, 'assessor' => $nomeUsuario, 'dataInicioLigacao' => $dataInicioLigacao, 'idLigacao' => $idLigacao]);

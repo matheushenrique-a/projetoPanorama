@@ -7,10 +7,10 @@ use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use App\Libraries\dbMaster;
 use App\Models\M_telegram;
-use App\Models\M_twilio;
+use App\Models\M_twilioVap;
 use Config\Services;
 
-class Frontline extends BaseController
+class FrontlineVap extends BaseController
 {
     protected $session;
     protected $dbMasterDefault;
@@ -28,7 +28,7 @@ class Frontline extends BaseController
         $this->dbMasterDefault = new dbMaster();
         $this->session = session();
         $this->telegram =  new M_telegram();
-        $this->twilio =  new M_twilio();
+        $this->twilio =  new M_twilioVap();
     }
 
 	//CONVADDED
@@ -104,11 +104,11 @@ class Frontline extends BaseController
 		//exit;
 
 		if (!empty($SmsSid)){
-			$this->dbMasterDefault->update('whatsapp_log', ['SmsStatus' => $SmsStatus], ['MessageSid' => $SmsSid], ['last_updated' => 'current_timestamp()']);
+
 		} else if (($EventType == 'onConversationStateUpdated') and ($StateFrom == 'active') and ($StateTo == 'closed')) {
 			//remove conversas encerradas para evitar de travar as próximas chamadas
 			$output = $this->twilio->closeConversation($ChatServiceSid, $ConversationSid);
-			$this->dbMasterDefault->insert('record_log',['log' => "onConversationStateUpdated $ConversationSid, $StateFrom, $StateTo - " . json_encode($output)]);
+			$this->dbMasterDefault->insert('record_log',['log' => "VAP onConversationStateUpdated $ConversationSid, $StateFrom, $StateTo - " . json_encode($output)]);
 
 			http_response_code(200);
 		} else if (($EventType == 'onConversationAdded')) {
@@ -116,41 +116,9 @@ class Frontline extends BaseController
 		} else if (($EventType == 'onParticipantAdded') and (empty($Identity))) {
 
 		} else if (($EventType == 'onMessageAdded')) {
-			//Faz a busca dos participantes da conversa para logar o histórico da conversa
-			$participants = $this->twilio->participants($ConversationSid);
 
-			//Verifica os participantes da conversa para extrair from/to
-			foreach ($participants as $record) {
-				//identity vazio seriam os clientes
-				if (empty($record->identity)){
-					//se author é um email indica que origem = Atendente QUID
-					if (strpos($Author, "@") !== false){
-						$From = normalizePhone(numberOnly($record->messagingBinding["proxy_address"]));
-						$To = normalizePhone(numberOnly($record->messagingBinding["address"]));
-					} else {
-						$To = normalizePhone(numberOnly($record->messagingBinding["proxy_address"]));
-						$From = normalizePhone(numberOnly($record->messagingBinding["address"]));
-					}
-					//echo "Quem Mandou: $Author, O que: $Body, De: $From, Para: $To";
-					break;
-				}
-			}
-
-			if (isset($Media[0])){$Body = "audio/photo";}
-
-			http_response_code(200);
-			if (strpos($Author, "@") !== false){
-				$Author = 'Assessor: ' . substr($Author, 0, 10) . "...";
-			} else {
-				$Author = 'Cliente';
-			}
-
-			//salva mensagem trocada
-			$data = (array('MessageSid' => $MessageSid, 'Type' => 'WHATSAPP', 'ProfileName' => $Author, 'Body' => $Body, 'SmsStatus' => 'Gravada', 'To' => ($To), 'WaId' => null, 'From' => ($From)));
-			$result = $this->dbMasterDefault->insert('whatsapp_log', $data);
 		} else if (($EventType == 'onDeliveryUpdated')) {
-			//$this->dbMasterDefault->insert('record_log',['log' => "onDeliveryUpdated $MessageSid, $Status, $ErrorCode"]);
-			$this->dbMasterDefault->update('whatsapp_log', ['SmsStatus' => $Status], ['MessageSid' => $MessageSid], ['last_updated' => 'current_timestamp()']);
+
 		}
 	}
 
@@ -168,51 +136,9 @@ class Frontline extends BaseController
 		$Location = $this->getpost('Location');
 		
 		header('Content-Type: application/json; charset=utf-8');
-		$clienteDetail = array ("proxy_address" => "whatsapp:+" . fromWhatsApp);
+		$clienteDetail = array ("proxy_address" => "whatsapp:+" . fromWhatsAppVap);
 		echo json_encode($clienteDetail);
 	}
-    
-	//http://localhost/InsightSuite/public/frontline-routing-webhook
-	//https://insightsuite.pravoce.io/frontline-routing-webhook
-	//https://a613-2804-1b3-6149-9c04-d1cc-cd1c-6041-2e1c.ngrok-free.app/InsightSuite/public/frontline-routing-webhook
-	// Attributes	{}
-	// ConversationServiceSid	IS94a7787086f64e4995841c514c96c773
-	// ConversationSid	CH7465a37132b142f4b86db898ada5d3f0
-	// DateCreated	2025-03-15T23:13:25.417Z
-	// EventType	onConversationRoute
-	// MessagingBinding.Address	whatsapp:+553195781355
-	// MessagingBinding.ProxyAddress	whatsapp:+551140402158
-	// State	active
-	function frontline_routing_webhook(){
-		$ConversationServiceSid = $this->getpost('ConversationServiceSid');
-		$ConversationSid = $this->getpost('ConversationSid');
-		$DateCreated = $this->getpost('DateCreated');
-		$From = normalizePhone(numberOnly($this->getpost('MessagingBinding_Address')));
-		$To = $this->getpost('MessagingBinding_ProxyAddress');
-		$State = $this->getpost('State');
-		
-		$worker = $this->dbMasterDefault->select('aaspa_cliente', ['celular' => $From]);
-
-		//RECUERA A ULTIMA LIGAÇÃO ATENDIDA PELO ASSESSOR E O SEU NOME
-		$sqlQuery = "SELECT assessor FROM aaspa_cliente where celular = '$From' ORDER BY data_criacao DESC LIMIT 1;";		
-		$cliente = $this->dbMasterDefault->runQuery($sqlQuery);
-
-		//ROTA PADRÃO
-		$workedEmail = "info@pravoce.io";
-
-		if ($cliente['existRecord']){
-			//VERIFICA O EMAIL DO ASSESSOR PARA ROTEAR A MENSAGEM
-			$worker = $this->dbMasterDefault->select('user_account', ['nickname' => $cliente['firstRow']->assessor]);
-			if ($worker['existRecord']){
-				$workedEmail = $worker['firstRow']->email;
-			}
-		}
-		$this->dbMasterDefault->insert('record_log',['log' => "ROUNTING $ConversationSid, $From, $To, $workedEmail"]);
-		
-		$this->twilio->routing($ConversationSid, $workedEmail);
-		http_response_code(200);
-	}
-
 
 	//QUANDO O CLIENTE É CLICADO NA LISTA
 	// CustomerId	C18
@@ -245,7 +171,7 @@ class Frontline extends BaseController
 		//$Location = "GetCustomerDetailsByCustomerId";
 		//$Location = "GetCustomersList";
 
-		$nomeAssessor = $this->dbMasterDefault->select('user_account', ['email' => $Worker])['firstRow']->nickname;
+		$nomeAssessor = ""; //$this->dbMasterDefault->select('user_account', ['email' => $Worker])['firstRow']->nickname;
 		header('Content-Type: application/json');
 
 		//OCORRE AO ABRIR A LISTA DE CLIENTES OU NUMERO NÃO COMPLETAMENTE DIGITADO
@@ -286,7 +212,9 @@ class Frontline extends BaseController
 
 		//OCORRE AO ABRIR A LISTA DE CLIENTES E TODOS OS DIGITOS DO TELEFONE FORAM DIGITADOS 55+11 =13 DIGITOS
 		} else if (($Location == "GetCustomersList") and (strlen($clientNumberWaId) == 13)) {
-			$cliente = $this->dbMasterDefault->select('aaspa_cliente', ['celular' => $clientNumberWaId]);
+			//$cliente = $this->dbMasterDefault->select('aaspa_cliente', ['celular' => $clientNumberWaId]);
+
+			$cliente['existRecord'] = false;
 
 			if ($cliente['existRecord']){
 				$nome = $cliente['firstRow']->nome;
@@ -350,132 +278,8 @@ class Frontline extends BaseController
 					}
 				}';
 			} else if (strpos($CustomerId, "-") !== false){ //INDICA QUE É UMA SEQUENCIA "CÓDIGO-TELEFONE DIGTADO"
-				$partes = explode("-", $CustomerId);
-				$id_proposta = $partes[0]; 
-				$clientNumberWaId = $partes[1];
-
-				$cliente = $this->dbMasterDefault->select('aaspa_cliente', ['id_proposta' => $id_proposta]);
-
-				if ($cliente['existRecord']){
-					$nome = strtoupper($cliente['firstRow']->nome);
-					$cpf = $cliente['firstRow']->cpf;
-					$id_proposta = $cliente['firstRow']->id_proposta;
-					$codCliente = $cliente['firstRow']->codCliente;
-					$nomeCliente = $cliente['firstRow']->nome;
-					$nomeUsuario = $cliente['firstRow']->assessor;
-					$celular = $cliente['firstRow']->celular;
-					$codCliente = $cliente['firstRow']->codCliente;
-
-
-					//Ao clientar em detalhes do cliente, só precisa retornar o telefone
-					$channelsWhatsApp = array("type" => "whatsapp", "value" => "whatsapp: +" . $clientNumberWaId);
-					$clienteContacts = array ("channels" => array($channelsWhatsApp));
-
-					$detailItem1 = array("title" => "Código Vanguard", "content" => $codCliente);
-					$detailItem2 = array("title" => "Nome Cliente", "content" => $nomeCliente);
-					$detailItem3 = array("title" => "Telefone", "content" => $celular);
-					$detailItem4 = array("title" => "Ultimo Assessor", "content" => $nomeUsuario);
-
-
-					$clienteDetail = array ("details" => $detailItem1);
-
-					// //Dados proopsta
-					// $urlDetalhes = 'https://fgts-cliente-detalhes/';
-					// $urlStatus = 'https://fgts/proposta-status/';
-					// $urlEditar = 'https://fgts/proposta';
-		
-					// $DetalhesItem = array("type" => "Insight Suite", "value" => $urlDetalhes, "display_name" => "Detalhes Proposta");
-					// $statusItem = array("type" => "Insight Suite", "value" => $urlStatus, "display_name" => "Status Proposta");
-					// $editarItem = array("type" => "Insight Suite", "value" => $urlEditar, "display_name" => "Editar Proposta");
-					// $clienteLinks = array ("links" => array($DetalhesItem, $statusItem, $editarItem));
-					
-					$autoContatoArray = [
-						"customer_id" => $id_proposta . "-" . $clientNumberWaId,
-						"display_name" => $nome . " | " . formatarTelefone($clientNumberWaId),
-						"cpf" => $cpf,
-						"telefone" => "+" . $clientNumberWaId,
-						"email" => "",
-					];
-
-					$customerList = json_encode($autoContatoArray + $clienteContacts + $clienteDetail);
-					echo '{
-						"objects": {
-							"customer": ' . $customerList . '
-						}
-					}';
-				}
+				
 			}
-		}
-	}
-
-
-	public function frontline_crm_inbound_BACKUP(){
-		
-		$Location = $this->getpost('Location');
-		$CustomerId = $this->getpost('CustomerId');
-		$Worker = $this->getpost('Worker');
-		$Anchor = $this->getpost('Anchor');
-		$clientNumber = ($this->getpost('Query'));
-		$clientNumberWaId = celularToWaId($clientNumber);
-		
-		//$clientNumber = "5531995781355";
-		//$CustomerId = 4;
-		//$Location = "GetCustomerDetailsByCustomerId";
-
-		
-		$autoContatoArray = [
-			"objects" => [
-				"customers" => [
-					[
-						"customer_id" => $clientNumberWaId,
-						"display_name" => "CLIENTE NA LIGAÇÃO",
-						"cpf" => "000.000.000-01",
-						"telefone" => "+" . $clientNumberWaId,
-						"email" => "info@pravoce.io",
-					]
-					], "searchable" => true
-			]
-		];
-
-		
-
-		//Busca pelo telefone do cliente sempre vai retornar o proprio telefone já que não existe integração com nenhum CRM - AutoCadastro
-		if (empty($CustomerId)){
-			$cliente = $this->dbMasterDefault->select('aaspa_cliente', ['celular' => $clientNumber]);
-
-			if ($cliente['existRecord']){
-				$nome = $cliente['firstRow']->nome;
-				$cpf = $cliente['firstRow']->cpf;
-				$id_proposta = $cliente['firstRow']->id_proposta;
-
-				$autoContatoArray = [
-					"objects" => [
-						"customers" => [
-							[
-								"customer_id" => $id_proposta,
-								"display_name" => $nome,
-								"cpf" => $cpf,
-								"telefone" => "+" . $clientNumber,
-								"email" => "info@pravoce.io",
-							]
-							], "searchable" => true
-					]
-				];
-			}
-
-			$autoContato = json_encode($autoContatoArray);
-			echo $autoContato;
-		} else {
-			//Ao clientar em detalhes do cliente, só precisa retornar o telefone
-			$channelsEmail = array("type" => "whatsapp", "value" => "whatsapp: +" . $CustomerId);
-			$clienteContacts = array ("channels" => array($channelsEmail));
-
-			$customerList = json_encode($autoContatoArray + $clienteContacts);
-			echo '{
-				"objects": {
-					"customer": ' . $customerList . '
-				}
-			}';
 		}
 	}
 
@@ -493,16 +297,6 @@ class Frontline extends BaseController
 		$Worker = $this->getpost('Worker');
 
 		$Worker = "AASPA";		
-		date_default_timezone_set("America/Sao_Paulo");  
-        $h = date('G');
-
-        if($h>=6 && $h<=11){
-            $saudacao = "Bom dia";
-        } else if($h>=12 && $h<=17) {
-            $saudacao = "Boa tarde";
-        } else {
-            $saudacao = "Boa noite";
-        }
 
 		header('Content-Type: application/json; charset=utf-8');
 		echo '[

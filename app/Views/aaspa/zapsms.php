@@ -60,7 +60,7 @@
 															<div class="accordion-item">
 																<h2 class="accordion-header" id="kt_accordion_1_header_1">
 																	<button class="accordion-button fs-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#kt_accordion_1_body_133" aria-expanded="true" aria-controls="kt_accordion_1_body_1">
-																		DADOS PARA ENVIO DA MENSAGEM
+																		ÚLTIMO CLIENTE ARGUS:
 																	</button>
 																</h2>
 																<div id="kt_accordion_1_body_133" class="accordion-collapse collapse show" aria-labelledby="kt_accordion_1_header_1" data-bs-parent="#kt_accordion_1">
@@ -68,10 +68,6 @@
 																		<div class="input-group">
 																			<span class="input-group-text" style="width: 155px">Nome</span>
 																			<input type="text" class="form-control" placeholder="" name="nomeCompleto" value="<?php echo $nomeCompleto;?>" />
-																		</div>
-																		<div class="input-group">
-																			<span class="input-group-text" style="width: 155px">CPF</span>
-																			<input type="text" class="form-control" placeholder="" name="cpf" value="<?php echo $cpf;?>" />
 																		</div>
 																		<div class="input-group">
 																			<span class="input-group-text" style="width: 155px">Telefone</span>
@@ -130,7 +126,7 @@
 															<div class="card-title">
 																<!--begin::User-->
 																<div class="d-flex justify-content-center flex-column me-3">
-																	<span class="fs-4 fw-bold text-gray-900 me-1 mb-2 lh-1"><?php echo strtoupper($nomeCompleto  ?? "NÃO INFORMADO");?> - <?php echo ($cpf  ?? "NÃO INFORMADO");?></span>
+																	<span class="fs-4 fw-bold text-gray-900 me-1 mb-2 lh-1"><?php echo strtoupper($nomeCompleto  ?? "NÃO INFORMADO");?></span>
 																	<!--begin::Info-->
 																	<div class="mb-0 lh-1">
 																		<span class="badge badge-success badge-circle w-10px h-10px me-1"></span>
@@ -176,9 +172,9 @@
 																			<div class="d-flex justify-content-start mb-10 ">
 																				<div class="d-flex flex-column align-items-start">
 																					<div class="d-flex align-items-center mb-2">
-																						<div class="symbol  symbol-35px symbol-circle "><div class="symbol-label fs-3 bg-light-success text-success"><?php echo substr(strtoupper($row->Type),0,1);?></div></div><!--end::Avatar-->
+																						<div class="symbol  symbol-35px symbol-circle "><div class="symbol-label fs-3 bg-light-success text-success"><?php echo substr(strtoupper($row->Type ?? "") ,0,1);?></div></div><!--end::Avatar-->
 																						<div class="ms-3">
-																							<a href="#" class="fs-5 fw-bold text-gray-900 text-hover-primary me-1"><?php echo strtoupper($row->Type);?> (<?php echo ($row->ProfileName);?>)</a>
+																							<a href="#" class="fs-5 fw-bold text-gray-900 text-hover-primary me-1"><?php echo strtoupper($row->Type ?? "");?> (<?php echo ($row->ProfileName);?>)</a>
 																							<span class="text-muted fs-7 mb-1"><?php echo time_elapsed_string($row->last_updated) . ' - ' . date_format(date_create($row->last_updated),"d/M H:i:s") . '<span class="badge badge-light-' . $statusMessage["status"][1] .  ' ms-auto">' . $statusMessage["status"][0] . '</span>'?></span>
 																						</div>
 																					</div>

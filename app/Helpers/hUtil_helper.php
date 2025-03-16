@@ -1,6 +1,18 @@
 <?php 
 
 
+	//adiciona um 9 ao telefone caso ja nao tenha
+	function normalizePhone($numero) {
+		// Verifica se a string tem exatamente 12 caracteres
+		if (strlen($numero) === 12) {
+			// Insere o número 9 entre a 4ª e 5ª posição
+			return substr($numero, 0, 4) . '9' . substr($numero, 4);
+		}
+		// Retorna a string original caso não tenha 12 caracteres
+		return $numero;
+	}
+
+
 	function formatarTelefone($numero) {
 		// Remove qualquer caractere não numérico
 		$numero = preg_replace('/\D/', '', $numero);
@@ -42,7 +54,7 @@
 			"SENDING" => ["enviando", "warning"],
 			"READ" => ["vista", "success"],
 			"UNDELIVERED" => ["falha", "danger"],
-			"GRAVADA" => ["gravada", "warning"],
+			"GRAVADA" => ["gravada", "success"],
 		];
  
 		// Retorna um array contendo a mensagem e a cor, ou um padrão caso não exista
