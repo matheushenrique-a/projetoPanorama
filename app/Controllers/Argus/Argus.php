@@ -51,20 +51,38 @@ class Argus extends BaseController
 
     //https://a613-2804-1b3-6149-9c04-d1cc-cd1c-6041-2e1c.ngrok-free.app/InsightSuite/public/argus-atendimento-webhook
     public function argus_atendimento_webhook(){
-        // $idDominio = $this->getpost('idDominio');
-		// $idCampanha = $this->getpost('idCampanha');
-		// $idSkill = $this->getpost('idSkill');
-		// $idLote = $this->getpost('idLote');
-        // $idLigacao = $this->getpost('idLigacao');
-		// $dataInicioLigacao = $this->getpost('dataInicioLigacao');
-		// $idTipoWebhook = $this->getpost('idTipoWebhook');
+        $request = file_get_contents('php://input');
+        $response = json_decode($request, true);
 
-        $codCliente = $this->getpost('codCliente');
-		$nomeCliente = $this->getpost('nomeCliente');
-		$cpfCnpj = $this->getpost('cpfCnpj');
-		$nomeUsuario = strtoupper($this->getpost('nomeUsuario'));
-		$telefone = $this->getpost('telefone');
-		$telefoneE164 = $this->getpost('telefoneE164');
+        //        {"idDominio":585,"idCampanha":1,"idSkill":2,"idLote":1123,"nrPlan":66308183,"codCliente":"_ZSv7X2ODCyCc%2BA3T2ALEFxM8","nomeCliente":"GINA ROSANE SILVEIRA DA FONSECA","cpfCnpj":"","codUsuarioIntegracao":"136","nomeUsuario":"BRUNA GUIMAR\u00C3ES DE OLIVEIRA","idLigacao":107468132,"dataInicioLigacao":"2025-03-17T09:17:14.000Z","telefone":"53981097589","telefoneE164":"5553981097589","idTipoWebhook":1}
+
+
+
+        if ((isset($response['nomeCliente']))) {
+            $idDominio = $response['idDominio'];
+            $idCampanha = $response['idCampanha'];
+            $idSkill = $response['idSkill'];
+            $idLote = $response['idLote'];
+            $idLigacao = $response['idLigacao'];
+            $dataInicioLigacao = $response['dataInicioLigacao'];
+            $idTipoWebhook = $response['idTipoWebhook'];
+
+            $codCliente = $response['codCliente'];
+            $nomeCliente = $response['nomeCliente'];
+            $cpfCnpj = $response['cpfCnpj'];
+            $nomeUsuario = $response['nomeUsuario'];
+            $telefoneE164 = $response['telefoneE164'];
+
+            //$this->telegram->notifyTelegramGroup($nomeCliente);
+
+            if (!empty($nomeCliente)){
+                $this->dbMasterDefault->insert('aaspa_cliente',['codCliente' => $codCliente, 'nome' => $nomeCliente, 'cpf' => $cpfCnpj, 'celular' => $telefoneE164, 'assessor' => $nomeUsuario, 'dataInicioLigacao' => $dataInicioLigacao, 'idLigacao' => $idLigacao]);
+            }
+            http_response_code(200);
+            
+        }
+
+      
 
         // $codCliente = "_aDmnVGyECSiY9Aza3Qq9YwkhmUQ%3D";
         // $nomeCliente = "PEDRO HENRIQUE DE SOUZA";
@@ -74,10 +92,10 @@ class Argus extends BaseController
         // $dataInicioLigacao = "2025-03-14T13:46:00.000Z";
         // $telefoneE164 = "5573981487632";
 
-        if (!empty($nomeCliente)){
-            $this->dbMasterDefault->insert('aaspa_cliente',['codCliente' => $codCliente, 'nome' => $nomeCliente, 'cpf' => $cpfCnpj, 'celular' => $telefoneE164, 'assessor' => $nomeUsuario, 'dataInicioLigacao' => $dataInicioLigacao, 'idLigacao' => $idLigacao]);
-        }
-        http_response_code(200);
+
+        //$output = $this->telegram->notifyTelegramGroup("CALL codCliente: $nomeCliente, $nomeUsuario: $idLigacao");
+
+
 
     }
 

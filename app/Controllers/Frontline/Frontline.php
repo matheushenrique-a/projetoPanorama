@@ -112,9 +112,47 @@ class Frontline extends BaseController
 
 			http_response_code(200);
 		} else if (($EventType == 'onConversationAdded')) {
-			
-		} else if (($EventType == 'onParticipantAdded') and (empty($Identity))) {
 
+		} else if (($EventType == 'onParticipantAdded') and (empty($Identity))) {
+			// $request = file_get_contents('php://input');
+
+			// //Faz a busca dos participantes da conversa para logar o histórico da conversa
+			// $participants = $this->twilio->participants($ConversationSid);
+
+			// //Verifica os participantes da conversa para extrair from/to
+			// foreach ($participants as $record) {
+			// 	//identity vazio seriam os clientes
+			// 	if (empty($record->identity)){
+			// 		//se author é um email indica que origem = Atendente QUID
+			// 		if (strpos($Author, "@") !== false){
+			// 			$From = normalizePhone(numberOnly($record->messagingBinding["proxy_address"]));
+			// 			$To = normalizePhone(numberOnly($record->messagingBinding["address"]));
+			// 		} else {
+			// 			$To = normalizePhone(numberOnly($record->messagingBinding["proxy_address"]));
+			// 			$From = normalizePhone(numberOnly($record->messagingBinding["address"]));
+			// 		}
+			// 		//echo "Quem Mandou: $Author, O que: $Body, De: $From, Para: $To";
+			// 		break;
+			// 	}
+			// }
+
+			$sqlQuery = "SELECT * FROM aaspa_cliente where celular = '" . numberOnly($From) . "' ORDER BY data_criacao DESC LIMIT 1;";		
+			$cliente = $this->dbMasterDefault->runQuery($sqlQuery);
+
+			$assessor = "";
+			$nomeCliente = "";
+			$display_name = "";
+
+			if ($cliente['existRecord']){
+				$assessor = firstName($cliente['firstRow']->assessor);
+				$nomeCliente = $cliente['firstRow']->nome;
+				$display_name = "WHATSAAP: [" . $assessor . "] em chat com [" . $nomeCliente . "] [" . formatarTelefone($From) . "]";
+			} else {
+				$display_name = "WHATSAPP SEM ARGUS ⁉️: DE $To PARA $From";
+			}
+			
+			$this->telegram->notifyTelegramGroup($display_name, telegramQuid);
+			http_response_code(200);
 		} else if (($EventType == 'onMessageAdded')) {
 			//Faz a busca dos participantes da conversa para logar o histórico da conversa
 			$participants = $this->twilio->participants($ConversationSid);
@@ -256,13 +294,32 @@ class Frontline extends BaseController
 				$sqlQuery = "SELECT CONCAT(id_proposta, '-', celular) customer_id, nome display_name, cpf, celular telefone FROM aaspa_cliente where assessor = '$nomeAssessor' ORDER BY data_criacao DESC LIMIT 50;";		
 				//echo $sqlQuery;exit;	
 				$cliente = $this->dbMasterDefault->runQuery($sqlQuery);
-				$clientes = $cliente["result"]->getResultArray();
+
+				//TODO
+
+				if ($cliente['existRecord']){
+					$clientes = $cliente["result"]->getResultArray();
 	
-				$autoContatoArray = [
-					"objects" => [
-						"customers" => $clientes, "searchable" => true
-					]
-				];
+					$autoContatoArray = [
+						"objects" => [
+							"customers" => $clientes, "searchable" => true
+						]
+					];
+				} else {
+					$autoContatoArray = [
+						"objects" => [
+							"customers" => [
+								[
+								"customer_id" => "N/A",
+								"display_name" => "DIGITE O TELEFONE",
+								"cpf" => "000.000.000-01",
+								"telefone" => "",
+								"email" => "",
+								]
+						], "searchable" => true
+						]
+					];
+				}
 
 			} else {
 				$autoContatoArray = [

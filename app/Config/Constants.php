@@ -72,6 +72,7 @@ define ('telegramPraVoceDiretoria', '-992723690');
 define ('telegramBurnApp', '-4518699236');
 define ('telegramPraVoceDigital', '-4003072193');
 define ('telegramPraVoceGroupLogErrors', '-587867421');
+define ('telegramQuid', '-4679812610');
 
 
 //Na tela de listar propostas carrega ou nao os valores (pesado)
