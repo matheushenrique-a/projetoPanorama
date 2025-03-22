@@ -1,15 +1,12 @@
 <?php 
 namespace App\Models;
 use CodeIgniter\Model;
-use App\Libraries\dbMaster;
 
 class M_http extends Model {
-    protected $dbMaster;
     protected $my_session;
 
     public function __construct()
     {
-        $this->dbMaster = new dbMaster();
         $this->my_session = session();
     }
     
@@ -23,7 +20,7 @@ class M_http extends Model {
         
         if ($method == 'POST') {
             curl_setopt($curl, CURLOPT_POST, 1);
-            curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+            curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
         }
 
         if ($method == 'DELETE') {

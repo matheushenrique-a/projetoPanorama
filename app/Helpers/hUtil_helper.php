@@ -101,6 +101,12 @@
 		return $nameParts[0];
 	}
 
+	function lastName($fullName) {
+		$nameParts = explode(" ", trim($fullName));
+		return count($nameParts) > 1 ? end($nameParts) : $fullName;
+	}
+	
+
     function limparMascaraTelefone($telefone){
         $telefone = str_replace(".", "", $telefone);
         $telefone = str_replace(" ", "", $telefone);

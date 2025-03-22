@@ -43,9 +43,18 @@ $routes->match(['get', 'post'], '/ambec-script', 'Ambec\Ambec::ambec_script');
 
 //AASPA
 $routes->match(['get', 'post'], '/aaspa-zapsms', 'Aaspa\Aaspa::zapsms');
+$routes->match(['get', 'post'], '/integraall-token', 'Aaspa\Integraall::integraall_token');
+$routes->match(['get', 'post'], '/integraall-cep', 'Aaspa\Integraall::cep');
+$routes->match(['get', 'post'], '/integraall-cpf', 'Aaspa\Integraall::cpf');
+$routes->match(['get', 'post'], '/integraall-detalhes-proposta', 'Aaspa\Integraall::detalhes_proposta');
+$routes->match(['get', 'post'], '/integraall-listar-propostas', 'Aaspa\Integraall::listar_propostas');
+$routes->match(['get', 'post'], '/integraall-validar-cpf', 'Aaspa\Integraall::validar_cpf');
+$routes->match(['get', 'post'], '/calculadora-login', 'Aaspa\Integraall::calculadora_login');
+$routes->match(['get', 'post'], '/calculadora-qualificacao', 'Aaspa\Integraall::calculadora_qualificacao');
 
-//AASPA
+//ARJGUS
 $routes->match(['get', 'post'], '/argus-atendimento-webhook', 'Argus\Argus::argus_atendimento_webhook');
+$routes->match(['get', 'post'], '/argus-atendimento-webhook-vap', 'Argus\Argus::argus_atendimento_webhook_vap');
 
 
 //FRONTLINE

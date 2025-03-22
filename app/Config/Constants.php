@@ -11,6 +11,14 @@ define('AppName', "Grupo QUID");
 
 define ('shortURL', 'https://pravc.io/');
 
+define ('API_Integraall', 'https://api.integraall.com/api/');
+define ('API_User', 'fernando.dantas');
+define ('API_Password', 'P@drao123');
+
+//calculadora
+define ('API_Calculadora', 'https://api2.calculadoraconsignado.com.br/api/');
+
+
 //SMS Account - US SMS ONLY
 define('TWILIO_ACCOUNT_SID_SMS','ACbec7bd36bb5c1d809c7fd76c0e06bb5c');
 define('TWILIO_AUTH_TOKEN_SMS','f9b35782bcc14ea689826783314dab9e');
