@@ -575,6 +575,12 @@ class Frontline extends BaseController
 			  "templates": [
 				{ "content": "Para procedermos com seu atendimento, por genteliza envie uma foto 📸 (frente e verso) do seu *documento de Identidade* ou *Carteira de Motorista (CNH)*."},
 			  ]
+			},
+			{
+			  "display_name": "AASPA - FINALIZAÇÃO",
+			  "templates": [
+				{ "content": "Agradecemos imensamente pela confiança e empenho! Informamos que o seu processo foi concluído com sucesso. Dentro de até *48 horas*, você receberá a sua carteirinha diretamente no WhatsApp. Caso tenha qualquer dúvida, estamos à disposição para ajudar. Abraços!"},
+			  ]
 			}
 		  ]';
 	}

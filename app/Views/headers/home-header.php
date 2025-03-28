@@ -42,7 +42,7 @@ License: For each use you must have a valid license purchased only from above li
 	</head>
 	<!--end::Head-->
 	<!--begin::Body-->
-	<body id="kt_app_body" data-kt-app-layout="dark-sidebar" data-kt-app-header-fixed="true" data-kt-app-sidebar-enabled="true" data-kt-app-sidebar-fixed="true" data-kt-app-sidebar-hoverable="true" data-kt-app-sidebar-push-header="true" data-kt-app-sidebar-push-toolbar="true" data-kt-app-sidebar-push-footer="true" data-kt-app-toolbar-enabled="true" class="app-default">
+	<body id="kt_app_body" data-kt-app-layout="dark-sidebar" data-kt-app-sidebar-minimize="on" data-kt-app-header-fixed="true" data-kt-app-sidebar-enabled="true" data-kt-app-sidebar-fixed="true" data-kt-app-sidebar-hoverable="true" data-kt-app-sidebar-push-header="true" data-kt-app-sidebar-push-toolbar="true" data-kt-app-sidebar-push-footer="true" data-kt-app-toolbar-enabled="true" class="app-default">
 		<!--begin::Theme mode setup on page load-->
 		<!--script>var defaultThemeMode = "light"; var themeMode; if ( document.documentElement ) { if ( document.documentElement.hasAttribute("data-theme-mode")) { themeMode = document.documentElement.getAttribute("data-theme-mode"); } else { if ( localStorage.getItem("data-theme") !== null ) { themeMode = localStorage.getItem("data-theme"); } else { themeMode = defaultThemeMode; } } if (themeMode === "system") { themeMode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"; } document.documentElement.setAttribute("data-theme", themeMode); }</script-->
 		<script>
@@ -122,7 +122,7 @@ License: For each use you must have a valid license purchased only from above li
 																<!--begin:Menu item-->
 																<div class="menu-item p-0 m-0">
 																	<!--begin:Menu link-->
-																	<a href="../../demo1/dist/index.html" class="menu-link active">
+																	<a href="<?php echo assetfolder;?>aaspa-zapsms" class="menu-link active">
 																		<span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-40px h-40px me-3">
 																			<!--begin::Svg Icon | path: icons/duotune/general/gen025.svg-->
 																			<span class="svg-icon svg-icon-primary svg-icon-1">
@@ -136,8 +136,8 @@ License: For each use you must have a valid license purchased only from above li
 																			<!--end::Svg Icon-->
 																		</span>
 																		<span class="d-flex flex-column">
-																			<span class="fs-6 fw-bold text-gray-800">Default</span>
-																			<span class="fs-7 fw-semibold text-muted">Reports & statistics</span>
+																			<span class="fs-6 fw-bold text-gray-800">Zap SMS</span>
+																			<span class="fs-7 fw-semibold text-muted">AASPA: WhatsApp & SMS</span>
 																		</span>
 																	</a>
 																	<!--end:Menu link-->
@@ -150,7 +150,7 @@ License: For each use you must have a valid license purchased only from above li
 																<!--begin:Menu item-->
 																<div class="menu-item p-0 m-0">
 																	<!--begin:Menu link-->
-																	<a href="../../demo1/dist/dashboards/ecommerce.html" class="menu-link">
+																	<a href="<?php echo assetfolder;?>aaspa-receptivo" class="menu-link">
 																		<span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-40px h-40px me-3">
 																			<!--begin::Svg Icon | path: icons/duotune/ecommerce/ecm002.svg-->
 																			<span class="svg-icon svg-icon-danger svg-icon-1">
@@ -163,8 +163,8 @@ License: For each use you must have a valid license purchased only from above li
 																			<!--end::Svg Icon-->
 																		</span>
 																		<span class="d-flex flex-column">
-																			<span class="fs-6 fw-bold text-gray-800">eCommerce</span>
-																			<span class="fs-7 fw-semibold text-muted">Sales reports</span>
+																			<span class="fs-6 fw-bold text-gray-800">Receptivo</span>
+																			<span class="fs-7 fw-semibold text-muted">AASPA: Propostas</span>
 																		</span>
 																	</a>
 																	<!--end:Menu link-->
@@ -177,7 +177,7 @@ License: For each use you must have a valid license purchased only from above li
 																<!--begin:Menu item-->
 																<div class="menu-item p-0 m-0">
 																	<!--begin:Menu link-->
-																	<a href="../../demo1/dist/dashboards/projects.html" class="menu-link">
+																	<a href="https://www.tse.jus.br/servicos-eleitorais/autoatendimento-eleitoral#/atendimento-eleitor/consultar-situacao-titulo-eleitor" class="menu-link" target="_blank">
 																		<span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-40px h-40px me-3">
 																			<!--begin::Svg Icon | path: icons/duotune/abstract/abs045.svg-->
 																			<span class="svg-icon svg-icon-info svg-icon-1">
@@ -189,8 +189,8 @@ License: For each use you must have a valid license purchased only from above li
 																			<!--end::Svg Icon-->
 																		</span>
 																		<span class="d-flex flex-column">
-																			<span class="fs-6 fw-bold text-gray-800">Projects</span>
-																			<span class="fs-7 fw-semibold text-muted">Tasts, graphs & charts</span>
+																			<span class="fs-6 fw-bold text-gray-800">TSE</span>
+																			<span class="fs-7 fw-semibold text-muted">Validação do TSE</span>
 																		</span>
 																	</a>
 																	<!--end:Menu link-->
@@ -203,7 +203,7 @@ License: For each use you must have a valid license purchased only from above li
 																<!--begin:Menu item-->
 																<div class="menu-item p-0 m-0">
 																	<!--begin:Menu link-->
-																	<a href="../../demo1/dist/dashboards/online-courses.html" class="menu-link">
+																	<a href="https://gestao.sistemacorban.com.br/" class="menu-link" target="_blank">
 																		<span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-40px h-40px me-3">
 																			<!--begin::Svg Icon | path: icons/duotune/art/art002.svg-->
 																			<span class="svg-icon svg-icon-success svg-icon-1">
@@ -215,8 +215,8 @@ License: For each use you must have a valid license purchased only from above li
 																			<!--end::Svg Icon-->
 																		</span>
 																		<span class="d-flex flex-column">
-																			<span class="fs-6 fw-bold text-gray-800">Online Courses</span>
-																			<span class="fs-7 fw-semibold text-muted">Student progress</span>
+																			<span class="fs-6 fw-bold text-gray-800">Vanguard</span>
+																			<span class="fs-7 fw-semibold text-muted">Acesso ao Vanguard</span>
 																		</span>
 																	</a>
 																	<!--end:Menu link-->
@@ -229,7 +229,7 @@ License: For each use you must have a valid license purchased only from above li
 																<!--begin:Menu item-->
 																<div class="menu-item p-0 m-0">
 																	<!--begin:Menu link-->
-																	<a href="../../demo1/dist/dashboards/marketing.html" class="menu-link">
+																	<a href="https://grupoquid.panoramaemprestimos.com.br/login.do?action=sistema" class="menu-link" target="_blank">
 																		<span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-40px h-40px me-3">
 																			<!--begin::Svg Icon | path: icons/duotune/graphs/gra001.svg-->
 																			<span class="svg-icon svg-icon-dark svg-icon-1">
@@ -241,8 +241,8 @@ License: For each use you must have a valid license purchased only from above li
 																			<!--end::Svg Icon-->
 																		</span>
 																		<span class="d-flex flex-column">
-																			<span class="fs-6 fw-bold text-gray-800">Marketing</span>
-																			<span class="fs-7 fw-semibold text-muted">Campaings & conversions</span>
+																			<span class="fs-6 fw-bold text-gray-800">Panorama</span>
+																			<span class="fs-7 fw-semibold text-muted">Acesso sistema</span>
 																		</span>
 																	</a>
 																	<!--end:Menu link-->
@@ -255,7 +255,7 @@ License: For each use you must have a valid license purchased only from above li
 																<!--begin:Menu item-->
 																<div class="menu-item p-0 m-0">
 																	<!--begin:Menu link-->
-																	<a href="../../demo1/dist/dashboards/bidding.html" class="menu-link">
+																	<a href="https://integraall.com/" class="menu-link" target="_blank">
 																		<span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-40px h-40px me-3">
 																			<!--begin::Svg Icon | path: icons/duotune/general/gen019.svg-->
 																			<span class="svg-icon svg-icon-warning svg-icon-1">
@@ -267,8 +267,8 @@ License: For each use you must have a valid license purchased only from above li
 																			<!--end::Svg Icon-->
 																		</span>
 																		<span class="d-flex flex-column">
-																			<span class="fs-6 fw-bold text-gray-800">Bidding</span>
-																			<span class="fs-7 fw-semibold text-muted">Campaings & conversions</span>
+																			<span class="fs-6 fw-bold text-gray-800">Integraall</span>
+																			<span class="fs-7 fw-semibold text-muted">AASPA: Sistema Integraall</span>
 																		</span>
 																	</a>
 																	<!--end:Menu link-->
@@ -281,7 +281,7 @@ License: For each use you must have a valid license purchased only from above li
 																<!--begin:Menu item-->
 																<div class="menu-item p-0 m-0">
 																	<!--begin:Menu link-->
-																	<a href="../../demo1/dist/dashboards/pos.html" class="menu-link">
+																	<a href="https://frontline.twilio.com/" class="menu-link" target="_blank">
 																		<span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-40px h-40px me-3">
 																			<!--begin::Svg Icon | path: icons/duotune/abstract/abs043.svg-->
 																			<span class="svg-icon svg-icon-danger svg-icon-1">
@@ -293,8 +293,8 @@ License: For each use you must have a valid license purchased only from above li
 																			<!--end::Svg Icon-->
 																		</span>
 																		<span class="d-flex flex-column">
-																			<span class="fs-6 fw-bold text-gray-800">POS System</span>
-																			<span class="fs-7 fw-semibold text-muted">Campaings & conversions</span>
+																			<span class="fs-6 fw-bold text-gray-800">Frontline</span>
+																			<span class="fs-7 fw-semibold text-muted">WhatsApp Web</span>
 																		</span>
 																	</a>
 																	<!--end:Menu link-->
@@ -307,7 +307,7 @@ License: For each use you must have a valid license purchased only from above li
 																<!--begin:Menu item-->
 																<div class="menu-item p-0 m-0">
 																	<!--begin:Menu link-->
-																	<a href="../../demo1/dist/dashboards/call-center.html" class="menu-link">
+																	<a href="<?php echo (empty($session->observacao)  ? 'http://meet.google.com/' : $session->observacao);?>" class="menu-link" target="_blank">
 																		<span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-40px h-40px me-3">
 																			<!--begin::Svg Icon | path: icons/duotune/communication/com004.svg-->
 																			<span class="svg-icon svg-icon-primary svg-icon-1">
@@ -319,8 +319,8 @@ License: For each use you must have a valid license purchased only from above li
 																			<!--end::Svg Icon-->
 																		</span>
 																		<span class="d-flex flex-column">
-																			<span class="fs-6 fw-bold text-gray-800">Call Center</span>
-																			<span class="fs-7 fw-semibold text-muted">Campaings & conversions</span>
+																			<span class="fs-6 fw-bold text-gray-800">Google Meeting</span>
+																			<span class="fs-7 fw-semibold text-muted">Meu Google Meeting</span>
 																		</span>
 																	</a>
 																	<!--end:Menu link-->
@@ -334,10 +334,10 @@ License: For each use you must have a valid license purchased only from above li
 														<!--begin:Landing-->
 														<div class="d-flex flex-stack flex-wrap flex-lg-nowrap gap-2 mx-5">
 															<div class="d-flex flex-column me-5">
-																<div class="fs-6 fw-bold text-gray-800">Landing Page Template</div>
-																<div class="fs-7 fw-semibold text-muted">Onpe page landing template with pricing & others</div>
+																<div class="fs-6 fw-bold text-gray-800">Seja Bem Vindo</div>
+																<div class="fs-7 fw-semibold text-muted"><?php echo $session->nickname;?></div>
 															</div>
-															<a href="../../demo1/dist/landing.html" class="btn btn-sm btn-primary fw-bold">Explore</a>
+															<a href="<?php echo assetfolder ?>sign-in" class="btn btn-sm btn-primary fw-bold">Sair</a>
 														</div>
 														<!--end:Landing-->
 													</div>
@@ -345,13 +345,13 @@ License: For each use you must have a valid license purchased only from above li
 													<!--begin:Col-->
 													<div class="menu-more bg-light col-lg-4 py-3 px-3 py-lg-6 px-lg-6 rounded-end">
 														<!--begin:Heading-->
-														<h4 class="fs-6 fs-lg-4 text-gray-800 fw-bold mt-3 mb-3 ms-4">More Dashboards</h4>
+														<h4 class="fs-6 fs-lg-4 text-gray-800 fw-bold mt-3 mb-3 ms-4">Mais Links</h4>
 														<!--end:Heading-->
 														<!--begin:Menu item-->
 														<div class="menu-item p-0 m-0">
 															<!--begin:Menu link-->
-															<a href="../../demo1/dist/dashboards/logistics.html" class="menu-link py-2">
-																<span class="menu-title">Logistics</span>
+															<a href="https://grupoquid.sydle.one/portal/" class="menu-link py-2" target="_blank">
+																<span class="menu-title">Portal Colaborador</span>
 															</a>
 															<!--end:Menu link-->
 														</div>
@@ -359,75 +359,13 @@ License: For each use you must have a valid license purchased only from above li
 														<!--begin:Menu item-->
 														<div class="menu-item p-0 m-0">
 															<!--begin:Menu link-->
-															<a href="../../demo1/dist/dashboards/website-analytics.html" class="menu-link py-2">
-																<span class="menu-title">Website Analytics</span>
+															<a href="https://kompletokard.com.br/" class="menu-link py-2" target="_blank">
+																<span class="menu-title">Kompleto</span>
 															</a>
 															<!--end:Menu link-->
 														</div>
 														<!--end:Menu item-->
-														<!--begin:Menu item-->
-														<div class="menu-item p-0 m-0">
-															<!--begin:Menu link-->
-															<a href="../../demo1/dist/dashboards/finance-performance.html" class="menu-link py-2">
-																<span class="menu-title">Finance Performance</span>
-															</a>
-															<!--end:Menu link-->
-														</div>
-														<!--end:Menu item-->
-														<!--begin:Menu item-->
-														<div class="menu-item p-0 m-0">
-															<!--begin:Menu link-->
-															<a href="../../demo1/dist/dashboards/store-analytics.html" class="menu-link py-2">
-																<span class="menu-title">Store Analytics</span>
-															</a>
-															<!--end:Menu link-->
-														</div>
-														<!--end:Menu item-->
-														<!--begin:Menu item-->
-														<div class="menu-item p-0 m-0">
-															<!--begin:Menu link-->
-															<a href="../../demo1/dist/dashboards/social.html" class="menu-link py-2">
-																<span class="menu-title">Social</span>
-															</a>
-															<!--end:Menu link-->
-														</div>
-														<!--end:Menu item-->
-														<!--begin:Menu item-->
-														<div class="menu-item p-0 m-0">
-															<!--begin:Menu link-->
-															<a href="../../demo1/dist/dashboards/delivery.html" class="menu-link py-2">
-																<span class="menu-title">Delivery</span>
-															</a>
-															<!--end:Menu link-->
-														</div>
-														<!--end:Menu item-->
-														<!--begin:Menu item-->
-														<div class="menu-item p-0 m-0">
-															<!--begin:Menu link-->
-															<a href="../../demo1/dist/dashboards/crypto.html" class="menu-link py-2">
-																<span class="menu-title">Crypto</span>
-															</a>
-															<!--end:Menu link-->
-														</div>
-														<!--end:Menu item-->
-														<!--begin:Menu item-->
-														<div class="menu-item p-0 m-0">
-															<!--begin:Menu link-->
-															<a href="../../demo1/dist/dashboards/school.html" class="menu-link py-2">
-																<span class="menu-title">School</span>
-															</a>
-															<!--end:Menu link-->
-														</div>
-														<!--end:Menu item-->
-														<!--begin:Menu item-->
-														<div class="menu-item p-0 m-0">
-															<!--begin:Menu link-->
-															<a href="../../demo1/dist/dashboards/podcast.html" class="menu-link py-2">
-																<span class="menu-title">Podcast</span>
-															</a>
-															<!--end:Menu link-->
-														</div>
-														<!--end:Menu item-->
+														
 													</div>
 													<!--end:Col-->
 												</div>
@@ -441,7 +379,7 @@ License: For each use you must have a valid license purchased only from above li
 									<!--begin:Menu item-->
 									<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="bottom-start" class="menu-item menu-lg-down-accordion me-0 me-lg-2">
 										<!--begin:Menu link-->
-										<span class="menu-link">
+										<span class="menu-link" style="display:none">
 											<span class="menu-title">Pages</span>
 											<span class="menu-arrow d-lg-none"></span>
 										</span>
@@ -1685,7 +1623,7 @@ License: For each use you must have a valid license purchased only from above li
 									<!--begin:Menu item-->
 									<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="bottom-start" class="menu-item menu-lg-down-accordion menu-sub-lg-down-indention me-0 me-lg-2">
 										<!--begin:Menu link-->
-										<span class="menu-link">
+										<span class="menu-link" style="display:none">
 											<span class="menu-title">Apps</span>
 											<span class="menu-arrow d-lg-none"></span>
 										</span>
@@ -2913,7 +2851,7 @@ License: For each use you must have a valid license purchased only from above li
 									<!--begin:Menu item-->
 									<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="bottom-start" class="menu-item menu-lg-down-accordion me-0 me-lg-2">
 										<!--begin:Menu link-->
-										<span class="menu-link">
+										<span class="menu-link" style="display:none">
 											<span class="menu-title">Layouts</span>
 											<span class="menu-arrow d-lg-none"></span>
 										</span>
@@ -3080,7 +3018,7 @@ License: For each use you must have a valid license purchased only from above li
 									<!--begin:Menu item-->
 									<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="bottom-start" class="menu-item menu-lg-down-accordion menu-sub-lg-down-indention me-0 me-lg-2">
 										<!--begin:Menu link-->
-										<span class="menu-link">
+										<span class="menu-link" style="display:none">
 											<span class="menu-title">Help</span>
 											<span class="menu-arrow d-lg-none"></span>
 										</span>
@@ -4911,6 +4849,21 @@ License: For each use you must have a valid license purchased only from above li
 														<span class="bullet bullet-dot"></span>
 													</span>
 													<span class="menu-title">ZapSMS</span>
+												</a>
+												<!--end:Menu link-->
+											</div>
+										</div>
+										<!--end:Menu sub-->
+										<!--begin:Menu sub-->
+										<div class="menu-sub menu-sub-accordion">
+											<!--begin:Menu item-->
+											<div class="menu-item">
+												<!--begin:Menu link-->
+												<a class="menu-link" href="<?php echo assetfolder;?>aaspa-receptivo">
+													<span class="menu-bullet">
+														<span class="bullet bullet-dot"></span>
+													</span>
+													<span class="menu-title">Receptivo</span>
 												</a>
 												<!--end:Menu link-->
 											</div>

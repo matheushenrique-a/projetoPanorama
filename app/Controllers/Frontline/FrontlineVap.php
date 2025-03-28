@@ -156,8 +156,8 @@ class FrontlineVap extends BaseController
 	// Query	STEFA
 	// Worker	dantas@pravoce.io
 
-	//http://localhost/InsightSuite/public/frontline-crm-inbound
-	//https://insightsuite.pravoce.io/frontline-crm-inbound
+	//http://localhost/InsightSuite/public/frontline-vap-crm-inbound
+	//https://insightsuite.pravoce.io/frontline-vap-crm-inbound
 	public function frontline_crm_inbound(){
 		$Location = $this->getpost('Location');
 		$CustomerId = $this->getpost('CustomerId');
@@ -171,7 +171,9 @@ class FrontlineVap extends BaseController
 		//$Location = "GetCustomerDetailsByCustomerId";
 		//$Location = "GetCustomersList";
 
-		$nomeAssessor = ""; //$this->dbMasterDefault->select('user_account', ['email' => $Worker])['firstRow']->nickname;
+		$nomeAssessor = $this->dbMasterDefault->select('user_account', ['email' => $Worker])['firstRow']->nickname;
+		if (empty($nomeAssessor)){ $this->telegram->notifyTelegramGroup("🚨 ASSESSOR SEM Email: " . $Worker, telegramQuid);}
+
 		header('Content-Type: application/json');
 
 		//OCORRE AO ABRIR A LISTA DE CLIENTES OU NUMERO NÃO COMPLETAMENTE DIGITADO
@@ -179,16 +181,35 @@ class FrontlineVap extends BaseController
 			//cliente vazio
 
 			if (!empty($nomeAssessor)){
-				$sqlQuery = "SELECT CONCAT(id_proposta, '-', celular) customer_id, nome display_name, cpf, celular telefone FROM aaspa_cliente where assessor = '$nomeAssessor' ORDER BY data_criacao DESC LIMIT 50;";		
+				$sqlQuery = "SELECT CONCAT(id_proposta, '-', celular) customer_id, nome display_name, cpf, celular telefone FROM aaspa_cliente_vap where assessor = '$nomeAssessor' ORDER BY data_criacao DESC LIMIT 50;";		
 				//echo $sqlQuery;exit;	
 				$cliente = $this->dbMasterDefault->runQuery($sqlQuery);
-				$clientes = $cliente["result"]->getResultArray();
+
+				//TODO
+
+				if ($cliente['existRecord']){
+					$clientes = $cliente["result"]->getResultArray();
 	
-				$autoContatoArray = [
-					"objects" => [
-						"customers" => $clientes, "searchable" => true
-					]
-				];
+					$autoContatoArray = [
+						"objects" => [
+							"customers" => $clientes, "searchable" => true
+						]
+					];
+				} else {
+					$autoContatoArray = [
+						"objects" => [
+							"customers" => [
+								[
+								"customer_id" => "N/A",
+								"display_name" => "DIGITE O TELEFONE",
+								"cpf" => "000.000.000-01",
+								"telefone" => "",
+								"email" => "",
+								]
+						], "searchable" => true
+						]
+					];
+				}
 
 			} else {
 				$autoContatoArray = [
@@ -212,7 +233,7 @@ class FrontlineVap extends BaseController
 
 		//OCORRE AO ABRIR A LISTA DE CLIENTES E TODOS OS DIGITOS DO TELEFONE FORAM DIGITADOS 55+11 =13 DIGITOS
 		} else if (($Location == "GetCustomersList") and (strlen($clientNumberWaId) == 13)) {
-			//$cliente = $this->dbMasterDefault->select('aaspa_cliente', ['celular' => $clientNumberWaId]);
+			//$cliente = $this->dbMasterDefault->select('_vap', ['celular' => $clientNumberWaId]);
 
 			$cliente['existRecord'] = false;
 
@@ -278,7 +299,60 @@ class FrontlineVap extends BaseController
 					}
 				}';
 			} else if (strpos($CustomerId, "-") !== false){ //INDICA QUE É UMA SEQUENCIA "CÓDIGO-TELEFONE DIGTADO"
-				
+				$partes = explode("-", $CustomerId);
+				$id_proposta = $partes[0]; 
+				$clientNumberWaId = $partes[1];
+
+				$cliente = $this->dbMasterDefault->select('aaspa_cliente_vap', ['id_proposta' => $id_proposta]);
+
+				if ($cliente['existRecord']){
+					$nome = strtoupper($cliente['firstRow']->nome);
+					$cpf = $cliente['firstRow']->cpf;
+					$id_proposta = $cliente['firstRow']->id_proposta;
+					$codCliente = $cliente['firstRow']->codCliente;
+					$nomeCliente = $cliente['firstRow']->nome;
+					$nomeUsuario = $cliente['firstRow']->assessor;
+					$celular = $cliente['firstRow']->celular;
+					$codCliente = $cliente['firstRow']->codCliente;
+
+
+					//Ao clientar em detalhes do cliente, só precisa retornar o telefone
+					$channelsWhatsApp = array("type" => "whatsapp", "value" => "whatsapp: +" . $clientNumberWaId);
+					$clienteContacts = array ("channels" => array($channelsWhatsApp));
+
+					$detailItem1 = array("title" => "Código Vanguard", "content" => $codCliente);
+					$detailItem2 = array("title" => "Nome Cliente", "content" => $nomeCliente);
+					$detailItem3 = array("title" => "Telefone", "content" => $celular);
+					$detailItem4 = array("title" => "Ultimo Assessor", "content" => $nomeUsuario);
+
+
+					$clienteDetail = array ("details" => $detailItem1);
+
+					// //Dados proopsta
+					// $urlDetalhes = 'https://fgts-cliente-detalhes/';
+					// $urlStatus = 'https://fgts/proposta-status/';
+					// $urlEditar = 'https://fgts/proposta';
+		
+					// $DetalhesItem = array("type" => "Insight Suite", "value" => $urlDetalhes, "display_name" => "Detalhes Proposta");
+					// $statusItem = array("type" => "Insight Suite", "value" => $urlStatus, "display_name" => "Status Proposta");
+					// $editarItem = array("type" => "Insight Suite", "value" => $urlEditar, "display_name" => "Editar Proposta");
+					// $clienteLinks = array ("links" => array($DetalhesItem, $statusItem, $editarItem));
+					
+					$autoContatoArray = [
+						"customer_id" => $id_proposta . "-" . $clientNumberWaId,
+						"display_name" => $nome . " | " . formatarTelefone($clientNumberWaId),
+						"cpf" => $cpf,
+						"telefone" => "+" . $clientNumberWaId,
+						"email" => "",
+					];
+
+					$customerList = json_encode($autoContatoArray + $clienteContacts + $clienteDetail);
+					echo '{
+						"objects": {
+							"customer": ' . $customerList . '
+						}
+					}';
+				}
 			}
 		}
 	}

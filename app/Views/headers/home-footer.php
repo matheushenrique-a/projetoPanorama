@@ -4161,6 +4161,7 @@
 		<!--begin::Global Javascript Bundle(used by all pages)-->
 		<script src="<?php echo assetfolder ?>assets/plugins/global/plugins.bundle.js"></script>
 		<script src="<?php echo assetfolder ?>assets/js/scripts.bundle.js"></script>
+		<script src="<?php echo assetfolder ?>assets/js/aaspa.js"></script>
 		<!--end::Global Javascript Bundle-->
 		<!--begin::Vendors Javascript(used by this page)-->
 		<script src="<?php echo assetfolder ?>assets/plugins/custom/fullcalendar/fullcalendar.bundle.js"></script>

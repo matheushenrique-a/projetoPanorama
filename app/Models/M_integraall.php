@@ -1,11 +1,13 @@
 <?php 
-//require_once 'aws/vendor/autoload.php';
-
 namespace App\Models;
+require_once 'panther/vendor/autoload.php';
+
+
 use CodeIgniter\Model;
 use App\Libraries\dbMaster;
 use App\Models\M_telegram;
 use App\Models\M_http;
+use Symfony\Component\Panther\Client;
 
 class M_integraall extends Model {
     protected $dbMasterDefault;
@@ -25,28 +27,56 @@ class M_integraall extends Model {
 		$headers[] = "Content-Type: application/json";
 
         $token = $this->token();
-        if ($token['sucesso']) {
-            $integraall = json_decode($token['retorno'], true);
-
-            if (isset($integraall['token'])){
-                $headers[] = "Authorization: Bearer " . $integraall['token'];
-                return $headers; exit;
-            }
-        }
-
-        $this->telegram->notifyTelegramGroup('🚨🚨🚨 INTEGRAALL TOKEN ERROR ' . $token['retorno'], telegramQuid);
-        throw new \Exception('INTEGRAALL TOKEN ERROR: ' . $token['retorno']);
+        $headers[] = "Authorization: Bearer " . $token;
+        return $headers; exit;
 	}
+
 
     //http://localhost/InsightSuite/public/integraall-token
     public function token(){
-        //TOKEN GERADO 20/03 07:45
-        $token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IkZFUk5BTkRPIERBTlRBUyBTQU5UT1MgSlVOSU9SIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy91c2VyZGF0YSI6Ijk5MSIsIlVzZXJJZCI6Ijk5MSIsIlJldmVuZGVkb3JJZCI6IjE0NCIsIlBlcmZpbElkIjoiNSIsImlwIjoiMTc3LjczLjE5Ny4yIiwicm9sZSI6WyJjcmlhcl9wcm9wb3N0YSIsInZpc3VhbGl6YXJfcHJvcG9zdGEiLCJlZGl0YXJfcHJvcG9zdGEiLCJpbnNlcmlyX2RvY3VtZW50b3MiLCJjb3BpYXJfbGlua19wYWdhbWVudG8iLCJyZWVudmlhcl9saW5rX3BhZ2FtZW50byIsImNhbmNlbGFyX3Byb3Bvc3RhIiwicmVsYXRvcmlvX2NvbWlzc2lvbmFtZW50byIsImFjZXNzb190b3RhbCIsImxpc3Rhcl91c3VhcmlvIiwiY3JpYXJfcHJvcG9zdGEiLCJ2aXN1YWxpemFyX3Byb3Bvc3RhIiwiZWRpdGFyX3Byb3Bvc3RhIiwiaW5zZXJpcl9kb2N1bWVudG9zIiwiY29waWFyX2xpbmtfcGFnYW1lbnRvIiwicmVlbnZpYXJfbGlua19wYWdhbWVudG8iLCJjYW5jZWxhcl9wcm9wb3N0YSIsInJlbGF0b3Jpb19jb21pc3Npb25hbWVudG8iLCJhY2Vzc29fdG90YWwiLCJsaXN0YXJfdXN1YXJpbyJdLCJuYmYiOjE3NDI1ODEwMjEsImV4cCI6MTc0MjYzODYyMSwiaWF0IjoxNzQyNTgxMDIxfQ.BQGxnDt4FLgRJV7iCzU9yS0C8K18zRWxhFK9m58ATDM';
-        return ['sucesso' => true, 'retorno' => json_encode(['token' => $token])];
+
+        $tokens = $this->dbMasterDefault->select('bancos_servicos', ['Slug' => 'AASPA_PROD']);
+        if ($tokens['existRecord']){
+            $token =  trim($tokens['firstRow']->AccessToken);
+            $updateTime =  $tokens['firstRow']->last_updated;
+
+            $currentTime = new \DateTime();
+            $lastUpdatedTime = new \DateTime($updateTime);
+            $interval = $currentTime->diff($lastUpdatedTime);
+
+            //token antigo ou vazio
+            if (($interval->h + ($interval->days * 24) > 6) or (empty($token))) {
+                $newToken = $this->tokenRenew();
+                if ($newToken['sucesso']) {
+                    $tokenDetalhes = json_decode($newToken['retorno'], true);
+
+                    if (isset($tokenDetalhes['token'])){
+                        $tokenGerado = $tokenDetalhes['token'];
+                        $this->dbMasterDefault->update('bancos_servicos', ['AccessToken' => $tokenGerado], ['Slug' => 'AASPA_PROD'], ['last_updated' => 'current_timestamp()']);
+                        return $tokenDetalhes['token'];
+                    } else {
+                        $this->telegram->notifyTelegramGroup('🚨🚨🚨 INTEGRAALL TOKEN ERROR ' . $token['retorno'], telegramQuid);
+                        Echo "Não foi possível renovar o token. Entre em contato com o Administrador <br>" . $token['retorno'];
+                        exit;
+                    }
+                } else {
+                    $this->telegram->notifyTelegramGroup('🚨🚨🚨 INTEGRAALL TOKEN ERROR CURL ' . $token['retorno'], telegramQuid);
+                    Echo "Não foi possível renovar o token. Entre em contato com o Administrador <br>" . $token['retorno'];
+                    exit;
+                }
+            } else {
+                return $token;
+            }
+        } else {
+            $this->telegram->notifyTelegramGroup('🚨🚨🚨 INTEGRAALL AASPA SERVICE INEXISTENTE', telegramQuid);
+        }
     }
 
     public function tokenRenew(){
-        $headers = $this->getHeader();
+		$headers = [];
+		$headers[] = "accept: */*";
+		$headers[] = "Content-Type: application/json";
+
         $url = API_Integraall . 'Login/validar';
         $token = '';
 
@@ -67,6 +97,17 @@ class M_integraall extends Model {
         return $this->m_http->http_request('POST', $url, $headers, $data);
     }
 
+    public function tse($data){
+        $headers = [];
+		$headers[] = "accept: */*";
+		$headers[] = "Content-Type: application/json";
+
+        //$url = "http://localhost:3000/consultar-cpf";
+        $url = "https://0cd0-177-73-197-2.ngrok-free.app/consultar-cpf";
+
+        return $this->m_http->http_request('POST', $url, $headers, $data);
+    }
+
     public function qualificaCalculadora($data){
         $headers = [];
 		$headers[] = "accept: */*";
@@ -75,6 +116,33 @@ class M_integraall extends Model {
         $url = API_Calculadora . 'Qualificacao/Consulta';
 
         return $this->m_http->http_request('POST', $url, $headers, $data);
+    }
+
+    public function criar_proposta_insight($data){
+        
+        //echo '14:12:37 - <h3>Dump 95 </h3> <br><br>' . var_dump($data); exit;					//<-------DEBUG
+
+        $proposta = $this->dbMasterDefault->select('aaspa_propostas', ['cpf' => $data['cpf']]);
+
+        if (!$proposta['existRecord']){
+            $added = $this->dbMasterDefault->insert('aaspa_propostas',$data);
+        } else {
+            $updated = $this->dbMasterDefault->update('aaspa_propostas', $data, ['cpf' => $data['cpf']]);
+        }
+
+    }
+
+    public function criar_proposta_integraall($data){
+        
+        $headers = $this->getHeader();
+        $url = API_Integraall . 'proposta';
+        
+
+        //echo json_encode($data); exit;					//<-------DEBUG
+
+
+        return $this->m_http->http_request('POST', $url, $headers, $data);
+        echo "16:09:24 - Breakpoint 5"; exit;					//<-------DEBUG
     }
 
     public function cep($cep){
@@ -88,6 +156,13 @@ class M_integraall extends Model {
         $headers = $this->getHeader();
         $url = API_Integraall . 'Proposta/' . $id;
 
+        return $this->m_http->http_request('GET', $url, $headers);
+    }
+
+    public function buscarProposta($id){
+        $headers = $this->getHeader();
+        $url = API_Integraall . 'Proposta/' . $id;
+        
         return $this->m_http->http_request('GET', $url, $headers);
     }
 

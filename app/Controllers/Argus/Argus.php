@@ -49,6 +49,10 @@ class Argus extends BaseController
     //     "idTipoWebhook": 1
     // }
 
+
+
+
+    
     //https://a613-2804-1b3-6149-9c04-d1cc-cd1c-6041-2e1c.ngrok-free.app/InsightSuite/public/argus-atendimento-webhook
     public function argus_atendimento_webhook(){
         $request = file_get_contents('php://input');

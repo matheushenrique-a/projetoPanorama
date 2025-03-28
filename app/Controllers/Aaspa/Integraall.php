@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Controllers\Aaspa;
+
+
 use App\Controllers\BaseController;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
@@ -23,28 +25,25 @@ class Integraall extends BaseController
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger) {
         parent::initController($request, $response, $logger);
         $this->checkSession();
-
-        //nesse caso o dbMaster vai apontar para o banco FGTS
-
         //o dbMasterDefault vai apontar para o banco do InsightSuite
         $this->dbMasterDefault = new dbMaster();
         $this->session = session();
         $this->telegram =  new M_telegram();
         $this->twilio =  new M_twilio();
         $this->m_http =  new M_http();
-        $this->integraall =  new M_integraall();
+        $this->m_integraall =  new M_integraall();
     }
 
     
     ///http://localhost/InsightSuite/public/integraall-token
     public function integraall_token(){
-        $result = $this->integraall->tokenRenew();
+        $result = $this->m_integraall->tokenRenew();
         echo '07:57:09 - <h3>Dump 5 </h3> <br><br>' . var_dump($result); exit;					//<-------DEBUG
     }
     
     ///http://localhost/InsightSuite/public/integraall-cep
     public function cep(){
-        $result = $this->integraall->cep('30575060');
+        $result = $this->m_integraall->cep('30575060');
         echo '07:57:09 - <h3>Dump 5 </h3> <br><br>' . var_dump($result); exit;					//<-------DEBUG
     }
 
@@ -57,61 +56,42 @@ class Integraall extends BaseController
         // $data["login"] = 'API_dantas';
         // $data["senha"] = '123456';
 
-        $result = $this->integraall->loginCalculadora($data);
+        $result = $this->m_integraall->loginCalculadora($data);
         echo '07:57:09 - <h3>Dump 5 </h3> <br><br>' . var_dump($result); exit;					//<-------DEBUG
     }
 
-    ///http://localhost/InsightSuite/public/calculadora-qualificacao
-    public function calculadora_qualificacao(){
-        $data = array();
-
-        $cpf = '484.828.709-04';
-        
-        $data["entrada"] = $cpf;
-        $data["tipoConsulta"] = 1;
-
-        $result = $this->integraall->qualificaCalculadora($data);
-
-        echo "<H1>CONSULTA CALCULADORA</H1>";
-
-        if ($result['sucesso']){
-            $retorno = json_decode($result['retorno'], true);
-            $propostas = $retorno['resultados'];
-            foreach ($propostas as $proposta){
-                echo "<br><br>beneficio: " . $proposta['beneficio'] . "<br>";
-                echo "bloqueioAssociacao: " . ($proposta['bloqueioAssociacao']  ? 'SIM' : 'NAO')  . "<br>";
-                echo "especieCodigo: " . $proposta['especieCodigo'] . "<br>";
-                echo "especieDescricao: " . $proposta['especieDescricao'] . "<br>";
-                echo "possuiSindicato: " . ($proposta['possuiSindicato']  ? 'SIM' : 'NAO') . "<br>";
-                echo "status: " . $proposta['status'] . "<br>";
-
-            }
-        }
-
-        echo "<H1>CONSULTA INSS</H1>";
-        $this->validar_cpf($cpf);
-
-    }
 
     ///http://localhost/InsightSuite/public/integraall-detalhes-proposta
     public function detalhes_proposta(){
         $id = 21136;
-        $result = $this->integraall->detalhesProposta($id);
+        $result = $this->m_integraall->detalhesProposta($id);
         echo '07:57:09 - <h3>Dump 5 </h3> <br><br>' . var_dump($result); exit;					//<-------DEBUG
     }
 
-    ///http://localhost/InsightSuite/public/integraall-lista-propostas
+    ///http://localhost/InsightSuite/public/integraall-buscar-propostas
+    public function buscar_propostas(){
+        $id = 21631;
+        $result = $this->m_integraall->buscarProposta($id);
+        echo '14:48:35 - <h3>Dump 89 </h3> <br><br>' . var_dump($result); exit;					//<-------DEBUG
+
+
+    }
+
+
+    ///http://localhost/InsightSuite/public/integraall-listar-propostas
     public function listar_propostas(){
         
-        $filters = ['DataCadastroInicio' => '2025-03-20 00:00', 'DataCadastroFim'=> '2025-03-20 23:59:59']; 
-        $result = $this->integraall->listarPropostas($filters);
+       // $filters = ['DataCadastroInicio' => '2025-03-20 00:00', 'DataCadastroFim'=> '2025-03-20 23:59:59']; 
+        $filters = ['TermoDaBusca' => '100.320.817-74']; 
+        $result = $this->m_integraall->listarPropostas($filters);
 
         if ($result['sucesso']){
             $retorno = json_decode($result['retorno'], true);
             if (isset($retorno['qtdResultado']) && $retorno['qtdResultado'] > 0){
                 $propostas = $retorno['resultado'];
                 foreach ($propostas as $proposta){
-                    echo "<br><br>Cliente: " . $proposta['nomeCliente'] . "<br>";
+                    echo "<br><br>ID: " . $proposta['id'] . "<br>";
+                    echo "Cliente: " . $proposta['nomeCliente'] . "<br>";
                     echo "cpf: " . $proposta['cpf'] . "<br>";
                     echo "telefonePessoal: " . $proposta['telefonePessoal'] . "<br>";
                     echo "nomeProduto: " . $proposta['nomeProduto'] . "<br>";
@@ -135,19 +115,119 @@ class Integraall extends BaseController
         }
     }
     
-    ///http://localhost/InsightSuite/public/integraall-validar-cpf
-    public function validar_cpf($cpf = null){
-        //00914447726 //valido
-        // 44105517953
-        // 73115487134
-        // 07205606837
-        // 17462878453
-        // 06250428674
-        // 31767486634
+    ///http://localhost/InsightSuite/public/calculadora-qualificacao/00001421743
+    public function calculadora_qualificacao($cpf = null){
+        $data = array();
+        $data["entrada"] = $cpf;
+        $data["tipoConsulta"] = 1;
 
-        //$cpf = '00030691923';
+        $result = $this->m_integraall->qualificaCalculadora($data);
+
+        $returnData = array();
+        $returnData["cpf"] = $cpf;
+        $returnData["status"] = "BLOQUEADO";
+        $returnData["color"] = "#f22e46";
+        $returnData["beneficio"] = '';
+
+        if ($result['sucesso']){
+            $retorno = json_decode($result['retorno'], true);
+
+            if (isset($retorno['resultados'])){
+                $propostas = $retorno['resultados'];
+                foreach ($propostas as $proposta){
+                    // echo "<br><br>beneficio: " . $proposta['beneficio'] . "<br>";
+                    // echo "bloqueioAssociacao: " . ($proposta['bloqueioAssociacao']  ? 'SIM' : 'NAO')  . "<br>";
+                    // echo "especieCodigo: " . $proposta['especieCodigo'] . "<br>";
+                    // echo "especieDescricao: " . $proposta['especieDescricao'] . "<br>";
+                    // echo "possuiSindicato: " . ($proposta['possuiSindicato']  ? 'SIM' : 'NAO') . "<br>";
+                    // echo "status: " . $proposta['status'] . "<br>";
+    
+                    if (!$proposta['bloqueioAssociacao']){
+                        $returnData["status"] = "LIBERADO";
+                        $returnData["color"] = "#008001";
+                        $returnData["beneficio"] = $proposta['beneficio'];
+                        break;
+                    }
+                }
+            }
+            
+        }
+
+        $dataPropostaInsight = [
+            "cpf" => $cpf,
+            "assessor" => $this->session->nickname,
+            "assessorId" => $this->session->userId,
+            "aaspaCheck" => $returnData["status"],
+        ];
+        
+        $propostaAdded = $this->m_integraall->criar_proposta_insight($dataPropostaInsight);
+
+        echo json_encode($returnData);
+    }
+
+
+    ///http://localhost/InsightSuite/public/integraall-validar-tse/44105517953
+    public function validar_tse($cpf){
         $filters = ['cpf' => $cpf, 'tipo'=> 6];    //tipo 6 = produto AASPA 
-        $result = $this->integraall->validarCpf($filters);
+        $result = $this->m_integraall->tse($filters);
+
+        //00060677007 cpf com falha
+
+        $returnData = array();
+        $returnData["cpf"] = $cpf;
+        $returnData["status"] = "BLOQUEADO";
+        $returnData["color"] = "#f22e46";
+        $returnData["beneficio"] = '';
+
+        if ($result['sucesso']){
+            $retorno = json_decode($result['retorno'], true);
+            if (isset($retorno['resultado'])){
+                $biometria = $retorno['resultado'];
+                //"ELEITOR/ELEITORA COM BIOMETRIA COLETADA"
+                //ELEITOR/ELEITORA COM BIOMETRIA NÃO COLETADA
+
+                if (strpos($biometria, "NÃO COLETADA") !== false){
+                    $returnData["status"] = "BLOQUEADO";
+                    $returnData["color"] = "#f22e46";
+                    $returnData["beneficio"] = $biometria;
+                } else  if (strpos($biometria, "BIOMETRIA COLETADA") !== false){
+                    $returnData["status"] = "LIBERADO";
+                    $returnData["color"] = "#008001";
+                    $returnData["beneficio"] = $biometria;
+                }
+            } else {
+                $returnData["status"] = "FALHA";
+                $returnData["color"] = "#f22e46";
+            }
+        } else {
+            $returnData["status"] = "FALHA";
+            $returnData["color"] = "#f22e46";
+        }
+
+        $dataPropostaInsight = [
+            "cpf" => $cpf,
+            "assessor" => $this->session->nickname,
+            "assessorId" => $this->session->userId,
+            "tseCheck" => $returnData["status"],
+        ];
+        
+        $propostaAdded = $this->m_integraall->criar_proposta_insight($dataPropostaInsight);
+
+        echo json_encode($returnData);
+    }
+    
+    //Vai no INSS validar o CPF
+    ///http://localhost/InsightSuite/public/integraall-validar-cpf/15918660810
+    public function validar_cpf($cpf){
+        $filters = ['cpf' => $cpf, 'tipo'=> 6];    //tipo 6 = produto AASPA 
+        $result = $this->m_integraall->validarCpf($filters);
+
+
+        $returnData = array();
+        $returnData["cpf"] = $cpf;
+        $returnData["status"] = "BLOQUEADO";
+        $returnData["color"] = "#f22e46";
+        $returnData["beneficio"] = '';
 
         if ($result['sucesso']){
             $retorno = json_decode($result['retorno'], true);
@@ -155,36 +235,54 @@ class Integraall extends BaseController
                 $proposta = $retorno['proposta'];
 
                 foreach ($retorno['cadastros'] as $cadastro){
-                    echo "<br><br>Cliente: " . $cadastro['nomeCliente'] . "<br>";
-                    echo "cpf: " . $cadastro['cpf'] . "<br>";
-                    echo "estadoCivil: " . $cadastro['estadoCivil'] . "<br>";
-                    echo "sexo: " . $cadastro['sexo'] . "<br>";
-                    echo "nomeMae: " . $cadastro['nomeMae'] . "<br>";
-                    echo "email: " . $cadastro['email'] . "<br>";
-                    echo "telefone: " . $cadastro['telefone'] . "<br>";
-                    echo "logradouro: " . $cadastro['logradouro'] . "<br>";
-                    echo "bairro: " . $cadastro['bairro'] . "<br>";
-                    echo "cep: " . $cadastro['cep'] . "<br>";
-                    echo "cidade: " . $cadastro['cidade'] . "<br>";
-                    echo "uf: " . $cadastro['uf'] . "<br>";
-                    echo "complemento: " . $cadastro['complemento'] . "<br>";
-                    echo "endNumero: " . $cadastro['endNumero'] . "<br>";
-                    echo "dataNascimento: " . $cadastro['dataNascimento'] . "<br>";
-                    echo "matricula: " . $cadastro['matricula'] . "<br>";
-                    echo "instituidorMatricula: " . $cadastro['instituidorMatricula'] . "<br>";
-                    echo "orgao: " . $cadastro['orgao'] . "<br>";
-                    echo "codigoOrgao: " . $cadastro['codigoOrgao'] . "<br>";
-                    echo "docIdentidade: " . $cadastro['docIdentidade'] . "<br>";
-                    echo "docIdentidadeUf: " . $cadastro['docIdentidadeUf'] . "<br>";
-                    echo "docIdentidadeOrgEmissor: " . $cadastro['docIdentidadeOrgEmissor'] . "<br>";
-                    echo "bloqueio: " . $cadastro['bloqueio'] . "<br>";
-                }
-            } else {
-                echo $result['retorno'];exit;
-            }
-            
-        }
-    }
+                    if (!$cadastro['bloqueio']){
+                        $returnData["nomeCliente"] = strtoupper($cadastro['nomeCliente']);
+                        $returnData["cpf"] = $cadastro['cpf'];
+                        $returnData["estadoCivil"] = estadoCivilParaNumero((empty($cadastro['estadoCivil'])  ? 'SOLTEIRO' : $cadastro['estadoCivil']));
+                        $returnData["sexo"] = sexoParaNumero($cadastro['sexo']);
+                        //echo $cadastro['sexo'] . "---" . $returnData["sexo"];exit;
+                        $returnData["nomeMae"] = strtoupper($cadastro['nomeMae']);
+                        $returnData["email"] = $cadastro['email'];
+                        $returnData["telefone"] = $cadastro['telefone'];
+                        $returnData["logradouro"] = strtoupper($cadastro['logradouro']);
+                        $returnData["bairro"] = strtoupper($cadastro['bairro']);
+                        $returnData["cep"] = $cadastro['cep'];
+                        $returnData["cidade"] = strtoupper($cadastro['cidade']);
+                        $returnData["uf"] = $cadastro['uf'];
+                        $returnData["complemento"] = strtoupper($cadastro['complemento']);
+                        $returnData["endNumero"] = $cadastro['endNumero'];
+                        $returnData["dataNascimento"] = dataUsPt($cadastro['dataNascimento'],true);
+                       
+                        $calculoIdade = meuAniversario( $cadastro['dataNascimento']);
+                        $returnData["meuAniversario"] = "Idade atual " . $calculoIdade['idade'] . " anos, faltam " . $calculoIdade['dias'] . " dias para o próximo aniversário";
+                       
+                        $returnData["matricula"] = $cadastro['matricula'];
+                        $returnData["instituidorMatricula"] = $cadastro['instituidorMatricula'];
+                        $returnData["orgao"] = $cadastro['orgao'];
+                        $returnData["codigoOrgao"] = $cadastro['codigoOrgao'];
+                        $returnData["docIdentidade"] = (empty($cadastro['docIdentidade'])  ? $cadastro['cpf'] : $cadastro['docIdentidade']); ;
+                        $returnData["docIdentidadeUf"] = $cadastro['docIdentidadeUf'];
+                        $returnData["docIdentidadeOrgEmissor"] = $cadastro['docIdentidadeOrgEmissor'];
+                        $returnData["bloqueio"] = $cadastro['bloqueio'];
 
+                        $returnData["status"] = "LIBERADO";
+                        $returnData["color"] = "#008001";
+                        break;
+                    }
+                }
+            }
+        }
+
+        $dataPropostaInsight = [
+            "cpf" => $cpf,
+            "assessor" => $this->session->nickname,
+            "assessorId" => $this->session->userId,
+            "inssCheck" => $returnData["status"],
+        ];
+        
+        $propostaAdded = $this->m_integraall->criar_proposta_insight($dataPropostaInsight);
+
+        echo json_encode($returnData);
+    }
     
 }

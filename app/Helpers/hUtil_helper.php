@@ -1,5 +1,59 @@
 <?php 
 
+	function estadoCivilParaNumero($estadoCivil) {
+		$estadoCivil = trim(strtoupper($estadoCivil));
+
+		$lista = [
+			'SOLTEIRO' => 1,
+			'CASADO' => 2,
+			'VIÚVO' => 3,
+			'SEPARADO JUDICIALMENTE' => 4,
+			'UNIÃO ESTÁVEL' => 5,
+			'OUTROS' => 6
+		];
+
+		return $lista[$estadoCivil] ?? null;
+	}
+
+	function sexoParaNumero($sexo) {
+		$sexo = trim(strtoupper($sexo));
+
+		$lista = [
+			'MASCULINO' => 1,
+			'M' => 1,
+			'FEMININO' => 2,
+			'F' => 2,
+			'OUTRO' => 1,
+			'O' => 1,
+			'0' => 1,
+		];
+
+		return $lista[$sexo] ?? null;
+	}
+
+	function meuAniversario($dataNascimento) {
+		$hoje = new DateTime();
+		$nascimento = new DateTime($dataNascimento);
+		
+		// Calcular idade
+		$idade = $hoje->diff($nascimento)->y;
+
+		// Próximo aniversário
+		$proximoAniversario = DateTime::createFromFormat('Y-m-d', $hoje->format('Y') . '-' . $nascimento->format('m-d'));
+
+		// Se o aniversário deste ano já passou, usar o do ano que vem
+		if ($proximoAniversario < $hoje) {
+			$proximoAniversario->modify('+1 year');
+		}
+
+		// Calcular dias restantes
+		$diasFaltando = $hoje->diff($proximoAniversario)->days;
+
+		return [
+			'idade' => $idade,
+			'dias' => $diasFaltando
+		];
+	}
 
 	//adiciona um 9 ao telefone caso ja nao tenha
 	function normalizePhone($numero) {

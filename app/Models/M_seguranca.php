@@ -26,6 +26,7 @@ class M_seguranca extends Model {
             $this->my_session->set('nickname', $login['firstRow']->nickname);
             $this->my_session->set('email', $login['firstRow']->email);
             $this->my_session->set('perfil', $login['firstRow']->perfil_acesso);
+            $this->my_session->set('observacao', $login['firstRow']->observacao);
             //echo "22:02:26 - <h3>Dump 99</h3> <br><br>" . $this->session->session_id . "---". $this->session->nickname ; exit;					//<-------DEBUG
             return true;
         } else {
