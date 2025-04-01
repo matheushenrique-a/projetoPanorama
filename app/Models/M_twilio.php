@@ -33,7 +33,7 @@ class m_twilio extends Model {
 		$this->dbMasterDefault->insert('record_log',['log' => "SMS Enviado $telefone - $mensagem"]);
 
 		try {
-			$message = $twilio->messages->create("+" . $telefone, ["body" => $mensagem, "from" => "+13393300703", "statusCallback" => rootURL . "frontline-conversations-webhook"]);
+			$message = $twilio->messages->create("+" . $telefone, ["body" => $mensagem, "from" => fromWhatsApp, "statusCallback" => rootURL . "frontline-conversations-webhook"]);
 			//echo '09:11:00 - <h3>Dump 42 </h3> <br><br>' . var_dump($message); exit;					//<-------DEBUG
 
 			// Suponha que $message seja o objeto retornado pelo Twilio
@@ -75,8 +75,8 @@ class m_twilio extends Model {
 	//mensagens enviadas pelo chatbot, mas sensiveis a opção de notificação via whatsapp
 	function sendWhatsApp($body, $to){
 		if (whatAppMsg) {
-			$sid = TWILIO_ACCOUNT_SID;
-			$token = TWILIO_AUTH_TOKEN;
+			$sid = TWILIO_ACCOUNT_SID_SMS;
+			$token = TWILIO_AUTH_TOKEN_SMS;
 			$twilio = new Client($sid, $token);
 
 			$params = array(       
@@ -101,20 +101,23 @@ class m_twilio extends Model {
 		$body = "";
 
 		if (whatAppMsg) {
-			$sid = TWILIO_ACCOUNT_SID;
-			$token = TWILIO_AUTH_TOKEN;
+			$sid = TWILIO_ACCOUNT_SID_SMS;
+			$token = TWILIO_AUTH_TOKEN_SMS;
 			$twilio = new Client($sid, $token);
 
 			$returnData = array();
 			$returnData["status"] = true;
 			$returnData["mensagem"] = "";
 			$returnData["raw"] = null;
-			$messaging_service_sid = "";
+			$messaging_service_sid = "MGe5bf2163a347b3c4f98c248e4459529f";
 			$message = null;
 
 			try {
 				//echo $template;exit;
-				$message = $twilio->messages->create("whatsapp:" . $to, ["contentSid" => $template, "from" => "whatsapp:+" . fromWhatsApp]);
+				//$message = $twilio->messages->create("whatsapp:" . $to, ["contentSid" => $template, "from" => "whatsapp:+" . fromWhatsApp]);
+				$message = $twilio->messages->create("whatsapp:" . $to, ["messagingServiceSid" => $messaging_service_sid, "contentSid" => $template, "from" => "whatsapp:+" . fromWhatsApp]);
+
+				//echo '15:20:23 - <h3>Dump 59 </h3> <br><br>' . var_dump($message); exit;					//<-------DEBUG
 
 				$messageSid = $message->sid;
 				$status = $message->status;
@@ -142,7 +145,7 @@ class m_twilio extends Model {
 			//echo $returnData["mensagem"];exit;
 			
 			//Registra conversa no histórico
-			$data = (array('MessageSid' => $messageSid, 'Type' => 'WHATSAPP', 'ProfileName' => 'INSIGHT', 'Body' => $body, 'SmsStatus' => 'Gravada', 'To' => normalizePhone($to), 'WaId' => normalizePhone(fromWhatsApp), 'From' => normalizePhone(fromWhatsApp)));
+			$data = (array('MessageSid' => $messageSid, 'Type' => 'WHATSAPP', 'ProfileName' => 'INSIGHT', 'Body' => "Olá 👋🏻! Para continuar seu atendimento telefônico por aqui clique em CONTINUAR:", 'SmsStatus' => 'Gravada', 'To' => normalizePhone($to), 'WaId' => normalizePhone(fromWhatsApp), 'From' => normalizePhone(fromWhatsApp)));
 			$result = $this->dbMasterDefault->insert('whatsapp_log', $data);
 
 			return $returnData;
@@ -150,8 +153,8 @@ class m_twilio extends Model {
 	}
 
 	function routing($conversationSid, $workedEmail){
-		$sid = TWILIO_ACCOUNT_SID;
-		$token = TWILIO_AUTH_TOKEN;
+		$sid = TWILIO_ACCOUNT_SID_SMS;
+		$token = TWILIO_AUTH_TOKEN_SMS;
 		$twilio = new Client($sid, $token);
 
 		try {
@@ -164,8 +167,8 @@ class m_twilio extends Model {
 	}
 
 	function delete_message($conversationSid, $messageSid){
-		$sid = TWILIO_ACCOUNT_SID;
-		$token = TWILIO_AUTH_TOKEN;
+		$sid = TWILIO_ACCOUNT_SID_SMS;
+		$token = TWILIO_AUTH_TOKEN_SMS;
 		$twilio = new Client($sid, $token);
 
 		try {
@@ -176,8 +179,8 @@ class m_twilio extends Model {
 	}
 
 	function participants($ConversationSid){
-		$sid = TWILIO_ACCOUNT_SID;
-		$token = TWILIO_AUTH_TOKEN;
+		$sid = TWILIO_ACCOUNT_SID_SMS;
+		$token = TWILIO_AUTH_TOKEN_SMS;
 		$twilio = new Client($sid, $token);
 				
 		$participants = $twilio->conversations->v1->conversations($ConversationSid)->participants->read(5);	
@@ -186,8 +189,8 @@ class m_twilio extends Model {
 
 
 	function message_update($conversationSid, $messageSid, $body){
-		$sid = TWILIO_ACCOUNT_SID;
-		$token = TWILIO_AUTH_TOKEN;
+		$sid = TWILIO_ACCOUNT_SID_SMS;
+		$token = TWILIO_AUTH_TOKEN_SMS;
 		$twilio = new Client($sid, $token);
 
 		try {
@@ -199,8 +202,8 @@ class m_twilio extends Model {
 
 	//remove conversas presas no Frontline
 	function closeConversation($service, $conversationId){
-		$sid = TWILIO_ACCOUNT_SID;
-		$token = TWILIO_AUTH_TOKEN;
+		$sid = TWILIO_ACCOUNT_SID_SMS;
+		$token = TWILIO_AUTH_TOKEN_SMS;
 		$twilio = new Client($sid, $token);
 		
 		//echo "$service, $conversationId";exit;
@@ -215,8 +218,8 @@ class m_twilio extends Model {
 			$sid = TWILIO_ACCOUNT_SID_SMS;
 			$token = TWILIO_AUTH_TOKEN_SMS;	
 		} else {
-			$sid = TWILIO_ACCOUNT_SID;
-			$token = TWILIO_AUTH_TOKEN;
+			$sid = TWILIO_ACCOUNT_SID_SMS;
+			$token = TWILIO_AUTH_TOKEN_SMS;
 		}
 
 		$twilio = new Client($sid, $token);
@@ -246,8 +249,8 @@ class m_twilio extends Model {
 	}
 
 	function participantUpdate($ConversationSid, $ParticipantSid, $id_proposta, $display_name){
-		$sid = TWILIO_ACCOUNT_SID;
-		$token = TWILIO_AUTH_TOKEN;
+		$sid = TWILIO_ACCOUNT_SID_SMS;
+		$token = TWILIO_AUTH_TOKEN_SMS;
 		$twilio = new Client($sid, $token);
 		//$data = ["attributes" => json_encode(["avatar" => $display_name, "customer_id" => $id_proposta, "display_name" => $display_name])];
 
@@ -274,8 +277,8 @@ class m_twilio extends Model {
 	}
 
 	function users(){
-		$sid = TWILIO_ACCOUNT_SID;
-		$token = TWILIO_AUTH_TOKEN;
+		$sid = TWILIO_ACCOUNT_SID_SMS;
+		$token = TWILIO_AUTH_TOKEN_SMS;
 		$twilio = new Client($sid, $token);
 
 		$user = $twilio->frontlineApi->v1->users("MBbc1356caabcf44f7ab49ef172af5d32b")->fetch();
@@ -284,8 +287,8 @@ class m_twilio extends Model {
 
 	// ChatServiceSid	IS94a7787086f64e4995841c514c96c773
 	function FrontLineCleanUp(){
-		$sid = TWILIO_ACCOUNT_SID;
-		$token = TWILIO_AUTH_TOKEN;
+		$sid = TWILIO_ACCOUNT_SID_SMS;
+		$token = TWILIO_AUTH_TOKEN_SMS;
 		$twilio = new Client($sid, $token);
 		
 		$conversations = $twilio->conversations->v1->conversations->read([], 20);

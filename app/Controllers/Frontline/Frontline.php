@@ -229,7 +229,7 @@ class Frontline extends BaseController
 		$To = $this->getpost('MessagingBinding_ProxyAddress');
 		$State = $this->getpost('State');
 		
-		$worker = $this->dbMasterDefault->select('aaspa_cliente', ['celular' => $From]);
+		//$worker = $this->dbMasterDefault->select('aaspa_cliente', ['celular' => $From]);
 
 		//RECUERA A ULTIMA LIGAÇÃO ATENDIDA PELO ASSESSOR E O SEU NOME
 		$sqlQuery = "SELECT assessor FROM aaspa_cliente where celular = '$From' ORDER BY data_criacao DESC LIMIT 1;";		

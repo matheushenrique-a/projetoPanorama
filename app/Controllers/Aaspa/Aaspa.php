@@ -49,8 +49,12 @@ class Aaspa extends BaseController
 
    
 
-
+    //
     public function zapsms($celular = null){
+        //$this->twilio->sendWhatsApp("Olá 👋🏻! Somos da *PRA VOCE* e observamos que recentemente você utilizou nosso site ou WhatsApp. Caso tenha ficado alguma dúvida, responda a essa mensagem para falar com nosso time de atendimento. Desde já agradecemos pela atenção e interesse 🙏🏻!", $celularWaId);
+        //$returnData =  $this->twilio->sendWhatsAppTemplate("HXc74e559c07f112bb8d75d91d5a47c087", '5531995781355'); //HX813435d38d3962826c91ae0736608191 = Olá, tudo bem? Vamos prosseguir com seu atendimento telefônico por aqui. Para continuar, responda SIM abaixo.
+        //echo '15:19:35 - <h3>Dump 85 </h3> <br><br>' . var_dump($returnData); exit;					//<-------DEBUG
+
         //$this->twilio->users();exit;
         $data['pageTitle'] = "AASPA - Enviar SMS e WhatsApp";
 
@@ -91,34 +95,34 @@ class Aaspa extends BaseController
     
                 if ($tipoMensagem == "WPP"){
                     //$this->twilio->sendWhatsApp("Olá 👋🏻! Somos da *PRA VOCE* e observamos que recentemente você utilizou nosso site ou WhatsApp. Caso tenha ficado alguma dúvida, responda a essa mensagem para falar com nosso time de atendimento. Desde já agradecemos pela atenção e interesse 🙏🏻!", $celularWaId);
-                    $returnData =  $this->twilio->sendWhatsAppTemplate("HX813435d38d3962826c91ae0736608191", $celularWaId); //HX813435d38d3962826c91ae0736608191 = Olá, tudo bem? Vamos prosseguir com seu atendimento telefônico por aqui. Para continuar, responda SIM abaixo.
+                    $returnData =  $this->twilio->sendWhatsAppTemplate("HXc74e559c07f112bb8d75d91d5a47c087", $celularWaId); //HX813435d38d3962826c91ae0736608191 = Olá, tudo bem? Vamos prosseguir com seu atendimento telefônico por aqui. Para continuar, responda SIM abaixo.
                 } 
     
                 if ($tipoMensagem == "SMS-GOOGLE"){
-                    $linkGoogle = $this->dbMasterDefault->select('user_account', ['nickname' => $this->session->nickname])['firstRow']->observacao;
-                    $returnData =  $this->twilio->sendSMS($celularWaId, "Ola $fname, por favor acessar o endereco $linkGoogle", $this->session->nickname);
+                    //$linkGoogle = $this->dbMasterDefault->select('user_account', ['nickname' => $this->session->nickname])['firstRow']->observacao;
+                    $linkGoogle = $this->session->parameters["google-meeting"];
+                    $returnData =  $this->twilio->sendSMS($celularWaId, $linkGoogle, $this->session->nickname);
                 } else if ($tipoMensagem == "SMS-AASPA"){
                     if ($linkAaspa == ""){
                         $returnData["mensagem"] = "Informe o link do AASPA";
                     } else {
-                        $returnData =  $this->twilio->sendSMS( $celularWaId, "Ola $fname, por favor acessar o endereco $linkAaspa", $this->session->nickname);
+                        $returnData =  $this->twilio->sendSMS( $celularWaId, $linkAaspa, $this->session->nickname);
                     }
                 }   
             }
         } else if (!empty($btnConsultar)){
 
         } else {
-
             if (empty($celular)){
                 //PEGA ULTIMA LIGACAO DO ASSESSOR
                 $ultimaLigacao = $this->m_argus->ultimaLigacao(['assessor' => $this->session->nickname]);
                 if ($ultimaLigacao['existRecord']){
                     $nomeCompleto = $ultimaLigacao['firstRow']->nome;
                     $celular = formatarTelefone($ultimaLigacao['firstRow']->celular);
+                    $celularWaId = celularToWaId($ultimaLigacao['firstRow']->celular);
                 }
             }
         }
-
 
         $chat = null;
         if ((!empty($celular))){

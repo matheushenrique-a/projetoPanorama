@@ -29,8 +29,8 @@ define('TWILIO_AUTH_TOKEN_SMS','f9b35782bcc14ea689826783314dab9e');
 define('TWILIO_ACCOUNT_SID','ACd07f72009069ead82dcf03497b6cb3b1');
 define('TWILIO_AUTH_TOKEN','29e809986eeca0bc9d85716fb8e17596');
 define('TWILIO_MEDIA_PATH','https://insightsuite.pravoce.io/assets/pravoce/media/whatsapp/');
-define('fromWhatsApp','551140402158'); //OPCAO 02
-define('fromWhatsAppVap','551140402155'); //OPCAO 02
+define('fromWhatsApp','551140402160'); //OPCAO 02
+define('fromWhatsAppVap','551140402160'); //OPCAO 02
 
 
 //DEFINE NOTIFICAÇÕES ATIVAS
