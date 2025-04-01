@@ -58,13 +58,13 @@
 					<!--begin::Content-->
 					<div class="d-flex flex-column flex-center pb-0 pb-lg-10 p-10 w-100">
 						<!--begin::Image-->
-						<img class="w-350px w-sm-550px mb-10 mb-lg-20" src="<?php echo assetfolder ?>assets/media/auth/agency.png" alt="" />
+						<img class="w-250px w-sm-450px mb-10 mb-lg-20 mt-20" src="<?php echo assetfolder ?>assets/media/auth/agency.png"/>
 						<!--end::Image-->
 						<!--begin::Title-->
-						<h1 class="text-gray-800 fs-2qx fw-bold text-center mb-7"><?php echo AppName;?> - Insight Suite</h1>
+						<h1 class="text-gray-800 fs-2qx fw-bold text-center mb-7"><?php echo AppName;?></h1>
 						<!--end::Title-->
 						<!--begin::Text-->
-						<div class="text-gray-600 fs-base text-center fw-semibold">Symphony representa a área administrativa da plataforma digital PraVoce.io. Antes de acessá-la você precisar estar autorizado pela nossa equipe administrativa. Qualquer dúvida entre em contato através de contato@pravoce.io</div>
+						<div class="text-gray-600 fs-base text-center fw-semibold">Você mais produtivo com o Insight Suite. Antes de acessá-la você precisar estar autorizado pela nossa equipe administrativa. Qualquer dúvida entre em contato através de contato@pravoce.io</div>
 						<!--end::Text-->
 					</div>
 					<!--end::Content-->
@@ -81,7 +81,7 @@
 								<!--begin::Heading-->
 								<div class="text-center mb-11">
 									<!--begin::Title-->
-									<h1 class="text-dark fw-bolder mb-3">Sign In</h1>
+									<h1 class="text-dark fw-bolder mb-3">Entrar</h1>
 									<!--end::Title-->
 									<!--begin::Subtitle-->
 									<div class="text-gray-500 fw-semibold fs-6">Seja bem-vindo</div>
@@ -144,7 +144,7 @@
 								<div class="d-grid mb-10">
 									<button type="submit" id="kt_sign_in_submit" class="btn btn-primary">
 										<!--begin::Indicator label-->
-										<span class="indicator-label">Sign In</span>
+										<span class="indicator-label">Entrar</span>
 										<!--end::Indicator label-->
 										<!--begin::Indicator progress-->
 										<span class="indicator-progress">Please wait...

@@ -307,7 +307,7 @@ License: For each use you must have a valid license purchased only from above li
 																<!--begin:Menu item-->
 																<div class="menu-item p-0 m-0">
 																	<!--begin:Menu link-->
-																	<a href="<?php echo (empty($session->observacao)  ? 'http://meet.google.com/' : $session->observacao);?>" class="menu-link" target="_blank">
+																	<a href="<?php echo (!isset($session->parameters["google-meeting"])  ? 'http://meet.google.com/' : $session->parameters["google-meeting"]);?>" class="menu-link" target="_blank">
 																		<span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-40px h-40px me-3">
 																			<!--begin::Svg Icon | path: icons/duotune/communication/com004.svg-->
 																			<span class="svg-icon svg-icon-primary svg-icon-1">
@@ -4821,8 +4821,46 @@ License: For each use you must have a valid license purchased only from above li
 										<!--end:Menu sub-->
 									</div>
 									<!--end:CONSORCIO BRASIL Menu item-->
+									
 									<!--begin:AASPA BRASILMenu item-->
 									<div data-kt-menu-trigger="click" class="menu-item menu-accordion" style="<?php $my_security->DisplayMenu("AASPA");?>">
+										<!--begin:Menu link-->
+										<span class="menu-link">
+											<span class="menu-icon">
+												<!--begin::Svg Icon | path: icons/duotune/communication/com013.svg-->
+												<span class="svg-icon svg-icon-2">
+													<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+														<path d="M6.28548 15.0861C7.34369 13.1814 9.35142 12 11.5304 12H12.4696C14.6486 12 16.6563 13.1814 17.7145 15.0861L19.3493 18.0287C20.0899 19.3618 19.1259 21 17.601 21H6.39903C4.87406 21 3.91012 19.3618 4.65071 18.0287L6.28548 15.0861Z" fill="currentColor" />
+														<rect opacity="0.3" x="8" y="3" width="8" height="8" rx="4" fill="currentColor" />
+													</svg>
+												</span>
+												<!--end::Svg Icon-->
+											</span>
+											<span class="menu-title">AASPA</span>
+											<span class="menu-arrow"></span>
+										</span>
+										<!--end:Menu link-->										
+										<!--begin:Menu sub-->
+										<div class="menu-sub menu-sub-accordion">
+											<!--begin:Menu item-->
+											<div class="menu-item">
+												<!--begin:Menu link-->
+												<a class="menu-link" href="<?php echo assetfolder;?>aaspa-zapsms">
+													<span class="menu-bullet">
+														<span class="bullet bullet-dot"></span>
+													</span>
+													<span class="menu-title">ZapSMS</span>
+												</a>
+												<!--end:Menu link-->
+											</div>
+										</div>
+										<!--end:Menu sub-->
+									</div>
+									<!--end:AASPA BRASIL Menu item-->
+
+
+									<!--begin:AASPA BRASILMenu item-->
+									<div data-kt-menu-trigger="click" class="menu-item menu-accordion" style="<?php $my_security->DisplayMenu("AASPA-SUPER");?>">
 										<!--begin:Menu link-->
 										<span class="menu-link">
 											<span class="menu-icon">
@@ -4859,7 +4897,7 @@ License: For each use you must have a valid license purchased only from above li
 											<!--begin:Menu item-->
 											<div class="menu-item">
 												<!--begin:Menu link-->
-												<a class="menu-link" href="<?php echo assetfolder;?>aaspa-receptivo">
+												<a class="menu-link" href="<?php echo assetfolder;?>aaspa-receptivo/0">
 													<span class="menu-bullet">
 														<span class="bullet bullet-dot"></span>
 													</span>
@@ -4869,8 +4907,39 @@ License: For each use you must have a valid license purchased only from above li
 											</div>
 										</div>
 										<!--end:Menu sub-->
+										<!--begin:Menu sub-->
+										<div class="menu-sub menu-sub-accordion">
+											<!--begin:Menu item-->
+											<div class="menu-item">
+												<!--begin:Menu link-->
+												<a class="menu-link" href="<?php echo assetfolder;?>aaspa-listar-propostas">
+													<span class="menu-bullet">
+														<span class="bullet bullet-dot"></span>
+													</span>
+													<span class="menu-title">Listar Propostas</span>
+												</a>
+												<!--end:Menu link-->
+											</div>
+										</div>
+										<!--end:Menu sub-->
+										<!--begin:Menu sub-->
+										<div class="menu-sub menu-sub-accordion">
+											<!--begin:Menu item-->
+											<div class="menu-item">
+												<!--begin:Menu link-->
+												<a class="menu-link" href="<?php echo assetfolder;?>argus-listar-chamadas">
+													<span class="menu-bullet">
+														<span class="bullet bullet-dot"></span>
+													</span>
+													<span class="menu-title">Listar Chamadas</span>
+												</a>
+												<!--end:Menu link-->
+											</div>
+										</div>
+										<!--end:Menu sub-->
 									</div>
-									<!--end:CONSORCIO BRASIL Menu item-->
+									<!--end:AASPA BRASIL Menu item-->
+
 									<!--begin:CONSORCIO BRASILMenu item-->
 									<div data-kt-menu-trigger="click" class="menu-item menu-accordion" style="<?php $my_security->DisplayMenu("CONSORCIO");?>">
 										<!--begin:Menu link-->

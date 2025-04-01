@@ -13,6 +13,7 @@ use App\Models\M_twilio;
 use Config\Services;
 use App\Models\M_http;
 use App\Models\M_integraall;
+use App\Models\M_argus;
 
 class Integraall extends BaseController
 {
@@ -21,6 +22,9 @@ class Integraall extends BaseController
     protected $telegram;
     protected $twilio;
     protected $integraall;
+    protected $m_argus;
+    protected $m_http;
+    protected $m_integraall;
 
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger) {
         parent::initController($request, $response, $logger);
@@ -32,6 +36,7 @@ class Integraall extends BaseController
         $this->twilio =  new M_twilio();
         $this->m_http =  new M_http();
         $this->m_integraall =  new M_integraall();
+        $this->m_argus =  new M_argus();
     }
 
     
@@ -41,10 +46,33 @@ class Integraall extends BaseController
         echo '07:57:09 - <h3>Dump 5 </h3> <br><br>' . var_dump($result); exit;					//<-------DEBUG
     }
     
-    ///http://localhost/InsightSuite/public/integraall-cep
-    public function cep(){
-        $result = $this->m_integraall->cep('30575060');
-        echo '07:57:09 - <h3>Dump 5 </h3> <br><br>' . var_dump($result); exit;					//<-------DEBUG
+    ///http://localhost/InsightSuite/public/integraall-cep/30575060
+    public function cep($cep){
+        $cep = numberOnly($cep);
+        $result = $this->m_integraall->cep($cep);
+
+        $returnData = array();
+        $returnData["cep"] = "";
+
+        if ($result['sucesso']){
+            $retorno = json_decode($result['retorno'], true);
+            if (isset($retorno['cep'])){
+                $returnData["cep"] = $cep;
+                $returnData["logradouro"] = strtoupper($retorno['logradouro']);
+                $returnData["complemento"] = strtoupper($retorno['complemento']);
+                $returnData["unidade"] = strtoupper($retorno['unidade']);
+                $returnData["bairro"] = strtoupper($retorno['bairro']);
+                $returnData["localidade"] = strtoupper($retorno['localidade']);
+                $returnData["uf"] = strtoupper($retorno['uf']);
+                $returnData["estado"] = strtoupper($retorno['estado']);
+                $returnData["regiao"] = strtoupper($retorno['regiao']);
+                $returnData["ibge"] = strtoupper($retorno['ibge']);
+                $returnData["gia"] = strtoupper($retorno['gia']);
+                $returnData["ddd"] = strtoupper($retorno['ddd']);
+                $returnData["siafi"] = strtoupper($retorno['siafi']);
+            }
+        }
+        echo json_encode($returnData);
     }
 
     ///http://localhost/InsightSuite/public/calculadora-login
@@ -68,21 +96,20 @@ class Integraall extends BaseController
         echo '07:57:09 - <h3>Dump 5 </h3> <br><br>' . var_dump($result); exit;					//<-------DEBUG
     }
 
-    ///http://localhost/InsightSuite/public/integraall-buscar-propostas
-    public function buscar_propostas(){
-        $id = 21631;
-        $result = $this->m_integraall->buscarProposta($id);
-        echo '14:48:35 - <h3>Dump 89 </h3> <br><br>' . var_dump($result); exit;					//<-------DEBUG
 
-
+    ///http://localhost/InsightSuite/public/integraall-buscar-propostas/24458
+    public function buscar_propostas($integraallId){
+        $result = $this->m_integraall->buscar_propostas($integraallId);
+        echo json_encode($result);
     }
 
-
+    //SYNC INTEGRAALL e INSIGHT
     ///http://localhost/InsightSuite/public/integraall-listar-propostas
+    ///https://insightsuite.pravoce.io/integraall-listar-propostas
     public function listar_propostas(){
         
-       // $filters = ['DataCadastroInicio' => '2025-03-20 00:00', 'DataCadastroFim'=> '2025-03-20 23:59:59']; 
-        $filters = ['TermoDaBusca' => '100.320.817-74']; 
+        $filters = ['DataCadastroInicio' => date('Y-m-d 00:00:00', strtotime('-5 days')), 'DataCadastroFim' => date('Y-m-d 23:59:59')]; 
+        //$filters = ['TermoDaBusca' => '100.320.817-74']; 
         $result = $this->m_integraall->listarPropostas($filters);
 
         if ($result['sucesso']){
@@ -90,26 +117,81 @@ class Integraall extends BaseController
             if (isset($retorno['qtdResultado']) && $retorno['qtdResultado'] > 0){
                 $propostas = $retorno['resultado'];
                 foreach ($propostas as $proposta){
-                    echo "<br><br>ID: " . $proposta['id'] . "<br>";
-                    echo "Cliente: " . $proposta['nomeCliente'] . "<br>";
-                    echo "cpf: " . $proposta['cpf'] . "<br>";
-                    echo "telefonePessoal: " . $proposta['telefonePessoal'] . "<br>";
-                    echo "nomeProduto: " . $proposta['nomeProduto'] . "<br>";
-                    echo "nomeStatus: " . $proposta['nomeStatus'] . "<br>";
-                    echo "nomeVendedor: " . $proposta['nomeVendedor'] . "<br>";
-                    echo "statusId: " . $proposta['statusId'] . "<br>";
-                    echo "dataCadastro: " . $proposta['dataCadastro'] . "<br>";
-                    echo "linkKompletoCliente: " . $proposta['linkKompletoCliente'] . "<br>";
-                    echo "dataSolicitacaoAtivacao: " . $proposta['dataSolicitacaoAtivacao'] . "<br>";
-                    echo "matricula: " . $proposta['matricula'] . "<br>";
-                    echo "tentativas: " . $proposta['tentativas'] . "<br>";
-                    echo "nomeIndicadorMaster: " . $proposta['nomeIndicadorMaster'] . "<br>";
-                    echo "nomeIndicador: " . $proposta['nomeIndicador'] . "<br>";
-                    echo "linkAtivo: " . $proposta['linkAtivo'] . "<br>";
-                    echo "produtoId: " . $proposta['produtoId'] . "<br>";
-                    echo "statusAdicional: " . $proposta['statusAdicional'] . "<br>";
-                    echo "revendedorId: " . $proposta['revendedorId'] . "<br>";
-                    echo "vendedorUsuarioId: " . $proposta['vendedorUsuarioId'] . "<br>";
+                    // {
+                    //     "id": 24610,
+                    //     "nomeCliente": "AILTON DOS SANTOS",
+                    //     "cpf": "08251517591",
+                    //     "telefonePessoal": "(71)98166-5444",
+                    //     "nomeProduto": "AASPA",
+                    //     "nomeStatus": "Aguardando Aceite",
+                    //     "nomeRevendedor": "QUID PROMOTORA",
+                    //     "nomeVendedor": "Maria Luiza Da Silva",
+                    //     "statusId": 1,
+                    //     "dataCadastro": "2025-03-31T09:29:04",
+                    //     "linkKompletoCliente": "https://kompleto.app.br/ASS30377",
+                    //     "dataSolicitacaoAtivacao": null,
+                    //     "token": "9661ac69c6c553b9dd1d2b36eeba7609449e8d2b882e412898a106a9cb689d63",
+                    //     "matricula": "2023226869",
+                    //     "tentativas": 0,
+                    //     "nomeIndicadorMaster": "Viana Ventures",
+                    //     "nomeIndicador": null,
+                    //     "nomeGerenteIndicador": null,
+                    //     "linkAtivo": true,
+                    //     "produtoId": 6,
+                    //     "statusAdicional": "Aguardando biometria",
+                    //     "statusAdicionalId": 2,
+                    //     "revendedorId": 144,
+                    //     "vendedorUsuarioId": 1030
+                    //   }
+
+                    $data = [
+                        'integraallId' => $proposta['id'],
+                        "nomeCliente" => $proposta['nomeCliente'],
+                        "cpf" => $proposta['cpf'],
+                        "telefonepessoal" => $proposta['telefonePessoal'],
+                        'nomeStatus' => $proposta['nomeStatus'],
+                        'assessor' => $proposta['nomeVendedor'],
+                        'statusId' => $proposta['statusId'],
+                        'data_criacao' => $proposta['dataCadastro'],
+                        'linkKompletoCliente' => $proposta['linkKompletoCliente'],
+                        'matricula' => $proposta['matricula'],
+                        'linkAtivo' => $proposta['linkAtivo'],
+                        'produtoId' => $proposta['produtoId'],
+                        'statusAdicional' => $proposta['statusAdicional'],
+                        "revendedorId" => $proposta['revendedorId'],
+                        "vendedorUsuarioId" => $proposta['vendedorUsuarioId']
+                    ];
+
+
+                    // echo "<br><br>ID: " . $proposta['id'] . "<br>";
+                    // echo "Cliente: " . $proposta['nomeCliente'] . "<br>";
+                    // echo "cpf: " . $proposta['cpf'] . "<br>";
+                    // echo "telefonePessoal: " . $proposta['telefonePessoal'] . "<br>";
+                    // echo "nomeProduto: " . $proposta['nomeProduto'] . "<br>";
+                    // echo "nomeStatus: " . $proposta['nomeStatus'] . "<br>";
+                    // echo "nomeVendedor: " . $proposta['nomeVendedor'] . "<br>";
+                    // echo "statusId: " . $proposta['statusId'] . "<br>";
+                    // echo "dataCadastro: " . $proposta['dataCadastro'] . "<br>";
+                    // echo "linkKompletoCliente: " . $proposta['linkKompletoCliente'] . "<br>";
+                    // echo "dataSolicitacaoAtivacao: " . $proposta['dataSolicitacaoAtivacao'] . "<br>";
+                    // echo "matricula: " . $proposta['matricula'] . "<br>";
+                    // echo "tentativas: " . $proposta['tentativas'] . "<br>";
+                    // echo "nomeIndicadorMaster: " . $proposta['nomeIndicadorMaster'] . "<br>";
+                    // echo "nomeIndicador: " . $proposta['nomeIndicador'] . "<br>";
+                    // echo "linkAtivo: " . $proposta['linkAtivo'] . "<br>";
+                    // echo "produtoId: " . $proposta['produtoId'] . "<br>";
+                    // echo "statusAdicional: " . $proposta['statusAdicional'] . "<br>";
+                    // echo "revendedorId: " . $proposta['revendedorId'] . "<br>";
+                    // echo "vendedorUsuarioId: " . $proposta['vendedorUsuarioId'] . "<br>";
+
+
+                    $proposta = $this->dbMasterDefault->select('aaspa_propostas', ['integraallId' => $data['integraallId']]);
+
+                    if (!$proposta['existRecord']){
+                        $added = $this->dbMasterDefault->insert('aaspa_propostas', $data);
+                    } else {
+                        $updated = $this->dbMasterDefault->update('aaspa_propostas', $data, ['integraallId' => $data['integraallId']]);
+                    }
                 }
             }
         }
@@ -160,7 +242,7 @@ class Integraall extends BaseController
             "aaspaCheck" => $returnData["status"],
         ];
         
-        $propostaAdded = $this->m_integraall->criar_proposta_insight($dataPropostaInsight);
+        $propostaAdded = $this->m_integraall->criar_proposta_insight($dataPropostaInsight, ["cpf" => $cpf]);
 
         echo json_encode($returnData);
     }
@@ -211,13 +293,14 @@ class Integraall extends BaseController
             "tseCheck" => $returnData["status"],
         ];
         
-        $propostaAdded = $this->m_integraall->criar_proposta_insight($dataPropostaInsight);
+        $propostaAdded = $this->m_integraall->criar_proposta_insight($dataPropostaInsight, ["cpf" => $cpf]);
 
         echo json_encode($returnData);
     }
     
     //Vai no INSS validar o CPF
     ///http://localhost/InsightSuite/public/integraall-validar-cpf/15918660810
+    ///https://insightsuite.pravoce.io/integraall-validar-cpf/15918660810
     public function validar_cpf($cpf){
         $filters = ['cpf' => $cpf, 'tipo'=> 6];    //tipo 6 = produto AASPA 
         $result = $this->m_integraall->validarCpf($filters);
@@ -236,20 +319,28 @@ class Integraall extends BaseController
 
                 foreach ($retorno['cadastros'] as $cadastro){
                     if (!$cadastro['bloqueio']){
-                        $returnData["nomeCliente"] = strtoupper($cadastro['nomeCliente']);
+                        $returnData["nomeCliente"] = strtoupper($cadastro['nomeCliente']  ?? "");
                         $returnData["cpf"] = $cadastro['cpf'];
                         $returnData["estadoCivil"] = estadoCivilParaNumero((empty($cadastro['estadoCivil'])  ? 'SOLTEIRO' : $cadastro['estadoCivil']));
                         $returnData["sexo"] = sexoParaNumero($cadastro['sexo']);
                         //echo $cadastro['sexo'] . "---" . $returnData["sexo"];exit;
-                        $returnData["nomeMae"] = strtoupper($cadastro['nomeMae']);
-                        $returnData["email"] = $cadastro['email'];
+                        $returnData["nomeMae"] = strtoupper($cadastro['nomeMae']  ?? "");
+                        $returnData["email"] = trim($cadastro['email']  ?? "");
+                        if (empty($returnData['email'])){ $returnData["email"] = strtolower(firstName($returnData["nomeCliente"])) . "@sem_email.com.br"; } 
+
                         $returnData["telefone"] = $cadastro['telefone'];
-                        $returnData["logradouro"] = strtoupper($cadastro['logradouro']);
-                        $returnData["bairro"] = strtoupper($cadastro['bairro']);
+
+                        $ultimaLigacao = $this->m_argus->ultimaLigacao(['cpf' => $cpf]);
+                        if ($ultimaLigacao['existRecord']){
+                            $returnData["telefone"] = substr($ultimaLigacao['firstRow']->celular, 2);
+                        }
+
+                        $returnData["logradouro"] = strtoupper($cadastro['logradouro']  ?? "");
+                        $returnData["bairro"] = strtoupper($cadastro['bairro']  ?? "");
                         $returnData["cep"] = $cadastro['cep'];
-                        $returnData["cidade"] = strtoupper($cadastro['cidade']);
+                        $returnData["cidade"] = strtoupper($cadastro['cidade']  ?? "");
                         $returnData["uf"] = $cadastro['uf'];
-                        $returnData["complemento"] = strtoupper($cadastro['complemento']);
+                        $returnData["complemento"] = strtoupper($cadastro['complemento']  ?? "");
                         $returnData["endNumero"] = $cadastro['endNumero'];
                         $returnData["dataNascimento"] = dataUsPt($cadastro['dataNascimento'],true);
                        
@@ -280,7 +371,7 @@ class Integraall extends BaseController
             "inssCheck" => $returnData["status"],
         ];
         
-        $propostaAdded = $this->m_integraall->criar_proposta_insight($dataPropostaInsight);
+        $propostaAdded = $this->m_integraall->criar_proposta_insight($dataPropostaInsight, ["cpf" => $cpf]);
 
         echo json_encode($returnData);
     }

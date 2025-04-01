@@ -1,5 +1,29 @@
 <?php 
 
+
+	function getStatusNomePorId($id) {
+		$statusList = [
+			1 => "Aguardando Aceite",
+			2 => "Aguardando Documento / Selfie",
+			3 => "Aguardando Documento",
+			4 => "Aguardando Selfie",
+			5 => "Aguardando Documento / Selfie Frágil",
+			6 => "Aguardando Selfie/Documento Frágil",
+			7 => "Aguardando Auditoria/Selfie Frágil",
+			8 => "Aguardando Auditoria/Doc Frágil",
+			9 => "Aguardando Auditoria/Doc e Selfie Frágeis",
+			10 => "Aguardando Auditoria",
+			11 => "Aguardando Averbação",
+			12 => "Enviado para Averbação",
+			13 => "Cancelado",
+			14 => "Cancelado/Não averbado",
+			15 => "Averbado",
+			16 => "Ativo/Pago"
+		];
+
+		return $statusList[$id] ?? "Status desconhecido";
+	}
+
 	function estadoCivilParaNumero($estadoCivil) {
 		$estadoCivil = trim(strtoupper($estadoCivil));
 
@@ -68,6 +92,7 @@
 
 
 	function formatarTelefone($numero) {
+		$numero = trim($numero  ?? "");
 		// Remove qualquer caractere não numérico
 		$numero = preg_replace('/\D/', '', $numero);
 
@@ -140,6 +165,27 @@
 		// Retorno padrão caso nenhum erro seja identificado
 		return "Erro desconhecido: " . $mensagem;
 	}
+
+	function traduzirErroIntegraall($mensagem) {
+		$mensagem = strtoupper($mensagem);
+
+		// Mapeamento de trechos de erro para mensagens mais claras
+		$errosMap = [
+			"NON-EXHAUSTIVE SWITCH EXPRESSION" => "Verifique o campo Sexo ou Estado Civil.",
+			"INVALID MESSAGE SID" => "O identificador da mensagem (SID) é inválido. Confirme se ele está correto.",
+		];
+	
+		// Verifica se algum trecho está na mensagem original e retorna a tradução correspondente
+		foreach ($errosMap as $erroIngles => $erroTraduzido) {
+			if (strpos($mensagem, $erroIngles) !== false) {
+				return $erroTraduzido;
+			}
+		}
+	
+		// Retorno padrão caso nenhum erro seja identificado
+		return "Erro em branco ou desconhecido" . $mensagem;
+	}
+
 
 	function celularToWaId($celular){
 		return "55" . preg_replace('/\D/', '', $celular);

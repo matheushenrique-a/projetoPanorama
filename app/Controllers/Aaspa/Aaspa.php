@@ -11,6 +11,7 @@ use App\Models\M_twilio;
 use Config\Services;
 use App\Models\M_integraall;
 use App\Models\M_argus;
+use App\Models\M_seguranca;
 
 class Aaspa extends BaseController
 {
@@ -20,6 +21,7 @@ class Aaspa extends BaseController
     protected $twilio;
     protected $m_integraall;
     protected $m_argus;
+    protected $m_security;
 
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger) {
         parent::initController($request, $response, $logger);
@@ -34,6 +36,7 @@ class Aaspa extends BaseController
         $this->twilio =  new M_twilio();
         $this->m_integraall =  new M_integraall();
         $this->m_argus =  new M_argus();
+        $this->m_security = new M_seguranca();
     }
 
 
@@ -44,15 +47,23 @@ class Aaspa extends BaseController
 
     }
 
+   
 
-    public function zapsms(){
+
+    public function zapsms($celular = null){
         //$this->twilio->users();exit;
         $data['pageTitle'] = "AASPA - Enviar SMS e WhatsApp";
 
         //DADOS PESSOAIS
         $nomeCompleto = strtoupper($this->getpost('nomeCompleto'));
-        $celular = $this->getpost('celular');
-        $celularWaId = celularToWaId($celular);
+
+        if (empty($celular)){
+            $celular = $this->getpost('celular');
+            $celularWaId = celularToWaId($celular);    
+        } else {
+            $celular = formatarTelefone($celular);
+            $celularWaId = celularToWaId($celular);    
+        }
         $fname = firstName($nomeCompleto);
 
         //$cpf = numberOnly($this->getpost('cpf'));
@@ -69,7 +80,6 @@ class Aaspa extends BaseController
             if ((strlen($celularWaId) != 13)){
                 $returnData["mensagem"] = "O telefone deve conter 11 números. Exemplo 31-99999-9999";
             } else {
-
                 $this->dbMasterDefault->insert('record_log',['log' => "ZAPSMS " . $nomeCompleto . " - " . $celular . " - " . $sms . " - " . $tipoMensagem . " - " . $linkAaspa . " - " . $this->session->nickname]);
 
                 // $cliente = $this->dbMasterDefault->select('aaspa_cliente', ['cpf' => $cpf]);
@@ -98,12 +108,14 @@ class Aaspa extends BaseController
         } else if (!empty($btnConsultar)){
 
         } else {
-            //PEGA ULTIMA LIGACAO DO ASSESSOR
-            $ultimaLigacao = $this->m_argus->ultimaLigacao(['cpf' => $cpf]);
-            if ($ultimaLigacao['existRecord']){
-                $nomeCompleto = $ultimaLigacao['firstRow']->nomeCliente;
-                $celular = $ultimaLigacao['firstRow']->telefone;
-                $celularWaId = celularToWaId($celular);
+
+            if (empty($celular)){
+                //PEGA ULTIMA LIGACAO DO ASSESSOR
+                $ultimaLigacao = $this->m_argus->ultimaLigacao(['assessor' => $this->session->nickname]);
+                if ($ultimaLigacao['existRecord']){
+                    $nomeCompleto = $ultimaLigacao['firstRow']->nome;
+                    $celular = formatarTelefone($ultimaLigacao['firstRow']->celular);
+                }
             }
         }
 
@@ -137,29 +149,24 @@ class Aaspa extends BaseController
         $data['tipoMensagem'] = $tipoMensagem;
         $data['returnData'] = $returnData;
         $data['twilio'] = $this->twilio;
+        
 
         return $this->loadpage('aaspa/zapsms', $data);
     }
 
 
     //http://localhost/InsightSuite/public/aaspa-receptivo
-    public function receptivo($cpf = null){
+    public function receptivo($cpf, $integraallId = null){
         $data['pageTitle'] = "AASPA - Receptivo";
 
         $btnSalvar = $this->getpost('btnSalvar');
         $btnConsultar = $this->getpost('btnConsultar');
-        
-        $cpf = numberOnly($cpf);
-        if (empty($cpf)){
-            $cpf = numberOnly($this->getpost('cpf'));
-        }
-
         $nomeCliente = strtoupper($this->getpost('nomeCliente'));
         $estadoCivil = strtoupper($this->getpost('estadoCivil'));
         $sexo = strtoupper($this->getpost('sexo'));
         $nomeMae = strtoupper($this->getpost('nomeMae'));
         $email = strtoupper($this->getpost('email'));
-        $telefone = strtoupper($this->getpost('telefone'));
+        $telefone = numberOnly(strtoupper($this->getpost('telefone')));
         $telefoneWaId = celularToWaId($telefone);
         $logradouro = strtoupper($this->getpost('logradouro'));
         $bairro = strtoupper($this->getpost('bairro'));
@@ -182,11 +189,115 @@ class Aaspa extends BaseController
 		$returnData["mensagem"] = "";
         $nomeCompletoUltima = "";
         $celularUltima = "";
+        //$integraallId = "";
+        $nomeStatus = "";
+        $statusId = "";
+        $linkKompletoCliente = "";
+        $statusAdicional = "";
+        $assessor = "";
+        $assessorId = "";
+        $aaspaCheck = "";
+        $inssCheck = "";
+        $tseCheck = "";
+        $last_update = "";
+        $cpfINSS = "";
+        $cliente = null;
+        
+        $cpf = numberOnly($cpf);
+        if ((empty($cpf)) or ($cpf == "0")) { $cpf = numberOnly($this->getpost('cpf'));}
+        if (empty($cpf)){ $cpf = numberOnly($this->getpost('cpfINSS'));}
 
+        //ao consultar limpa os campos
+        if (!empty($btnConsultar)){
+            $nomeCliente = "";
+            $estadoCivil = "";
+            $sexo = "";
+            $nomeMae = "";
+            $email = "";
+            $telefone = "";
+            $logradouro = "";
+            $bairro = "";
+            $cep = "";
+            $cidade = "";
+            $uf = "";
+            $complemento = "";
+            $endNumero = "";
+            $dataNascimento = "";
+            $last_update = "";
+            $matricula = "";
+            $docIdentidade = "";
+            $integraallId = "";
+            $nomeStatus = "";
+            $statusId = "";
+            $linkKompletoCliente = "";
+            $statusAdicional = "";
+            $assessor = "";
+            $assessorId = "";
+            $aaspaCheck = "";
+            $inssCheck = "";
+            $tseCheck = "";
+        }
+
+        if ((!empty($integraallId)) and (($integraallId) != 0)){
+
+            $cliente = $this->m_integraall->proposta_integraall($integraallId);
+        } else if ((!empty($cpf)) and (strlen($cpf) == 11)){
+            $cliente = $this->m_integraall->ultima_proposta($cpf);
+        }
+
+        //leitura através do ARGUS receptivo com CPF vindo da QueryString ou botão Consultar
+        if (!is_null($cliente)){
+            if ($cliente['existRecord']){
+                $cpfINSS = $cliente['firstRow']->cpf;
+                $nomeCliente = $cliente['firstRow']->nomeCliente;
+                $estadoCivil = $cliente['firstRow']->estadoCivil;
+                $sexo = $cliente['firstRow']->sexo;
+                $nomeMae = $cliente['firstRow']->nomeMae;
+                $email = $cliente['firstRow']->emailPessoal;
+                $telefone = $cliente['firstRow']->telefonepessoal;
+                $logradouro = $cliente['firstRow']->logradouro;
+                $bairro = $cliente['firstRow']->bairro;
+                $cep = $cliente['firstRow']->cep;
+                $cidade = $cliente['firstRow']->cidade;
+                $uf = $cliente['firstRow']->uf;
+                $complemento = $cliente['firstRow']->complemento;
+                $endNumero = $cliente['firstRow']->endNumero;
+                $dataNascimento = dataUsPt($cliente['firstRow']->datanascimento);
+                $last_update = $cliente['firstRow']->last_update;
+                $matricula = $cliente['firstRow']->matricula;
+                $docIdentidade = $cliente['firstRow']->docIdentidade;
+
+                $integraallId = $cliente['firstRow']->integraallId;
+                $nomeStatus = $cliente['firstRow']->nomeStatus;
+                $statusId = $cliente['firstRow']->statusId;
+                $linkKompletoCliente = $cliente['firstRow']->linkKompletoCliente;
+                $statusAdicional = $cliente['firstRow']->statusAdicional;
+                $assessor = $cliente['firstRow']->assessor;
+                $assessorId = $cliente['firstRow']->assessorId;
+                $aaspaCheck = $cliente['firstRow']->aaspaCheck;
+                $inssCheck = $cliente['firstRow']->inssCheck;
+                $tseCheck = $cliente['firstRow']->tseCheck;
+            }
+        } else if ((!empty($cpf)) and (strlen($cpf) != 11)){
+            $returnData["mensagem"] = "O CPF deve ser preenchido.";
+        }
+        
         if (!empty($btnSalvar)){
-            if ((strlen($nomeCliente) < 3)){
-                $returnData["mensagem"] = "O nome deve ser preenchido.";
+            if ((strlen($cpf) != 11)){
+                $returnData["mensagem"] = "O CPF deve ser preenchido.";
             } else {
+                if ($cliente['existRecord']){
+                    $integraallId = $cliente['firstRow']->integraallId;
+                    $last_update = $cliente['firstRow']->last_update;
+                    $nomeStatus = $cliente['firstRow']->nomeStatus;
+                    $statusId = $cliente['firstRow']->statusId;
+                    $linkKompletoCliente = $cliente['firstRow']->linkKompletoCliente;
+                    $statusAdicional = $cliente['firstRow']->statusAdicional;
+                    $aaspaCheck = $cliente['firstRow']->aaspaCheck;
+                    $inssCheck = $cliente['firstRow']->inssCheck;
+                    $tseCheck = $cliente['firstRow']->tseCheck;
+                }
+
                 $dataProposta = [
                     "nomeCliente" => $nomeCliente,
                     "cpf" => $cpf,
@@ -205,60 +316,94 @@ class Aaspa extends BaseController
                     "dataNascimento" => str_replace(' ', 'T', dataPtUs($dataNascimento)),
                     "matricula" => $matricula,
                     "docIdentidade" => $docIdentidade,
-                    "produtoId" => 6,
-                    "revendedorId" => 144,
-                    "vendedorUsuarioId" => 991, //dantas
-                    //"vendedorUsuarioId" => 1030, //maria
+                    "produtoId" => API_Produto,
+                    "revendedorId" => API_Revendedor,
+                    "vendedorUsuarioId" => $session->parameters["integraallId"], //dantas
                 ];
 
                 $dataPropostaInsight = [
                     "assessor" => $this->session->nickname,
                     "assessorId" => $this->session->user_id,
-                    "aaspaCheck" => true,
-                    "inssCheck" => (int)$sexo,
-                    "tseCheck" => $nomeMae,
                 ];
                     
-                    
-
-                //echo '10:27:27 - <h3>Dump 49 </h3> <br><br>' . var_dump($dataProposta); exit;					//<-------DEBUG
-                
                 $propostaAdded = $this->m_integraall->criar_proposta_insight($dataProposta + $dataPropostaInsight);
-                
-                $result = $this->m_integraall->criar_proposta_integraall($dataProposta);
 
-                if ($result['sucesso']){
-                    $detalhesGravacao = json_decode($result['retorno'], true);
-                    if (isset($detalhesGravacao['title'])){
-                        $type = $detalhesGravacao['type'];
-                        $title = $detalhesGravacao['title'];
-                        $status = $detalhesGravacao['status'];
-                        $traceId = $detalhesGravacao['traceId'];
+                $returnData["status"] = true;
+                $returnData["mensagem"] = "Proposta atualiza no Insight. Faça edições manualmente no Integraall.";
+        
+                if (empty($integraallId)) {
+                    $result = $this->m_integraall->criar_proposta_integraall($dataProposta);
 
-                        echo "RESULTADO: <br>Type: $type <br> Titulo: $title <br>Status: $status <br>Tracert: $traceId<br><br>";
-
-                        // Verifica se há erros
-                        if (isset($detalhesGravacao['errors']) && is_array($detalhesGravacao['errors'])) {
-                            echo "Erros encontrados:<br><br>";
-
-                            foreach ($detalhesGravacao['errors'] as $campo => $mensagens) {
-                                echo "Campo: {$campo}<br>";
-                                foreach ($mensagens as $mensagem) {
-                                    echo "- {$mensagem}<br>";
+                    if ($result['sucesso']){
+                        $detalhesGravacao = json_decode($result['retorno'], true);
+    
+                        //quando decode do resultado é vazio indica que não existe json e sim texto puro com erro
+                        if (empty($detalhesGravacao)){
+                            $returnData["status"] = false;
+                            $returnData["mensagem"] = traduzirErroIntegraall($result['retorno']) . "<br>Detalhes: " . (empty($result['retorno'])  ? 'Nenhum detalhe retornado' : $result['retorno']); ;
+                        
+                        //quando decode do resultado é um array com 1 elemento, indica lista de erros
+                        } else if ((is_array($detalhesGravacao)) and (isset($detalhesGravacao[0]))){
+                            $returnData["status"] = false;
+                            $returnData["mensagem"] = str_replace("Api Kompleto Respondeu", "Revise a proposta:", $detalhesGravacao[0]);
+                            $returnData["mensagem"] = str_replace('\r\n', "<br>", $returnData["mensagem"]);
+                            $returnData["mensagem"] = str_replace('"', "", $returnData["mensagem"]);
+                            $returnData["mensagem"] = str_replace('::', ":", $returnData["mensagem"]);
+                        
+                        //cenario onde a proposta foi gravada com sucesso
+                        } else if (isset($detalhesGravacao['message'])){
+                            $returnData["status"] = true;
+                            $returnData["mensagem"] = $detalhesGravacao['message'];
+    
+                            if (isset($detalhesGravacao['data'])){
+                                $id = $detalhesGravacao['data']['id'];
+                                $token = $detalhesGravacao['data']['token'];
+                                $statusId = $detalhesGravacao['data']['status'];
+                                $nome = $detalhesGravacao['data']['nome'];
+                                if (isset($detalhesGravacao['data']['termos'])){
+                                    $termoCliente = $detalhesGravacao['data']['termos']['cliente'];
+                                    $termoVendedor = $detalhesGravacao['data']['termos']['vendedor'];
                                 }
-                                echo "<br>";
+    
+                                if (!empty($id)){
+                                    $dataPropostaIntegraall['cpf'] = $cpf;
+                                    $dataPropostaIntegraall['integraallId'] = $id;
+                                    $dataPropostaIntegraall['statusId'] = $statusId;
+                                    $dataPropostaIntegraall['nomeStatus'] = getStatusNomePorId($statusId);
+                                    //$dataPropostaIntegraall['token'] = $token;
+
+                                    $propostaAdded = $this->m_integraall->criar_proposta_insight($dataPropostaIntegraall);
+                                    $returnData["mensagem"] = "Proposta criar no Insight e Integraall com ID: $id";
+                                }
+    
                             }
-                        } else {
-                            echo "Nenhum erro encontrado.<br>";
+                        //cenário onde o json retorna erro de autorization ou algo de rede (mais baixo nível)
+                        } else if (isset($detalhesGravacao['title'])){
+                            $returnData["status"] = false;
+                            $type = $detalhesGravacao['type'];
+                            $title = $detalhesGravacao['title'];
+                            $status = $detalhesGravacao['status'];
+                            $traceId = $detalhesGravacao['traceId'];
+    
+                            $returnData["mensagem"] = "Falha geral - " . $detalhesGravacao['title'];
+    
+                            // Verifica se há erros
+                            if (isset($detalhesGravacao['errors']) && is_array($detalhesGravacao['errors'])) {
+                                $returnData["mensagem"] .= "<br>Erros encontrados:<br>";
+    
+                                foreach ($detalhesGravacao['errors'] as $campo => $mensagens) {
+                                    $returnData["mensagem"] .= "Campo {$campo}";
+                                    foreach ($mensagens as $mensagem) {
+                                        $returnData["mensagem"] .=  "- {$mensagem}<br>";
+                                    }
+                                }
+                            } else {
+                                $returnData["mensagem"] .=  "<br>Nenhum detalhe informado.";
+                            }
                         }
                     }
                 }
-
-                echo '10:33:24 - <h3>Dump 45 </h3> <br><br>' . var_dump($result); exit;					//<-------DEBUG
-
             }
-        } else if (!empty($btnConsultar)){
-
         } else {
             //PEGA ULTIMA LIGACAO DO ASSESSOR
             $ultimaLigacao = $this->m_argus->ultimaLigacao(['cpf' => $cpf]);
@@ -294,6 +439,7 @@ class Aaspa extends BaseController
         $data['journey'] = $journey;
 
         $data['cpf'] = $cpf;
+        $data['cpfINSS'] = $cpfINSS;
         $data['nomeCliente'] = $nomeCliente;
         $data['estadoCivil'] = $estadoCivil;
         $data['sexo'] = $sexo;
@@ -316,6 +462,19 @@ class Aaspa extends BaseController
         $data['docIdentidadeUf'] = $docIdentidadeUf;
         $data['docIdentidadeOrgEmissor'] = $docIdentidadeOrgEmissor;
         $data['bloqueio'] = $bloqueio;
+        $data['session'] = $this->session;
+
+        $data['integraallId'] = $integraallId;
+        $data['statusId'] = $statusId;
+        $data['nomeStatus'] = $nomeStatus;
+        $data['linkKompletoCliente'] = $linkKompletoCliente;
+        $data['statusAdicional'] = $statusAdicional;
+        $data['assessor'] = $assessor;
+        $data['assessorId'] = $assessorId;
+        $data['aaspaCheck'] = $aaspaCheck;
+        $data['inssCheck'] = $inssCheck;
+        $data['tseCheck'] = $tseCheck;
+        $data['last_update'] = $last_update;
 
         $data['nomeCompletoUltima'] = $nomeCompletoUltima;
         $data['celularUltima'] = $celularUltima;
@@ -325,5 +484,114 @@ class Aaspa extends BaseController
         return $this->loadpage('aaspa/receptivo', $data);
     }
 
+    //http://localhost/InsightSuite/public/sign-in
+    public function listarPropostas(){
+        $buscarProp = $this->getpost('buscarProp');
+
+        if (!empty($buscarProp)){
+            helper('cookie');
+            $cpf = $this->getpost('txtCPF', false);
+            $integraallId = $this->getpost('integraallId', false);
+            $celular = $this->getpost('celular', false);
+            $nome = $this->getpost('txtNome', false);
+            $emailPessoal = $this->getpost('emailPessoal', false);
+            //echo '22:16:13 - <h3>Dump 87 </h3> <br><br>' . var_dump($emailPessoal); exit;					//<-------DEBUG
+            $statusPropostaFiltro = $this->getpost('statusPropostaFiltro', false);
+            $paginas = $this->getpost('paginas', false);
+            $operadorFiltro = $this->getpost('operadorFiltro', false);
+            $flag = $this->getpost('flag',false);
+               
+            Services::response()->setCookie('cpf', $cpf);
+            Services::response()->setCookie('integraallId', $integraallId);
+            Services::response()->setCookie('celular', $celular);
+            Services::response()->setCookie('nome', $nome);
+            Services::response()->setCookie('emailPessoal', $emailPessoal);
+            Services::response()->setCookie('statusPropostaFiltro', $statusPropostaFiltro);
+            Services::response()->setCookie('paginas', $paginas);
+            Services::response()->setCookie('operadorFiltro', $operadorFiltro);
+            Services::response()->setCookie('flag', $flag);
+
+            //$aux = Services::request()->getCookie($valor);	
+        } else {
+            $cpf = $this->getpost('txtCPF', true);
+            $integraallId = $this->getpost('integraallId', true);
+            $celular = $this->getpost('celular', true);
+            $nome = $this->getpost('txtNome', true);
+            $emailPessoal = $this->getpost('emailPessoal', true);
+            $statusPropostaFiltro = $this->getpost('statusPropostaFiltro', true);
+            $paginas = $this->getpost('paginas', true);
+            $operadorFiltro = $this->getpost('operadorFiltro', true);
+            $flag = $this->getpost('flag',true);
+        }
+
+        $flag = (empty($flag) ? 'ACAO' : $flag);
+        
+        $whereCheck = [];
+        $likeCheck = [];
+        $whereNotIn = [];
+        $whereIn = [];
+        
+        if (!empty($cpf)) $likeCheck['cpf'] = $cpf;
+        //if (!empty($paginas)) $whereCheck['paginas'] = $paginas;
+        if (!empty($integraallId)) $likeCheck['integraallId'] = $integraallId;
+        if (!empty($celular)) $likeCheck['celular'] = $celular;
+        if (!empty($statusPropostaFiltro)) $whereCheck['statusProposta'] = $statusPropostaFiltro;
+        if (!empty($nome)) $likeCheck['nome'] = $nome;
+        if (!empty($emailPessoal)) $likeCheck['emailPessoal'] = $emailPessoal;
+        if ($flag == "OPTIN") $whereCheck['Optin_pan'] = "V";
+
+        // if ((count($likeCheck) == 0) and (count($whereCheck) == 0)){
+        //     if ($flag == "ADESAO"){
+        //         $fasesAdd = getFasesCategory('funil');
+        //         $whereIn = array("whereIn" => array('statusProposta', $fasesAdd)); 
+        //     } else if ($flag == "ACAO"){
+        //         $fasesAdd = getFasesCategory('acao');
+        //         $whereIn = array("whereIn" => array('statusProposta', $fasesAdd)); 
+        //     } else if ($flag == "ACOMPANHAR"){
+        //         $fasesAdd = getFasesCategory('acompanhar');
+        //         $whereIn = array("whereIn" => array('statusProposta', $fasesAdd)); 
+        //     } else if ($flag == "OCULTAS"){
+        //         $fasesAdd = getFasesCategory('fim');
+        //         $whereIn = array("whereIn" => array('statusProposta', $fasesAdd)); 
+        //     }
+        // }
+        
+        //foreach($fasesAdd as $item){echo "'" . $item . "', ";}exit;
+
+        $likeCheck = array("likeCheck" => $likeCheck);
+
+        $paginas = (empty($paginas)  ? 10 : $paginas); 
+        $this->dbMasterDefault->setLimit($paginas);
+        $this->dbMasterDefault->setOrderBy(array('id_proposta', 'DESC'));
+        $propostas = $this->dbMasterDefault->select('aaspa_propostas', $whereCheck, $whereNotIn + $likeCheck + $whereIn);
+
+        //INDICADORES
+        $dados['indicadores'] = $this->indicadores();
+
+        $dados['pageTitle'] = "AASPA - Listar propostas";
+        $dados['propostas'] = $propostas;
+        $dados['cpf'] = $cpf;
+        $dados['nome'] = $nome;
+        $dados['paginas'] = $paginas;
+        $dados['integraallId'] = $integraallId;
+        $dados['celular'] = $celular;
+        $dados['emailPessoal'] = $emailPessoal;
+        $dados['statusPropostaFiltro'] = $statusPropostaFiltro;
+        $dados['operadorFiltro'] = $operadorFiltro;
+
+        return $this->loadpage('aaspa/listar_propostas', $dados);
+    }
+
+    public function indicadores(){
+        $indicadores = [];
+        $indicadores['clicks_campanha'] = $this->dbMaster->runQuery("select count(*) total from campanha_click_count where DATE(last_updated) = CURDATE();")['firstRow']->total;
+        $indicadores['clicks_campanha_inbound'] = $this->dbMaster->runQuery("select slug, count(*) total from campanha_click_count where DATE(last_updated) = CURDATE() group by slug order by total desc;")['firstRow'];
+        $indicadores['clicks_campanha_ontem'] = $this->dbMaster->runQuery("select count(*) total from campanha_click_count where DATE(last_updated) = DATE_SUB(CURDATE(), INTERVAL 1 DAY);")['firstRow']->total;
+        $indicadores['propostas_cadastradas'] = $this->dbMaster->runQuery("select count(*) total from aaspa_propostas where DATE(data_criacao) = CURDATE();")['firstRow']->total;
+        $indicadores['propostas_cadastradas_ontem'] = $this->dbMaster->runQuery("select count(*) total from aaspa_propostas where DATE(data_criacao) = DATE_SUB(CURDATE(), INTERVAL 1 DAY);")['firstRow']->total;
+        //$indicadores['top_indicacao'] = $this->dbMaster->runQuery("select chave_origem, count(*) total from aaspa_propostas where DATE(data_criacao) = CURDATE() and chave_origem is not null group by chave_origem order by total desc")['firstRow'];
+
+        return $indicadores;
+    }
     
 }

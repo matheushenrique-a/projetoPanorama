@@ -7,13 +7,15 @@
  */
 
 define('IsProduction', false);
-define('AppName', "Grupo QUID");
+define('AppName', "Insight Suite");
 
 define ('shortURL', 'https://pravc.io/');
 
 define ('API_Integraall', 'https://api.integraall.com/api/');
 define ('API_User', 'fernando.dantas');
 define ('API_Password', 'P@drao123');
+define ('API_Revendedor', 144); //quid
+define ('API_Produto', 6); //quid
 
 //calculadora
 define ('API_Calculadora', 'https://api2.calculadoraconsignado.com.br/api/');

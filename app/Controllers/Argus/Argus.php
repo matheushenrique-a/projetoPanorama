@@ -50,7 +50,118 @@ class Argus extends BaseController
     // }
 
 
+    public function listaOPeradores(){
+        $this->dbMasterDefault->setOrderBy(array('nickname', 'ASC'));
+        $users = $this->dbMasterDefault->select('user_account', ['empresa' => $this->session->empresa]);
+		return $users;
+    }  
 
+    //http://localhost/InsightSuite/public/argus-listar-chamadas
+    public function listarChamadas(){
+        $buscarProp = $this->getpost('buscarProp');
+        $company = "";
+        if ($this->session->empresa == "VAP"){$company = "_vap";}
+        $users = $this->listaOPeradores();
+
+        if (!empty($buscarProp)){
+            helper('cookie');
+            $cpf = $this->getpost('txtCPF', false);
+            $idLigacao = $this->getpost('idLigacao', false);
+            $celular = $this->getpost('celular', false);
+            $nome = $this->getpost('txtNome', false);
+            $emailPessoal = $this->getpost('emailPessoal', false);
+            //echo '22:16:13 - <h3>Dump 87 </h3> <br><br>' . var_dump($emailPessoal); exit;					//<-------DEBUG
+            $statusWhatsApp = $this->getpost('statusWhatsApp', false);
+            $paginas = $this->getpost('paginas', false);
+            $operadorFiltro = $this->getpost('operadorFiltro', false);
+            $flag = $this->getpost('flag',false);
+            
+            Services::response()->setCookie('cpf', $cpf);
+            Services::response()->setCookie('idLigacao', $idLigacao);
+            Services::response()->setCookie('celular', $celular);
+            Services::response()->setCookie('nome', $nome);
+            Services::response()->setCookie('emailPessoal', $emailPessoal);
+            Services::response()->setCookie('statusWhatsApp', $statusWhatsApp);
+            Services::response()->setCookie('paginas', $paginas);
+            Services::response()->setCookie('operadorFiltro', $operadorFiltro);
+            Services::response()->setCookie('flag', $flag);
+
+            //$aux = Services::request()->getCookie($valor);	
+        } else {
+            $cpf = $this->getpost('txtCPF', true);
+            $idLigacao = $this->getpost('idLigacao', true);
+            $celular = $this->getpost('celular', true);
+            $nome = $this->getpost('txtNome', true);
+            $emailPessoal = $this->getpost('emailPessoal', true);
+            $statusWhatsApp = $this->getpost('statusWhatsApp', true);
+            $paginas = $this->getpost('paginas', true);
+            $operadorFiltro = $this->getpost('operadorFiltro', true);
+            $flag = $this->getpost('flag',true);
+        }
+
+        $flag = (empty($flag) ? 'ACAO' : $flag);
+        
+        $whereCheck = [];
+        $likeCheck = [];
+        $whereNotIn = [];
+        $whereIn = [];
+        
+        if (!empty($cpf)) $likeCheck['cpf'] = $cpf;
+        //if (!empty($paginas)) $whereCheck['paginas'] = $paginas;
+        if (!empty($idLigacao)) $likeCheck['idLigacao'] = $idLigacao;
+        if (!empty($celular)) $likeCheck['celular'] = numberOnly($celular);
+        if (!empty($statusWhatsApp)) $whereCheck['statusProposta'] = $statusWhatsApp;
+        if (!empty($nome)) $likeCheck['nome'] = $nome;
+        if (!empty($emailPessoal)) $likeCheck['emailPessoal'] = $emailPessoal;
+        if ($flag == "OPTIN") $whereCheck['Optin_pan'] = "V";
+        
+        //foreach($fasesAdd as $item){echo "'" . $item . "', ";}exit;
+
+        $likeCheck = array("likeCheck" => $likeCheck);
+
+        $paginas = (empty($paginas)  ? 10 : $paginas); 
+        $this->dbMasterDefault->setLimit($paginas);
+        $this->dbMasterDefault->setOrderBy(array('id_proposta', 'DESC'));
+       //$propostas = $this->dbMasterDefault->select('aaspa_cliente_vap', $whereCheck, $whereNotIn + $likeCheck + $whereIn);
+
+       
+
+        $query = "select *, (select count(*) from whatsapp_log w where w.to = c.celular) messages from aaspa_cliente$company c where 1=1 ";
+        if (!empty($cpf))
+            $query .= " and c.cpf like '%$cpf%' ";
+        if (!empty($idLigacao))
+            $query .= "and c.idLigacao like '%$idLigacao%' ";
+        if (!empty($celular))
+            $query .= "and c.celular like '%$celular%' ";
+        if (!empty($nome))
+            $query .= "and c.nome like '%$nome%' ";
+        if (!empty($operadorFiltro))
+            $query .= "and c.assessor like '%$operadorFiltro%' ";
+        if (!empty($statusWhatsApp))
+            $query .= " having messages > 0";
+        
+
+        $query .= " order by id_proposta desc limit $paginas;";
+
+        //echo $query;exit;
+        $propostas = $this->dbMasterDefault->runQuery($query);
+
+
+
+        $dados['pageTitle'] = "ARGUS - Listar chamadas";
+        $dados['propostas'] = $propostas;
+        $dados['cpf'] = $cpf;
+        $dados['nome'] = $nome;
+        $dados['paginas'] = $paginas;
+        $dados['idLigacao'] = $idLigacao;
+        $dados['celular'] = $celular;
+        $dados['emailPessoal'] = $emailPessoal;
+        $dados['statusWhatsApp'] = $statusWhatsApp;
+        $dados['operadorFiltro'] = $operadorFiltro;
+        $dados['users'] = $users;
+
+        return $this->loadpage('aaspa/listar_chamadas', $dados);
+    }
 
     
     //https://a613-2804-1b3-6149-9c04-d1cc-cd1c-6041-2e1c.ngrok-free.app/InsightSuite/public/argus-atendimento-webhook

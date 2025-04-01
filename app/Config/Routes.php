@@ -43,14 +43,18 @@ $routes->match(['get', 'post'], '/ambec-script', 'Ambec\Ambec::ambec_script');
 
 //AASPA
 $routes->match(['get', 'post'], '/aaspa-zapsms', 'Aaspa\Aaspa::zapsms');
+$routes->match(['get', 'post'], '/aaspa-zapsms/(:any)', 'Aaspa\Aaspa::zapsms/$1');
+$routes->match(['get', 'post'], '/aaspa-receptivo/(:any)/(:any)', 'Aaspa\Aaspa::receptivo/$1/$2');
 $routes->match(['get', 'post'], '/aaspa-receptivo/(:any)', 'Aaspa\Aaspa::receptivo/$1');
 $routes->match(['get', 'post'], '/aaspa-receptivo/', 'Aaspa\Aaspa::receptivo');
+$routes->match(['get', 'post'], '/aaspa-listar-propostas', 'Aaspa\Aaspa::listarPropostas');
+$routes->match(['get', 'post'], '/argus-listar-chamadas', 'Argus\Argus::listarChamadas');
 $routes->match(['get', 'post'], '/integraall-token', 'Aaspa\Integraall::integraall_token');
-$routes->match(['get', 'post'], '/integraall-cep', 'Aaspa\Integraall::cep');
+$routes->match(['get', 'post'], '/integraall-cep/(:any)', 'Aaspa\Integraall::cep/$1');
 $routes->match(['get', 'post'], '/integraall-cpf', 'Aaspa\Integraall::cpf');
 $routes->match(['get', 'post'], '/integraall-detalhes-proposta', 'Aaspa\Integraall::detalhes_proposta');
 $routes->match(['get', 'post'], '/integraall-listar-propostas', 'Aaspa\Integraall::listar_propostas');
-$routes->match(['get', 'post'], '/integraall-buscar-propostas', 'Aaspa\Integraall::buscar_propostas');
+$routes->match(['get', 'post'], '/integraall-buscar-propostas/(:any)', 'Aaspa\Integraall::buscar_propostas/$1');
 $routes->match(['get', 'post'], '/integraall-criar-proposta', 'Aaspa\Integraall::criar_proposta');
 $routes->match(['get', 'post'], '/integraall-validar-cpf/(:any)', 'Aaspa\Integraall::validar_cpf/$1');
 $routes->match(['get', 'post'], '/integraall-validar-tse/(:any)', 'Aaspa\Integraall::validar_tse/$1');

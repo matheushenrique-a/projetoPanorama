@@ -11,6 +11,7 @@ class M_argus extends Model {
     protected $dbMasterDefault;
     protected $my_session;
     protected $telegram;
+    protected $m_http;
 
     public function __construct(){
 		$this->dbMasterDefault = new dbMaster();

@@ -25,9 +25,10 @@ class M_seguranca extends Model {
             $this->my_session->set('userId', $login['firstRow']->userId);
             $this->my_session->set('nickname', $login['firstRow']->nickname);
             $this->my_session->set('email', $login['firstRow']->email);
+            $this->my_session->set('empresa', $login['firstRow']->empresa);
             $this->my_session->set('perfil', $login['firstRow']->perfil_acesso);
             $this->my_session->set('observacao', $login['firstRow']->observacao);
-            //echo "22:02:26 - <h3>Dump 99</h3> <br><br>" . $this->session->session_id . "---". $this->session->nickname ; exit;					//<-------DEBUG
+            $this->my_session->set('parameters', json_decode($login['firstRow']->parameters ?? "", true));
             return true;
         } else {
             return false;
@@ -35,7 +36,6 @@ class M_seguranca extends Model {
     }
 
     public function DisplayMenu($modulo){
-        
        $perfil = json_decode($this->my_session->perfil, true);
        
        echo (!in_array($modulo, $perfil)  ? 'display: none; visibility: hidden;' : 'display: block; visibility: visible;');
