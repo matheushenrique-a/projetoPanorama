@@ -87,9 +87,25 @@
 																			<span class="input-group-text" style="width: 155px">Link AASPA</span>
 																			<input type="text" class="form-control" placeholder="" name="linkAaspa" value="<?php echo $linkAaspa;?>" />
 																		</div>
-																		<div class="card-header p-0" id="headingOne4"><div class="card-title d" data-toggle="" data-target="#validaBancarios"><i class="flaticon2-checkmark"></i>Mensagem WhatsApp</div></div>
+																		<div class="input-group">
+																			<span class="input-group-text bg-color: $ffffff" style="width: 100%"><input class="form-check-input" type="radio" name="tipoMensagem" <?php echo $tipoMensagem == "SMS-BENEFICIOS" ? "checked" : ""?> value="SMS-BENEFICIOS" />&nbsp;SMS Link Benefícios</span>
+																		</div>
+																		<div class="input-group">
+																			<span class="input-group-text" style="width: 155px">Link AASPA</span>
+																			<input type="text" class="form-control" placeholder="" name="linkAaspa2" value="<?php echo $linkAaspa2;?>" />
+																		</div>
+																		<!-- <div class="card-header p-0" id="headingOne4"><div class="card-title d" data-toggle="" data-target="#validaBancarios"><i class="flaticon2-checkmark"></i>Mensagem WhatsApp</div></div>
 																		<div class="input-group">
 																			<span class="input-group-text bg-color: $ffffff" style="width: 100%"><input class="form-check-input" type="radio" name="tipoMensagem"  <?php echo $tipoMensagem == "WPP" ? "checked" : ""?> value="WPP" />&nbsp;WhatsApp Inicial</span>
+																		</div> -->
+																		<div class="card-header p-0" id="headingOne4"><div class="card-title d" data-toggle="" data-target="#validaBancarios"><i class="flaticon2-checkmark"></i>WhatsApp Manual</div></div>
+																		
+																		<div class="input-group">
+																			<span class="input-group-text bg-color: $ffffff" style="width: 100%"><input class="form-check-input" type="radio" name="tipoMensagem"  <?php echo $tipoMensagem == "WPP-MANUAL" ? "checked" : ""?> value="WPP-MANUAL" />&nbsp;WhatsApp Manual</span>
+																		</div>
+																		<div class="input-group">
+																			<span class="input-group-text" style="width: 155px">Link AASPA</span>
+																			<input type="text" class="form-control" placeholder="" name="linkAaspa3" value="<?php echo $linkAaspa3;?>" />
 																		</div>
 																		<?php if ((!$returnData["status"]) and (!empty($returnData["mensagem"]))){?>
 																			<div class="input-group">

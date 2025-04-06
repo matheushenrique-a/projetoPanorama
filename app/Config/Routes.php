@@ -41,7 +41,15 @@ $routes->get('/', 'Home::index');
 //AMBEC
 $routes->match(['get', 'post'], '/ambec-script', 'Ambec\Ambec::ambec_script');
 
+//META
+$routes->match(['get', 'post'], '/whatsapp-webhook', 'Meta\WhatsApp::whatsapp_webhook');
+$routes->match(['get', 'post'], '/whatsapp-listner/(:any)/(:any)', 'Meta\WhatsApp::whatsapp_listner/$1/$2');
+$routes->match(['get', 'post'], '/whatsapp-send-template', 'Meta\WhatsApp::whatsapp_send_template');
+$routes->match(['get', 'post'], '/whatsapp-send-text', 'Meta\WhatsApp::whatsapp_send_text');
+$routes->match(['get', 'post'], '/whatsapp-chat', 'Meta\WhatsApp::whatsapp_chat');
+
 //AASPA
+$routes->match(['get', 'post'], '/comecar/(:any)', 'Frontline\Frontline::comecar/$1');
 $routes->match(['get', 'post'], '/aaspa-zapsms', 'Aaspa\Aaspa::zapsms');
 $routes->match(['get', 'post'], '/aaspa-zapsms/(:any)', 'Aaspa\Aaspa::zapsms/$1');
 $routes->match(['get', 'post'], '/aaspa-receptivo/(:any)/(:any)', 'Aaspa\Aaspa::receptivo/$1/$2');

@@ -29,11 +29,12 @@ class m_twilio extends Model {
 		$returnData["mensagem"] = "";
 		$returnData["raw"] = null;
 		$message = null;
+		$messageSid = "";
 		
 		$this->dbMasterDefault->insert('record_log',['log' => "SMS Enviado $telefone - $mensagem"]);
 
 		try {
-			$message = $twilio->messages->create("+" . $telefone, ["body" => $mensagem, "from" => fromWhatsApp, "statusCallback" => rootURL . "frontline-conversations-webhook"]);
+			$message = $twilio->messages->create("+" . $telefone, ["body" => $mensagem, "from" => "+13393300703", "statusCallback" => rootURL . "frontline-conversations-webhook"]);
 			//echo '09:11:00 - <h3>Dump 42 </h3> <br><br>' . var_dump($message); exit;					//<-------DEBUG
 
 			// Suponha que $message seja o objeto retornado pelo Twilio
@@ -158,6 +159,7 @@ class m_twilio extends Model {
 		$twilio = new Client($sid, $token);
 
 		try {
+			//Manually Adds operator as participant to the Conversation
 			$participant =  $twilio->conversations->v1->conversations($conversationSid)->participants->create(["identity" => $workedEmail]);
 			//$participant = $twilio->conversations->conversations($conversationSid)->participants->create(["identity" => $workedEmail]);
 			$this->dbMasterDefault->insert('record_log',['log' => "ROUTING OK $conversationSid, Worker:$workedEmail"]);
@@ -301,5 +303,346 @@ class m_twilio extends Model {
 		return $conversations;
 	}
 
+	// Recupera detalhes de uma conversation exemplo CHa935531a0e934d78ad47c778e33f9425
+	function conversationDetails($conversationSid){
+		$sid = TWILIO_ACCOUNT_SID_SMS;
+		$token = TWILIO_AUTH_TOKEN_SMS;
+		$twilio = new Client($sid, $token);
+
+		$conversation = $twilio->conversations->v1->conversations($conversationSid)->fetch();
+
+		// {
+		// 	"sid": "CHXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+		// 	"account_sid": "ACaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+		// 	"chat_service_sid": "ISaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+		// 	"messaging_service_sid": "MGaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+		// 	"friendly_name": "My First Conversation",
+		// 	"unique_name": "first_conversation",
+		// 	"attributes": "{ \"topic\": \"feedback\" }",
+		// 	"date_created": "2015-12-16T22:18:37Z",
+		// 	"date_updated": "2015-12-16T22:18:38Z",
+		// 	"state": "active",
+		// 	"timers": {
+		// 		"date_inactive": "2015-12-16T22:19:38Z",
+		// 		"date_closed": "2015-12-16T22:28:38Z"
+		// 	},
+		// 	"bindings": {},
+		// 	"url": "https://conversations.twilio.com/v1/Conversations/CHaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+		// 	"links": {
+		// 		"participants": "https://conversations.twilio.com/v1/Conversations/CHaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/Participants",
+		// 		"messages": "https://conversations.twilio.com/v1/Conversations/CHaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/Messages",
+		// 		"webhooks": "https://conversations.twilio.com/v1/Conversations/CHaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/Webhooks"
+		// 	}
+		// 	}
+			
+		return $conversation;
+	}
+
+	// Recupera detalhes de uma conversation exemplo CHa935531a0e934d78ad47c778e33f9425
+	function createConversation(){
+		$sid = TWILIO_ACCOUNT_SID_SMS;
+		$token = TWILIO_AUTH_TOKEN_SMS;
+		$twilio = new Client($sid, $token);
+
+		$conversation = $twilio->conversations->v1->conversations->create(["friendlyName" => "Friendly Conversation",]);
+			
+		return $conversation;
+	}
+
+	// Recupera detalhes de uma conversation exemplo CHa935531a0e934d78ad47c778e33f9425
+	function updateConversations($conversationSid){
+		$sid = TWILIO_ACCOUNT_SID_SMS;
+		$token = TWILIO_AUTH_TOKEN_SMS;
+		$twilio = new Client($sid, $token);
+
+		$conversation = $twilio->conversations->v1->conversations($conversationSid)->update(["friendlyName" => "Important Customer Question"]);
+			
+		return $conversation;
+	}
+
+	// Adiciona uma msg a uma conversa
+	function addMessageToConversations($conversationSid){
+		$sid = TWILIO_ACCOUNT_SID_SMS;
+		$token = TWILIO_AUTH_TOKEN_SMS;
+		$twilio = new Client($sid, $token);
+
+		$message = $twilio->conversations->v1->conversations($conversationSid)->messages->create(["subject" => "Boas Vindas", "author" => "smee","body" => "Ahoy there!",]);
+		
+		//output
+		// {
+		// 	"sid": "IMaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+		// 	"account_sid": "ACaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+		// 	"conversation_sid": "CHXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+		// 	"body": "Ahoy there!",
+		// 	"media": null,
+		// 	"author": "smee",
+		// 	"participant_sid": "MBaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+		// 	"attributes": "{ \"importance\": \"high\" }",
+		// 	"date_created": "2015-12-16T22:18:37Z",
+		// 	"date_updated": "2015-12-16T22:18:38Z",
+		// 	"index": 0,
+		// 	"delivery": {
+		// 	  "total": 2,
+		// 	  "sent": "all",
+		// 	  "delivered": "some",
+		// 	  "read": "some",
+		// 	  "failed": "none",
+		// 	  "undelivered": "none"
+		// 	},
+		// 	"content_sid": null,
+		// 	"url": "https://conversations.twilio.com/v1/Conversations/CHaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/Messages/IMaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+		// 	"links": {
+		// 	  "delivery_receipts": "https://conversations.twilio.com/v1/Conversations/CHaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/Messages/IMaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/Receipts",
+		// 	  "channel_metadata": "https://conversations.twilio.com/v1/Conversations/CHaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/Messages/IMaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/ChannelMetadata"
+		// 	}
+		//   }
+		return $message;
+	}
+
+	// Lista todas as mensagems de uma conversa
+	//        $msg = $this->twilio->getMessagesDetails("CHa935531a0e934d78ad47c778e33f9425", "IM802a1208297a494eb421873bfd6b95bb");
+
+	function getMessagesDetailsAggregated($conversationSid, $msgSid){
+		$sid = TWILIO_ACCOUNT_SID_SMS;
+		$token = TWILIO_AUTH_TOKEN_SMS;
+		$twilio = new Client($sid, $token);
+
+		$message = $twilio->conversations->v1->conversations($conversationSid)->messages($msgSid)->fetch();
 	
+		echo "SID: " . $message->sid . "<br>";
+		echo "Autor: " . $message->author . "<br>";
+		echo "Corpo: " . $message->body . "<br>";
+		echo "Criada em: " . $message->dateCreated->format('Y-m-d H:i:s') . "<br>";
+		echo "Atributos: " . $message->attributes . "<br>";
+		echo "Delivery: " . json_encode($message->delivery) . "<br>";
+
+		return $message;
+	}
+
+	function getMessagesDetailsIndividual($conversationSid, $msgSid){
+		$sid = TWILIO_ACCOUNT_SID_SMS;
+		$token = TWILIO_AUTH_TOKEN_SMS;
+		$twilio = new Client($sid, $token);
+
+		$deliveryReceipts = $twilio->conversations->v1
+		->conversations($conversationSid)
+		->messages($msgSid)
+		->deliveryReceipts->read(20);
+
+		foreach ($deliveryReceipts as $receipt) {
+			echo "-----------------------------<br>";
+			echo "SID: " . $receipt->sid . "<br>";
+			echo "Message SID: " . $receipt->messageSid . "<br>";
+			echo "Conversation SID: " . $receipt->conversationSid . "<br>";
+			echo "Participant SID: " . $receipt->participantSid . "<br>";
+			echo "Status da entrega: " . $receipt->status . "<br>"; // delivered, read, failed, etc.
+			echo "Erro: " . ($receipt->errorCode ? $receipt->errorCode . ' - ' . $receipt->errorMessage : 'Nenhum') . "<br>";
+			echo "Data de criação: " . $receipt->dateCreated->format('Y-m-d H:i:s') . "<br>";
+			echo "Data de atualização: " . $receipt->dateUpdated->format('Y-m-d H:i:s') . "<br>";
+		}
+
+		return $deliveryReceipts;
+	}
+
+	//mostra mensagens de uma conversa
+	//        $msg = $this->twilio->listMessages("CHa935531a0e934d78ad47c778e33f9425");
+	function listMessages($conversationSid){
+		$sid = TWILIO_ACCOUNT_SID_SMS;
+		$token = TWILIO_AUTH_TOKEN_SMS;
+		$twilio = new Client($sid, $token);
+
+		$messages = $twilio->conversations->v1->conversations($conversationSid)->messages->read([], 20);
+
+		foreach ($messages as $msg) {
+			echo "SID: " . $msg->sid . "<br>";
+			echo "Autor: " . $msg->author . "<br>";
+			echo "Corpo: " . $msg->body . "<br>";
+			echo "Data de criação: " . $msg->dateCreated->format('Y-m-d H:i:s') . "<br>";
+			echo "Participante SID: " . $msg->participantSid . "<br>";
+			echo "Índice: " . $msg->index . "<br>";
+			echo "Atributos: " . $msg->attributes . "<br>";
+			echo "-----------------------------" . "<br>";
+		}
+
+		return $messages;
+	}
+
+	function participantsofConversations($conversationSid){
+		$sid = TWILIO_ACCOUNT_SID_SMS;
+		$token = TWILIO_AUTH_TOKEN_SMS;
+		$twilio = new Client($sid, $token);
+
+		$participants = $twilio->conversations->v1->conversations($conversationSid)->participants->read(20);
+
+		foreach ($participants as $participant) {
+			echo "-----------------------------" . "<br>";
+			echo "Participant SID: " . $participant->sid . "<br>";
+			echo "Conversation SID: " . $participant->conversationSid . "<br>";
+			echo "Identity: " . ($participant->identity ?? 'N/A') . "<br>";
+		
+			if (!empty($participant->messagingBinding)) {
+				echo "Canal (Proxy Address): " . ($participant->messagingBinding['proxy_address'] ?? 'N/A') . "<br>";
+				echo "Contato (Address): " . ($participant->messagingBinding['address'] ?? 'N/A') . "<br>";
+			}
+		
+			echo "Role SID: " . ($participant->roleSid ?? 'N/A') . "<br>";
+			echo "Data de criação: " . $participant->dateCreated->format('Y-m-d H:i:s') . "<br>";
+			echo "Última atualização: " . $participant->dateUpdated->format('Y-m-d H:i:s') . "<br>";
+			echo "Atributos customizados: " . ($participant->attributes ?? '{}') . "<br>";
+		}
+
+		return $participant;
+	}
+
+
+	function participantUpdate2($conversationSid, $participantSid){
+		$sid = TWILIO_ACCOUNT_SID_SMS;
+		$token = TWILIO_AUTH_TOKEN_SMS;
+		$twilio = new Client($sid, $token);
+
+		$data = [
+				"name" => "dasntas@pvc.com",
+				"attributes" => json_encode(["customer_id" => "12312", "name" => "dantas 2"])
+			];
+		
+		//$participant = $twilio->conversations->v1->conversations($conversationSid)->participants($participantSid)->update(["dateUpdated" => new \DateTime("2019-05-15T13:37:35Z")]);
+		$participant = $twilio->conversations
+					->v1
+					->conversations($conversationSid)
+					->participants($participantSid)
+					->update($data);
+
+		return $participant;
+	}
+
+	
+	function transferChat($conversationSid, $participantDelete, $workedEmailNewParticipant){
+		$sid = TWILIO_ACCOUNT_SID_SMS;
+		$token = TWILIO_AUTH_TOKEN_SMS;
+		$twilio = new Client($sid, $token);
+
+		//remove um
+		$twilio->conversations->v1->conversations($conversationSid)->participants($participantDelete)->delete();
+
+		//adiciona outro
+		$this->routing($conversationSid, $workedEmailNewParticipant);
+
+		return $participant;
+	}
+
+	function newConversationWithTemplate($display_name, $to, $workedEmail){
+		$sid = TWILIO_ACCOUNT_SID_SMS;
+		$token = TWILIO_AUTH_TOKEN_SMS;
+		$twilio = new Client($sid, $token);
+
+		$returnData["status"] = false;
+		$returnData["mensagem"] = "";
+
+		//echo "$display_name, $to, $workedEmail";exit;
+		
+
+		try {
+			//criar uma conversa com um participante do whatsapp e outro com o identity
+			$conversation = $twilio->conversations->v1->conversationWithParticipants->create(
+				[
+					"friendlyName" => $display_name,
+					"participant" => [
+						"{\"messaging_binding\": {\"address\": \"whatsapp:+" . $to . "\", \"proxy_address\": \"whatsapp:+" . fromWhatsApp .  "\"}}",
+						"{\"identity\": \"" . $workedEmail . "\"}",
+					],
+				]
+			);
+			$returnData["status"] = true;
+		} catch (\Exception $e) {
+			$returnData["status"] = false;
+			$returnData["mensagem"] = "Erro ao criar conversa - " . $e->getMessage();	
+		}
+		
+		//envia uma mensagem para o participante do whatsapp
+		$returnData =  $this->sendWhatsAppTemplate("HXc74e559c07f112bb8d75d91d5a47c087", $to); //HX813435d38d3962826c91ae0736608191 = Olá, tudo bem? Vamos prosseguir com seu atendimento telefônico por aqui. Para continuar, responda SIM abaixo.
+	
+		return $returnData;
+	}
+
+	function listUsers(){
+		$sid = TWILIO_ACCOUNT_SID_SMS;
+		$token = TWILIO_AUTH_TOKEN_SMS;
+		$twilio = new Client($sid, $token);
+
+		$users = $twilio->conversations->v1->users->read(40);
+
+		$i = 0;
+		foreach ($users as $user) {
+			$i++;
+			echo "$i: ------------------------<br>";
+			echo "SID: " . $user->sid . "<br>";
+			echo "Identity: " . $user->identity . "<br>";
+			echo "Friendly Name: " . ($user->friendlyName ?? 'N/A') . "<br>";
+			echo "Atributos: " . $user->attributes . "<br>";
+			echo "Role SID: " . ($user->roleSid ?? 'N/A') . "<br>";
+			echo "Is Notifiable: " . ($user->isNotifiable ? 'Sim' : 'Não') . "<br>";
+			echo "Criado em: " . $user->dateCreated->format('Y-m-d H:i:s') . "<br>";
+			echo "Atualizado em: " . $user->dateUpdated->format('Y-m-d H:i:s') . "<br>";
+			echo "URL: " . $user->url . "<br>";
+		}
+
+		return $users;
+	}
+
+	function listUserConversations($userid){
+		$sid = TWILIO_ACCOUNT_SID_SMS;
+		$token = TWILIO_AUTH_TOKEN_SMS;
+		$twilio = new Client($sid, $token);
+
+		$userConversations = $twilio->conversations->v1
+			->users($userid)
+			->userConversations->read(20);
+
+		foreach ($userConversations as $conv) {
+			echo "-----------------------------<br>";
+			echo "Conversation SID: " . $conv->conversationSid . "<br>";
+			echo "User SID: " . $conv->userSid . "<br>";
+			echo "Account SID: " . $conv->accountSid . "<br>";
+			echo "Chat Service SID: " . $conv->chatServiceSid . "<br>";
+			echo "Role SID: " . ($conv->roleSid ?? 'N/A') . "<br>";
+			echo "Attributes: " . $conv->attributes . "<br>";
+			echo "Conversation State: " . $conv->conversationState . "<br>";
+			echo "Last Read Message Index: " . ($conv->lastReadMessageIndex ?? 'N/A') . "<br>";
+			//echo "Last Read Timestamp: " . ($conv->lastReadTimestamp ? $conv->lastReadTimestamp->format('Y-m-d H:i:s') : 'N/A') . "<br>";
+			echo "Criado em: " . $conv->dateCreated->format('Y-m-d H:i:s') . "<br>";
+			echo "Atualizado em: " . $conv->dateUpdated->format('Y-m-d H:i:s') . "<br>";
+		}
+
+		return $userConversations;
+	}
+
+
+	function listCustomerConversations($to){
+		$sid = TWILIO_ACCOUNT_SID_SMS;
+		$token = TWILIO_AUTH_TOKEN_SMS;
+		$twilio = new Client($sid, $token);
+
+		$participantConversations = $twilio->conversations->v1->participantConversations->read(
+			["address" => "whatsapp:+" . $to],
+			20
+		);
+		
+		foreach ($participantConversations as $conv) {
+			echo "-----------------------------<br>";
+			echo "Conversation SID: " . $conv->conversationSid . "<br>";
+			echo "Participant SID: " . $conv->participantSid . "<br>";
+			echo "User SID: " . ($conv->userSid ?? 'N/A') . "<br>";
+			echo "Account SID: " . $conv->accountSid . "<br>";
+			echo "Chat Service SID: " . $conv->chatServiceSid . "<br>";
+			echo "Role SID: " . ($conv->roleSid ?? 'N/A') . "<br>";
+			//echo "Attributes: " . $conv->attributes . "<br>";
+			echo "Conversation State: " . $conv->conversationState . "<br>";
+			echo "Last Read Message Index: " . ($conv->lastReadMessageIndex ?? 'N/A') . "<br>";
+			//echo "Criado em: " . $conv->dateCreated->format('Y-m-d H:i:s') . "<br>";
+			//echo "Atualizado em: " . $conv->dateUpdated->format('Y-m-d H:i:s') . "<br>";
+		}
+
+		return $participantConversations;
+	}
+
 }

@@ -1,0 +1,284 @@
+<?php
+
+namespace App\Controllers\Meta;
+use App\Controllers\BaseController;
+use CodeIgniter\HTTP\RequestInterface;
+use CodeIgniter\HTTP\ResponseInterface;
+use Psr\Log\LoggerInterface;
+use App\Libraries\dbMaster;
+use App\Models\M_telegram;
+use Config\Services;
+use App\Models\M_chatGpt;
+use App\Models\M_whatsapp;
+use App\Models\M_argus;
+
+class WhatsApp extends BaseController
+{
+    protected $session;
+    protected $dbMasterDefault;
+    protected $telegram;
+    protected $chatgpt;
+    protected $m_whatsapp;
+    protected $m_argus;
+
+    public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger) {
+        parent::initController($request, $response, $logger);
+		$this->dbMaster = new dbMaster();
+       
+
+        //o dbMasterDefault vai apontar para o banco do InsightSuite
+        $this->dbMasterDefault = new dbMaster();
+        $this->session = session();
+        $this->telegram =  new M_telegram();
+        $this->chatgpt =  new M_chatGpt();
+        $this->m_whatsapp =  new M_whatsapp();
+        $this->m_argus =  new M_argus();
+    }
+
+    //http://localhost/InsightSuite/public/whatsapp-chat
+    public function whatsapp_chat(){
+        $this->checkSession();
+
+        $ConversationSid =  $this->getpost('ConversationSid') ?? '';
+        $currentConversationSid =  $this->getpost('currentConversationSid') ?? '';
+        $search =  $this->getpost('search');
+        $newConversation =  $this->getpost('newConversation');
+        $closeConversation =  $this->getpost('closeConversation');
+        $messageToSend =  $this->getpost('messageToSend');
+        $btnSendMsg =  $this->getpost('btnSendMsg');
+
+        $userId = $this->session->userId;
+        $atendenteNome = $this->session->nickname;
+        $messages = [];
+        $currentConversation = null;
+        $clientesCRM = null;
+        $topConversation = null;
+
+        //se o usuario clicou em uma conversa específica
+        if (!empty($ConversationSid)){
+            $messages = $this->m_whatsapp->getMessages(['ConversationSid' => $ConversationSid]);
+            $currentConversation = $this->m_whatsapp->getConversation(['ConversationSid' => $ConversationSid]);
+        } 
+        //caso uma busca no CRM tenha sido feita
+        else  if (!empty($search)){
+            $clientesCRM = $this->m_argus->buscarClienteCRM($search);
+        } 
+        //caso uma nova conversa tenha sido solicitada com um cliente do CRM
+        else if (!empty($newConversation)){
+            $clientesCRMNew = $this->m_argus->buscarCliente(['id_proposta' => $newConversation]);
+            if ($clientesCRMNew['existRecord']){
+                $conversation = $this->m_whatsapp->createConversation([
+                    'telefoneCliente' => normalizePhone($clientesCRMNew['firstRow']->celular),
+                    'telefoneBot' => fromWhatsApp,
+                    'nomeCliente' => $clientesCRMNew['firstRow']->nome,
+                    'nomeBot' => 'INSIGHT',
+                    'atendenteId' => $userId,
+                    'atendenteNome' => $atendenteNome,
+                ]);
+
+                return redirect()->to('whatsapp-chat?ConversationSid=' . $conversation['firstRow']->ConversationSid);exit;
+            }
+        //fecha uma conversa
+        } else if (!empty ($closeConversation)) {
+            $this->m_whatsapp->deleteConversation(['conversationSid' => $closeConversation], ['status' => 'CLOSED']);
+
+        //envia uma nova mensagem após pressionar o botão Enviar
+        } else if (!empty($btnSendMsg) && !empty($messageToSend)) {
+            
+            $conversation = $this->m_whatsapp->getConversation(['ConversationSid' => $currentConversationSid]);
+            if ($conversation['existRecord']){
+                $result = $this->m_whatsapp->sendWhatsApp($messageToSend, normalizePhone($conversation['firstRow']->telefoneCliente), $conversation);
+                
+                $messages = $this->m_whatsapp->getMessages(['ConversationSid' => $currentConversationSid]);
+                $currentConversation = $this->m_whatsapp->getConversation(['ConversationSid' => $currentConversationSid]);
+            }
+        }
+
+        //listar conversas abertas para o usuario logado
+        $conversations = $this->m_whatsapp->getConversation(['atendenteId'=> $userId, 'status' => 'OPEN']);
+
+        if ((empty($ConversationSid)) && (empty($search))){
+            if ($conversations['existRecord']){
+                $messages = $this->m_whatsapp->getMessages(['ConversationSid' => $conversations['firstRow']->ConversationSid]);
+                $currentConversation = $this->m_whatsapp->getConversation(['ConversationSid' => $conversations['firstRow']->ConversationSid]);
+            }
+        } 
+
+        $data['pageTitle'] = "WhatsApp Chat";
+        $data['ConversationSid'] = $ConversationSid;
+        $data['conversations'] = $conversations;
+        $data['messages'] = $messages;
+        $data['currentConversation'] = $currentConversation;
+        $data['clientesCRM'] = $clientesCRM;
+        $data['search'] = $search;
+        $data['session'] = $this->session;
+        $data['topConversation'] = $topConversation;
+        return $this->loadpage('whatsapp/chat', $data);
+
+    }
+
+
+    //http://localhost/InsightSuite/public/whatsapp-webhook
+    public function whatsapp_webhook(){
+        $mode =  $this->getpost('hub_mode') ?? '';
+        $token =  $this->getpost('hub_verify_token') ?? '';
+        $challenge =  $this->getpost('hub_challenge') ?? '';
+        $WEBHOOK_VERIFY_TOKEN = 'PRAVOCE0404';
+        // Recebe o JSON enviado pelo webhook do WhatsApp
+        $json = file_get_contents('php://input');
+
+        //DEBUG nova mensagem
+        //$json = '{"object": "whatsapp_business_account", "entry": [{"id": "1403356640797060", "changes": [{"value": {"messaging_product": "whatsapp", "metadata": {"display_phone_number": "15556418758", "phone_number_id": "643196615539553"}, "contacts": [{"profile": {"name": "Dantas"}, "wa_id": "553195781355"}], "messages": [{"from": "553195781355", "id": "wamid.HBgMNTUzMTk1NzgxMzU1FQIAEhgWM0VCMDZBMkVCQTkxOTMzNkVBMjcwQgA=", "timestamp": "1743813734", "text": {"body": "ok"}, "type": "text"}]}, "field": "messages"}]}]}';
+
+        //DEBUG stauts mensagem
+        //$json = '{"object": "whatsapp_business_account", "entry": [{"id": "1403356640797060", "changes": [{"value": {"messaging_product": "whatsapp", "metadata": {"display_phone_number": "15556418758", "phone_number_id": "643196615539553"}, "statuses": [{"id": "wamid.HBgMNTUzMTk1NzgxMzU1FQIAEhgWM0VCMDZBMkVCQTkxOTMzNkVBMjcwQgA=", "status": "read", "timestamp": "1743813795", "recipient_id": "553195781355"}]}, "field": "messages"}]}]}';
+        // $json = '{"object": "whatsapp_business_account", "entry": [{"id": "1403356640797060", "changes": [{"value": {"messaging_product": "whatsapp", "metadata": {"display_phone_number": "15556418758", "phone_number_id": "643196615539553"}, "statuses": [{"id": "wamid.HBgMNTUzMTk1NzgxMzU1FQIAERgSNzVDMjFEMjIxOTAxRjJBQjU2AA==", "status": "read", "timestamp": "1743892998", "recipient_id": "553195781355"}]}, "field": "messages"}]}]}';
+        
+        //DEBUG Both message and status
+        //$json = '{"object": "whatsapp_business_account", "entry": [{"id": "1403356640797060", "changes": [{"value": {"messaging_product": "whatsapp", "metadata": {"display_phone_number": "15556418758", "phone_number_id": "643196615539553"}, "contacts": [{"profile": {"name": "Dantas"}, "wa_id": "553195781355"}], "messages": [{"from": "553195781355", "id": "wamid.HBgMNTUzMTk1NzgxMzU1FQIAEhgWM0VCMDZBMkVCQTkxOTMzNkVBMjcwQgA=", "timestamp": "1743813734", "text": {"body": "ok"}, "type": "text"}], "statuses": [{"id": "wamid.HBgMNTUzMTk1NzgxMzU1FQIAERgSREU1RjI5RDIxMEExOTU4NjZBAA==", "status": "read", "timestamp": "1743813795", "recipient_id": "553195781355"}]}, "field": "messages"}]}]}';
+        
+        $data = json_decode($json, true);
+        if ($mode === 'subscribe' && $token === $WEBHOOK_VERIFY_TOKEN) {
+            http_response_code(200); echo $challenge;
+        }
+
+        // Verifica se há entries
+        if (isset($data['entry']) && is_array($data['entry'])) {
+            foreach ($data['entry'] as $entryIndex => $entry) {
+                $changes = $entry['changes'] ?? [];
+
+                foreach ($changes as $changeIndex => $change) {
+                    
+                    //MUDANÇAS DE STATUS
+                    if (isset($change['value']['statuses'])) {
+                        $statuses = $change['value']['statuses'] ?? [];
+
+                        foreach ($statuses as $statusIndex => $status) {
+                            $messageSid = $status['id'];
+                            $statusType = strtoupper($status['status']);
+                            $timestamp = $status['timestamp'];
+                            $recipientId = $status['recipient_id'];
+    
+                            //atualiza o status da mensagem
+                            $this->m_whatsapp->updateMessage(['SmsStatus' => $statusType], ['MessageSid' => $messageSid], ['last_updated' => 'current_timestamp()']);
+                        }
+                    }
+
+                    //NOVAS MENSAGENS RECEBIDAS
+                    if (isset($change['value']['messages'])) {
+                        $messages = $change['value']['messages'] ?? [];
+                        $to = $change['value']['metadata']['display_phone_number'] ?? '';
+
+                        foreach ($messages as $messageIndex => $message) {
+                            $messageId = $message['id'];
+                            $messageType = $message['type'];
+                            $messageBody = $message['text']['body'] ?? '';
+                            $from = $message['from'];
+                            $timestamp = $message['timestamp'];
+                            $contactName = $change['value']['contacts'][0]['profile']['name'] ?? '';
+                            $waId = $change['value']['contacts'][0]['wa_id'] ?? '';
+
+                            //verifica se existe uma conversa aberta
+                            $conversation = $this->m_whatsapp->getConversation(['telefoneCliente' => normalizePhone($from), 'status' => 'OPEN']);
+
+                            if (!$conversation['existRecord']){
+                                //cria conversa se necessário
+                                $conversation = $this->m_whatsapp->createConversation([
+                                    'telefoneCliente' => normalizePhone($from),
+                                    'telefoneBot' => $to,
+                                    'nomeCliente' => $contactName,
+                                    'nomeBot' => 'INSIGHT',
+                                    'atendenteId' => null,
+                                    'atendenteNome' => null,
+                                ]);
+                            }
+                    
+                            //Registra a mensagem recebida na conversa existente
+                            $data = ['ConversationSid' => $conversation['firstRow']->ConversationSid, 'MessageSid' => $messageId, 'Type' => 'WHATSAPP', 'ProfileName' => $contactName, 'direction' => 'C2B', 'Body' => $messageBody, 'SmsStatus' => 'RECEIVED', 'To' => ($to), 'From' => normalizePhone($from)];
+                            $this->m_whatsapp->createMessage($data, $conversation);
+
+                            //Atualiza o contador de mensagens da conversa
+                            $this->m_whatsapp->updateConversation(['msgCount' => $conversation['firstRow']->msgCount + 1], ['id' => $conversation['firstRow']->id], ['last_updated' => 'current_timestamp()']);
+                        }
+                    }
+                }
+            }
+        } else {
+            echo "Nenhuma entry encontrada.<BR>";
+        }
+
+        http_response_code(200);
+    }
+
+    //http://localhost/InsightSuite/public/whatsapp-send-template
+    public function whatsapp_send_template(){
+        $this->checkSession();
+
+        $to = '5531995781355';
+        $nomeCliente = 'Dantas';
+        $templateName = "antedimento_telefonico";
+        $atendenteId = $this->session->userId ?? 1;
+        $atendenteNome = $this->session->nickname ?? 'Dantas';
+
+        //verifica se existe uma conversa aberta
+        $conversation = $this->m_whatsapp->getConversation(['telefoneCliente' => normalizePhone($to), 'status' => 'OPEN']);
+        
+        if (!$conversation['existRecord']){
+            //cria conversa se necessário
+            $conversation = $this->m_whatsapp->createConversation([
+                'telefoneCliente' => normalizePhone($to),
+                'telefoneBot' => fromWhatsApp,
+                'nomeCliente' => $nomeCliente,
+                'nomeBot' => 'INSIGHT',
+                'atendenteId' => $this->session->userId,
+                'atendenteNome' => $this->session->nickname,
+            ]);
+        }
+
+        $result = $this->m_whatsapp->sendWhatsAppTemplate($templateName, $to, $conversation);
+
+        if ($result['sucesso']) {
+            echo $result["message"]['messageId'];
+        } else {
+            echo $result["error"];
+        }
+    }
+
+    //http://localhost/InsightSuite/public/whatsapp-send-text
+    public function whatsapp_send_text(){
+        $this->checkSession();
+        
+        $to = '5531995781355';
+        $nomeCliente = 'Dantas';
+        $atendenteId = $this->session->userId ?? 1;
+        $atendenteNome = $this->session->nickname ?? 'Dantas';
+        $body = 'Novo teste B2c';
+
+        //verifica se existe uma conversa aberta
+        $conversation = $this->m_whatsapp->getConversation(['telefoneCliente' => normalizePhone($to), 'status' => 'OPEN']);
+        
+        //cria conversa se necessário
+        if (!$conversation['existRecord']) $conversation = $this->m_whatsapp->createConversation(['telefoneCliente' => normalizePhone($to),'telefoneBot' => fromWhatsApp,'nomeCliente' => $nomeCliente,'nomeBot' => 'INSIGHT','atendenteId' => $this->session->userId,'atendenteNome' => $this->session->nickname,]);
+
+        $result = $this->m_whatsapp->sendWhatsApp($body, $to, $conversation);
+
+        echo $result["message"]['messageId'] ?? $result["error"];
+    }
+
+    //http://localhost/InsightSuite/public/whatsapp-listner/1
+    public function whatsapp_listner($atendenteId, $topConversation){
+
+        $sql = "SELECT id, ConversationSid, telefoneCliente, nomeCliente FROM whatsapp_conversations WHERE id > 1 AND status = 'OPEN' and atendenteId = 1;";
+
+        $incomingConversations = $this->dbMasterDefault->runQuery($sql);
+
+        $result = ['newConversations' => []];
+        
+        if ($incomingConversations['existRecord']){
+            $result = ['newConversations' => $incomingConversations["result"]->getResult()];
+        }
+
+        echo json_encode($result);
+    }
+        
+}

@@ -30,4 +30,26 @@ class M_argus extends Model {
         return $cliente;
     }
 
+    public function buscarClienteCRM($search){
+        $searchNumber = numberOnly($search);
+
+        if ($search == "CRM") {
+            $sql = "select * from aaspa_cliente order by data_criacao DESC LIMIT 30;";
+        } else {
+            $sql = "select * from aaspa_cliente where nome like '%$search%' ";
+        
+            if (!empty($searchNumber)){
+                $sql .= " or (celular like '%$searchNumber%' or cpf like '%$searchNumber%')";
+            }
+            $sql .= " order by data_criacao DESC LIMIT 30;";    
+        }
+
+        return $this->dbMasterDefault->runQuery($sql);
+    }
+    
+    public function buscarCliente($filters){
+        return $this->dbMasterDefault->select('aaspa_cliente', $filters);
+    }
+
+
 }

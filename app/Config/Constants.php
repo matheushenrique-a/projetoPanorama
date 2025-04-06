@@ -20,6 +20,8 @@ define ('API_Produto', 6); //quid
 //calculadora
 define ('API_Calculadora', 'https://api2.calculadoraconsignado.com.br/api/');
 
+//WHATSAPP CLOUD API
+define ('META_CLOUD_API', "https://graph.facebook.com/v22.0/643196615539553/messages"); //643196615539553 = phone number id = +1 555 641 8758
 
 //SMS Account - US SMS ONLY
 define('TWILIO_ACCOUNT_SID_SMS','ACbec7bd36bb5c1d809c7fd76c0e06bb5c');

@@ -4937,6 +4937,21 @@ License: For each use you must have a valid license purchased only from above li
 											</div>
 										</div>
 										<!--end:Menu sub-->
+										<!--begin:Menu sub-->
+										<div class="menu-sub menu-sub-accordion">
+											<!--begin:Menu item-->
+											<div class="menu-item">
+												<!--begin:Menu link-->
+												<a class="menu-link" href="<?php echo assetfolder;?>whatsapp-chat">
+													<span class="menu-bullet">
+														<span class="bullet bullet-dot"></span>
+													</span>
+													<span class="menu-title">WhatsApp Web</span>
+												</a>
+												<!--end:Menu link-->
+											</div>
+										</div>
+										<!--end:Menu sub-->
 									</div>
 									<!--end:AASPA BRASIL Menu item-->
 

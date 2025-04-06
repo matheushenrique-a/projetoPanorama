@@ -49,13 +49,8 @@ class Aaspa extends BaseController
 
    
 
-    //
+    //http://localhost/InsightSuite/public/aaspa-zapsms
     public function zapsms($celular = null){
-        //$this->twilio->sendWhatsApp("Olá 👋🏻! Somos da *PRA VOCE* e observamos que recentemente você utilizou nosso site ou WhatsApp. Caso tenha ficado alguma dúvida, responda a essa mensagem para falar com nosso time de atendimento. Desde já agradecemos pela atenção e interesse 🙏🏻!", $celularWaId);
-        //$returnData =  $this->twilio->sendWhatsAppTemplate("HXc74e559c07f112bb8d75d91d5a47c087", '5531995781355'); //HX813435d38d3962826c91ae0736608191 = Olá, tudo bem? Vamos prosseguir com seu atendimento telefônico por aqui. Para continuar, responda SIM abaixo.
-        //echo '15:19:35 - <h3>Dump 85 </h3> <br><br>' . var_dump($returnData); exit;					//<-------DEBUG
-
-        //$this->twilio->users();exit;
         $data['pageTitle'] = "AASPA - Enviar SMS e WhatsApp";
 
         //DADOS PESSOAIS
@@ -74,6 +69,8 @@ class Aaspa extends BaseController
         $sms = strtoupper($this->getpost('sms'));
         $tipoMensagem = strtoupper($this->getpost('tipoMensagem'));
         $linkAaspa = strtoupper($this->getpost('linkAaspa'));
+        $linkAaspa2 = strtoupper($this->getpost('linkAaspa2'));
+        $linkAaspa3 = strtoupper($this->getpost('linkAaspa3'));
         $btnSalvar = $this->getpost('btnSalvar');
         $btnConsultar = $this->getpost('btnConsultar');
 
@@ -95,10 +92,37 @@ class Aaspa extends BaseController
     
                 if ($tipoMensagem == "WPP"){
                     //$this->twilio->sendWhatsApp("Olá 👋🏻! Somos da *PRA VOCE* e observamos que recentemente você utilizou nosso site ou WhatsApp. Caso tenha ficado alguma dúvida, responda a essa mensagem para falar com nosso time de atendimento. Desde já agradecemos pela atenção e interesse 🙏🏻!", $celularWaId);
-                    $returnData =  $this->twilio->sendWhatsAppTemplate("HXc74e559c07f112bb8d75d91d5a47c087", $celularWaId); //HX813435d38d3962826c91ae0736608191 = Olá, tudo bem? Vamos prosseguir com seu atendimento telefônico por aqui. Para continuar, responda SIM abaixo.
+                    $display_name = $nomeCompleto . " | " . $celular;
+                    $returnData = $this->twilio->newConversationWithTemplate($display_name, $celularWaId, $this->session->email);
+                    //$returnData =  $this->twilio->sendWhatsAppTemplate("HXc74e559c07f112bb8d75d91d5a47c087", $celularWaId); //HX813435d38d3962826c91ae0736608191 = Olá, tudo bem? Vamos prosseguir com seu atendimento telefônico por aqui. Para continuar, responda SIM abaixo.
                 } 
-    
-                if ($tipoMensagem == "SMS-GOOGLE"){
+                    
+                if ($tipoMensagem == "WPP-MANUAL"){
+                    
+                    $linkMeeting = $this->session->parameters["google-meeting"];
+                    $assessor = $this->session->nickname;
+                    $fname = firstName($nomeCompleto);
+
+                    $cliente = $this->dbMasterDefault->select('aaspa_sms', ['telefone' => $celularWaId]);
+
+                    if (!$cliente['existRecord']){
+                        $smsMSG = $this->dbMasterDefault->insert('aaspa_sms',['linkKompletoCliente' => $linkAaspa3, 'linkMeeting' => $linkMeeting, 'assessor' => $assessor, 'nomeCliente' => $nomeCompleto, 'telefone' => $celularWaId, 'status' => 'ENVIADO']);
+                        $idCliente = $smsMSG["insert_id"];
+                    } else {
+                        $this->dbMasterDefault->update('aaspa_sms', ['linkKompletoCliente' => $linkAaspa3, 'linkMeeting' => $linkMeeting, 'assessor' => $assessor, 'nomeCliente' => $nomeCompleto, 'status' => 'ATUALIZADO'], ['telefone' => $celularWaId], ['last_update' => 'current_timestamp()']);
+                        $idCliente = $cliente['firstRow']->id_proposta;
+                    }
+
+                    $msg1 = "Ola $fname, segue o caminho para continuarmos a ligacao:";
+                    $msg2 = "https://beneficio.pravoce.io/comecar/id" . $idCliente; 
+                    
+                    $msgTelegram = "ASSESSOR: $assessor \nTELEFONE CLIENTE: $celularWaId \nNOME CLIENTE: $nomeCompleto \nLINK KOMPLETO: $linkAaspa3 \nMENSAGEM SUGERIDA:\n$msg1 \nLINK BENEFICIO:\n$msg2";
+                    $this->telegram->notifyTelegramGroup($msgTelegram, telegramQuid);
+
+                    $returnData["status"] = true;
+                    $returnData["mensagem"] = "Pedido enviado ao Supervisor.";
+
+                }  else if ($tipoMensagem == "SMS-GOOGLE"){
                     //$linkGoogle = $this->dbMasterDefault->select('user_account', ['nickname' => $this->session->nickname])['firstRow']->observacao;
                     $linkGoogle = $this->session->parameters["google-meeting"];
                     $returnData =  $this->twilio->sendSMS($celularWaId, $linkGoogle, $this->session->nickname);
@@ -106,7 +130,31 @@ class Aaspa extends BaseController
                     if ($linkAaspa == ""){
                         $returnData["mensagem"] = "Informe o link do AASPA";
                     } else {
-                        $returnData =  $this->twilio->sendSMS( $celularWaId, $linkAaspa, $this->session->nickname);
+                        $returnData =  $this->twilio->sendSMS($celularWaId, $linkAaspa, $this->session->nickname);
+                    }
+                }  else if ($tipoMensagem == "SMS-BENEFICIOS"){
+                    if ($linkAaspa2 == ""){
+                        $returnData["mensagem"] = "Informe o link do AASPA Benefícios";
+                        
+                    } else {
+                        $linkMeeting = $this->session->parameters["google-meeting"];
+                        $assessor = $this->session->nickname;
+		                $fname = firstName($nomeCompleto);
+
+                        $cliente = $this->dbMasterDefault->select('aaspa_sms', ['telefone' => $celularWaId]);
+
+                        if ($cliente['existRecord']){
+                            $this->dbMasterDefault->update('aaspa_sms', ['linkKompletoCliente' => $linkAaspa2, 'linkMeeting' => $linkMeeting, 'assessor' => $assessor, 'nomeCliente' => $nomeCompleto, 'status' => 'ATUALIZADO'], ['telefone' => $celularWaId], ['last_update' => 'current_timestamp()']);
+                            $returnData["status"] = true;
+                            $returnData["mensagem"] = "SMS existente, link Kompleto atualizado.";
+                        } else {
+                            $smsMSG = $this->dbMasterDefault->insert('aaspa_sms',['linkKompletoCliente' => $linkAaspa2, 'linkMeeting' => $linkMeeting, 'assessor' => $assessor, 'nomeCliente' => $nomeCompleto, 'telefone' => $celularWaId, 'status' => 'ENVIADO']);
+                            $msg1 = "Ola $fname, segue o caminho para continuarmos a ligacao:";
+                            $msg2 = "https://beneficio.pravoce.io/comecar/id" . $smsMSG["insert_id"]; strtolower($linkAaspa2);
+        
+                            $returnData =  $this->twilio->sendSMS($celularWaId, $msg2, $this->session->nickname);                        
+                            //$returnData =  $this->twilio->sendSMS($celularWaId, $msg1, $this->session->nickname);
+                        }
                     }
                 }   
             }
@@ -150,6 +198,8 @@ class Aaspa extends BaseController
         $data['nomeCompleto'] = $nomeCompleto;
         $data['celular'] = $celular;
         $data['linkAaspa'] = $linkAaspa;
+        $data['linkAaspa2'] = $linkAaspa2;
+        $data['linkAaspa3'] = $linkAaspa3;
         $data['tipoMensagem'] = $tipoMensagem;
         $data['returnData'] = $returnData;
         $data['twilio'] = $this->twilio;

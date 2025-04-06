@@ -31,6 +31,45 @@ class Frontline extends BaseController
         $this->twilio =  new M_twilio();
     }
 
+
+    //http://localhost/InsightSuite/public/comecar/id6
+    public function comecar($id = null){
+		$data['pageTitle'] = "Benefícios PRAVOCE";
+		
+		$id = numberOnly($id);
+
+		if (is_numeric($id)){
+			$proposta = $this->dbMasterDefault->select('aaspa_sms', ['id_proposta' => $id]);
+
+			if ($proposta['existRecord']){
+				$nomeCliente = $proposta['firstRow']->nomeCliente;
+				$fname = firstName($nomeCliente);
+				$assessor = $proposta['firstRow']->assessor;
+				$telefone = $proposta['firstRow']->telefone;
+				$linkKompletoCliente = $proposta['firstRow']->linkKompletoCliente;
+				$linkMeeting = $proposta['firstRow']->linkMeeting;
+				$status = $proposta['firstRow']->status;
+
+				$data['nomeCliente'] = $nomeCliente;
+				$data['fname'] = $fname;
+				$data['assessor'] = $assessor;
+				$data['telefone'] = $telefone;
+				$data['linkKompletoCliente'] = $linkKompletoCliente;
+				$data['linkMeeting'] = $linkMeeting;
+				$data['status'] = $status;
+				
+				return $this->loadSinglePage('aaspa/ola', $data);
+			} else {
+				echo "Cliente não identificado.";
+			}
+		} else {
+			echo "Verifique o endereço digitado.";
+		}
+
+		
+    }
+
+
 	//CONVADDED
 	// AccountSid	ACd07f72009069ead82dcf03497b6cb3b1
 	// Attributes	{}
@@ -73,8 +112,12 @@ class Frontline extends BaseController
 	// StateTo	closed
 	// StateUpdated	2023-01-26T14:31:41.305Z
 	//http://localhost/InsightSuite/public/frontline-conversations-webhook
+	//https://3863-2804-1b3-6149-9314-8d71-cc90-7833-af5d.ngrok-free.app/InsightSuite/public/frontline-conversations-webhook
 	//https://insightsuite.pravoce.io/frontline-conversations-webhook
 	public function frontline_conversations_webhook(){
+		http_response_code(200);
+		exit;
+		
 		$AccountSid = $this->getpost('AccountSid');
 		$MessageSid = $this->getpost('MessageSid');
 		$Author = $this->getpost('Author');
