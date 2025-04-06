@@ -95,17 +95,24 @@ class WhatsApp extends BaseController
         }
 
         //listar conversas abertas para o usuario logado
-        $conversations = $this->m_whatsapp->getConversation(['atendenteId'=> $userId, 'status' => 'OPEN']);
+        $conversations = $this->m_whatsapp->getConversationTopMsg($userId);
 
+        //elege a primeira conversa com a selecionada caso nenhuma outra esteja marcada
         if ((empty($ConversationSid)) && (empty($search))){
             if ($conversations['existRecord']){
                 $messages = $this->m_whatsapp->getMessages(['ConversationSid' => $conversations['firstRow']->ConversationSid]);
                 $currentConversation = $this->m_whatsapp->getConversation(['ConversationSid' => $conversations['firstRow']->ConversationSid]);
             }
-        } 
+        }
 
+        //registra a conversa mais recente enviada ao cliente para monitorar e buscar números acima
+        $topConversation = $this->m_whatsapp->getTopConversation($userId);
+        $toptMessage = $this->m_whatsapp->getTopMessage((isset($currentConversation['firstRow']->ConversationSid)  ? $currentConversation['firstRow']->ConversationSid : 0));
+
+        
         $data['pageTitle'] = "WhatsApp Chat";
         $data['ConversationSid'] = $ConversationSid;
+        $data['toptMessage'] = $toptMessage;
         $data['conversations'] = $conversations;
         $data['messages'] = $messages;
         $data['currentConversation'] = $currentConversation;
@@ -265,20 +272,29 @@ class WhatsApp extends BaseController
         echo $result["message"]['messageId'] ?? $result["error"];
     }
 
-    //http://localhost/InsightSuite/public/whatsapp-listner/1
-    public function whatsapp_listner($atendenteId, $topConversation){
+    //http://localhost/InsightSuite/public/whatsapp-listner/1/1/6128123e-12e0-11f0-983b-fe427d5affb6/14
+    public function whatsapp_listner($atendenteId, $topConversation, $ConversationSid, $topMessage){
 
-        $sql = "SELECT id, ConversationSid, telefoneCliente, nomeCliente FROM whatsapp_conversations WHERE id > 1 AND status = 'OPEN' and atendenteId = 1;";
-
+        //todas novas conversas acima dos ids já buscados
+        $sql = "SELECT id, ConversationSid, telefoneCliente, nomeCliente FROM whatsapp_conversations WHERE id > $topConversation AND status = 'OPEN' and atendenteId = 1;";
         $incomingConversations = $this->dbMasterDefault->runQuery($sql);
 
-        $result = ['newConversations' => []];
-        
-        if ($incomingConversations['existRecord']){
-            $result = ['newConversations' => $incomingConversations["result"]->getResult()];
-        }
+        //listar conversas abertas para o usuario logado com o código da Mensagem mais atual existente
+        $incomingNewMessages = $this->m_whatsapp->getConversationTopMsgShort($atendenteId);
 
-        echo json_encode($result);
+        //todas novas mensagens acima dos ids já buscados para uma conversa
+        $sql = "select id, ConversationSid, Body, ProfileName, direction, l.Type, SmsStatus, l.To, l.From, l.error, last_updated from whatsapp_log l where ConversationSid = '$ConversationSid' and id > $topMessage order by id;";
+        $incomingMessageDetails = $this->dbMasterDefault->runQuery($sql);
+
+        $saidaConversas = ['newConversations' => []];
+        $saidaMensagens = ['newMessages' => []];
+        $saidaMensagensDetalhe = ['newMessageDetails' => []];
+        
+        if ($incomingConversations['existRecord']){$saidaConversas = ['newConversations' => $incomingConversations["result"]->getResult()];}
+        if ($incomingNewMessages['existRecord']){$saidaMensagens = ['newMessages' => $incomingNewMessages["result"]->getResult()];}
+        if ($incomingMessageDetails['existRecord']){$saidaMensagensDetalhe = ['newMessageDetails' => $incomingMessageDetails["result"]->getResult()];}
+
+        echo json_encode($saidaConversas + $saidaMensagens + $saidaMensagensDetalhe);
     }
         
 }

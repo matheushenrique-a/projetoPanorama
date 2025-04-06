@@ -216,6 +216,10 @@
 													<!--begin::Input-->
 													<input type="text" class="form-control form-control-solid px-15" name="search" value="<?php echo ($search == "CRM"  ? '' : $search);?>" placeholder="Digite dados cliente ou telefone" />
 													<!--end::Input-->
+													<div class="mb-0 mt-2 ms-2">
+														<span id="lblOnlineGreen" class="badge badge-success badge-circle w-10px h-10px me-1"></span>
+														<span class="fs-7 fw-bold text-muted" id="lblOnline">Online</span>
+													</div>
 												</form>
 												<!--end::Form-->
 											</div>
@@ -228,6 +232,7 @@
 
 													<?php 
 
+														//Cliente CRM
 														if (!empty($clientesCRM)) {
 															foreach ($clientesCRM["result"]->getResult() as $cliente){
 																$nome = $cliente->nome;
@@ -236,8 +241,12 @@
 																$id_proposta = $cliente->id_proposta;
 	
 																$url = assetfolder . 'whatsapp-chat?newConversation=' . $id_proposta;
-																echo chatList($nome, $celular, $data_criacao, $url, 'primary');
+																$type = "contact";
+																$recordId = $id_proposta;
+																echo chatList($type, $recordId, $nome, formatarTelefone($celular), time_elapsed_string($data_criacao), $url, 'primary');
 															}
+
+														//Conversas abertas
 														} else if (!empty($conversations)){
 															foreach ($conversations["result"]->getResult() as $conversation){
 																$nomeCliente = $conversation->nomeCliente;
@@ -247,6 +256,7 @@
 																$data_criacao = $conversation->data_criacao;
 																$atendenteId = $conversation->atendenteId;
 																$atendenteNome = $conversation->atendenteNome;
+																$topMsgId = $conversation->topMsgId;
 	
 																$url = assetfolder . 'whatsapp-chat?ConversationSid=' . $ConversationSid;
 
@@ -254,10 +264,13 @@
 																if ($ConversationSid == $currentConversation['firstRow']->ConversationSid) {$selectedLine = true;}
 
 																$params = [
-																	'selectedLine' => $selectedLine
+																	'selectedLine' => $selectedLine,
+																	'topMsgId' => $topMsgId
 																];
 
-																echo chatList($nomeCliente, formatarTelefone($telefoneCliente), time_elapsed_string($data_criacao), $url, 'success', $params);
+																$type = "conversation";
+																$recordId = $ConversationSid;
+																echo chatList($type, $recordId, $nomeCliente, formatarTelefone($telefoneCliente), time_elapsed_string($data_criacao), $url, 'success', $params);
 															}	
 														} 
 													 ?>
@@ -364,7 +377,7 @@
 											<!--begin::Card body-->
 											<div class="card-body" id="kt_chat_messenger_body">
 												<!--begin::Messages-->
-												<div class="scroll-y me-n5 pe-5 h-300px h-lg-auto" data-kt-element="messages" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#kt_header, #kt_toolbar, #kt_footer, #kt_chat_messenger_header, #kt_chat_messenger_footer" data-kt-scroll-wrappers="#kt_content, #kt_chat_messenger_body" data-kt-scroll-offset="5px">
+												<div class="scroll-y me-n5 pe-5 h-300px h-lg-auto" id="conv-<?php echo $currentConversation['firstRow']->ConversationSid ?? 0;?>" data-kt-element="messages" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#kt_header, #kt_toolbar, #kt_footer, #kt_chat_messenger_header, #kt_chat_messenger_footer" data-kt-scroll-wrappers="#kt_content, #kt_chat_messenger_body" data-kt-scroll-offset="5px">
 													
 													<?php 
 
@@ -381,46 +394,9 @@
 																$From = $conversation->From;
 																$last_updated = $conversation->last_updated;
 														
-																if ($direction == 'B2C'){
-													;?>
-
-													<!--begin::Message(CLIENTE)-->
-													<div class="d-flex justify-content-start mb-10">
-														<div class="d-flex flex-column align-items-start">
-															<div class="d-flex align-items-center mb-2">
-																<div class="symbol symbol-35px symbol-circle">
-																	<img alt="Pic" src="assets/media/avatars/300-25.jpg" />
-																</div>
-																<div class="ms-3">
-																	<a href="#" class="fs-5 fw-bolder text-gray-900 text-hover-primary me-1">Você</a>
-																	<span class="text-muted fs-7 mb-1"><?php echo time_elapsed_string($last_updated);?></span>
-																</div>
-															</div>
-															<div class="p-5 rounded bg-light-info text-dark fw-bold mw-lg-400px text-start" data-kt-element="message-text"><?php echo $Body;?></div>
-														</div>
-													</div>
-													<!--end::Message(in)-->
-
-													<?php } else { ?>
-													
-													<!--begin::Message(CHATBOT)-->
-													<div class="d-flex justify-content-end mb-10">
-														<div class="d-flex flex-column align-items-end">
-															<div class="d-flex align-items-center mb-2">
-																<div class="me-3">
-																	<span class="text-muted fs-7 mb-1"><?php echo time_elapsed_string($last_updated);?></span>
-																	<a href="#" class="fs-5 fw-bolder text-gray-900 text-hover-primary ms-1"><?php echo ($ProfileName);?></a>
-																</div>
-																<div class="symbol symbol-35px symbol-circle">
-																	<img alt="Pic" src="assets/media/avatars/300-1.jpg" />
-																</div>
-															</div>
-															<div class="p-5 rounded bg-light-primary text-dark fw-bold mw-lg-400px text-end" data-kt-element="message-text"><?php echo $Body;?></div>
-														</div>
-													</div>
-													<!--end::Message(out)-->
-
-													<?php }}} ?>
+																echo chatMessageHTML($direction, $last_updated, $Body, $ProfileName = 'Chatbot');
+															}
+														} ?>
 													
 												</div>
 												<!--end::Messages-->
@@ -432,6 +408,7 @@
 												<form class="w-100 position-relative" method="post" action="<?php echo assetfolder;?>whatsapp-chat" autocomplete="off">
 													<input type="hidden" name="currentConversationSid" value="<?php echo $currentConversation['firstRow']->ConversationSid ?? ''; ?>">
 													<input type="hidden" name="topConversation" id="topConversation" value="<?php echo $topConversation;?>">
+													<input type="hidden" name="toptMessage" id="toptMessage" value="<?php echo $toptMessage;?>">
 													<textarea class="form-control form-control-flush mb-3" rows="1" data-kt-element="input" placeholder="Digite sua mensagem" name="messageToSend"></textarea>
 													<!--end::Input-->
 													<!--begin:Toolbar-->
@@ -1790,36 +1767,70 @@
 					<script>
 
 						window.addEventListener('load', function () {
-							//const intervalListner = setInterval(() => {checkStatus();}, 3000);
-							checkStatus();
+							const intervalListner = setInterval(() => {checkStatus();}, 4000);
+							//checkStatus();
 						});
 
 						function checkStatus(){
 							const inputTopConversation = document.getElementById('topConversation');
+							const inputTopMessage = document.getElementById('toptMessage');
+							
 							const topConversation = inputTopConversation.value;
+							const topMessage = inputTopMessage.value;
+							console.log(topMessage);
 							let topConversationNew = 0;
 
-							fetch('<?php echo assetfolder;?>whatsapp-listner/<?php echo $session->userId;?>/' + topConversation, {method: "GET", cache: "no-cache"})
+							const lblOnlineGreen = document.getElementById("lblOnlineGreen"); 
+							lblOnlineGreen.classList.remove('badge-success');
+							lblOnlineGreen.classList.add('badge-warning');
+
+							urlFetch = '<?php echo assetfolder;?>whatsapp-listner/<?php echo $session->userId;?>/' + topConversation +'/<?php echo $currentConversation['firstRow']->ConversationSid ?? 0;?>/' + topMessage;
+							//console.log(urlFetch);
+							fetch(urlFetch, {method: "GET", cache: "no-cache"})
 							.then(response => {
 								if (!response.ok) {throw new Error('HTTP error! Status: ${response.status}');}
 								return response.json();
 							}) .then(data => {
-								if (data.hasOwnProperty('newConversations')) {
-									
-									data.newConversations.forEach((conversation, index) => {
-										console.log(`--- Conversa ${index + 1} ---`);
-										console.log(`ID: ${conversation.id}`);
-										console.log(`ConversationSid: ${conversation.ConversationSid}`);
-										console.log(`Telefone do Cliente: ${conversation.telefoneCliente}`);
-										console.log(`Nome do Cliente: ${conversation.nomeCliente}`);
+								lblOnlineGreen.classList.remove('badge-warning');
+								lblOnlineGreen.classList.add('badge-success');
 
+								if (data.hasOwnProperty('newConversations')) {
+									//adiciona cada nova conversa recebida a lista
+									data.newConversations.forEach((conversation, index) => {
 										if (conversation.id > topConversationNew) {topConversationNew = conversation.id;}
 										addToChatList(conversation.nomeCliente, conversation.telefoneCliente, 'agora pouco', '<?php echo assetfolder . 'whatsapp-chat?ConversationSid='; ?>' + conversation.ConversationSid, 'warning', {selectedLine: false});
 									});
 									if (topConversationNew > topConversation) {inputTopConversation.value = topConversationNew;}
 								
 								}
+								if (data.hasOwnProperty('newMessages')) {
+									//adiciona cada nova conversa recebida a lista
+									data.newMessages.forEach((message, index) => {
+										let objConversation = document.getElementById('topmsg-' + message.ConversationSid);
+										if (objConversation) {
+											//console.log('Hidden: ' +  objConversation.value + ' - API: ' + (message.topMsgId ?? 0));
+											if (objConversation.value < (message.topMsgId ?? 0)){
+												document.getElementById('bullet-' + message.ConversationSid).style.display = 'block';
+											}
+										}
+										//console.log(message.ConversationSid);
+										//console.log(message.topMsgId);
+									});
+								}
+								
+								if (data.hasOwnProperty('newMessageDetails')) {
+									//adiciona cada nova conversa recebida a lista
+									let objMessage = document.getElementById('conv-<?php echo $currentConversation['firstRow']->ConversationSid ?? 0;?>');
+									data.newMessageDetails.forEach((messageDetail, index) => {
+										//console.log(messageDetail.id);
+										addToMessageList(messageDetail.direction, messageDetail.last_updated, messageDetail.Body, messageDetail.ProfileName, objMessage);
+										//console.log('check: ' + messageDetail.id);
+										if (topMessage < (messageDetail.id)){inputTopMessage.value = messageDetail.id;}
+									});
+								}
 							}) .catch(error => {
+								lblOnlineGreen.classList.remove('badge-warning');
+								lblOnlineGreen.classList.add('badge-danger');
 								console.log('Fetch Error: ' + error.message);
 							});
 						}
@@ -1859,6 +1870,53 @@
 							} else {
 								console.warn('Elemento com id "listConversations" não encontrado.');
 							}
+						}
+
+						function addToMessageList(direction, last_updated, body, profileName, objMessage) {
+							const timeAgo = (last_updated); // Precisa de implementação ou lib
+
+							let html = '';
+
+							if (direction === 'B2C') {
+								html = `
+								<!--begin::Message(CLIENTE)-->
+								<div class="d-flex justify-content-start mb-10">
+									<div class="d-flex flex-column align-items-start">
+										<div class="d-flex align-items-center mb-2">
+											<div class="symbol symbol-35px symbol-circle">
+												<img alt="Pic" src="assets/media/avatars/300-25.jpg" />
+											</div>
+											<div class="ms-3">
+												<a href="#" class="fs-5 fw-bolder text-gray-900 text-hover-primary me-1">Você</a>
+												<span class="text-muted fs-7 mb-1">${timeAgo}</span>
+											</div>
+										</div>
+										<div class="p-5 rounded bg-light-info text-dark fw-bold mw-lg-400px text-start" data-kt-element="message-text">${body}</div>
+									</div>
+								</div>
+								<!--end::Message(in)-->`;
+							} else {
+								html = `
+								<!--begin::Message(CHATBOT)-->
+								<div class="d-flex justify-content-end mb-10">
+									<div class="d-flex flex-column align-items-end">
+										<div class="d-flex align-items-center mb-2">
+											<div class="me-3">
+												<span class="text-muted fs-7 mb-1">${timeAgo}</span>
+												<a href="#" class="fs-5 fw-bolder text-gray-900 text-hover-primary ms-1">${profileName}</a>
+											</div>
+											<div class="symbol symbol-35px symbol-circle">
+												<img alt="Pic" src="assets/media/avatars/300-1.jpg" />
+											</div>
+										</div>
+										<div class="p-5 rounded bg-light-primary text-dark fw-bold mw-lg-400px text-end" data-kt-element="message-text">${body}</div>
+									</div>
+								</div>
+								<!--end::Message(out)-->`;
+							}
+
+							objMessage.insertAdjacentHTML('beforeend', html);
+							objMessage.scrollTop = objMessage.scrollHeight;
 						}
 
 					</script>	

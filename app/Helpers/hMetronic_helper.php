@@ -1,16 +1,63 @@
 <?php 
 
-function chatList($titulo, $subtitulo, $sideLable, $url, $color, $params = []){
+function chatMessageHTML($direction, $last_updated, $Body, $ProfileName = 'Chatbot') {
+    if ($direction === 'B2C') {
+        return '
+        <!--begin::Message(CLIENTE)-->
+        <div class="d-flex justify-content-start mb-10">
+            <div class="d-flex flex-column align-items-start">
+                <div class="d-flex align-items-center mb-2">
+                    <div class="symbol symbol-35px symbol-circle">
+                        <img alt="Pic" src="assets/media/avatars/300-25.jpg" />
+                    </div>
+                    <div class="ms-3">
+                        <a href="#" class="fs-5 fw-bolder text-gray-900 text-hover-primary me-1">Você</a>
+                        <span class="text-muted fs-7 mb-1">' . time_elapsed_string($last_updated) . '</span>
+                    </div>
+                </div>
+                <div class="p-5 rounded bg-light-info text-dark fw-bold mw-lg-400px text-start" data-kt-element="message-text">' . htmlspecialchars($Body) . '</div>
+            </div>
+        </div>
+        <!--end::Message(in)-->';
+    } else {
+        return '
+        <!--begin::Message(CHATBOT)-->
+        <div class="d-flex justify-content-end mb-10">
+            <div class="d-flex flex-column align-items-end">
+                <div class="d-flex align-items-center mb-2">
+                    <div class="me-3">
+                        <span class="text-muted fs-7 mb-1">' . time_elapsed_string($last_updated) . '</span>
+                        <a href="#" class="fs-5 fw-bolder text-gray-900 text-hover-primary ms-1">' . htmlspecialchars($ProfileName) . '</a>
+                    </div>
+                    <div class="symbol symbol-35px symbol-circle">
+                        <img alt="Pic" src="assets/media/avatars/300-1.jpg" />
+                    </div>
+                </div>
+                <div class="p-5 rounded bg-light-primary text-dark fw-bold mw-lg-400px text-end" data-kt-element="message-text">' . htmlspecialchars($Body) . '</div>
+            </div>
+        </div>
+        <!--end::Message(out)-->';
+    }
+}
+
+function chatList($type, $recordId, $titulo, $subtitulo, $sideLable, $url, $color, $params = []){
 
     $selectedLine = $params['selectedLine'] ?? false;
+    $topMsgId = $params['topMsgId'] ?? 0;
+
+    $identity = '';
+    if ($type == 'conversation'){
+        $identity = '<input type="hidden" id="topmsg-' . $recordId . '" value="' . $topMsgId . '">';
+    }
 
     $output = '<!--begin::User-->
             <div class="d-flex flex-stack py-4 bg-hover-light-dark ' . ($selectedLine  ? 'bg-light-success' : '') . ' border-bottom" >
                 <div class="d-flex align-items-center ">
                     <div class="symbol symbol-45px symbol-circle ms-2" >
                         <span class="symbol-label bg-light-' . $color . ' text-' . $color . ' fs-6 fw-bolder">' . substr($titulo, 0, 1) . '</span>
-                        <div class="symbol-badge bg-danger start-100 top-100 border-4 h-15px w-15px ms-n2 mt-n2" style="display: ' . ($selectedLine  ? 'block' : 'none')  . '"></div>
+                        <div id="bullet-' . $recordId . '" class="symbol-badge bg-danger start-100 top-100 border-4 h-15px w-15px ms-n2 mt-n2" style="display: none"></div>
                     </div>
+                    ' . $identity . '
                     <div class="ms-5">
                         <a href="'  . $url . '" class="fs-5 fw-bolder text-gray-900 text-hover-primary mb-2">' . $titulo . '</a>
                         <div class="fw-bold text-muted">' . $subtitulo . '</div>

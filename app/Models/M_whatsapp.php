@@ -138,16 +138,49 @@ class m_whatsapp extends Model {
 	}
 
 	public function getConversation($filter){
+		$this->dbMasterDefault->setOrderBy(array("data_criacao", "DESC"));
 		return $this->dbMasterDefault->select('whatsapp_conversations', $filter);
+	}
+
+	public function getConversationTopMsg($userId){
+		$sql = "select c.id, c.ConversationSid, c.atendenteId, c.atendenteNome, c.telefoneCliente, c.nomeCliente, c.last_updated, c.data_criacao, MAX(l.id) topMsgId 
+				FROM whatsapp_conversations c LEFT JOIN whatsapp_log l 
+				ON c.ConversationSid = l.ConversationSid
+				WHERE c.atendenteId = $userId AND status = 'OPEN'
+				GROUP BY c.id, c.ConversationSid, c.atendenteId, c.atendenteNome, c.telefoneCliente, c.nomeCliente, c.last_updated, c.data_criacao;";
+	
+		return $this->dbMasterDefault->runQuery($sql);
+	}
+
+	public function getConversationTopMsgShort($userId){
+		$sql = "select c.ConversationSid, MAX(l.id) topMsgId 
+				FROM whatsapp_conversations c LEFT JOIN whatsapp_log l 
+				ON c.ConversationSid = l.ConversationSid
+				WHERE c.atendenteId = $userId AND status = 'OPEN'
+				GROUP BY c.ConversationSid;";
+	
+		return $this->dbMasterDefault->runQuery($sql);
 	}
 
 	public function getTopConversation($userId){
 		$sql = "SELECT id FROM whatsapp_conversations WHERE status = 'OPEN' and atendenteId = $userId ORDER BY id DESC LIMIT 1;";
-
-        $topConversation = $this->dbMasterDefault->runQuery($sql);
+	
+		$topConversation = $this->dbMasterDefault->runQuery($sql);
 
         if ($topConversation['existRecord']){
 			return $topConversation['firstRow']->id;
+        } else {
+			return 0;
+		}
+	}
+
+	public function getTopMessage($ConversationSid){
+		$sql = "SELECT id FROM whatsapp_log WHERE ConversationSid = '$ConversationSid' ORDER BY id DESC LIMIT 1;";
+	
+		$topMessage = $this->dbMasterDefault->runQuery($sql);
+
+        if ($topMessage['existRecord']){
+			return $topMessage['firstRow']->id;
         } else {
 			return 0;
 		}
@@ -159,6 +192,8 @@ class m_whatsapp extends Model {
 
 	public function createConversation($data){
 		$added = $this->dbMasterDefault->insert('whatsapp_conversations', $data);
+
+		$this->dbMasterDefault->setOrderBy(null);
 		$conversation = $this->dbMasterDefault->select('whatsapp_conversations', ['id' => $added["insert_id"]]);
 		return $conversation;
 	}
@@ -169,6 +204,7 @@ class m_whatsapp extends Model {
 	}
 
 	public function getMessages($filter){
+		$this->dbMasterDefault->setOrderBy(null);
 		return $this->dbMasterDefault->select('whatsapp_log', $filter);
 	}
 
