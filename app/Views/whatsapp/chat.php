@@ -377,7 +377,7 @@
 											<!--begin::Card body-->
 											<div class="card-body" id="kt_chat_messenger_body">
 												<!--begin::Messages-->
-												<div class="scroll-y me-n5 pe-5 h-300px h-lg-auto" id="conv-<?php echo $currentConversation['firstRow']->ConversationSid ?? 0;?>" data-kt-element="messages" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#kt_header, #kt_toolbar, #kt_footer, #kt_chat_messenger_header, #kt_chat_messenger_footer" data-kt-scroll-wrappers="#kt_content, #kt_chat_messenger_body" data-kt-scroll-offset="5px">
+												<div class="scroll-y me-n5 pe-5 h-300px " id="conversationPanel" data-kt-element="messages" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#kt_header, #kt_toolbar, #kt_footer, #kt_chat_messenger_header, #kt_chat_messenger_footer" data-kt-scroll-wrappers="#kt_content, #kt_chat_messenger_body" data-kt-scroll-offset="5px">
 													
 													<?php 
 
@@ -409,7 +409,7 @@
 													<input type="hidden" name="currentConversationSid" value="<?php echo $currentConversation['firstRow']->ConversationSid ?? ''; ?>">
 													<input type="hidden" name="topConversation" id="topConversation" value="<?php echo $topConversation;?>">
 													<input type="hidden" name="toptMessage" id="toptMessage" value="<?php echo $toptMessage;?>">
-													<textarea class="form-control form-control-flush mb-3" rows="1" data-kt-element="input" placeholder="Digite sua mensagem" name="messageToSend"></textarea>
+													<textarea class="form-control form-control-flush mb-3" rows="1" data-kt-element="input" placeholder="Digite sua mensagem" name="messageToSend"  id="messageToSend" onkeydown="if(event.key === 'Enter'){ event.preventDefault(); this.form.submit(); }"></textarea>
 													<!--end::Input-->
 													<!--begin:Toolbar-->
 													<div class="d-flex flex-stack">
@@ -1768,7 +1768,12 @@
 
 						window.addEventListener('load', function () {
 							const intervalListner = setInterval(() => {checkStatus();}, 4000);
-							//checkStatus();
+							conversationPanel = document.getElementById('conversationPanel');
+							conversationPanel.scrollTop = conversationPanel.scrollHeight;
+							const input = document.getElementById('messageToSend');
+							if (input) {
+								input.focus();
+							}
 						});
 
 						function checkStatus(){
@@ -1820,7 +1825,7 @@
 								
 								if (data.hasOwnProperty('newMessageDetails')) {
 									//adiciona cada nova conversa recebida a lista
-									let objMessage = document.getElementById('conv-<?php echo $currentConversation['firstRow']->ConversationSid ?? 0;?>');
+									let objMessage = document.getElementById('conversationPanel');
 									data.newMessageDetails.forEach((messageDetail, index) => {
 										//console.log(messageDetail.id);
 										addToMessageList(messageDetail.direction, messageDetail.last_updated, messageDetail.Body, messageDetail.ProfileName, objMessage);

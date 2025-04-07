@@ -5,7 +5,7 @@ namespace App\Libraries;
 class dbMaster {
 	protected $db;
 	protected $orderby;
-	protected $limit = 50;
+	protected $limit = 250;
 
 	public function setOrderBy($value) {$this->orderby = $value;}
 	public function getOrderBy() {return $this->orderby;}

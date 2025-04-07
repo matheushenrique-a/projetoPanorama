@@ -83,7 +83,7 @@ class WhatsApp extends BaseController
             $this->m_whatsapp->deleteConversation(['conversationSid' => $closeConversation], ['status' => 'CLOSED']);
 
         //envia uma nova mensagem após pressionar o botão Enviar
-        } else if (!empty($btnSendMsg) && !empty($messageToSend)) {
+        } else if (!empty($btnSendMsg) or !empty($messageToSend)) {
             
             $conversation = $this->m_whatsapp->getConversation(['ConversationSid' => $currentConversationSid]);
             if ($conversation['existRecord']){
