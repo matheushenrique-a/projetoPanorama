@@ -117,23 +117,22 @@
 		return "($ddd)$parte1-$parte2";
 	}
 
-
-
 	function traduzirStatusTwilio($status) {
 		$status = strtoupper($status);
 
 		// Mapeamento de status em inglês para português e cor correspondente
 		$statusMap = [
-			"MESSAGE CREATED" => ["criada", "warning"],
-			"ENQUEUED" => ["na fila", "warning"],
-			"DEQUEUED" => ["na fila", "warning"],
-			"SENT" => ["a caminho", "warning"],
-			"DELIVERED" => ["entregue", "success"],
-			"RECEIVED" => ["recebida", "success"],
-			"SENDING" => ["enviando", "warning"],
-			"READ" => ["vista", "success"],
-			"UNDELIVERED" => ["falha", "danger"],
-			"GRAVADA" => ["gravada", "success"],
+			"MESSAGE CREATED" => ["Criada", "warning"],
+			"ENQUEUED" => ["Na fila", "warning"],
+			"DEQUEUED" => ["Na fila", "warning"],
+			"SENT" => ["A caminho", "warning"],
+			"DELIVERED" => ["Entregue", "success"],
+			"RECEIVED" => ["Recebida", "success"],
+			"SENDING" => ["Enviando", "warning"],
+			"READ" => ["Lida", "success"],
+			"UNDELIVERED" => ["Falha", "danger"],
+			"GRAVADA" => ["Gravada", "success"],
+			"ACCEPTED" => ["Enviada", "success"],
 		];
  
 		// Retorna um array contendo a mensagem e a cor, ou um padrão caso não exista

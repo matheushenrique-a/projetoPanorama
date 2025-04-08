@@ -383,6 +383,7 @@
 
 														if (!empty($messages)){
 															foreach ($messages["result"]->getResult() as $conversation){
+																$id = $conversation->id;
 																$MessageSid = $conversation->MessageSid;
 																$ConversationSid = $conversation->ConversationSid;
 																$Body = $conversation->Body;
@@ -394,7 +395,7 @@
 																$From = $conversation->From;
 																$last_updated = $conversation->last_updated;
 														
-																echo chatMessageHTML($direction, $last_updated, $Body, $ProfileName = 'Chatbot');
+																echo chatMessageHTML($id, $direction, $last_updated, $Body, $SmsStatus, $ProfileName);
 															}
 														} ?>
 													
@@ -406,10 +407,10 @@
 											<div class="card-footer pt-4" id="kt_chat_messenger_footer">
 												<!--begin::Input-->
 												<form class="w-100 position-relative" method="post" action="<?php echo assetfolder;?>whatsapp-chat" autocomplete="off">
-													<input type="hidden" name="currentConversationSid" value="<?php echo $currentConversation['firstRow']->ConversationSid ?? ''; ?>">
+													<input type="hidden" name="currentConversationSid" id="currentConversationSid" value="<?php echo $currentConversation['firstRow']->ConversationSid ?? ''; ?>">
 													<input type="hidden" name="topConversation" id="topConversation" value="<?php echo $topConversation;?>">
 													<input type="hidden" name="toptMessage" id="toptMessage" value="<?php echo $toptMessage;?>">
-													<textarea class="form-control form-control-flush mb-3" rows="1" data-kt-element="input" placeholder="Digite sua mensagem" name="messageToSend"  id="messageToSend" onkeydown="if(event.key === 'Enter'){ event.preventDefault(); this.form.submit(); }"></textarea>
+													<textarea class="form-control form-control-flush mb-3" rows="1" data-kt-element="input" placeholder="Digite sua mensagem" name="messageToSend"  id="messageToSend" onkeydown="if(event.key === 'Enter'){ sendWhatsApp(); }"></textarea>
 													<!--end::Input-->
 													<!--begin:Toolbar-->
 													<div class="d-flex flex-stack">
@@ -424,7 +425,7 @@
 														</div>
 														<!--end::Actions-->
 														<!--begin::Send-->
-														<button class="btn btn-primary" type="submit" value="sendMsg" name="btnSendMsg" data-kt-element="send">Enviar</button>
+														<button class="btn btn-primary" type="button" value="sendMsg" name="btnSendMsg" id="btnSendMsg" onclick="sendWhatsApp();">Enviar</button>
 														<!--end::Send-->
 													</div>
 												</form>
@@ -1768,12 +1769,11 @@
 
 						window.addEventListener('load', function () {
 							const intervalListner = setInterval(() => {checkStatus();}, 4000);
-							conversationPanel = document.getElementById('conversationPanel');
-							conversationPanel.scrollTop = conversationPanel.scrollHeight;
+
+							scrollToBottom();
+							//cursor na caixa de mensagem
 							const input = document.getElementById('messageToSend');
-							if (input) {
-								input.focus();
-							}
+							if (input) {input.focus();}
 						});
 
 						function checkStatus(){
@@ -1782,7 +1782,7 @@
 							
 							const topConversation = inputTopConversation.value;
 							const topMessage = inputTopMessage.value;
-							console.log(topMessage);
+							//console.log(topMessage);
 							let topConversationNew = 0;
 
 							const lblOnlineGreen = document.getElementById("lblOnlineGreen"); 
@@ -1799,6 +1799,7 @@
 								lblOnlineGreen.classList.remove('badge-warning');
 								lblOnlineGreen.classList.add('badge-success');
 
+								//novas conversas recebidas
 								if (data.hasOwnProperty('newConversations')) {
 									//adiciona cada nova conversa recebida a lista
 									data.newConversations.forEach((conversation, index) => {
@@ -1808,6 +1809,8 @@
 									if (topConversationNew > topConversation) {inputTopConversation.value = topConversationNew;}
 								
 								}
+
+								//bullet vermelho de nova mensagem
 								if (data.hasOwnProperty('newMessages')) {
 									//adiciona cada nova conversa recebida a lista
 									data.newMessages.forEach((message, index) => {
@@ -1823,17 +1826,77 @@
 									});
 								}
 								
+								//novas mensagens da conversa corrente
 								if (data.hasOwnProperty('newMessageDetails')) {
 									//adiciona cada nova conversa recebida a lista
-									let objMessage = document.getElementById('conversationPanel');
 									data.newMessageDetails.forEach((messageDetail, index) => {
-										//console.log(messageDetail.id);
-										addToMessageList(messageDetail.direction, messageDetail.last_updated, messageDetail.Body, messageDetail.ProfileName, objMessage);
+										if (!document.getElementById('msgBlock-' + messageDetail.id)) {
+											console.log('Not found element msgBlock-' + messageDetail.id);
+											addToMessageList(messageDetail.id, messageDetail.direction, messageDetail.last_updated, messageDetail.Body, messageDetail.ProfileName);
+										} else {
+											console.log('Found element msgBlock-' + messageDetail.id);
+
+										}
 										//console.log('check: ' + messageDetail.id);
 										if (topMessage < (messageDetail.id)){inputTopMessage.value = messageDetail.id;}
 									});
 								}
 							}) .catch(error => {
+								lblOnlineGreen.classList.remove('badge-warning');
+								lblOnlineGreen.classList.add('badge-danger');
+								console.log('Fetch Error: ' + error.message);
+							});
+						}
+
+						function scrollToBottom(){
+							//scroll para o fim da conversa
+							conversationPanel = document.getElementById('conversationPanel');
+							conversationPanel.scrollTop = conversationPanel.scrollHeight;
+						}
+
+						function sendWhatsApp(){
+							const currentConversationSid = document.getElementById('currentConversationSid').value;
+							const messageToSendText = document.getElementById('messageToSend');
+							const btnSendMsg = document.getElementById('btnSendMsg');
+
+							const urlFetch = '<?php echo rootURL; ?>whatsapp-direct';
+
+							btnSendMsg
+							addToMessageList("000", "B2C", "agora", "Enviando...", "INSIGHT");
+							scrollToBottom();
+
+							fetch(urlFetch, {
+								method: "POST",
+								headers: {
+									"Content-Type": "application/json"
+								},
+								cache: "no-cache",
+								body: JSON.stringify({
+									conversationSid: currentConversationSid,
+									message: messageToSendText.value
+								})
+							})
+							.then(response => {
+								if (!response.ok) {throw new Error(`HTTP error! Status: ${response.status}`);}
+								return response.json();
+							})
+							.then(data => {
+								lblOnlineGreen.classList.remove('badge-warning');
+								lblOnlineGreen.classList.add('badge-success');
+
+								if (data.sucesso){
+									const tmpSending = document.getElementById('msgBlock-000');
+									tmpSending.style.display = 'none';
+
+									const elementEnviando = document.getElementById('msgBlock-000');
+									if (elementEnviando) {elementEnviando.remove();}
+									messageToSendText.value = "";
+									document.getElementById('messageToSend').focus();
+
+									addToMessageList(data.id, data.direction, data.last_updated, data.Body, data.ProfileName);
+								}
+							})
+							.catch(error => {
 								lblOnlineGreen.classList.remove('badge-warning');
 								lblOnlineGreen.classList.add('badge-danger');
 								console.log('Fetch Error: ' + error.message);
@@ -1877,33 +1940,34 @@
 							}
 						}
 
-						function addToMessageList(direction, last_updated, body, profileName, objMessage) {
+						function addToMessageList(id, direction, last_updated, body, profileName) {
 							const timeAgo = (last_updated); // Precisa de implementação ou lib
+							let objMessage = document.getElementById('conversationPanel');
 
 							let html = '';
 
 							if (direction === 'B2C') {
 								html = `
 								<!--begin::Message(CLIENTE)-->
-								<div class="d-flex justify-content-start mb-10">
+								<div class="d-flex justify-content-start mb-10" id="msgBlock-${id}">
 									<div class="d-flex flex-column align-items-start">
 										<div class="d-flex align-items-center mb-2">
 											<div class="symbol symbol-35px symbol-circle">
-												<img alt="Pic" src="assets/media/avatars/300-25.jpg" />
+												<img alt="Pic" src="assets/media/avatars/blank.png" />
 											</div>
 											<div class="ms-3">
 												<a href="#" class="fs-5 fw-bolder text-gray-900 text-hover-primary me-1">Você</a>
 												<span class="text-muted fs-7 mb-1">${timeAgo}</span>
 											</div>
 										</div>
-										<div class="p-5 rounded bg-light-info text-dark fw-bold mw-lg-400px text-start" data-kt-element="message-text">${body}</div>
+										<div class="p-5 rounded bg-light-info text-dark fw-bold mw-lg-400px text-start" data-kt-element="message-text" id="msgBody-${id}" >${body}</div>
 									</div>
 								</div>
 								<!--end::Message(in)-->`;
 							} else {
 								html = `
 								<!--begin::Message(CHATBOT)-->
-								<div class="d-flex justify-content-end mb-10">
+								<div class="d-flex justify-content-end mb-10" id="msgBlock-${id}">
 									<div class="d-flex flex-column align-items-end">
 										<div class="d-flex align-items-center mb-2">
 											<div class="me-3">
@@ -1911,17 +1975,17 @@
 												<a href="#" class="fs-5 fw-bolder text-gray-900 text-hover-primary ms-1">${profileName}</a>
 											</div>
 											<div class="symbol symbol-35px symbol-circle">
-												<img alt="Pic" src="assets/media/avatars/300-1.jpg" />
+												<img alt="Pic" src="assets/media/avatars/blank.png" />
 											</div>
 										</div>
-										<div class="p-5 rounded bg-light-primary text-dark fw-bold mw-lg-400px text-end" data-kt-element="message-text">${body}</div>
+										<div class="p-5 rounded bg-light-primary text-dark fw-bold mw-lg-400px text-end" data-kt-element="message-text" id="msgBody-${id}" >${body}</div>
 									</div>
 								</div>
 								<!--end::Message(out)-->`;
 							}
 
 							objMessage.insertAdjacentHTML('beforeend', html);
-							objMessage.scrollTop = objMessage.scrollHeight;
+							scrollToBottom()
 						}
 
 					</script>	

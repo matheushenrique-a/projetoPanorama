@@ -1,28 +1,31 @@
 <?php 
 
-function chatMessageHTML($direction, $last_updated, $Body, $ProfileName = 'Chatbot') {
+function chatMessageHTML($id, $direction, $last_updated, $Body, $SmsStatus, $ProfileName) {
     if ($direction === 'B2C') {
         return '
         <!--begin::Message(CLIENTE)-->
-        <div class="d-flex justify-content-start mb-10">
+        <div class="d-flex justify-content-start mb-10" id="msgBlock-'.  $id . '">
             <div class="d-flex flex-column align-items-start">
                 <div class="d-flex align-items-center mb-2">
                     <div class="symbol symbol-35px symbol-circle">
-                        <img alt="Pic" src="assets/media/avatars/300-25.jpg" />
+                        <img alt="Pic" src="assets/media/avatars/blank.png" />
                     </div>
                     <div class="ms-3">
                         <a href="#" class="fs-5 fw-bolder text-gray-900 text-hover-primary me-1">Você</a>
                         <span class="text-muted fs-7 mb-1">' . time_elapsed_string($last_updated) . '</span>
                     </div>
                 </div>
-                <div class="p-5 rounded bg-light-info text-dark fw-bold mw-lg-400px text-start" data-kt-element="message-text">' . htmlspecialchars($Body) . '</div>
+                <div class="p-5 rounded bg-light-info text-dark fw-bold mw-lg-400px text-start" data-kt-element="message-text" id="msgBody-'.  $id . '">' . htmlspecialchars($Body) . '</div>
+                <div class="ms-1">
+                        <span class="text-muted fs-7 mb-1 ms-0 ps-0" id="msg-'.  $id . '">' . traduzirStatusTwilio($SmsStatus)[0] . '</span>
+                    </div>
             </div>
         </div>
         <!--end::Message(in)-->';
     } else {
         return '
-        <!--begin::Message(CHATBOT)-->
-        <div class="d-flex justify-content-end mb-10">
+        <!--begin::Message(Cliente)-->
+        <div class="d-flex justify-content-end mb-10" id="msgBlock-'.  $id . '">
             <div class="d-flex flex-column align-items-end">
                 <div class="d-flex align-items-center mb-2">
                     <div class="me-3">
@@ -30,10 +33,10 @@ function chatMessageHTML($direction, $last_updated, $Body, $ProfileName = 'Chatb
                         <a href="#" class="fs-5 fw-bolder text-gray-900 text-hover-primary ms-1">' . htmlspecialchars($ProfileName) . '</a>
                     </div>
                     <div class="symbol symbol-35px symbol-circle">
-                        <img alt="Pic" src="assets/media/avatars/300-1.jpg" />
+                        <img alt="Pic" src="assets/media/avatars/blank.png" />
                     </div>
                 </div>
-                <div class="p-5 rounded bg-light-primary text-dark fw-bold mw-lg-400px text-end" data-kt-element="message-text">' . htmlspecialchars($Body) . '</div>
+                <div class="p-5 rounded bg-light-primary text-dark fw-bold mw-lg-400px text-end" data-kt-element="message-text" id="msgBody-'.  $id . '">' . htmlspecialchars($Body) . '</div>
             </div>
         </div>
         <!--end::Message(out)-->';

@@ -34,7 +34,7 @@ class m_twilio extends Model {
 		$this->dbMasterDefault->insert('record_log',['log' => "SMS Enviado $telefone - $mensagem"]);
 
 		try {
-			$message = $twilio->messages->create("+" . $telefone, ["body" => $mensagem, "from" => "+13393300703", "statusCallback" => rootURL . "frontline-conversations-webhook"]);
+			$message = $twilio->messages->create("+" . $telefone, ["body" => $mensagem, "from" => "+" . fromWhatsAppSMS, "statusCallback" => rootURL . "frontline-conversations-webhook"]);
 			//echo '09:11:00 - <h3>Dump 42 </h3> <br><br>' . var_dump($message); exit;					//<-------DEBUG
 
 			// Suponha que $message seja o objeto retornado pelo Twilio
@@ -67,7 +67,7 @@ class m_twilio extends Model {
 		$returnData["raw"] = $message;
 
 		//Registra conversa no histórico
-		$data = (array('MessageSid' => $messageSid, 'Type' => 'SMS', 'ProfileName' => $author, 'Body' => $mensagem, 'SmsStatus' => 'Gravada', 'To' => normalizePhone(numberOnly($telefone)), 'WaId' => normalizePhone(fromWhatsApp), 'From' => normalizePhone(fromWhatsApp)));
+		$data = (array('MessageSid' => $messageSid, 'Type' => 'SMS', 'ProfileName' => $author, 'Body' => $mensagem, 'SmsStatus' => 'Gravada', 'To' => normalizePhone(numberOnly($telefone)), 'WaId' => fromWhatsAppSMS, 'From' => fromWhatsAppSMS));
 		$result = $this->dbMasterDefault->insert('whatsapp_log', $data);
 
 		return $returnData;
@@ -146,7 +146,7 @@ class m_twilio extends Model {
 			//echo $returnData["mensagem"];exit;
 			
 			//Registra conversa no histórico
-			$data = (array('MessageSid' => $messageSid, 'Type' => 'WHATSAPP', 'ProfileName' => 'INSIGHT', 'Body' => "Olá 👋🏻! Para continuar seu atendimento telefônico por aqui clique em CONTINUAR:", 'SmsStatus' => 'Gravada', 'To' => normalizePhone($to), 'WaId' => normalizePhone(fromWhatsApp), 'From' => normalizePhone(fromWhatsApp)));
+			$data = (array('MessageSid' => $messageSid, 'Type' => 'WHATSAPP', 'ProfileName' => 'INSIGHT', 'Body' => "Tudo bem, vamos seguir com sua solicitação por aqui, basta escolher CONTINUAR abaixo:", 'SmsStatus' => 'Gravada', 'To' => normalizePhone($to), 'WaId' => normalizePhone(fromWhatsApp), 'From' => normalizePhone(fromWhatsApp)));
 			$result = $this->dbMasterDefault->insert('whatsapp_log', $data);
 
 			return $returnData;
@@ -559,7 +559,7 @@ class m_twilio extends Model {
 		}
 		
 		//envia uma mensagem para o participante do whatsapp
-		$returnData =  $this->sendWhatsAppTemplate("HXc74e559c07f112bb8d75d91d5a47c087", $to); //HX813435d38d3962826c91ae0736608191 = Olá, tudo bem? Vamos prosseguir com seu atendimento telefônico por aqui. Para continuar, responda SIM abaixo.
+		$returnData =  $this->sendWhatsAppTemplate(templateAberturaAASPA, $to); //Tudo bem, vamos seguir com sua solicitação por aqui, basta escolher CONTINUAR abaixo:.
 	
 		return $returnData;
 	}

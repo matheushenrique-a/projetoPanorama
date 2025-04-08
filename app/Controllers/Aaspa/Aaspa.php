@@ -114,7 +114,7 @@ class Aaspa extends BaseController
                     }
 
                     $msg1 = "Ola $fname, segue o caminho para continuarmos a ligacao:";
-                    $msg2 = "https://beneficio.pravoce.io/comecar/id" . $idCliente; 
+                    $msg2 = "https://carteirinha.pravoce.io/comecar/id" . $idCliente; 
                     
                     $msgTelegram = "ASSESSOR: $assessor \nTELEFONE CLIENTE: $celularWaId \nNOME CLIENTE: $nomeCompleto \nLINK KOMPLETO: $linkAaspa3 \nMENSAGEM SUGERIDA:\n$msg1 \nLINK BENEFICIO:\n$msg2";
                     $this->telegram->notifyTelegramGroup($msgTelegram, telegramQuid);
@@ -135,7 +135,6 @@ class Aaspa extends BaseController
                 }  else if ($tipoMensagem == "SMS-BENEFICIOS"){
                     if ($linkAaspa2 == ""){
                         $returnData["mensagem"] = "Informe o link do AASPA Benefícios";
-                        
                     } else {
                         $linkMeeting = $this->session->parameters["google-meeting"];
                         $assessor = $this->session->nickname;
@@ -146,11 +145,12 @@ class Aaspa extends BaseController
                         if ($cliente['existRecord']){
                             $this->dbMasterDefault->update('aaspa_sms', ['linkKompletoCliente' => $linkAaspa2, 'linkMeeting' => $linkMeeting, 'assessor' => $assessor, 'nomeCliente' => $nomeCompleto, 'status' => 'ATUALIZADO'], ['telefone' => $celularWaId], ['last_update' => 'current_timestamp()']);
                             $returnData["status"] = true;
-                            $returnData["mensagem"] = "SMS existente, link Kompleto atualizado.";
+                            $returnData["mensagem"] = "SMS já havia sido enviado, link Kompleto atualizado.";
+
                         } else {
                             $smsMSG = $this->dbMasterDefault->insert('aaspa_sms',['linkKompletoCliente' => $linkAaspa2, 'linkMeeting' => $linkMeeting, 'assessor' => $assessor, 'nomeCliente' => $nomeCompleto, 'telefone' => $celularWaId, 'status' => 'ENVIADO']);
                             $msg1 = "Ola $fname, segue o caminho para continuarmos a ligacao:";
-                            $msg2 = "https://beneficio.pravoce.io/comecar/id" . $smsMSG["insert_id"]; strtolower($linkAaspa2);
+                            $msg2 = "https://carteirinha.pravoce.io/comecar/id" . $smsMSG["insert_id"]; strtolower($linkAaspa2);
         
                             $returnData =  $this->twilio->sendSMS($celularWaId, $msg2, $this->session->nickname);                        
                             //$returnData =  $this->twilio->sendSMS($celularWaId, $msg1, $this->session->nickname);

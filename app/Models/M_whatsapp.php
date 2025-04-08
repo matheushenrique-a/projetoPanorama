@@ -77,7 +77,8 @@ class m_whatsapp extends Model {
 
 			//Registra conversa no histórico
 			$data = (array('ConversationSid' => $conversation['firstRow']->ConversationSid, 'MessageSid' => $messageId, 'Type' => 'WHATSAPP', 'ProfileName' => 'INSIGHT', 'direction' => 'B2C', 'Body' => $body, 'SmsStatus' => strtoupper($messageStatus), 'error' => $returnData["error"], 'To' => normalizePhone($to), 'From' => (fromWhatsApp)));
-			$this->createMessage($data);
+			$added = $this->createMessage($data);
+			$returnData["id"] = $added["insert_id"];
 		} else {
 			$returnData["error"] = "Envio WhatsApp desativado nas configurações.";
 		}
@@ -129,7 +130,8 @@ class m_whatsapp extends Model {
 
 			//Registra conversa no histórico
 			$data = (array('ConversationSid' => $conversation['firstRow']->ConversationSid, 'MessageSid' => $messageId, 'Type' => 'WHATSAPP', 'ProfileName' => 'INSIGHT', 'direction' => 'B2C', 'Body' => $body, 'SmsStatus' => strtoupper($messageStatus), 'error' => $returnData["error"], 'To' => normalizePhone($to), 'From' => (fromWhatsApp)));
-			$this->createMessage($data, $conversation);
+			$added = $this->createMessage($data, $conversation);
+			$returnData["id"] = $added["insert_id"];
 		} else {
 			$returnData["error"] = "Envio WhatsApp desativado nas configurações.";
 		}

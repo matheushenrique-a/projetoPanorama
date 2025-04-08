@@ -2,7 +2,9 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Olá Maria</title>
+  <title>Minha Carteirinha</title>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <meta name="description" content="Veja como é fácil receber sua carteirinha.">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body style="background-color: white; text-align: center; font-family: Arial, sans-serif; padding: 10vh 5vw;">

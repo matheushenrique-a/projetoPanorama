@@ -85,10 +85,12 @@ class WhatsApp extends BaseController
         //envia uma nova mensagem após pressionar o botão Enviar
         } else if (!empty($btnSendMsg) or !empty($messageToSend)) {
             
+            //recupera a conversa antes de enviar uma mensagem
             $conversation = $this->m_whatsapp->getConversation(['ConversationSid' => $currentConversationSid]);
             if ($conversation['existRecord']){
                 $result = $this->m_whatsapp->sendWhatsApp($messageToSend, normalizePhone($conversation['firstRow']->telefoneCliente), $conversation);
                 
+                //busca todas as mensagens trocadas
                 $messages = $this->m_whatsapp->getMessages(['ConversationSid' => $currentConversationSid]);
                 $currentConversation = $this->m_whatsapp->getConversation(['ConversationSid' => $currentConversationSid]);
             }
@@ -295,6 +297,36 @@ class WhatsApp extends BaseController
         if ($incomingMessageDetails['existRecord']){$saidaMensagensDetalhe = ['newMessageDetails' => $incomingMessageDetails["result"]->getResult()];}
 
         echo json_encode($saidaConversas + $saidaMensagens + $saidaMensagensDetalhe);
+    }
+
+    //http://localhost/InsightSuite/public/whatsapp-direct
+    public function whatsapp_direct(){
+        // Recupera o JSON do corpo da requisição
+        $json = file_get_contents("php://input");
+        $request = json_decode($json, true);
+
+        // Acessa os dados
+        $messageToSend = $request['message'] ?? '';
+        $conversationSid = $request['conversationSid'] ?? '';
+        $returnData["sucesso"] = false;
+
+        //verifica se existe uma conversa aberta
+        $conversation = $this->m_whatsapp->getConversation(['conversationSid' => $conversationSid]);
+        if ($conversation['existRecord']){
+            $telefoneCliente = $conversation['firstRow']->telefoneCliente;
+
+            if (!empty($telefoneCliente)){
+                $returnData = $this->m_whatsapp->sendWhatsApp($messageToSend, $telefoneCliente, $conversation);
+                //messageDetail.direction, messageDetail.last_updated, messageDetail.Body, messageDetail.ProfileName
+                $returnData["direction"] = "B2C";
+                $returnData["last_updated"] = time_elapsed_string(date("Y-m-d H:i:s"));
+                $returnData["Body"] = $messageToSend;
+                $returnData["ProfileName"] = "INSIGHT";
+            }
+        }
+
+        header("Content-Type: application/json");
+        echo json_encode($returnData);
     }
         
 }
