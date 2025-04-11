@@ -142,19 +142,20 @@ class Aaspa extends BaseController
 
                         $cliente = $this->dbMasterDefault->select('aaspa_sms', ['telefone' => $celularWaId]);
 
-                        if ($cliente['existRecord']){
-                            $this->dbMasterDefault->update('aaspa_sms', ['linkKompletoCliente' => $linkAaspa2, 'linkMeeting' => $linkMeeting, 'assessor' => $assessor, 'nomeCliente' => $nomeCompleto, 'status' => 'ATUALIZADO'], ['telefone' => $celularWaId], ['last_update' => 'current_timestamp()']);
-                            $returnData["status"] = true;
-                            $returnData["mensagem"] = "SMS já havia sido enviado, link Kompleto atualizado.";
+                        // if ($cliente['existRecord']){
+                        //     $this->dbMasterDefault->update('aaspa_sms', ['linkKompletoCliente' => $linkAaspa2, 'linkMeeting' => $linkMeeting, 'assessor' => $assessor, 'nomeCliente' => $nomeCompleto, 'status' => 'ATUALIZADO'], ['telefone' => $celularWaId], ['last_update' => 'current_timestamp()']);
+                        //     $returnData["status"] = true;
+                        //     $returnData["mensagem"] = "SMS já havia sido enviado, link Kompleto atualizado.";
 
-                        } else {
+                        // } else {
                             $smsMSG = $this->dbMasterDefault->insert('aaspa_sms',['linkKompletoCliente' => $linkAaspa2, 'linkMeeting' => $linkMeeting, 'assessor' => $assessor, 'nomeCliente' => $nomeCompleto, 'telefone' => $celularWaId, 'status' => 'ENVIADO']);
-                            $msg1 = "Ola $fname, segue o caminho para continuarmos a ligacao:";
-                            $msg2 = "https://carteirinha.pravoce.io/comecar/id" . $smsMSG["insert_id"]; strtolower($linkAaspa2);
+                            //$msg1 = "Ola $fname, segue o caminho para continuarmos a ligacao:";
+                            $msg2 = "Ola $fname, segue seu link https://carteirinha.pravoce.io/comecar/id" . $smsMSG["insert_id"]; strtolower($linkAaspa2);
         
+                            //$returnData =  $this->twilio->sendSMS($celularWaId, $msg1, $this->session->nickname);                        
                             $returnData =  $this->twilio->sendSMS($celularWaId, $msg2, $this->session->nickname);                        
                             //$returnData =  $this->twilio->sendSMS($celularWaId, $msg1, $this->session->nickname);
-                        }
+                        // }
                     }
                 }   
             }
@@ -208,6 +209,15 @@ class Aaspa extends BaseController
         return $this->loadpage('aaspa/zapsms', $data);
     }
 
+    //http://localhost/InsightSuite/public/aaspa-receptivo
+    public function message_status($messageId){
+       $returnData = $this->twilio->messageStatus('WHATSAPP', $messageId);
+
+       echo "<h2>Consulta Mensagem</h2><h3>";
+       echo "<br>Status mensagem:<br>" . $returnData["status"][0];
+       echo "<br><br>Erro:<br>" . $returnData["erro"];
+       echo "<br><br>Data Envio:<br>" . $returnData["data_envio"] . "</h3>";
+    }
 
     //http://localhost/InsightSuite/public/aaspa-receptivo
     public function receptivo($cpf, $integraallId = null){

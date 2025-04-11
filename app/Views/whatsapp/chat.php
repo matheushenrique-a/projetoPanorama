@@ -234,6 +234,21 @@
 
 														//Cliente CRM
 														if (!empty($clientesCRM)) {
+
+
+															//Direct Contact First
+															$celular = numberOnly($search);
+															if (strlen($celular) == 11) {
+																$nome = "CONTATO DIRETO | " . formatarTelefone($celular);
+																$data_criacao = date("Y-m-d H:i:s");					
+																$id_proposta = "0";
+	
+																$url = assetfolder . 'whatsapp-chat?directContact=55' . $celular;
+																$type = "contact";
+																$recordId = "0";
+																echo chatList($type, $recordId, $nome, formatarTelefone($celular), time_elapsed_string($data_criacao), $url, 'info');	
+															}
+
 															foreach ($clientesCRM["result"]->getResult() as $cliente){
 																$nome = $cliente->nome;
 																$celular = $cliente->celular;
@@ -394,8 +409,10 @@
 																$To = $conversation->To;
 																$From = $conversation->From;
 																$last_updated = $conversation->last_updated;
+																$media_format = $conversation->media_format;
+																$media_name = $conversation->media_name;
 														
-																echo chatMessageHTML($id, $direction, $last_updated, $Body, $SmsStatus, $ProfileName);
+																echo chatMessageHTML($id, $direction, $last_updated, $Body, ($SmsStatus), $ProfileName, $media_format, $media_name);
 															}
 														} ?>
 													
@@ -1831,11 +1848,7 @@
 									//adiciona cada nova conversa recebida a lista
 									data.newMessageDetails.forEach((messageDetail, index) => {
 										if (!document.getElementById('msgBlock-' + messageDetail.id)) {
-											console.log('Not found element msgBlock-' + messageDetail.id);
-											addToMessageList(messageDetail.id, messageDetail.direction, messageDetail.last_updated, messageDetail.Body, messageDetail.ProfileName);
-										} else {
-											console.log('Found element msgBlock-' + messageDetail.id);
-
+											addToMessageList(messageDetail.id, messageDetail.direction, messageDetail.last_updated, messageDetail.Body, messageDetail.ProfileName, messageDetail.SmsStatus);
 										}
 										//console.log('check: ' + messageDetail.id);
 										if (topMessage < (messageDetail.id)){inputTopMessage.value = messageDetail.id;}
@@ -1862,7 +1875,7 @@
 							const urlFetch = '<?php echo rootURL; ?>whatsapp-direct';
 
 							btnSendMsg
-							addToMessageList("000", "B2C", "agora", "Enviando...", "INSIGHT");
+							addToMessageList("000", "B2C", "agora", "Enviando...", "INSIGHT", "Aguarde");
 							scrollToBottom();
 
 							fetch(urlFetch, {
@@ -1884,17 +1897,20 @@
 								lblOnlineGreen.classList.remove('badge-warning');
 								lblOnlineGreen.classList.add('badge-success');
 
-								if (data.sucesso){
-									const tmpSending = document.getElementById('msgBlock-000');
-									tmpSending.style.display = 'none';
+								const elementEnviando = document.getElementById('msgBlock-000');
+								if (elementEnviando) {elementEnviando.remove();}
 
-									const elementEnviando = document.getElementById('msgBlock-000');
-									if (elementEnviando) {elementEnviando.remove();}
-									messageToSendText.value = "";
-									document.getElementById('messageToSend').focus();
+								messageToSendText.value = "";
+								document.getElementById('messageToSend').focus();
 
-									addToMessageList(data.id, data.direction, data.last_updated, data.Body, data.ProfileName);
+								addToMessageList(data.id, data.direction, data.last_updated, data.Body, data.ProfileName, data.SmsStatus, 'Enviada');
+
+								if (!data.sucesso){
+									console.log('msgStatus-' + data.id);
+									const stsStatus = document.getElementById('msgStatus-' + data.id);
+									stsStatus.innerHTML = "Falha";
 								}
+
 							})
 							.catch(error => {
 								lblOnlineGreen.classList.remove('badge-warning');
@@ -1940,7 +1956,7 @@
 							}
 						}
 
-						function addToMessageList(id, direction, last_updated, body, profileName) {
+						function addToMessageList(id, direction, last_updated, body, profileName, SmsStatus) {
 							const timeAgo = (last_updated); // Precisa de implementação ou lib
 							let objMessage = document.getElementById('conversationPanel');
 
@@ -1953,7 +1969,7 @@
 									<div class="d-flex flex-column align-items-start">
 										<div class="d-flex align-items-center mb-2">
 											<div class="symbol symbol-35px symbol-circle">
-												<img alt="Pic" src="assets/media/avatars/blank.png" />
+												<img alt="Pic" src="<?php echo assetfolder;?>assets/media/avatars/blank.png" />
 											</div>
 											<div class="ms-3">
 												<a href="#" class="fs-5 fw-bolder text-gray-900 text-hover-primary me-1">Você</a>
@@ -1961,6 +1977,9 @@
 											</div>
 										</div>
 										<div class="p-5 rounded bg-light-info text-dark fw-bold mw-lg-400px text-start" data-kt-element="message-text" id="msgBody-${id}" >${body}</div>
+										<div class="ms-1">
+											<span class="text-muted fs-7 mb-1 ms-0 ps-0" id="msgStatus-${id}">${SmsStatus}</span>
+										</div>
 									</div>
 								</div>
 								<!--end::Message(in)-->`;
@@ -1975,10 +1994,12 @@
 												<a href="#" class="fs-5 fw-bolder text-gray-900 text-hover-primary ms-1">${profileName}</a>
 											</div>
 											<div class="symbol symbol-35px symbol-circle">
-												<img alt="Pic" src="assets/media/avatars/blank.png" />
+												<img alt="Pic" src="<?php echo assetfolder;?>assets/media/avatars/blank.png" />
 											</div>
 										</div>
 										<div class="p-5 rounded bg-light-primary text-dark fw-bold mw-lg-400px text-end" data-kt-element="message-text" id="msgBody-${id}" >${body}</div>
+											<span class="text-muted fs-7 mb-1 ms-0 ps-0" id="msgStatus-${id}">${SmsStatus}</span>
+										</div>
 									</div>
 								</div>
 								<!--end::Message(out)-->`;

@@ -1,6 +1,23 @@
 <?php 
 
 
+	function getExtensionByMimeType($mimeType) {
+		$mimeType = strtolower(trim($mimeType));
+
+		if (strpos($mimeType, 'audio/aac') !== false) return 'aac';
+		if (strpos($mimeType, 'audio/mp4') !== false) return 'm4a';
+		if (strpos($mimeType, 'audio/amr') !== false) return 'amr';
+		if (strpos($mimeType, 'audio/mpeg') !== false) return 'mp3';
+		if (strpos($mimeType, 'audio/ogg') !== false) return 'ogg'; // inclui 'codecs=opus'
+		if (strpos($mimeType, 'image/jpeg') !== false) return 'jpg';
+		if (strpos($mimeType, 'image/png') !== false) return 'png';
+		if (strpos($mimeType, 'image/webp') !== false) return 'webp';
+		if (strpos($mimeType, 'video/mp4') !== false) return 'mp4';
+		if (strpos($mimeType, 'video/3gpp') !== false) return '3gp';
+
+		return 'bin'; // extensão genérica como fallback
+	}
+
 	function getStatusNomePorId($id) {
 		$statusList = [
 			1 => "Aguardando Aceite",
@@ -125,13 +142,14 @@
 			"MESSAGE CREATED" => ["Criada", "warning"],
 			"ENQUEUED" => ["Na fila", "warning"],
 			"DEQUEUED" => ["Na fila", "warning"],
-			"SENT" => ["A caminho", "warning"],
+			"SENT" => ["Enviada", "warning"],
 			"DELIVERED" => ["Entregue", "success"],
 			"RECEIVED" => ["Recebida", "success"],
 			"SENDING" => ["Enviando", "warning"],
 			"READ" => ["Lida", "success"],
 			"UNDELIVERED" => ["Falha", "danger"],
 			"GRAVADA" => ["Gravada", "success"],
+			"ERROR" => ["Falha", "danger"],
 			"ACCEPTED" => ["Enviada", "success"],
 		];
  
@@ -146,6 +164,7 @@
 		$errosMap = [
 			"UNABLE TO FETCH RECORD" => "Não foi possível consultar a mensagem. Verifique se código da mensagem está correto.",
 			"INVALID MESSAGE SID" => "O identificador da mensagem (SID) é inválido. Confirme se ele está correto.",
+			"63049" => "Facebook escolheu não enviar mensagem de marketing para esse cliente. Tente usar SMS.",
 			"HTTP 400" => "Requisição inválida. Verifique os parâmetros enviados.",
 			"HTTP 401" => "Não autorizado. Verifique suas credenciais do Twilio.",
 			"HTTP 403" => "Acesso negado. Sua conta pode não ter permissão para essa ação.",

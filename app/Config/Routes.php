@@ -52,6 +52,7 @@ $routes->match(['get', 'post'], '/whatsapp-chat', 'Meta\WhatsApp::whatsapp_chat'
 //AASPA
 $routes->match(['get', 'post'], '/comecar/(:any)', 'Frontline\Frontline::comecar/$1');
 $routes->match(['get', 'post'], '/aaspa-zapsms', 'Aaspa\Aaspa::zapsms');
+$routes->match(['get', 'post'], '/aaspa-message-status/(:any)', 'Aaspa\Aaspa::message_status/$1');
 $routes->match(['get', 'post'], '/aaspa-zapsms/(:any)', 'Aaspa\Aaspa::zapsms/$1');
 $routes->match(['get', 'post'], '/aaspa-receptivo/(:any)/(:any)', 'Aaspa\Aaspa::receptivo/$1/$2');
 $routes->match(['get', 'post'], '/aaspa-receptivo/(:any)', 'Aaspa\Aaspa::receptivo/$1');
@@ -77,6 +78,7 @@ $routes->match(['get', 'post'], '/argus-atendimento-webhook-vap', 'Argus\Argus::
 
 //FRONTLINE
 $routes->match(['get', 'post'], '/frontline-routing-webhook', 'Frontline\Frontline::frontline_routing_webhook');
+$routes->match(['get', 'post'], '/twilio-error-webhook', 'Frontline\Frontline::twilio_error_webhook');
 $routes->match(['get', 'post'], '/frontline-conversations-webhook', 'Frontline\Frontline::frontline_conversations_webhook');
 $routes->match(['get', 'post'], '/frontline-pre-conversations-webhook', 'Frontline\Frontline::frontline_pre_conversations_webhook');
 $routes->match(['get', 'post'], '/frontline-outgoing-conversation', 'Frontline\Frontline::frontline_outgoing_conversation');

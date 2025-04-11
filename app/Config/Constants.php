@@ -22,6 +22,8 @@ define ('API_Calculadora', 'https://api2.calculadoraconsignado.com.br/api/');
 
 //WHATSAPP CLOUD API
 define ('META_CLOUD_API', "https://graph.facebook.com/v22.0/643196615539553/messages"); //643196615539553 = phone number id = +1 555 641 8758
+define ('META_CLOUD_API_RAW', "https://graph.facebook.com/v22.0/"); //643196615539553 = phone number id = +1 555 641 8758
+define('PATH_SAVE_MEDIA', "/Applications/XAMPP/xamppfiles/htdocs/InsightSuite/public/assets/media/whatsapp/");
 
 //SMS Account - US SMS ONLY
 define('TWILIO_ACCOUNT_SID_SMS','ACbec7bd36bb5c1d809c7fd76c0e06bb5c');
@@ -46,7 +48,10 @@ define('telegramAlerts', true);
 
 //FACEBOOK ADS
 define('META_GRAPH_API', "https://graph.facebook.com/v20.0/");
+//APP ADS TOKEN
 define('META_TOKEN', "EAAMqjXZAxYiUBOxXAUzj9qYwNGRWDQKGdpMAneTRZBK65XDTAHc2hyzZC9mUMk2yWYM66yoDSQZCopNmXSzQmlxNSgy6YYf0yVt8Qkv9PYenDqZBFmjCUREXOU9E4Wxz2MGGbqhdqgye3AEcqnyKkwHFJsPVDK9NhKHRlg657SGvZAO25Y7DfTCA2ZA");
+//APP WHATSAPP TOKEN
+define('META_TOKEN_WHATSAPP', "EAAOkO2w2V1sBOzI1pEnf9UTOtZAXUDiqdnCC3ZCVKMDP37bd8wT63UE1eCoThIHIQ6WtIctYaILuOKZAT3rkFDUj7khSgoxTDsLm1iAz7P9NHdetSqrlM9KZC5VdL3t4IOigerKT5R5ZBqLi7oeEvOAzyZCcZBivQjVT4FhzEadFnHcajQDSzGqXFcy");
 
 //CHAT_GPT
 define('API_KEY_CHATGPT','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');

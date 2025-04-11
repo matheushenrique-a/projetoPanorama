@@ -200,7 +200,7 @@
 																						<div class="ms-3">
 																							<span class="text-muted fs-7 mb-1">
 																								<?php echo $row->To;?> - 
-																								<?php echo $row->MessageSid;?>
+																								<a href="<?php echo assetfolder;?>aaspa-message-status/<?php echo $row->MessageSid;?>" target="_blank"><?php echo $row->MessageSid;?></a>
 																							
 																							</span>
 																						</div>

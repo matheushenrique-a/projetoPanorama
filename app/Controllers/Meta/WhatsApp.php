@@ -46,6 +46,7 @@ class WhatsApp extends BaseController
         $closeConversation =  $this->getpost('closeConversation');
         $messageToSend =  $this->getpost('messageToSend');
         $btnSendMsg =  $this->getpost('btnSendMsg');
+        $directContact =  $this->getpost('directContact');
 
         $userId = $this->session->userId;
         $atendenteNome = $this->session->nickname;
@@ -78,6 +79,18 @@ class WhatsApp extends BaseController
 
                 return redirect()->to('whatsapp-chat?ConversationSid=' . $conversation['firstRow']->ConversationSid);exit;
             }
+        //Cria conversa com número avulso / direto
+        } else if (!empty($directContact)){
+                $conversation = $this->m_whatsapp->createConversation([
+                    'telefoneCliente' => normalizePhone($directContact),
+                    'telefoneBot' => fromWhatsApp,
+                    'nomeCliente' => 'CONTATO DIRETO | ' . formatarTelefone($directContact),
+                    'nomeBot' => 'INSIGHT',
+                    'atendenteId' => $userId,
+                    'atendenteNome' => $atendenteNome,
+                ]);
+
+                return redirect()->to('whatsapp-chat?ConversationSid=' . $conversation['firstRow']->ConversationSid);exit;
         //fecha uma conversa
         } else if (!empty ($closeConversation)) {
             $this->m_whatsapp->deleteConversation(['conversationSid' => $closeConversation], ['status' => 'CLOSED']);
@@ -128,7 +141,12 @@ class WhatsApp extends BaseController
 
 
     //http://localhost/InsightSuite/public/whatsapp-webhook
+    // https://b31f-177-73-197-2.ngrok-free.app/InsightSuite/public/whatsapp-webhook
     public function whatsapp_webhook(){
+        //$result = $this->m_whatsapp->getWhatsAppMedia("1357103935532763", "image/jpeg");
+        //http_response_code(200);
+       // exit;
+
         $mode =  $this->getpost('hub_mode') ?? '';
         $token =  $this->getpost('hub_verify_token') ?? '';
         $challenge =  $this->getpost('hub_challenge') ?? '';
@@ -147,8 +165,12 @@ class WhatsApp extends BaseController
         //$json = '{"object": "whatsapp_business_account", "entry": [{"id": "1403356640797060", "changes": [{"value": {"messaging_product": "whatsapp", "metadata": {"display_phone_number": "15556418758", "phone_number_id": "643196615539553"}, "contacts": [{"profile": {"name": "Dantas"}, "wa_id": "553195781355"}], "messages": [{"from": "553195781355", "id": "wamid.HBgMNTUzMTk1NzgxMzU1FQIAEhgWM0VCMDZBMkVCQTkxOTMzNkVBMjcwQgA=", "timestamp": "1743813734", "text": {"body": "ok"}, "type": "text"}], "statuses": [{"id": "wamid.HBgMNTUzMTk1NzgxMzU1FQIAERgSREU1RjI5RDIxMEExOTU4NjZBAA==", "status": "read", "timestamp": "1743813795", "recipient_id": "553195781355"}]}, "field": "messages"}]}]}';
         
         $data = json_decode($json, true);
+
+        //usado no registro do webhook apenas
         if ($mode === 'subscribe' && $token === $WEBHOOK_VERIFY_TOKEN) {
+            $this->telegram->notifyTelegramGroup("✅✅✅ META Webhook Registered.", telegramQuid);
             http_response_code(200); echo $challenge;
+            exit;
         }
 
         // Verifica se há entries
@@ -197,23 +219,40 @@ class WhatsApp extends BaseController
                                     'telefoneBot' => $to,
                                     'nomeCliente' => $contactName,
                                     'nomeBot' => 'INSIGHT',
-                                    'atendenteId' => null,
+                                    'atendenteId' => null, //TODO Routing Rule
                                     'atendenteNome' => null,
                                 ]);
                             }
-                    
-                            //Registra a mensagem recebida na conversa existente
-                            $data = ['ConversationSid' => $conversation['firstRow']->ConversationSid, 'MessageSid' => $messageId, 'Type' => 'WHATSAPP', 'ProfileName' => $contactName, 'direction' => 'C2B', 'Body' => $messageBody, 'SmsStatus' => 'RECEIVED', 'To' => ($to), 'From' => normalizePhone($from)];
-                            $this->m_whatsapp->createMessage($data, $conversation);
 
-                            //Atualiza o contador de mensagens da conversa
+                            //Registra a mensagem recebida na conversa existente
+                            $data = ['ConversationSid' => $conversation['firstRow']->ConversationSid, 'media_format' => $messageType, 'MessageSid' => $messageId, 'Type' => 'WHATSAPP', 'ProfileName' => $contactName, 'direction' => 'C2B', 'SmsStatus' => 'RECEIVED', 'To' => ($to), 'From' => normalizePhone($from)];
+                            
+                            if ($messageType == "text"){
+                                $data['Body'] = $messageBody;
+                            } else if ($messageType == "image"){
+                                $mediaId = $message['image']['id'];
+                                $mime_type = $message['image']['mime_type'];
+                                $data['Body'] = $message['image']['caption'] ?? "Imagem recebida.";
+
+                                $result = $this->m_whatsapp->getWhatsAppMedia($mediaId, $mime_type);
+                                if ($result['sucesso']) {$data['media_name'] = $result['fileName'];}
+
+                            } else if ($messageType == "audio"){
+                                $mediaId = $message['audio']['id'];
+                                $mime_type = $message['audio']['mime_type'];
+                                $data['Body'] = "Áudio recebido.";
+                                $result = $this->m_whatsapp->getWhatsAppMedia($mediaId, $mime_type);
+                                if ($result['sucesso']) {$data['media_name'] = $result['fileName'];}
+                            }
+
+                            $this->m_whatsapp->createMessage($data, $conversation);
                             $this->m_whatsapp->updateConversation(['msgCount' => $conversation['firstRow']->msgCount + 1], ['id' => $conversation['firstRow']->id], ['last_updated' => 'current_timestamp()']);
                         }
                     }
                 }
             }
         } else {
-            echo "Nenhuma entry encontrada.<BR>";
+            $this->telegram->notifyTelegramGroup("🚨🚨🚨 META Webhook error: \n" . $json, telegramQuid);
         }
 
         http_response_code(200);
@@ -285,7 +324,7 @@ class WhatsApp extends BaseController
         $incomingNewMessages = $this->m_whatsapp->getConversationTopMsgShort($atendenteId);
 
         //todas novas mensagens acima dos ids já buscados para uma conversa
-        $sql = "select id, ConversationSid, Body, ProfileName, direction, l.Type, SmsStatus, l.To, l.From, l.error, last_updated from whatsapp_log l where ConversationSid = '$ConversationSid' and id > $topMessage order by id;";
+        $sql = "select id, ConversationSid, Body, ProfileName, direction, l.Type, media_format, media_name, SmsStatus, l.To, l.From, l.error, last_updated from whatsapp_log l where ConversationSid = '$ConversationSid' and id > $topMessage order by id;";
         $incomingMessageDetails = $this->dbMasterDefault->runQuery($sql);
 
         $saidaConversas = ['newConversations' => []];

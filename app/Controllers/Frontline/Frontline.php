@@ -146,6 +146,9 @@ class Frontline extends BaseController
 		//$participants = $this->twilio->participantUpdate("CH0cba079bd7384d90b70a87651681f6c9", "MB905f02b772ce4ca493af29a047f7a4cc", "01", "DANTAS");
 		//exit;
 
+		$this->dbMasterDefault->insert('record_log',['log' => "$EventType $MessageSid, $Status"]);
+
+
 		if (!empty($SmsSid)){
 			$this->dbMasterDefault->update('whatsapp_log', ['SmsStatus' => $SmsStatus], ['MessageSid' => $SmsSid], ['last_updated' => 'current_timestamp()']);
 		} else if (($EventType == 'onConversationStateUpdated') and ($StateFrom == 'active') and ($StateTo == 'closed')) {
@@ -230,8 +233,39 @@ class Frontline extends BaseController
 			$data = (array('MessageSid' => $MessageSid, 'Type' => 'WHATSAPP', 'ProfileName' => $Author, 'Body' => $Body, 'SmsStatus' => 'Gravada', 'To' => ($To), 'WaId' => null, 'From' => ($From)));
 			$result = $this->dbMasterDefault->insert('whatsapp_log', $data);
 		} else if (($EventType == 'onDeliveryUpdated')) {
+			$this->dbMasterDefault->insert('record_log',['log' => "onDeliveryUpdated $MessageSid, $Status"]);
 			//$this->dbMasterDefault->insert('record_log',['log' => "onDeliveryUpdated $MessageSid, $Status, $ErrorCode"]);
 			$this->dbMasterDefault->update('whatsapp_log', ['SmsStatus' => $Status], ['MessageSid' => $MessageSid], ['last_updated' => 'current_timestamp()']);
+		}
+	}
+
+	//http://localhost/InsightSuite/public/twilio-error-webhook
+	//https://b31f-177-73-197-2.ngrok-free.app/InsightSuite/public/twilio-error-webhook
+	//https://insightsuite.pravoce.io/twilio-error-webhook
+
+	public function twilio_error_webhook(){
+		//$Payload = '{"resource_sid":"SM0f72ddf52fa0fe3322090262f849040c","service_sid":null,"error_code":"63052","more_info":{"Msg":"Warning/Error: From April 1, 2025 onwards WhatsApp templates may no longer be sent using a matching body parameter and must be sent using content sid."},"webhook":{"type":"application/json","request":{"url":null,"method":"POST","headers":{},"parameters":{"channelToAddress":"+5531972189215","provider":"Some(wa-cloudapi)","errorMessage":"Warning/Error: From April 1, 2025 onwards WhatsApp templates may no longer be sent using a matching body parameter and must be sent using content sid.","error":"63052","accountSid":"ACbec7bd36bb5c1d809c7fd76c0e06bb5c","messageSid":"SM0f72ddf52fa0fe3322090262f849040c"}},"response":{"status_code":null,"headers":{"Content-Type":"application/json"},"body":null}}}';
+
+		$Payload = ($this->getpost('Payload'));
+		$json_string = html_entity_decode($Payload); //json vindo html encoded
+		$data = json_decode($json_string, true);
+
+		$output = "";
+
+        if ((isset($data['resource_sid']))) {
+			$output .= $data['resource_sid'] ?? "" . "\n";
+			//$output .= "Mensagem Erro: " . $data['error_code'] . "\n";
+			$output .= "\n\nERRO: \n" . $data['more_info']['Msg']  ?? "" . "\n";
+
+			$output .= "\n\nTELEFONE: \n" . $data['webhook']['request']['parameters']['channelToAddress']  ?? "" . "\n";
+			//$output .= "Provider: " . $data['webhook']['request']['parameters']['provider'] . "\n";
+			//$output .= "Error Message: " . $data['webhook']['request']['parameters']['errorMessage'] . "\n";
+			//$output .= "Account SID: " . $data['webhook']['request']['parameters']['accountSid'] . "\n";
+			//$output .= "Message SID: " . $data['webhook']['request']['parameters']['messageSid'] . "\n";
+
+			$this->telegram->notifyTelegramGroup("🚨 LOG ERRO TWILIO:\n" . $output, telegramQuid);
+		} else {
+			$this->telegram->notifyTelegramGroup("🚨 LOG ERRO TWILIO \n" . $json_string, telegramQuid);
 		}
 	}
 
@@ -241,7 +275,7 @@ class Frontline extends BaseController
 	// CustomerId	4
 	// Location	GetProxyAddress
 	// Worker	dantas@pravoce.io
-	//http://localhost/InsightSuite/public/frontline-outgoing-conversation
+	//
 	//https://insightsuite.pravoce.io/frontline-outgoing-conversation
 	public function frontline_outgoing_conversation(){
 		$ChannelType = $this->getpost('ChannelType');
@@ -609,7 +643,8 @@ class Frontline extends BaseController
 			{
 			  "display_name": "AASPA - BOAS VINDAS",
 			  "templates": [
-				{ "content": "Olá 👋🏻! Para continuar seu atendimento telefônico por aqui clique em CONTINUAR:", "whatsAppApproved": true}
+				{ "content": "Olá 👋🏻! Para continuar seu atendimento telefônico por aqui clique em CONTINUAR:", "whatsAppApproved": true},
+				{ "content": "Obrigado por responder! Como solicitado, segue o link abaixo para receber sua carteirinha:", "whatsAppApproved": false}
 
 			  ]
 			},
