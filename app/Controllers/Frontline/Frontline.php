@@ -112,12 +112,9 @@ class Frontline extends BaseController
 	// StateTo	closed
 	// StateUpdated	2023-01-26T14:31:41.305Z
 	//http://localhost/InsightSuite/public/frontline-conversations-webhook
-	//https://3863-2804-1b3-6149-9314-8d71-cc90-7833-af5d.ngrok-free.app/InsightSuite/public/frontline-conversations-webhook
+	//https://b31f-177-73-197-2.ngrok-free.app/InsightSuite/public/frontline-conversations-webhook
 	//https://insightsuite.pravoce.io/frontline-conversations-webhook
-	public function frontline_conversations_webhook(){
-		http_response_code(200);
-		exit;
-		
+	public function frontline_conversations_webhook(){	
 		$AccountSid = $this->getpost('AccountSid');
 		$MessageSid = $this->getpost('MessageSid');
 		$Author = $this->getpost('Author');
