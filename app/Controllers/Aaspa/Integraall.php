@@ -205,14 +205,38 @@ class Integraall extends BaseController
 
                         if (($nomeStatusNovo <> $nomeStatusAtual) or ($statusAdicionalNovo <> $statusAdicionalAtual)){
                             $totalUpdates = $totalUpdates + 1;
-                            $strDelta .= "\n\n<b>" . $data['integraallId'] . " | " . strtoupper($data['nomeCliente']) . "</b>\n";
-                            $strDelta .= substr(strtoupper($data['assessor']), 0, 20) . "...\n";
-                            $strDelta .= "❌ <s>$nomeStatusAtual / $statusAdicionalAtual</s>\n";
+                            $strDelta .= "\n\n<b>" . $data['integraallId'] . " | " . substr(strtoupper($data['nomeCliente']), 0, 17) . "...</b>\n";
+                            $strDelta .= "🥷🏻 " . substr(strtoupper($data['assessor']), 0, 20) . "...\n";
+
+                            $mudanca = "";
+                            if (($nomeStatusAtual != $nomeStatusNovo)) {
+                                $mudanca .= "❌ <s>$nomeStatusAtual</s> / ";
+                            } else {
+                                $mudanca .= "❌ / ";
+                            }
+
+                            if (($statusAdicionalAtual != $statusAdicionalNovo)) {
+                                $mudanca .= "<s>$statusAdicionalAtual</s>\n";
+                            } else {
+                                $mudanca .= "\n";
+                            }
+
+                            $strDelta .= $mudanca;
                             $strDelta .= "👉 $nomeStatusNovo / $statusAdicionalNovo";
-                            if ($totalUpdates > 15) {
-                                $strDelta .= "\n\n + propostas não listadas.";  
+
+                            //condições da proposta averbada
+                            if  (($nomeStatusNovo == 'AGUARDANDO AUDITORIA' and $statusAdicionalNovo == 'AGUARDANDO AVERBAÇÃO ENTIDADE') 
+                            OR ($nomeStatusNovo == 'AGUARDANDO AUDITORIA' and $statusAdicionalNovo == 'AVERBADO GOV.')  
+                            OR ($nomeStatusNovo == 'AGUARDANDO AVERBAÇÃO' and $statusAdicionalNovo == 'AGUARDANDO AVERBAÇÃO ENTIDADE') 
+                            OR ($nomeStatusNovo == 'AGUARDANDO AVERBAÇÃO' and $statusAdicionalNovo == 'AVERBADO GOV.')) {
+                                $strDelta .= "\n⭐️⭐️🎉 Proposta aprovada!";
+                            }
+
+                            if ($totalUpdates > 10) {
+                                $strDelta .= "\n + propostas não listadas.";  
                                 break;
                             } 
+
                         }
 
                         $updated = $this->dbMasterDefault->update('aaspa_propostas', $data, ['integraallId' => $data['integraallId']]);
@@ -220,10 +244,10 @@ class Integraall extends BaseController
                 }
 
                 if (!empty($strDelta)){
-                    $strDelta = "♻️♻️♻️ SINCRONIZAÇÃO INTEGRAALL" . $strDelta;
-                    //echo $strDelta;
+                    $strDelta = "♻️♻️♻️ SYNC INTEGRAALL" . $strDelta;
                     $result = $this->telegram->notifyTelegramGroup($strDelta, telegramQuid);
                 }
+                echo "Resultado: " . $strDelta;
             }
         }
     }
