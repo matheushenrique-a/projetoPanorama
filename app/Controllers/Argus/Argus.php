@@ -259,6 +259,36 @@ class Argus extends BaseController
         }
 
 
+        //https://8b46-177-73-197-2.ngrok-free.app/InsightSuite/public/metricas-ligacao-operador
+        //http://localhost/InsightSuite/public/metricas-ligacao-operador
+        //https://insightsuite.pravoce.io/metricas-ligacao-operador
+        public function metricas_ligacao_operador(){
+            $sqlLigacoesOperador = "select assessor, count(codCliente) total from aaspa_cliente c INNER JOIN user_account u ON c.assessor = u.nickname 
+            WHERE perfil_acesso LIKE '%AASPA%' AND empresa = 'QUID' AND u.status = 'ATIVO' AND u.role = 'OPERADOR'
+            AND c.last_update >= '" . date('Y-m-d') . " 00:00:01' AND c.last_update <= '" . date('Y-m-d') . " 23:00:01'
+            GROUP by assessor 
+            ORDER BY assessor limit 100;";
+
+            $ligacoes = $this->dbMasterDefault->runQuery($sqlLigacoesOperador);
+
+            $sendData = "☎️☎️☎️ LIGAÇÕES DE HOJE \n";
+            $totalGeral = 0;
+            if ($ligacoes['existRecord']){
+                foreach ($ligacoes["result"]->getResult() as $row){
+                    $assessor = $row->assessor;
+                    $assessorShort = substr($assessor, 0, 17) . "...";
+                    $total = $row->total;
+                    $totalGeral = $total + $totalGeral;
+
+                    $sendData .=  "- $assessorShort [$total] \n";
+                }
+            }
+            $sendData .=  "\nTotal Geral: $totalGeral\n";
+
+            $this->telegram->notifyTelegramGroup($sendData, telegramQuid);
+        }
+
+
     
     
 }

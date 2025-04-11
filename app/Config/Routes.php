@@ -74,6 +74,7 @@ $routes->match(['get', 'post'], '/calculadora-qualificacao/(:any)', 'Aaspa\Integ
 //ARJGUS
 $routes->match(['get', 'post'], '/argus-atendimento-webhook', 'Argus\Argus::argus_atendimento_webhook');
 $routes->match(['get', 'post'], '/argus-atendimento-webhook-vap', 'Argus\Argus::argus_atendimento_webhook_vap');
+$routes->match(['get', 'post'], '/metricas-ligacao-operador', 'Argus\Argus::metricas_ligacao_operador');
 
 
 //FRONTLINE

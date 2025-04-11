@@ -28,7 +28,7 @@ class Integraall extends BaseController
 
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger) {
         parent::initController($request, $response, $logger);
-        $this->checkSession();
+        //$this->checkSession();
         //o dbMasterDefault vai apontar para o banco do InsightSuite
         $this->dbMasterDefault = new dbMaster();
         $this->session = session();
@@ -107,8 +107,7 @@ class Integraall extends BaseController
     ///http://localhost/InsightSuite/public/integraall-listar-propostas
     ///https://insightsuite.pravoce.io/integraall-listar-propostas
     public function listar_propostas(){
-        
-        $filters = ['DataCadastroInicio' => date('Y-m-d 00:00:00', strtotime('-5 days')), 'DataCadastroFim' => date('Y-m-d 23:59:59')]; 
+        $filters = ['DataCadastroInicio' => date('Y-m-d 00:00:00', strtotime('-7 days')), 'DataCadastroFim' => date('Y-m-d 23:59:59')]; 
         //$filters = ['TermoDaBusca' => '100.320.817-74']; 
         $result = $this->m_integraall->listarPropostas($filters);
 
@@ -116,6 +115,10 @@ class Integraall extends BaseController
             $retorno = json_decode($result['retorno'], true);
             if (isset($retorno['qtdResultado']) && $retorno['qtdResultado'] > 0){
                 $propostas = $retorno['resultado'];
+
+                $strDelta = "";
+                $totalUpdates = 0;
+
                 foreach ($propostas as $proposta){
                     // {
                     //     "id": 24610,
@@ -159,6 +162,7 @@ class Integraall extends BaseController
                         'produtoId' => $proposta['produtoId'],
                         'statusAdicional' => $proposta['statusAdicional'],
                         "revendedorId" => $proposta['revendedorId'],
+                        "data_ativacao" => $proposta['dataSolicitacaoAtivacao'],
                         "vendedorUsuarioId" => $proposta['vendedorUsuarioId']
                     ];
 
@@ -185,13 +189,40 @@ class Integraall extends BaseController
                     // echo "vendedorUsuarioId: " . $proposta['vendedorUsuarioId'] . "<br>";
 
 
-                    $proposta = $this->dbMasterDefault->select('aaspa_propostas', ['integraallId' => $data['integraallId']]);
+                    $propostaIntegraall = $this->dbMasterDefault->select('aaspa_propostas', ['integraallId' => $data['integraallId']]);
+                    //echo "Consultando proposta: " . $data['integraallId'] . "<br>";
 
-                    if (!$proposta['existRecord']){
+                    if (!$propostaIntegraall['existRecord']){
                         $added = $this->dbMasterDefault->insert('aaspa_propostas', $data);
                     } else {
+                           // echo '14:19:00 - <h3>Dump 30 </h3> <br><br>' . var_dump($propostaIntegraall) ;					//<-------DEBUG
+
+                        $nomeStatusAtual = strtoupper($propostaIntegraall['firstRow']->nomeStatus);
+                        $statusAdicionalAtual = strtoupper($propostaIntegraall['firstRow']->statusAdicional);
+
+                        $nomeStatusNovo = strtoupper($data['nomeStatus']);
+                        $statusAdicionalNovo = strtoupper($data['statusAdicional']);
+
+                        if (($nomeStatusNovo <> $nomeStatusAtual) or ($statusAdicionalNovo <> $statusAdicionalAtual)){
+                            $totalUpdates = $totalUpdates + 1;
+                            $strDelta .= "\n\n<b>" . $data['integraallId'] . " | " . strtoupper($data['nomeCliente']) . "</b>\n";
+                            $strDelta .= substr(strtoupper($data['assessor']), 0, 20) . "...\n";
+                            $strDelta .= "❌ <s>$nomeStatusAtual / $statusAdicionalAtual</s>\n";
+                            $strDelta .= "👉 $nomeStatusNovo / $statusAdicionalNovo";
+                            if ($totalUpdates > 15) {
+                                $strDelta .= "\n\n + propostas não listadas.";  
+                                break;
+                            } 
+                        }
+
                         $updated = $this->dbMasterDefault->update('aaspa_propostas', $data, ['integraallId' => $data['integraallId']]);
                     }
+                }
+
+                if (!empty($strDelta)){
+                    $strDelta = "♻️♻️♻️ SINCRONIZAÇÃO INTEGRAALL" . $strDelta;
+                    //echo $strDelta;
+                    $result = $this->telegram->notifyTelegramGroup($strDelta, telegramQuid);
                 }
             }
         }
@@ -199,6 +230,7 @@ class Integraall extends BaseController
     
     ///http://localhost/InsightSuite/public/calculadora-qualificacao/00001421743
     public function calculadora_qualificacao($cpf = null){
+        $this->checkSession();
         $data = array();
         $data["entrada"] = $cpf;
         $data["tipoConsulta"] = 1;
@@ -250,6 +282,7 @@ class Integraall extends BaseController
 
     ///http://localhost/InsightSuite/public/integraall-validar-tse/44105517953
     public function validar_tse($cpf){
+        $this->checkSession();
         $filters = ['cpf' => $cpf, 'tipo'=> 6];    //tipo 6 = produto AASPA 
         $result = $this->m_integraall->tse($filters);
 
@@ -302,6 +335,7 @@ class Integraall extends BaseController
     ///http://localhost/InsightSuite/public/integraall-validar-cpf/15918660810
     ///https://insightsuite.pravoce.io/integraall-validar-cpf/15918660810
     public function validar_cpf($cpf){
+        $this->checkSession();
         $filters = ['cpf' => $cpf, 'tipo'=> 6];    //tipo 6 = produto AASPA 
         $result = $this->m_integraall->validarCpf($filters);
 
