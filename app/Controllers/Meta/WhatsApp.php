@@ -52,6 +52,7 @@ class WhatsApp extends BaseController
         $atendenteNome = $this->session->nickname;
         $messages = [];
         $currentConversation = null;
+        $conversationWindow = null;
         $clientesCRM = null;
         $topConversation = null;
 
@@ -59,6 +60,8 @@ class WhatsApp extends BaseController
         if (!empty($ConversationSid)){
             $messages = $this->m_whatsapp->getMessages(['ConversationSid' => $ConversationSid]);
             $currentConversation = $this->m_whatsapp->getConversation(['ConversationSid' => $ConversationSid]);
+            $conversationWindow = $this->m_whatsapp->getConversationWindow($currentConversation['firstRow']->telefoneCliente);
+
         } 
         //caso uma busca no CRM tenha sido feita
         else  if (!empty($search)){
@@ -106,6 +109,7 @@ class WhatsApp extends BaseController
                 //busca todas as mensagens trocadas
                 $messages = $this->m_whatsapp->getMessages(['ConversationSid' => $currentConversationSid]);
                 $currentConversation = $this->m_whatsapp->getConversation(['ConversationSid' => $currentConversationSid]);
+                $conversationWindow = $this->m_whatsapp->getConversationWindow($currentConversation['firstRow']->telefoneCliente);
             }
         }
 
@@ -117,6 +121,7 @@ class WhatsApp extends BaseController
             if ($conversations['existRecord']){
                 $messages = $this->m_whatsapp->getMessages(['ConversationSid' => $conversations['firstRow']->ConversationSid]);
                 $currentConversation = $this->m_whatsapp->getConversation(['ConversationSid' => $conversations['firstRow']->ConversationSid]);
+                $conversationWindow = $this->m_whatsapp->getConversationWindow($currentConversation['firstRow']->telefoneCliente);
             }
         }
 
@@ -124,6 +129,7 @@ class WhatsApp extends BaseController
         $topConversation = $this->m_whatsapp->getTopConversation($userId);
         $toptMessage = $this->m_whatsapp->getTopMessage((isset($currentConversation['firstRow']->ConversationSid)  ? $currentConversation['firstRow']->ConversationSid : 0));
 
+        $templates = $this->whatsapp_list_templates();
         
         $data['pageTitle'] = "WhatsApp Chat";
         $data['ConversationSid'] = $ConversationSid;
@@ -131,17 +137,19 @@ class WhatsApp extends BaseController
         $data['conversations'] = $conversations;
         $data['messages'] = $messages;
         $data['currentConversation'] = $currentConversation;
+        $data['conversationWindow'] = $conversationWindow;
         $data['clientesCRM'] = $clientesCRM;
         $data['search'] = $search;
         $data['session'] = $this->session;
         $data['topConversation'] = $topConversation;
+        $data['templates'] = $templates;
         return $this->loadpage('whatsapp/chat', $data);
 
     }
 
 
     //http://localhost/InsightSuite/public/whatsapp-webhook
-    // https://b31f-177-73-197-2.ngrok-free.app/InsightSuite/public/whatsapp-webhook
+    // https://2ff8-2804-1b3-6149-92ba-1d5-e266-2b71-4c38.ngrok-free.app/InsightSuite/public/whatsapp-webhook
     public function whatsapp_webhook(){
         //$result = $this->m_whatsapp->getWhatsAppMedia("1357103935532763", "image/jpeg");
         //http_response_code(200);
@@ -150,7 +158,7 @@ class WhatsApp extends BaseController
         $mode =  $this->getpost('hub_mode') ?? '';
         $token =  $this->getpost('hub_verify_token') ?? '';
         $challenge =  $this->getpost('hub_challenge') ?? '';
-        $WEBHOOK_VERIFY_TOKEN = 'PRAVOCE0404';
+        $WEBHOOK_VERIFY_TOKEN = 'PRAVOCE';
         // Recebe o JSON enviado pelo webhook do WhatsApp
         $json = file_get_contents('php://input');
 
@@ -192,7 +200,7 @@ class WhatsApp extends BaseController
 
                             $returnErros = $status['errors'] ?? [];
                             foreach ($returnErros as $errorIndex => $errorArray) {
-                                $detail = $errorArray['details'] ?? "";
+                                $detail = $errorArray['message'] ?? "";
                                 $this->telegram->notifyTelegramGroup("🚨🚨🚨 Error Message $messageSid \n$detail", telegramQuid);
                             }
 
@@ -231,7 +239,17 @@ class WhatsApp extends BaseController
                             }
 
                             //Registra a mensagem recebida na conversa existente
-                            $data = ['ConversationSid' => $conversation['firstRow']->ConversationSid, 'media_format' => $messageType, 'MessageSid' => $messageId, 'Type' => 'WHATSAPP', 'ProfileName' => $contactName, 'direction' => 'C2B', 'SmsStatus' => 'RECEIVED', 'To' => ($to), 'From' => normalizePhone($from)];
+                            $data = [
+                                'ConversationSid' => $conversation['firstRow']->ConversationSid,
+                                'media_format' => $messageType,
+                                'MessageSid' => $messageId,
+                                'Type' => 'WHATSAPP',
+                                'ProfileName' => $contactName,
+                                'direction' => 'C2B',
+                                'SmsStatus' => 'RECEIVED',
+                                'To' => ($to),
+                                'From' => normalizePhone($from)
+                            ];
                             
                             if ($messageType == "text"){
                                 $contextMessageId = $message['context']['id'] ?? "";
@@ -257,6 +275,13 @@ class WhatsApp extends BaseController
 
                                 $result = $this->m_whatsapp->getWhatsAppMedia($mediaId, $mime_type);
                                 if ($result['sucesso']) {$data['media_name'] = $result['fileName'];}
+                            } else if ($messageType == "sticker"){
+                                $mediaId = $message['sticker']['id'];
+                                $mime_type = $message['sticker']['mime_type'];
+                                $data['Body'] = $message['image']['caption'] ?? "Sticker recebida.";
+
+                                $result = $this->m_whatsapp->getWhatsAppMedia($mediaId, $mime_type);
+                                if ($result['sucesso']) {$data['media_name'] = $result['fileName'];}
 
                             } else if ($messageType == "audio"){
                                 $mediaId = $message['audio']['id'];
@@ -273,7 +298,7 @@ class WhatsApp extends BaseController
                             }
 
                             $this->m_whatsapp->createMessage($data, $conversation);
-                            $this->m_whatsapp->updateConversation(['msgCount' => $conversation['firstRow']->msgCount + 1], ['id' => $conversation['firstRow']->id], ['last_updated' => 'current_timestamp()']);
+                            $this->m_whatsapp->updateConversation(['dataUltimaMensagemCliente' => date('Y-m-d H:i:s'), 'msgCount' => $conversation['firstRow']->msgCount + 1], ['id' => $conversation['firstRow']->id], ['last_updated' => 'current_timestamp()']);
                         }
                     }
                 }
@@ -286,6 +311,7 @@ class WhatsApp extends BaseController
     }
 
     //http://localhost/InsightSuite/public/whatsapp-send-template
+    //TWILIO
     public function whatsapp_send_template(){
         $this->checkSession();
 
@@ -317,6 +343,27 @@ class WhatsApp extends BaseController
         } else {
             echo $result["error"];
         }
+    }
+
+    //http://localhost/InsightSuite/public/whatsapp-send-template-cloud
+    //META CLOUD API
+    public function whatsapp_send_template_cloud($templateName, $body, $to, $conversation){
+
+        //$conversation = '88f3a584-186d-11f0-9224-fe427d5affb6';
+        //$to = '5531995781355';
+        //$templateName = "antedimento_telefonico";
+
+        $result = $this->m_whatsapp->sendWhatsAppTemplateCloud($templateName, $body, $to, $conversation);
+        return  $result;
+    }
+
+    //http://localhost/InsightSuite/public/whatsapp-list-templates
+    //META CLOUD API
+    public function whatsapp_list_templates(){
+        $result = $this->m_whatsapp->searchTempalte();
+        return $result;
+
+
     }
 
     //http://localhost/InsightSuite/public/whatsapp-send-text
@@ -378,33 +425,34 @@ class WhatsApp extends BaseController
         // Acessa os dados
         $messageToSend = $request['message'] ?? '';
         $conversationSid = $request['conversationSid'] ?? '';
+        $tipo = $request['tipo'] ?? '';
+        $templateName = $request['templateName'] ?? '';
+
+        // $messageToSend = "Olá";
+        // $conversationSid =  '88f3a584-186d-11f0-9224-fe427d5affb6';
+        // $tipo = 'template';
+        // $templateName = 'antedimento_telefonico';
+
         $returnData["sucesso"] = false;
-
-
-        if (empty($messageToSend)) {
-            $returnData["status"] = false;
-            $returnData["error"] = "Mensagem vazia.";
-        }
-        
-        //$messageToSend = "mat";
-        //$conversationSid = "3ac39a00-1619-11f0-983b-fe427d5affb6";
-
+        if (empty($messageToSend)) {$returnData["error"] = "Mensagem vazia.";}
 
         //verifica se existe uma conversa aberta o que sera o normal no envio direct
         $conversation = $this->m_whatsapp->getConversation(['conversationSid' => $conversationSid]);
-
-        // //cria conversa se necessário
-        // if (!$conversation['existRecord']) $conversation = $this->m_whatsapp->createConversation(['telefoneCliente' => normalizePhone($to),'telefoneBot' => fromWhatsApp,'nomeCliente' => $nomeCliente,'nomeBot' => 'INSIGHT','atendenteId' => $this->session->userId,'atendenteNome' => $this->session->nickname,]);
 
         if ($conversation['existRecord']){
             $telefoneCliente = $conversation['firstRow']->telefoneCliente;
 
             if (!empty($telefoneCliente)){
-                $returnData = $this->m_whatsapp->sendWhatsApp($messageToSend, $telefoneCliente, $conversation);
-                //messageDetail.direction, messageDetail.last_updated, messageDetail.Body, messageDetail.ProfileName
+                if ($tipo == 'message') {
+                    $returnData += $this->m_whatsapp->sendWhatsApp($messageToSend, $telefoneCliente, $conversation);
+                } else if (($tipo == 'template') and (!empty($templateName))) {
+                    $returnData += $this->whatsapp_send_template_cloud($templateName, $messageToSend, $telefoneCliente, $conversation);
+                }
+
+                $returnData["Body"] = $messageToSend;
                 $returnData["direction"] = "B2C";
                 $returnData["last_updated"] = time_elapsed_string(date("Y-m-d H:i:s"));
-                $returnData["Body"] = $messageToSend;
+                
                 $returnData["ProfileName"] = "INSIGHT";
             }
         }

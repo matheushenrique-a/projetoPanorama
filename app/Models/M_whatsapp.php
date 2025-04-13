@@ -141,6 +141,71 @@ class m_whatsapp extends Model {
 		return $returnData;
 	}
 
+	//buca template na Cloud API
+	function searchTempalte(){
+		$headers = [];
+		$headers[] = "Authorization: Bearer " . META_TOKEN_WHATSAPP;
+
+		$url = META_CLOUD_API_RAW . META_CLOUD_BUSINESS_ID . '/message_templates?search=antedimento_telefonico';
+		$result = $this->m_http->http_request('GET', $url, $headers);
+		return $result;
+	}
+
+	//envia template direto pela CLoud API
+	function sendWhatsAppTemplateCloud($templateName, $body, $to, $conversation){
+		$returnData["sucesso"] = false;
+        $returnData["error"] = "";
+		$returnData["messageId"] = "";
+
+		$messageId = 'N/I';
+		$messageStatus = "ACCEPTED";
+
+		if (whatAppMsg) {
+			$headers = $this->getHeader();
+			$url = META_CLOUD_API_RAW . META_CLOUD_PHONE_ID . '/messages';
+
+			$data = [
+				"messaging_product" => "whatsapp",
+				"recipient_type" => "individual",
+				"to" => $to,
+				"type" => "template",
+				"template" => [
+					"name" => $templateName,
+					"language" => ["code" => "PT_BR"]
+					]
+				];
+			
+			$result = $this->m_http->http_request('POST', $url, $headers, $data);
+			 
+			if ($result['sucesso']){
+				$retorno = json_decode($result['retorno'], true);
+				//echo '18:35:30 - <h3>Dump 35 </h3> <br><br>' . var_dump($retorno); exit;					//<-------DEBUG
+				
+				if (isset($retorno['messaging_product'])){
+					$returnData["sucesso"] = true;
+					$returnData["messageId"] = $retorno['messages'][0]['id'];
+				} else {
+					$returnData["error"] = "Erro ao enviar mensagem: " . $result['retorno'];
+					$messageStatus = "ERROR";
+				}
+			} else {
+				$returnData["error"] = "Erro HTTP ao enviar mensagem: " . $result['retorno'];
+				$messageStatus = "ERROR";
+			}
+			//Registra conversa no histórico
+			$data = (array('ConversationSid' => $conversation['firstRow']->ConversationSid, 'MessageSid' => $returnData["messageId"], 'Type' => 'WHATSAPP', 'ProfileName' => 'INSIGHT', 'direction' => 'B2C', 'Body' => $body, 'SmsStatus' => strtoupper($messageStatus), 'error' => $returnData["error"], 'To' => normalizePhone($to), 'From' => (fromWhatsApp)));
+			$added = $this->createMessage($data, $conversation);
+			$returnData["id"] = $added["insert_id"];
+			
+		} else {
+			$messageStatus = "DISABLED";
+			$returnData["error"] = "Envio WhatsApp desativado nas configurações.";
+		}
+
+		$returnData["status"] = traduzirStatusTwilio($messageStatus)[0];
+		return $returnData;
+	}
+
 	//mensagens enviadas pelo chatbot, mas sensiveis a opção de notificação via whatsapp
 	function getWhatsAppMedia($mediaId, $mime_type){
 		$returnData["sucesso"] = false;
@@ -169,14 +234,19 @@ class m_whatsapp extends Model {
 				$headers[] = "Authorization: Bearer " . META_TOKEN_WHATSAPP;
 				$headers[] = "User-Agent: WhatsApp/2.19.81 A";
 				
+				$this->dbMasterDefault->insert('record_log',['log' => "Curl URL: " . $imageUrl]);
 				$ch = curl_init($imageUrl);
 				curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 				curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+				//curl_setopt($ch, CURLOPT_CAINFO, PATH_SAVE_MEDIA . 'cacert.pem'); // caminho do seu arquivo
+				// curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+				// curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 				curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true); // <-- ESSENCIAL para mídia
 				$response = curl_exec($ch);
 	
 				if (curl_errno($ch)) {
 					$returnData["error"] =  "Erro ao fazer o download Media Id<br>: $mediaId, Mime: $mime_type: " . curl_error($ch);
+					$this->dbMasterDefault->insert('record_log',['log' => "Http Return Get Media: " . curl_error($ch)]);
 				} else {
 					try {
 						file_put_contents($outputFile, $response);
@@ -200,6 +270,42 @@ class m_whatsapp extends Model {
 	public function getConversation($filter){
 		$this->dbMasterDefault->setOrderBy(array("data_criacao", "DESC"));
 		return $this->dbMasterDefault->select('whatsapp_conversations', $filter);
+	}
+	
+	public function getConversationWindow($telefoneCliente){
+		$returnData["janela_aberta"] = false;
+        $returnData["minutos_passados"] = 0;
+        $returnData["minutos_restantes"] = 0;
+        $returnData["hora_fechamento"] = 0;
+
+		$sql = "SELECT 
+				dataUltimaMensagemCliente,
+				TIMESTAMPDIFF(MINUTE, dataUltimaMensagemCliente, NOW()) AS minutos,
+				DATE_ADD(dataUltimaMensagemCliente, INTERVAL 24 HOUR) AS fechamentoJanela
+				FROM 
+				whatsapp_conversations
+				WHERE 
+				telefoneCliente = '$telefoneCliente';";
+	
+		$result = $this->dbMasterDefault->runQuery($sql);
+
+		if ($result['existRecord']){
+			$minutos = $result['firstRow']->minutos; //minutos desde a ultima conversa. Se > 1440 (24h) a janela foi perdida.
+			$dataUltimaMensagemCliente = $result['firstRow']->dataUltimaMensagemCliente; 
+			$fechamentoJanela = $result['firstRow']->fechamentoJanela; 
+
+			if (!empty($dataUltimaMensagemCliente)){
+				if ($minutos < 1440){
+					$returnData["janela_aberta"] = true;
+					$returnData["minutos_passados"] = $minutos;
+					$returnData["minutos_restantes"] = 1440 - $minutos;
+					$returnData["hora_fechamento"] = dataUsPtHours($fechamentoJanela, true);
+				}
+			}
+		}
+
+		return $returnData;
+
 	}
 
 	public function getConversationTopMsg($userId){

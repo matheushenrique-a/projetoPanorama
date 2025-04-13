@@ -46,6 +46,8 @@ $routes->match(['get', 'post'], '/whatsapp-webhook', 'Meta\WhatsApp::whatsapp_we
 $routes->match(['get', 'post'], '/whatsapp-listner/(:any)/(:any)/(:any)/(:any)', 'Meta\WhatsApp::whatsapp_listner/$1/$2/$3/$4');
 $routes->match(['get', 'post'], '/whatsapp-direct', 'Meta\WhatsApp::whatsapp_direct');
 $routes->match(['get', 'post'], '/whatsapp-send-template', 'Meta\WhatsApp::whatsapp_send_template');
+$routes->match(['get', 'post'], '/whatsapp-send-template-cloud', 'Meta\WhatsApp::whatsapp_send_template_cloud');
+$routes->match(['get', 'post'], '/whatsapp-list-templates', 'Meta\WhatsApp::whatsapp_list_templates');
 $routes->match(['get', 'post'], '/whatsapp-send-text', 'Meta\WhatsApp::whatsapp_send_text');
 $routes->match(['get', 'post'], '/whatsapp-chat', 'Meta\WhatsApp::whatsapp_chat');
 

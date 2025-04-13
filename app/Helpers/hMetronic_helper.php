@@ -41,7 +41,7 @@ function chatMessageHTML($id, $direction, $last_updated, $Body, $SmsStatus, $Pro
                     <span class="text-muted fs-7 mb-1 ms-0 ps-0" id="msgStatus-'.  $id . '">' . traduzirStatusTwilio($SmsStatus)[0] . '</span>
                 </div>';
 
-                if ($media_format == 'image'){
+                if (($media_format == 'image') or ($media_format == 'sticker')){
                     $output .= '<div class="p-5 rounded bg-light-primary text-dark fw-bold mw-lg-400px text-end" data-kt-element="message-text" id="msgBody-img-'.  $id . '"><img src="' . assetfolder . 'assets/media/whatsapp/' . $media_name . '" style="width: 250px"></div>';
                 } else  if ($media_format == 'audio'){
                     $output .= '<div class="p-5 rounded bg-light-primary text-dark fw-bold mw-lg-400px text-end" data-kt-element="message-text" id="msgBody-img-'.  $id . '"><audio controls>

@@ -426,6 +426,16 @@
 		}
 	}
 
+	function dataUsPtHours($dateEntry, $barSeparator = false){
+		$date = str_replace('/', '-', $dateEntry ?? '');
+
+		if ($barSeparator){
+			return date('d/m/Y  H:i:s', strtotime($date));
+		} else {
+			return date('d-m-Y  H:i:s', strtotime($date));
+		}
+	}
+
 	function getFasesCategory($category){
 		$category = strtolower($category);
 		$fases = getFases();

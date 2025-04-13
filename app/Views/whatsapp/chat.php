@@ -308,12 +308,22 @@
 												<div class="card-title">
 													<!--begin::User-->
 													<div class="d-flex justify-content-center flex-column me-3">
-														<a href="#" class="fs-4 fw-bolder text-gray-900 text-hover-primary me-1 mb-2 lh-1"><?php echo $currentConversation['firstRow']->nomeCliente ?? "";?></a>
+														<a href="#" class="fs-4 fw-bolder text-gray-900 text-hover-primary me-1 mb-2 lh-1 mt-4"><?php echo $currentConversation['firstRow']->nomeCliente ?? "ESCOLHA UM CLIENTE";?></a>
 														<!--begin::Info-->
 														<div class="mb-0 lh-1">
 															<span class="badge badge-success badge-circle w-10px h-10px me-1"></span>
-															<span class="fs-7 fw-bold text-muted"><?php echo formatarTelefone($currentConversation['firstRow']->telefoneCliente ?? "");?> - <?php echo ($currentConversation['firstRow']->ConversationSid ?? "");?></span>
+															<?php if (isset($conversationWindow['janela_aberta'])) {?>
+																<span class="fs-7 fw-bold text-muted"><?php echo formatarTelefone($currentConversation['firstRow']->telefoneCliente ?? "");?> - <?php echo ($currentConversation['firstRow']->ConversationSid ?? "");?></span>
+															<?php } else {?>
+																<span class="fs-7 fw-bold text-muted">Inicie uma conversa para ver os detalhes</span>
+															<?php };?>
 														</div>
+														<?php if (isset($conversationWindow['janela_aberta'])) {?>
+														<div class="mb-0 lh-1">
+															<span class="badge badge-<?php echo ($conversationWindow['janela_aberta'] ?? false  ? 'success' : 'danger');?> badge-circle w-10px h-10px me-1"></span>
+															<span class="fs-7 fw-bold text-muted">Status Janela: <?php echo ($conversationWindow['janela_aberta'] ?? false  ? 'Aberta até ' .  $conversationWindow['hora_fechamento']: 'Fechada');?></span>
+														</div>
+														<?php };?>
 														<!--end::Info-->
 													</div>
 													<!--end::User-->
@@ -345,8 +355,8 @@
 															<!--end::Menu item-->
 															<!--begin::Menu item-->
 															<div class="menu-item px-3">
-																<a href="#" class="menu-link flex-stack px-3" data-bs-toggle="modal" data-bs-target="#kt_modal_invite_friends">Transferir
-																<i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="Specify a contact email to send an invitation"></i></a>
+																<a href="#" class="menu-link flex-stack px-3" data-bs-toggle="modal" data-bs-target="#kt_modal_invite_friends">Templates
+																<i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="Envie mensagens padronizadas"></i></a>
 															</div>
 															<!--end::Menu item-->
 															<!--begin::Menu item-->
@@ -427,22 +437,31 @@
 													<input type="hidden" name="currentConversationSid" id="currentConversationSid" value="<?php echo $currentConversation['firstRow']->ConversationSid ?? ''; ?>">
 													<input type="hidden" name="topConversation" id="topConversation" value="<?php echo $topConversation;?>">
 													<input type="hidden" name="toptMessage" id="toptMessage" value="<?php echo $toptMessage;?>">
-													<textarea class="form-control form-control-flush mb-3" rows="1" data-kt-element="input" placeholder="Digite sua mensagem" name="messageToSend"  id="messageToSend" onkeydown="if(event.key === 'Enter'){ sendWhatsApp(); return false; }"></textarea>
+													<?php if (((isset($conversationWindow['janela_aberta']))) and ($conversationWindow['janela_aberta'])) {?>
+														<textarea class="form-control form-control-flush mb-3" rows="1" data-kt-element="input" placeholder="Digite sua mensagem" name="messageToSend"  id="messageToSend" onkeydown="if(event.key === 'Enter'){ sendWhatsApp('message'); return false; }"></textarea>
+													<?php } else {;?>
+														<textarea class="form-control form-control-flush mb-3" rows="1" data-kt-element="input" placeholder="Para iniciar a conversa envie um template primeiro." disabled name="messageToSend"  id="messageToSend" onkeydown="if(event.key === 'Enter'){ sendWhatsApp('message'); return false; }"></textarea>
+													<?php }?>
 													<!--end::Input-->
 													<!--begin:Toolbar-->
 													<div class="d-flex flex-stack">
 														<!--begin::Actions-->
 														<div class="d-flex align-items-center me-2">
-															<button class="btn btn-sm btn-icon btn-active-light-primary me-1" type="button" data-bs-toggle="tooltip" title="Coming soon">
+															<button class="btn btn-sm btn-icon btn-active-light-primary me-1" type="button" data-bs-toggle="tooltip" title="Em contrução">
 																<i class="bi bi-paperclip fs-3"></i>
 															</button>
-															<button class="btn btn-sm btn-icon btn-active-light-primary me-1" type="button" data-bs-toggle="tooltip" title="Coming soon">
-																<i class="bi bi-upload fs-3"></i>
-															</button>
+															<a href="#" class="btn btn-sm btn-icon btn-active-light-primary me-1" type="button" data-bs-toggle="modal" data-bs-target="#kt_modal_invite_friends" title="Template Mensagem">
+																<i class="bi bi-bookmark-check fs-3"></i>
+															</a>
 														</div>
 														<!--end::Actions-->
 														<!--begin::Send-->
-														<button class="btn btn-primary" type="button" value="sendMsg" name="btnSendMsg" id="btnSendMsg" onclick="sendWhatsApp();">Enviar</button>
+														<?php if (((isset($conversationWindow['janela_aberta']))) and ($conversationWindow['janela_aberta'])) {?>
+															<button class="btn btn-primary" type="button" value="sendMsg" name="btnSendMsg" id="btnSendMsg" onclick="sendWhatsApp('message');">Enviar</button>
+														<?php } else {;?>
+															<a class="btn btn-info" type="button" value="sendMsg" data-bs-toggle="modal" data-bs-target="#kt_modal_invite_friends">Templates</a>
+														<?php }?>
+
 														<!--end::Send-->
 													</div>
 												</form>
@@ -481,7 +500,7 @@
 											<!--begin::Modal body-->
 											<div class="modal-body scroll-y mx-5 mx-xl-18 pt-0 pb-15">
 												<!--begin::Heading-->
-												<div class="text-center mb-13">
+												<div class="text-center mb-5">
 													<!--begin::Title-->
 													<h1 class="mb-3">Browse Users</h1>
 													<!--end::Title-->
@@ -990,7 +1009,7 @@
 											<!--begin::Modal body-->
 											<div class="modal-body scroll-y mx-5 mx-xl-18 pt-0 pb-15">
 												<!--begin::Content-->
-												<div class="text-center mb-13">
+												<div class="text-center mb-5">
 													<h1 class="mb-3">Search Users</h1>
 													<div class="text-muted fw-bold fs-5">Invite Collaborators To Your Project</div>
 												</div>
@@ -1782,6 +1801,101 @@
 					<!--end::Content-->
 
 
+					<!--begin::Modal - Invite Friends-->
+					<div class="modal fade" id="kt_modal_invite_friends" tabindex="-1" aria-hidden="true">
+								<!--begin::Modal dialog-->
+								<div class="modal-dialog mw-650px">
+									<!--begin::Modal content-->
+									<div class="modal-content">
+										<!--begin::Modal header-->
+										<div class="modal-header pb-0 border-0 justify-content-end">
+											<!--begin::Close-->
+											<div class="btn btn-sm btn-icon btn-active-color-primary" data-bs-dismiss="modal">
+												<!--begin::Svg Icon | path: icons/duotune/arrows/arr061.svg-->
+												<span class="svg-icon svg-icon-1">
+													<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+														<rect opacity="0.5" x="6" y="17.3137" width="16" height="2" rx="1" transform="rotate(-45 6 17.3137)" fill="currentColor" />
+														<rect x="7.41422" y="6" width="16" height="2" rx="1" transform="rotate(45 7.41422 6)" fill="currentColor" />
+													</svg>
+												</span>
+												<!--end::Svg Icon-->
+											</div>
+											<!--end::Close-->
+										</div>
+										<!--begin::Modal header-->
+										<!--begin::Modal body-->
+										<div class="modal-body scroll-y mx-2 mx-xl-8 pt-0 ps-3 pe-3 pb-15">
+											<!--begin::Heading-->
+											<div class="text-center mb-5">
+												<!--begin::Title-->
+												<h1 class="mb-0">Iniciar Conversa</h1>
+												<!--end::Title-->
+												<!--begin::Description-->
+												<div class="text-muted fw-semibold fs-5">Escolha o modelo para iniciar a conversa</div>
+												<!--end::Description-->
+											</div>
+											<!--begin::Users-->
+											<div class="mb-3">
+												<!--begin::List-->
+												<div class="mh-300px scroll-y me-n7 pe-2">
+
+													<?php 
+													
+													if ($templates['sucesso']){
+														$listaTemplates = json_decode($templates['retorno'], true);
+														if (isset($listaTemplates['data'])) {
+															foreach ($listaTemplates['data'] as $template) {
+																if (isset($template['language'], $template['status']) &&  strtoupper($template['language']) === 'PT_BR' && $template['status'] === 'APPROVED') {
+																	?>
+
+																	<!--begin::User-->
+																	<div class="d-flex flex-stack py-4 border-bottom border-gray-300 border-bottom-dashed">
+																		<div class="d-flex align-items-center">
+																			<div class="symbol symbol-35px symbol-circle"><span class="symbol-label bg-light-danger text-info fw-semibold"><?php echo substr($template['components'][0]['text'], 0, 1);?></span></div>
+																			<div class="ms-5" style="width: 450px">
+																				<span class="fs-5 fw-semi-bold text-gray-900 text-hover-primary mb-2" id="template-body-<?php echo $template['name'];?>"><?php echo $template['components'][0]['text'];?></span>
+																				<div class="fw-semibold text-muted"><?php echo $template['name'] . " [" . $template['id'] . "]";?></div>
+																			</div>
+																		</div>
+																		<div class="ms-2 w-100px">
+																			<button class="btn btn-sm btn-primary" type="button" value="sendMsg" name="btnSendMsg" id="btnSendMsg" onclick="sendWhatsApp('template', '<?php echo $template['name'];?>');" data-bs-dismiss="modal">Enviar</button>
+																		</div>
+																	</div>
+																	<!--end::User-->
+
+																<?php
+																}
+															}
+														}
+													}
+											
+													;?>
+
+																									
+													
+												</div>
+												<!--end::List-->
+											</div>
+											<!--end::Users-->
+											<!--begin::Notice-->
+											<div class="d-flex flex-stack">
+												<!--begin::Label-->
+												<div class="me-5 fw-semibold">
+													<label class="fs-6 mt-5">Após envio, aguarde a resposta do cliente</label>
+													<div class="fs-7 text-muted">Após a resposta do cliente você tem 24h para enviar mensagens livremente</div>
+												</div>
+												<!--end::Label-->
+											</div>
+											<!--end::Notice-->
+										</div>
+										<!--end::Modal body-->
+									</div>
+									<!--end::Modal content-->
+								</div>
+								<!--end::Modal dialog-->
+							</div>
+							<!--end::Modal - Invite Friend-->
+
 					<script>
 
 						window.addEventListener('load', function () {
@@ -1870,16 +1984,25 @@
 							conversationPanel.scrollTop = conversationPanel.scrollHeight;
 						}
 
-						function sendWhatsApp(){
+						function sendWhatsApp(tipo = 'message', templateName = ''){
 							const currentConversationSid = document.getElementById('currentConversationSid').value;
-							const messageToSendInput = document.getElementById('messageToSend');
-							const messageToSendText = messageToSendInput.value;
-							messageToSendInput.value = "";
+							let messageToSendText = "";
+
+							if (tipo == 'message'){
+								const messageToSendInput = document.getElementById('messageToSend');
+								messageToSendText = messageToSendInput.value;
+								messageToSendInput.value = "";
+							} else {
+								const messageToSendInput = document.getElementById('template-body-' + templateName);
+								messageToSendText = messageToSendInput.innerHTML;
+								console.log(messageToSendText);
+							}
+							
 							const btnSendMsg = document.getElementById('btnSendMsg');
 
+							//console.log(currentConversationSid + " - " + messageToSendText  + " - " +  tipo  + " - " +  templateName); return false;
 							const urlFetch = '<?php echo rootURL; ?>whatsapp-direct';
 
-							btnSendMsg
 							addToMessageList("000", "B2C", "agora", messageToSendText, "INSIGHT", "Aguarde", "text", "");
 							scrollToBottom();
 
@@ -1891,7 +2014,9 @@
 								cache: "no-cache",
 								body: JSON.stringify({
 									conversationSid: currentConversationSid,
-									message: messageToSendText
+									message: messageToSendText,
+									tipo: tipo,
+									templateName: templateName
 								})
 							})
 							.then(response => {
@@ -2007,7 +2132,7 @@
 											<span class="text-muted fs-7 mb-1 ms-0 ps-0" id="msgStatus-${id}">${SmsStatus}</span>
 										</div>`;
 
-										if (media_format == 'image'){
+										if ((media_format == 'image') || (media_format == 'sticker')) {
 											html += `<div class="p-5 rounded bg-light-primary text-dark fw-bold mw-lg-400px text-end" data-kt-element="message-text" id="msgBody-img-${id}"><img src="<?php echo assetfolder;?>assets/media/whatsapp/${media_name}" style="width: 250px"></div>`;
 										} else  if (media_format == 'audio'){
 											html += `<div class="p-5 rounded bg-light-primary text-dark fw-bold mw-lg-400px text-end" data-kt-element="message-text" id="msgBody-img-${id}">

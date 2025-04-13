@@ -22,6 +22,8 @@ define ('API_Calculadora', 'https://api2.calculadoraconsignado.com.br/api/');
 
 //WHATSAPP CLOUD API
 define ('META_CLOUD_API', "https://graph.facebook.com/v22.0/643196615539553/messages"); //643196615539553 = phone number id = +1 555 641 8758
+define ('META_CLOUD_PHONE_ID', "643196615539553"); //643196615539553 = phone number id = +1 555 641 8758
+define ('META_CLOUD_BUSINESS_ID', "1403356640797060"); //643196615539553 = phone number id = +1 555 641 8758
 define ('META_CLOUD_API_RAW', "https://graph.facebook.com/v22.0/"); //643196615539553 = phone number id = +1 555 641 8758
 define('PATH_SAVE_MEDIA', "/Applications/XAMPP/xamppfiles/htdocs/InsightSuite/public/assets/media/whatsapp/");
 
