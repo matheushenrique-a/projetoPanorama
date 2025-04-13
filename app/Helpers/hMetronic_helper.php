@@ -15,9 +15,9 @@ function chatMessageHTML($id, $direction, $last_updated, $Body, $SmsStatus, $Pro
                         <span class="text-muted fs-7 mb-1">' . time_elapsed_string($last_updated) . '</span>
                     </div>
                 </div>
-                <div class="p-5 rounded bg-light-info text-dark fw-bold mw-lg-400px text-start" data-kt-element="message-text" id="msgBody-'.  $id . '">' . htmlspecialchars($Body) . '</div>
+                <div class="p-5 rounded bg-light-info text-dark fw-bold mw-lg-400px text-start" data-kt-element="message-text" id="msgBody-'.  $id . '">' . ($Body) . '</div>
                 <div class="ms-1">
-                    <span class="text-muted fs-7 mb-1 ms-0 ps-0" id="msg-'.  $id . '">' . traduzirStatusTwilio($SmsStatus)[0] . '</span>
+                    <span class="text-muted fs-7 mb-1 ms-0 ps-0" id="msgStatus-'.  $id . '">' . traduzirStatusTwilio($SmsStatus)[0] . '</span>
                 </div>
             </div>
         </div>
@@ -36,20 +36,28 @@ function chatMessageHTML($id, $direction, $last_updated, $Body, $SmsStatus, $Pro
                         <img alt="Pic" src="' . assetfolder . 'assets/media/avatars/blank.png" />
                     </div>
                 </div>
-                <div class="p-5 rounded bg-light-primary text-dark fw-bold mw-lg-400px text-end" data-kt-element="message-text" id="msgBody-'.  $id . '">' . htmlspecialchars($Body) . '</div>';
+                <div class="p-5 rounded bg-light-primary text-dark fw-bold mw-lg-400px text-end" data-kt-element="message-text" id="msgBody-'.  $id . '">' . ($Body) . '</div>
+                <div class="ms-1">
+                    <span class="text-muted fs-7 mb-1 ms-0 ps-0" id="msgStatus-'.  $id . '">' . traduzirStatusTwilio($SmsStatus)[0] . '</span>
+                </div>';
 
-        if ($media_format == 'image'){
-            $output .= '<div class="p-5 rounded bg-light-primary text-dark fw-bold mw-lg-400px text-end" data-kt-element="message-text" id="msgBody-img-'.  $id . '"><img src="' . assetfolder . 'assets/media/whatsapp/' . $media_name . '" style="width: 250px"></div>';
-        } else  if ($media_format == 'audio'){
-            $output .= '<div class="p-5 rounded bg-light-primary text-dark fw-bold mw-lg-400px text-end" data-kt-element="message-text" id="msgBody-img-'.  $id . '"><audio controls>
-                <source src="' . assetfolder . 'assets/media/whatsapp/' . $media_name . '" type="audio/ogg">
-                Seu navegador não suporta áudio HTML5.
-                </audio></div>';
-        }
-
-        $output .= '</div>
-        </div>
-        <!--end::Message(out)-->';
+                if ($media_format == 'image'){
+                    $output .= '<div class="p-5 rounded bg-light-primary text-dark fw-bold mw-lg-400px text-end" data-kt-element="message-text" id="msgBody-img-'.  $id . '"><img src="' . assetfolder . 'assets/media/whatsapp/' . $media_name . '" style="width: 250px"></div>';
+                } else  if ($media_format == 'audio'){
+                    $output .= '<div class="p-5 rounded bg-light-primary text-dark fw-bold mw-lg-400px text-end" data-kt-element="message-text" id="msgBody-img-'.  $id . '"><audio controls>
+                        <source src="' . assetfolder . 'assets/media/whatsapp/' . $media_name . '" type="audio/ogg">
+                        Seu navegador não suporta áudio HTML5.
+                        </audio></div>';
+                } else  if ($media_format == 'video'){
+                    $output .= '<div class="p-5 rounded bg-light-primary text-dark fw-bold mw-lg-400px text-end" data-kt-element="message-text" id="msgBody-img-'.  $id . '">
+                        <video controls width="70%">
+                        <source src="' . assetfolder . 'assets/media/whatsapp/' . $media_name . '" type="audio/ogg">
+                        Seu navegador não suporta áudio HTML5.
+                        </video></div>';
+                }
+                $output .= '</div>
+                </div>
+                <!--end::Message(out)-->';
 
         return $output;
 

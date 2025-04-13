@@ -90,7 +90,10 @@ class m_whatsapp extends Model {
 	function sendWhatsApp($body, $to, $conversation){
 		$returnData["sucesso"] = false;
         $returnData["error"] = "";
-        $returnData["message"] = null;
+		$returnData["messageId"] = "";
+
+		$messageId = 'N/I';
+		$messageStatus = "ACCEPTED";
 
 		if (whatAppMsg) {
 			$headers = $this->getHeader();
@@ -108,17 +111,14 @@ class m_whatsapp extends Model {
 				];
 			
 			$result = $this->m_http->http_request('POST', $url, $headers, $data);
-
-			$messageId = 'N/I';
-			$messageStatus = "ACCEPTED";
-
+			 
 			if ($result['sucesso']){
 				$retorno = json_decode($result['retorno'], true);
+				//echo '18:35:30 - <h3>Dump 35 </h3> <br><br>' . var_dump($retorno); exit;					//<-------DEBUG
 				
 				if (isset($retorno['messaging_product'])){
 					$returnData["sucesso"] = true;
-					$messageId = $retorno['messages'][0]['id'];
-					$returnData["message"]['messageId'] = $messageId;
+					$returnData["messageId"] = $retorno['messages'][0]['id'];
 				} else {
 					$returnData["error"] = "Erro ao enviar mensagem: " . $result['retorno'];
 					$messageStatus = "ERROR";
@@ -127,15 +127,17 @@ class m_whatsapp extends Model {
 				$returnData["error"] = "Erro HTTP ao enviar mensagem: " . $result['retorno'];
 				$messageStatus = "ERROR";
 			}
-
 			//Registra conversa no histórico
-			$data = (array('ConversationSid' => $conversation['firstRow']->ConversationSid, 'MessageSid' => $messageId, 'Type' => 'WHATSAPP', 'ProfileName' => 'INSIGHT', 'direction' => 'B2C', 'Body' => $body, 'SmsStatus' => strtoupper($messageStatus), 'error' => $returnData["error"], 'To' => normalizePhone($to), 'From' => (fromWhatsApp)));
+			$data = (array('ConversationSid' => $conversation['firstRow']->ConversationSid, 'MessageSid' => $returnData["messageId"], 'Type' => 'WHATSAPP', 'ProfileName' => 'INSIGHT', 'direction' => 'B2C', 'Body' => $body, 'SmsStatus' => strtoupper($messageStatus), 'error' => $returnData["error"], 'To' => normalizePhone($to), 'From' => (fromWhatsApp)));
 			$added = $this->createMessage($data, $conversation);
 			$returnData["id"] = $added["insert_id"];
+			
 		} else {
+			$messageStatus = "DISABLED";
 			$returnData["error"] = "Envio WhatsApp desativado nas configurações.";
 		}
 
+		$returnData["status"] = traduzirStatusTwilio($messageStatus)[0];
 		return $returnData;
 	}
 

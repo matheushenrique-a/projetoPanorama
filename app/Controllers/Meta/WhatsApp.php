@@ -189,7 +189,13 @@ class WhatsApp extends BaseController
                             $statusType = strtoupper($status['status']);
                             $timestamp = $status['timestamp'];
                             $recipientId = $status['recipient_id'];
-    
+
+                            $returnErros = $status['errors'] ?? [];
+                            foreach ($returnErros as $errorIndex => $errorArray) {
+                                $detail = $errorArray['details'] ?? "";
+                                $this->telegram->notifyTelegramGroup("🚨🚨🚨 Error Message $messageSid \n$detail", telegramQuid);
+                            }
+
                             //atualiza o status da mensagem
                             $this->m_whatsapp->updateMessage(['SmsStatus' => $statusType], ['MessageSid' => $messageSid], ['last_updated' => 'current_timestamp()']);
                         }
@@ -228,7 +234,22 @@ class WhatsApp extends BaseController
                             $data = ['ConversationSid' => $conversation['firstRow']->ConversationSid, 'media_format' => $messageType, 'MessageSid' => $messageId, 'Type' => 'WHATSAPP', 'ProfileName' => $contactName, 'direction' => 'C2B', 'SmsStatus' => 'RECEIVED', 'To' => ($to), 'From' => normalizePhone($from)];
                             
                             if ($messageType == "text"){
-                                $data['Body'] = $messageBody;
+                                $contextMessageId = $message['context']['id'] ?? "";
+
+                                if (empty($contextMessageId)) {
+                                    $data['Body'] = $messageBody;
+                                } else {
+                                    //reply to message
+                                    $BodyOriginal = $this->dbMasterDefault->select('whatsapp_log', ['MessageSid' => $contextMessageId])['firstRow']->Body ?? "";
+                                    $data['Body'] = "Em resposta a [$BodyOriginal]:<br>$messageBody";
+                                }
+
+                            } else if ($messageType == "reaction"){
+                                $reactionMessage_id = $message['reaction']['message_id'];
+                                $emoji = $message['reaction']['emoji'];
+
+                                $BodyOriginal = $this->dbMasterDefault->select('whatsapp_log', ['MessageSid' => $reactionMessage_id])['firstRow']->Body ?? "";
+                                $data['Body'] = "Em reação a [$BodyOriginal]<br>$emoji";
                             } else if ($messageType == "image"){
                                 $mediaId = $message['image']['id'];
                                 $mime_type = $message['image']['mime_type'];
@@ -241,6 +262,12 @@ class WhatsApp extends BaseController
                                 $mediaId = $message['audio']['id'];
                                 $mime_type = $message['audio']['mime_type'];
                                 $data['Body'] = "Áudio recebido.";
+                                $result = $this->m_whatsapp->getWhatsAppMedia($mediaId, $mime_type);
+                                if ($result['sucesso']) {$data['media_name'] = $result['fileName'];}
+                            } else if ($messageType == "video"){
+                                $mediaId = $message['video']['id'];
+                                $mime_type = $message['video']['mime_type'];
+                                $data['Body'] = "Vídeo recebido.";
                                 $result = $this->m_whatsapp->getWhatsAppMedia($mediaId, $mime_type);
                                 if ($result['sucesso']) {$data['media_name'] = $result['fileName'];}
                             }
@@ -324,8 +351,12 @@ class WhatsApp extends BaseController
         $incomingNewMessages = $this->m_whatsapp->getConversationTopMsgShort($atendenteId);
 
         //todas novas mensagens acima dos ids já buscados para uma conversa
-        $sql = "select id, ConversationSid, Body, ProfileName, direction, l.Type, media_format, media_name, SmsStatus, l.To, l.From, l.error, last_updated from whatsapp_log l where ConversationSid = '$ConversationSid' and id > $topMessage order by id;";
+        //$sql = "select id, ConversationSid, Body, ProfileName, direction, l.Type, media_format, media_name, SmsStatus, l.To, l.From, l.error, last_updated from whatsapp_log l where ConversationSid = '$ConversationSid' and id > $topMessage order by id;";
+        $sql = "select id, ConversationSid, Body, ProfileName, direction, l.Type, media_format, media_name, SmsStatus, l.To, l.From, l.error, last_updated from whatsapp_log l where ConversationSid = '$ConversationSid' order by id DESC LIMIT 10;";
         $incomingMessageDetails = $this->dbMasterDefault->runQuery($sql);
+        foreach ($incomingMessageDetails["result"]->getResult() as $messagesToConvert){
+            $messagesToConvert->SmsStatus = traduzirStatusTwilio($messagesToConvert->SmsStatus)[0];
+        }
 
         $saidaConversas = ['newConversations' => []];
         $saidaMensagens = ['newMessages' => []];
@@ -349,8 +380,22 @@ class WhatsApp extends BaseController
         $conversationSid = $request['conversationSid'] ?? '';
         $returnData["sucesso"] = false;
 
-        //verifica se existe uma conversa aberta
+
+        if (empty($messageToSend)) {
+            $returnData["status"] = false;
+            $returnData["error"] = "Mensagem vazia.";
+        }
+        
+        //$messageToSend = "mat";
+        //$conversationSid = "3ac39a00-1619-11f0-983b-fe427d5affb6";
+
+
+        //verifica se existe uma conversa aberta o que sera o normal no envio direct
         $conversation = $this->m_whatsapp->getConversation(['conversationSid' => $conversationSid]);
+
+        // //cria conversa se necessário
+        // if (!$conversation['existRecord']) $conversation = $this->m_whatsapp->createConversation(['telefoneCliente' => normalizePhone($to),'telefoneBot' => fromWhatsApp,'nomeCliente' => $nomeCliente,'nomeBot' => 'INSIGHT','atendenteId' => $this->session->userId,'atendenteNome' => $this->session->nickname,]);
+
         if ($conversation['existRecord']){
             $telefoneCliente = $conversation['firstRow']->telefoneCliente;
 

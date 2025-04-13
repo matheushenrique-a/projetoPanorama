@@ -312,7 +312,7 @@
 														<!--begin::Info-->
 														<div class="mb-0 lh-1">
 															<span class="badge badge-success badge-circle w-10px h-10px me-1"></span>
-															<span class="fs-7 fw-bold text-muted"><?php echo formatarTelefone($currentConversation['firstRow']->telefoneCliente ?? "");?></span>
+															<span class="fs-7 fw-bold text-muted"><?php echo formatarTelefone($currentConversation['firstRow']->telefoneCliente ?? "");?> - <?php echo ($currentConversation['firstRow']->ConversationSid ?? "");?></span>
 														</div>
 														<!--end::Info-->
 													</div>
@@ -427,7 +427,7 @@
 													<input type="hidden" name="currentConversationSid" id="currentConversationSid" value="<?php echo $currentConversation['firstRow']->ConversationSid ?? ''; ?>">
 													<input type="hidden" name="topConversation" id="topConversation" value="<?php echo $topConversation;?>">
 													<input type="hidden" name="toptMessage" id="toptMessage" value="<?php echo $toptMessage;?>">
-													<textarea class="form-control form-control-flush mb-3" rows="1" data-kt-element="input" placeholder="Digite sua mensagem" name="messageToSend"  id="messageToSend" onkeydown="if(event.key === 'Enter'){ sendWhatsApp(); }"></textarea>
+													<textarea class="form-control form-control-flush mb-3" rows="1" data-kt-element="input" placeholder="Digite sua mensagem" name="messageToSend"  id="messageToSend" onkeydown="if(event.key === 'Enter'){ sendWhatsApp(); return false; }"></textarea>
 													<!--end::Input-->
 													<!--begin:Toolbar-->
 													<div class="d-flex flex-stack">
@@ -1848,7 +1848,10 @@
 									//adiciona cada nova conversa recebida a lista
 									data.newMessageDetails.forEach((messageDetail, index) => {
 										if (!document.getElementById('msgBlock-' + messageDetail.id)) {
-											addToMessageList(messageDetail.id, messageDetail.direction, messageDetail.last_updated, messageDetail.Body, messageDetail.ProfileName, messageDetail.SmsStatus);
+											addToMessageList(messageDetail.id, messageDetail.direction, messageDetail.last_updated, messageDetail.Body, messageDetail.ProfileName, messageDetail.SmsStatus, messageDetail.media_format, messageDetail.media_name);
+										} else {
+											console.log('msgStatus-' + messageDetail.id + " - " + messageDetail.SmsStatus);
+											document.getElementById('msgStatus-' + messageDetail.id).innerHTML = messageDetail.SmsStatus;
 										}
 										//console.log('check: ' + messageDetail.id);
 										if (topMessage < (messageDetail.id)){inputTopMessage.value = messageDetail.id;}
@@ -1869,13 +1872,15 @@
 
 						function sendWhatsApp(){
 							const currentConversationSid = document.getElementById('currentConversationSid').value;
-							const messageToSendText = document.getElementById('messageToSend');
+							const messageToSendInput = document.getElementById('messageToSend');
+							const messageToSendText = messageToSendInput.value;
+							messageToSendInput.value = "";
 							const btnSendMsg = document.getElementById('btnSendMsg');
 
 							const urlFetch = '<?php echo rootURL; ?>whatsapp-direct';
 
 							btnSendMsg
-							addToMessageList("000", "B2C", "agora", "Enviando...", "INSIGHT", "Aguarde");
+							addToMessageList("000", "B2C", "agora", messageToSendText, "INSIGHT", "Aguarde", "text", "");
 							scrollToBottom();
 
 							fetch(urlFetch, {
@@ -1886,7 +1891,7 @@
 								cache: "no-cache",
 								body: JSON.stringify({
 									conversationSid: currentConversationSid,
-									message: messageToSendText.value
+									message: messageToSendText
 								})
 							})
 							.then(response => {
@@ -1900,10 +1905,10 @@
 								const elementEnviando = document.getElementById('msgBlock-000');
 								if (elementEnviando) {elementEnviando.remove();}
 
-								messageToSendText.value = "";
+								
 								document.getElementById('messageToSend').focus();
 
-								addToMessageList(data.id, data.direction, data.last_updated, data.Body, data.ProfileName, data.SmsStatus, 'Enviada');
+								addToMessageList(data.id, data.direction, data.last_updated, data.Body, data.ProfileName, data.status, data.media_format, data.media_name);
 
 								if (!data.sucesso){
 									console.log('msgStatus-' + data.id);
@@ -1956,7 +1961,7 @@
 							}
 						}
 
-						function addToMessageList(id, direction, last_updated, body, profileName, SmsStatus) {
+						function addToMessageList(id, direction, last_updated, body, profileName, SmsStatus, media_format, media_name) {
 							const timeAgo = (last_updated); // Precisa de implementação ou lib
 							let objMessage = document.getElementById('conversationPanel');
 
@@ -1998,11 +2003,27 @@
 											</div>
 										</div>
 										<div class="p-5 rounded bg-light-primary text-dark fw-bold mw-lg-400px text-end" data-kt-element="message-text" id="msgBody-${id}" >${body}</div>
+										<div class="ms-1">
 											<span class="text-muted fs-7 mb-1 ms-0 ps-0" id="msgStatus-${id}">${SmsStatus}</span>
-										</div>
-									</div>
-								</div>
-								<!--end::Message(out)-->`;
+										</div>`;
+
+										if (media_format == 'image'){
+											html += `<div class="p-5 rounded bg-light-primary text-dark fw-bold mw-lg-400px text-end" data-kt-element="message-text" id="msgBody-img-${id}"><img src="<?php echo assetfolder;?>assets/media/whatsapp/${media_name}" style="width: 250px"></div>`;
+										} else  if (media_format == 'audio'){
+											html += `<div class="p-5 rounded bg-light-primary text-dark fw-bold mw-lg-400px text-end" data-kt-element="message-text" id="msgBody-img-${id}">
+											<audio controls>
+												<source src="<?php echo assetfolder;?>assets/media/whatsapp/${media_name}" type="audio/ogg">
+												Seu navegador não suporta áudio HTML5.
+											</audio></div>`;
+										} else  if (media_format == 'video'){
+											html += `<div class="p-5 rounded bg-light-primary text-dark fw-bold mw-lg-400px text-end" data-kt-element="message-text" id="msgBody-img-${id}">
+												<video controls width="70%">
+													<source src="<?php echo assetfolder;?>assets/media/whatsapp/${media_name}" type="video/mp4">
+													Seu navegador não suporta vídeo HTML5.
+												</video>
+											</div>`;
+										}
+										html +=`</div></div><!--end::Message(out)-->`;
 							}
 
 							objMessage.insertAdjacentHTML('beforeend', html);

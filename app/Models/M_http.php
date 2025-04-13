@@ -1,13 +1,16 @@
 <?php 
 namespace App\Models;
 use CodeIgniter\Model;
+use App\Libraries\dbMaster;
 
 class M_http extends Model {
-    protected $my_session;
+    protected $session;
+	protected $dbMasterDefault;
 
     public function __construct()
     {
-        $this->my_session = session();
+        $this->session = session();
+		$this->dbMasterDefault = new dbMaster();
     }
     
     function http_request($method, $url, $headers = [], $data = null){
@@ -38,8 +41,9 @@ class M_http extends Model {
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
         $output = curl_exec($curl);
 
-        //echo '20:53:27 - <h3>Dump 96 </h3> <br><br>' . var_dump($output); exit;					//<-------DEBUG
-        
+        //echo '18:31:30 - <h3>Dump 20 </h3> <br><br>' . var_dump($output); exit;					//<-------DEBUG
+        $this->dbMasterDefault->insert('record_log',['log' => "Http Return: " . $output . " - " . $this->session->nickname]);
+
         if (curl_errno($curl)) {
             $retorno = array('sucesso' => false, 'retorno' => curl_error($curl));
         } else {
