@@ -225,11 +225,11 @@ class Integraall extends BaseController
                             $strDelta .= "👉 $nomeStatusNovo / $statusAdicionalNovo";
 
                             //condições da proposta averbada
-                            if  (($nomeStatusNovo == 'AGUARDANDO AUDITORIA' and $statusAdicionalNovo == 'AGUARDANDO AVERBAÇÃO ENTIDADE') 
+                            if  (($nomeStatusNovo == 'AGUARDANDO AUDITORIA' and $statusAdicionalNovo == 'AGUARDANDO AVERBAçãO ENTIDADE') 
                             OR ($nomeStatusNovo == 'AGUARDANDO AUDITORIA' and $statusAdicionalNovo == 'AVERBADO GOV.')  
-                            OR ($nomeStatusNovo == 'AGUARDANDO AVERBAÇÃO' and $statusAdicionalNovo == 'AGUARDANDO AVERBAÇÃO ENTIDADE') 
-                            OR ($nomeStatusNovo == 'AGUARDANDO AVERBAÇÃO' and $statusAdicionalNovo == 'AVERBADO GOV.')) {
-                                $strDelta .= "\n⭐️⭐️🎉 Proposta aprovada!";
+                            OR ($nomeStatusNovo == 'AGUARDANDO AVERBAçãO' and $statusAdicionalNovo == 'AGUARDANDO AVERBAçãO ENTIDADE') 
+                            OR ($nomeStatusNovo == 'AGUARDANDO AVERBAçãO' and $statusAdicionalNovo == 'AVERBADO GOV.')) {
+                                $strDelta .= "\n\n⭐️⭐️🎉 Proposta aprovada!";
                             }
 
                             if ($totalUpdates > 10) {

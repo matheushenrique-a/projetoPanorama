@@ -50,6 +50,8 @@ $routes->match(['get', 'post'], '/whatsapp-send-template-cloud', 'Meta\WhatsApp:
 $routes->match(['get', 'post'], '/whatsapp-list-templates', 'Meta\WhatsApp::whatsapp_list_templates');
 $routes->match(['get', 'post'], '/whatsapp-send-text', 'Meta\WhatsApp::whatsapp_send_text');
 $routes->match(['get', 'post'], '/whatsapp-chat', 'Meta\WhatsApp::whatsapp_chat');
+$routes->match(['get', 'post'], '/whatsapp-auditoria', 'Meta\WhatsApp::whatsapp_auditoria');
+$routes->match(['get', 'post'], '/whatsapp-auditoria/(:any)', 'Meta\WhatsApp::whatsapp_auditoria/$1');
 
 //AASPA
 $routes->match(['get', 'post'], '/comecar/(:any)', 'Frontline\Frontline::comecar/$1');

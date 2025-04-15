@@ -272,6 +272,15 @@ class m_whatsapp extends Model {
 		return $this->dbMasterDefault->select('whatsapp_conversations', $filter);
 	}
 	
+	public function getConversationWindowById($ConversationSid){
+		$conversa = $this->getConversation(['ConversationSid' => $ConversationSid]);
+		if ($conversa['existRecord']){
+			return $this->getConversationWindow($conversa['firstRow']->telefoneCliente);
+		} else {
+			return null;
+		}
+	}
+
 	public function getConversationWindow($telefoneCliente){
 		$returnData["janela_aberta"] = false;
         $returnData["minutos_passados"] = 0;

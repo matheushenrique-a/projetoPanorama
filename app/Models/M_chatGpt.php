@@ -8,7 +8,7 @@ class m_chatGpt extends Model {
         //$this->load->database();
     }
 
-    public function runQuery($query){
+    public function runQuery($query, $format = null){
         $apiKey = API_KEY_CHATGPT;
         $url = API_URL_CHATGPT;  
     
@@ -29,8 +29,11 @@ class m_chatGpt extends Model {
         $data = array();
         //$data["model"] = "gpt-4";
         $data["model"] = "gpt-4o";
+        if ($format == "json") {
+            $data["response_format"] = ["type" =>'json_object'];
+        }
         $data["max_tokens"] = 4000;
-        $data["temperature"] = 0.13;
+        $data["temperature"] = 0.2;
         $data["messages"] = $messages;
         //$data["model"] = "text-davinci-003";
         //$data["model"] = "gpt-3.5-turbo";

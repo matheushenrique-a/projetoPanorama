@@ -200,7 +200,7 @@ class WhatsApp extends BaseController
 
                             $returnErros = $status['errors'] ?? [];
                             foreach ($returnErros as $errorIndex => $errorArray) {
-                                $detail = $errorArray['message'] ?? "";
+                                $detail = $errorArray['title'] ?? "";
                                 $this->telegram->notifyTelegramGroup("🚨🚨🚨 Error Message $messageSid \n$detail", telegramQuid);
                             }
 
@@ -268,6 +268,8 @@ class WhatsApp extends BaseController
 
                                 $BodyOriginal = $this->dbMasterDefault->select('whatsapp_log', ['MessageSid' => $reactionMessage_id])['firstRow']->Body ?? "";
                                 $data['Body'] = "Em reação a [$BodyOriginal]<br>$emoji";
+                            } else if ($messageType == "button"){
+                                $data['Body'] = $message['button']['text'];
                             } else if ($messageType == "image"){
                                 $mediaId = $message['image']['id'];
                                 $mime_type = $message['image']['mime_type'];
@@ -390,13 +392,16 @@ class WhatsApp extends BaseController
     //http://localhost/InsightSuite/public/whatsapp-listner/1/1/6128123e-12e0-11f0-983b-fe427d5affb6/14
     public function whatsapp_listner($atendenteId, $topConversation, $ConversationSid, $topMessage){
 
-        //todas novas conversas acima dos ids já buscados
+        //NOVAS CONVERSAS
+        //Todas novas conversas acima dos ids já buscados
         $sql = "SELECT id, ConversationSid, telefoneCliente, nomeCliente FROM whatsapp_conversations WHERE id > $topConversation AND status = 'OPEN' and atendenteId = 1;";
         $incomingConversations = $this->dbMasterDefault->runQuery($sql);
 
-        //listar conversas abertas para o usuario logado com o código da Mensagem mais atual existente
+        //CONVERSAS ATUAIS DO ASSESSOR
+        //Listar conversas abertas para o usuario logado com o código da Mensagem mais atual existente
         $incomingNewMessages = $this->m_whatsapp->getConversationTopMsgShort($atendenteId);
 
+        //NOVAS MENSAGENS DA CONVERTA ABERTA - ultimas 10 mensagens
         //todas novas mensagens acima dos ids já buscados para uma conversa
         //$sql = "select id, ConversationSid, Body, ProfileName, direction, l.Type, media_format, media_name, SmsStatus, l.To, l.From, l.error, last_updated from whatsapp_log l where ConversationSid = '$ConversationSid' and id > $topMessage order by id;";
         $sql = "select id, ConversationSid, Body, ProfileName, direction, l.Type, media_format, media_name, SmsStatus, l.To, l.From, l.error, last_updated from whatsapp_log l where ConversationSid = '$ConversationSid' order by id DESC LIMIT 10;";
@@ -405,15 +410,20 @@ class WhatsApp extends BaseController
             $messagesToConvert->SmsStatus = traduzirStatusTwilio($messagesToConvert->SmsStatus)[0];
         }
 
+        //STATUS JANELA DA CONVERSA
+        //monitora status da janela de conversa se aproveitando da lista de conversas 
+        $conversationWindow = $this->m_whatsapp->getConversationWindowById($ConversationSid);
+
         $saidaConversas = ['newConversations' => []];
         $saidaMensagens = ['newMessages' => []];
         $saidaMensagensDetalhe = ['newMessageDetails' => []];
+        $saidaConversationWindow = ['conversationWindow' => $conversationWindow];
         
         if ($incomingConversations['existRecord']){$saidaConversas = ['newConversations' => $incomingConversations["result"]->getResult()];}
         if ($incomingNewMessages['existRecord']){$saidaMensagens = ['newMessages' => $incomingNewMessages["result"]->getResult()];}
         if ($incomingMessageDetails['existRecord']){$saidaMensagensDetalhe = ['newMessageDetails' => $incomingMessageDetails["result"]->getResult()];}
 
-        echo json_encode($saidaConversas + $saidaMensagens + $saidaMensagensDetalhe);
+        echo json_encode($saidaConversas + $saidaMensagens + $saidaMensagensDetalhe + $saidaConversationWindow);
     }
 
     //http://localhost/InsightSuite/public/whatsapp-direct
@@ -459,6 +469,86 @@ class WhatsApp extends BaseController
 
         header("Content-Type: application/json");
         echo json_encode($returnData);
+    }
+
+    public function whatsapp_auditoria($telefoneCliente = null){
+
+        if (!empty($telefoneCliente)){
+            $this->whatsapp_auditoria_details($telefoneCliente);
+            exit;
+        }
+
+        $data_inicial = date('Y-m-d 00:00:01'); 
+        $data_final = date('Y-m-d 23:59:59');
+
+        $sql = "SELECT distinct l.To telefoneCliente FROM whatsapp_log l WHERE last_updated >= '$data_inicial' and last_updated <= '$data_final' AND l.To <> '" . normalizePhone(fromWhatsApp) . "' AND l.To <> '5531995781355';";
+        $chatsDia = $this->dbMasterDefault->runQuery($sql);
+
+        $chatTranscript = "";
+
+        if ($chatsDia['existRecord']){
+            foreach ($chatsDia["result"]->getResult() as $row){
+                $telefoneCliente = $row->telefoneCliente;
+
+                $sql = "SELECT * FROM whatsapp_log l WHERE (l.To = '$telefoneCliente' OR l.from = '$telefoneCliente') AND (last_updated >= '$data_inicial' and last_updated <= '$data_final') ORDER BY id DESC; ";
+                $chatDetail = $this->dbMasterDefault->runQuery($sql);
+
+                $chatTranscript .= "<h2>Chat com cliente: $telefoneCliente </h2>\n";
+                
+                if ($chatDetail['existRecord']){
+                    foreach ($chatDetail["result"]->getResult() as $row){
+                        $chatTranscript .= $row->id . "-" . $row->ProfileName . ": " . $row->Body . "<br>\n";
+                    }
+                }
+            }
+        }
+
+        $basePrompt = "Você é o supervisor de um time de vendas de um produto chamado AASAP e deve fazer uma auditoria 
+        em todos os chats conduzidos hoje entre os vendedores e os clientes. Seu o objetivo é identificar conversas que 
+        violem os termos e políticas do WhatsApp já que as conversas são realizadas por esse canal. 
+        Você deve identificar casos de desconforto pelo cliente na conversa que possa resultar em bloqueio ou 
+        report de spam pelo cliente. Você também deve identificar situações onde preço ou custo do produto é discutida, 
+        essa tema é proibido de ser tratado pelo chat pela minha empresa. Agora, leia os chats abaixo e retorne uma coleção 
+        json chamada auditoria contendo items com 3 colunas: telefone_cliente: número do telefone do cliente, gravidade: o nível de gravidade 
+        do desvio ou do risco gerado pelo vendedor, frase_feedback: uma frase com um feedback para orientar o 
+        vendedor sobre o ocorrido e como evitar esse tipo de ocorrência. Abaixo está a lista de conversas \n\n";
+
+        $basePrompt .= $chatTranscript;
+        
+        $result = $this->chatgpt->runQuery($basePrompt, 'json');
+
+        if ($result['existResposta']) {
+            if (isset($result['conteudo'])){
+                $data = json_decode($result['conteudo'], true);
+
+                if (isset($data['auditoria'])){
+                    foreach ($data['auditoria'] as $item) {
+                        echo "Telefone do cliente: " . $item['telefone_cliente'] . "<bR>";
+                        echo "Gravidade: " . $item['gravidade'] . "<bR>";
+                        echo "Feedback: " . $item['frase_feedback'] . "<bR>";
+                        echo str_repeat("-", 50) . "<bR>";
+    
+                        $this->telegram->notifyTelegramGroup("❌❌❌ AUDITORIA WhatsApp - [" . $item['telefone_cliente'] . "][" . $item['gravidade'] . "\n" . $item['frase_feedback'] . "\nInspecionar:\n" . rootURL  . "whatsapp-auditoria/" . $item['telefone_cliente'], telegramQuid);
+                    }
+                } else {
+                    $this->telegram->notifyTelegramGroup("❌❌❌ AUDITORIA WhatsApp ERRO - Auditoria Inválida", telegramQuid);
+                }
+            }
+        }
+    }
+
+    public function whatsapp_auditoria_details($telefoneCliente){
+        $sql = "SELECT * FROM whatsapp_log l WHERE (l.To = '$telefoneCliente' OR l.from = '$telefoneCliente') ORDER BY id; ";
+        $chatDetail = $this->dbMasterDefault->runQuery($sql);
+
+        echo "<h2>Chat com cliente: $telefoneCliente </h2>";
+        
+        if ($chatDetail['existRecord']){
+            foreach ($chatDetail["result"]->getResult() as $row){
+                echo dataUsPtHours($row->last_updated, true) . " - " . $row->id . " - " . $row->ProfileName . ": " . $row->Body . "<br>";
+            }
+        }
+
     }
         
 }

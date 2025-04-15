@@ -320,8 +320,8 @@
 														</div>
 														<?php if (isset($conversationWindow['janela_aberta'])) {?>
 														<div class="mb-0 lh-1">
-															<span class="badge badge-<?php echo ($conversationWindow['janela_aberta'] ?? false  ? 'success' : 'danger');?> badge-circle w-10px h-10px me-1"></span>
-															<span class="fs-7 fw-bold text-muted">Status Janela: <?php echo ($conversationWindow['janela_aberta'] ?? false  ? 'Aberta até ' .  $conversationWindow['hora_fechamento']: 'Fechada');?></span>
+															<span class="badge badge-<?php echo ($conversationWindow['janela_aberta'] ?? false  ? 'success' : 'danger');?> badge-circle w-10px h-10px me-1" id="statusJanelaBullet"></span>
+															<span class="fs-7 fw-bold text-muted" id="statusJanela">Status Janela: <?php echo ($conversationWindow['janela_aberta'] ?? false  ? 'Aberta até ' .  $conversationWindow['hora_fechamento']: 'Fechada');?></span>
 														</div>
 														<?php };?>
 														<!--end::Info-->
@@ -1964,14 +1964,30 @@
 										if (!document.getElementById('msgBlock-' + messageDetail.id)) {
 											addToMessageList(messageDetail.id, messageDetail.direction, messageDetail.last_updated, messageDetail.Body, messageDetail.ProfileName, messageDetail.SmsStatus, messageDetail.media_format, messageDetail.media_name);
 										} else {
-											console.log('msgStatus-' + messageDetail.id + " - " + messageDetail.SmsStatus);
+											//console.log('msgStatus-' + messageDetail.id + " - " + messageDetail.SmsStatus);
 											document.getElementById('msgStatus-' + messageDetail.id).innerHTML = messageDetail.SmsStatus;
 										}
 										//console.log('check: ' + messageDetail.id);
 										if (topMessage < (messageDetail.id)){inputTopMessage.value = messageDetail.id;}
 									});
 								}
-							}) .catch(error => {
+
+								//status da janela de comunicacao
+								if (data.hasOwnProperty('conversationWindow')) {
+									const lblStatusJanela = document.getElementById('statusJanela');
+									const lblStatusJanelaBullet = document.getElementById('statusJanelaBullet');
+									//console.log(data.conversationWindow['janela_aberta'] + " - " + data.conversationWindow['hora_fechamento'] + " - " + data.conversationWindow['minutos_passados'] + " - " + data.conversationWindow['minutos_restantes']);
+									if (data.conversationWindow['janela_aberta']){
+										lblStatusJanela.innerHTML = "Status Janela: Aberta até " + data.conversationWindow['hora_fechamento'];
+										lblStatusJanelaBullet.classList.remove('badge-danger');
+										lblStatusJanelaBullet.classList.add('badge-success');
+									} else {
+										lblStatusJanela.innerHTML = "Status Janela: Fechada";
+										lblStatusJanelaBullet.classList.remove('badge-success');
+										lblStatusJanelaBullet.classList.add('badge-danger');
+									}
+								}
+							}).catch(error => {
 								lblOnlineGreen.classList.remove('badge-warning');
 								lblOnlineGreen.classList.add('badge-danger');
 								console.log('Fetch Error: ' + error.message);
