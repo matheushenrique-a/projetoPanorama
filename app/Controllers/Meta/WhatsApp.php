@@ -438,10 +438,16 @@ class WhatsApp extends BaseController
         $tipo = $request['tipo'] ?? '';
         $templateName = $request['templateName'] ?? '';
 
-        // $messageToSend = "Olá";
-        // $conversationSid =  '88f3a584-186d-11f0-9224-fe427d5affb6';
-        // $tipo = 'template';
-        // $templateName = 'antedimento_telefonico';
+        $messageToSend = "Olá";
+        $conversation =  ' fb85faf8-1a01-11f0-9224-fe427d5affb6';
+        $tipo = 'template';
+        $telefoneCliente = '5531995010050';
+        $templateName = 'continuar_chamada';
+
+        $result = $this->whatsapp_send_template_cloud($templateName, $messageToSend, $telefoneCliente, $conversation);
+        echo '11:53:22 - <h3>Dump 32 </h3> <br><br>' . var_dump($result); exit;					//<-------DEBUG
+
+        exit;
 
         $returnData["sucesso"] = false;
         if (empty($messageToSend)) {$returnData["error"] = "Mensagem vazia.";}

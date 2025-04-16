@@ -146,8 +146,9 @@ class m_whatsapp extends Model {
 		$headers = [];
 		$headers[] = "Authorization: Bearer " . META_TOKEN_WHATSAPP;
 
-		$url = META_CLOUD_API_RAW . META_CLOUD_BUSINESS_ID . '/message_templates?search=antedimento_telefonico';
+		$url = META_CLOUD_API_RAW . META_CLOUD_BUSINESS_ID . '/message_templates?search=continuar_chamada';
 		$result = $this->m_http->http_request('GET', $url, $headers);
+
 		return $result;
 	}
 

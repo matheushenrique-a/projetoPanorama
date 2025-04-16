@@ -21,10 +21,10 @@ define ('API_Produto', 6); //quid
 define ('API_Calculadora', 'https://api2.calculadoraconsignado.com.br/api/');
 
 //WHATSAPP CLOUD API
-define ('META_CLOUD_API', "https://graph.facebook.com/v22.0/643196615539553/messages"); //643196615539553 = phone number id = +1 555 641 8758
-define ('META_CLOUD_PHONE_ID', "643196615539553"); //643196615539553 = phone number id = +1 555 641 8758
-define ('META_CLOUD_BUSINESS_ID', "1403356640797060"); //643196615539553 = phone number id = +1 555 641 8758
-define ('META_CLOUD_API_RAW', "https://graph.facebook.com/v22.0/"); //643196615539553 = phone number id = +1 555 641 8758
+define ('META_CLOUD_PHONE_ID', "631093443420913"); //phone number id do Sender WhatsApp = +1 555 641 8758
+define ('META_CLOUD_BUSINESS_ID', "1180147207074114"); //Asset_id pela URL do Gerenciador WhatsApp
+define ('META_CLOUD_API_RAW', "https://graph.facebook.com/v22.0/"); 
+define ('META_CLOUD_API', META_CLOUD_API_RAW . META_CLOUD_PHONE_ID . "/messages");
 define('PATH_SAVE_MEDIA', "/Applications/XAMPP/xamppfiles/htdocs/InsightSuite/public/assets/media/whatsapp/");
 
 //SMS Account - US SMS ONLY
@@ -53,7 +53,7 @@ define('META_GRAPH_API', "https://graph.facebook.com/v20.0/");
 //APP ADS TOKEN
 define('META_TOKEN', "EAAMqjXZAxYiUBOxXAUzj9qYwNGRWDQKGdpMAneTRZBK65XDTAHc2hyzZC9mUMk2yWYM66yoDSQZCopNmXSzQmlxNSgy6YYf0yVt8Qkv9PYenDqZBFmjCUREXOU9E4Wxz2MGGbqhdqgye3AEcqnyKkwHFJsPVDK9NhKHRlg657SGvZAO25Y7DfTCA2ZA");
 //APP WHATSAPP TOKEN
-define('META_TOKEN_WHATSAPP', "EAAOkO2w2V1sBOzI1pEnf9UTOtZAXUDiqdnCC3ZCVKMDP37bd8wT63UE1eCoThIHIQ6WtIctYaILuOKZAT3rkFDUj7khSgoxTDsLm1iAz7P9NHdetSqrlM9KZC5VdL3t4IOigerKT5R5ZBqLi7oeEvOAzyZCcZBivQjVT4FhzEadFnHcajQDSzGqXFcy");
+define('META_TOKEN_WHATSAPP', "EAAaYwsrh9DcBOZBJgP3SGSeiNEF6LD78zdhXIpij9i65NRVZBKUfL4oYTvGReO7zZBwZBqZAYsvWoucQ41VVwZCwhQ5TAhStuhUZCOi52olqp6ZCDFrNyLmjbHZCmbhq5MgzQrxkZCAyLmqgmrBpi2ZCZAARZCjIvZBgcyXWVmSPb7GDZCB4fKaBRjrfIoyZAgZDZD");
 
 //CHAT_GPT
 define('API_KEY_CHATGPT','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');

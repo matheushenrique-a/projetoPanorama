@@ -166,42 +166,44 @@ class Integraall extends BaseController
                         "vendedorUsuarioId" => $proposta['vendedorUsuarioId']
                     ];
 
-
-                    // echo "<br><br>ID: " . $proposta['id'] . "<br>";
-                    // echo "Cliente: " . $proposta['nomeCliente'] . "<br>";
-                    // echo "cpf: " . $proposta['cpf'] . "<br>";
-                    // echo "telefonePessoal: " . $proposta['telefonePessoal'] . "<br>";
-                    // echo "nomeProduto: " . $proposta['nomeProduto'] . "<br>";
-                    // echo "nomeStatus: " . $proposta['nomeStatus'] . "<br>";
-                    // echo "nomeVendedor: " . $proposta['nomeVendedor'] . "<br>";
-                    // echo "statusId: " . $proposta['statusId'] . "<br>";
-                    // echo "dataCadastro: " . $proposta['dataCadastro'] . "<br>";
-                    // echo "linkKompletoCliente: " . $proposta['linkKompletoCliente'] . "<br>";
-                    // echo "dataSolicitacaoAtivacao: " . $proposta['dataSolicitacaoAtivacao'] . "<br>";
-                    // echo "matricula: " . $proposta['matricula'] . "<br>";
-                    // echo "tentativas: " . $proposta['tentativas'] . "<br>";
-                    // echo "nomeIndicadorMaster: " . $proposta['nomeIndicadorMaster'] . "<br>";
-                    // echo "nomeIndicador: " . $proposta['nomeIndicador'] . "<br>";
-                    // echo "linkAtivo: " . $proposta['linkAtivo'] . "<br>";
-                    // echo "produtoId: " . $proposta['produtoId'] . "<br>";
-                    // echo "statusAdicional: " . $proposta['statusAdicional'] . "<br>";
-                    // echo "revendedorId: " . $proposta['revendedorId'] . "<br>";
-                    // echo "vendedorUsuarioId: " . $proposta['vendedorUsuarioId'] . "<br>";
-
-
                     $propostaIntegraall = $this->dbMasterDefault->select('aaspa_propostas', ['integraallId' => $data['integraallId']]);
                     //echo "Consultando proposta: " . $data['integraallId'] . "<br>";
 
+                    //faz lookup do Id Integraall com Id Insight
+                    $userId = $proposta['vendedorUsuarioId'];
+                    $sqlQuery = 'select * from user_account where parameters like "%{\"integraallId\": ' . $proposta['vendedorUsuarioId'] . ',%"';
+                    $userContext = $this->dbMasterDefault->runQuery($sqlQuery);
+                    if ($userContext['existRecord']){$userId = $userContext['firstRow']->userId;} 
+                    
+                    $dataNotificacao = [
+                        'userId' => $userId,
+                        'notifica_user' => true,
+                        'notifica_supervisor' => true,
+                        'notifica_manager' => false,
+                        'contexto_grupo' => "AASPA",
+                        'last_updated' => date('Y-m-d H:i:s'),
+                    ];
+
+                    $dataExtra = [];
+
                     if (!$propostaIntegraall['existRecord']){
                         $added = $this->dbMasterDefault->insert('aaspa_propostas', $data);
+                        $dataNotificacao['tipo'] = "proposta_criada";
+                        $dataNotificacao['titulo'] = "Proposta nova encontrada no Integraall";
+                        $dataExtra['statusFinal'] = '';
+
+                        $dataNotificacao['json_detalhes'] = json_encode($data + $dataExtra);
+                        $added = $this->dbMasterDefault->insert('insight_notificacoes', $dataNotificacao);
                     } else {
-                           // echo '14:19:00 - <h3>Dump 30 </h3> <br><br>' . var_dump($propostaIntegraall) ;					//<-------DEBUG
+                        $dataNotificacao['tipo'] = "proposta_atualizada";
+                        $dataNotificacao['titulo'] = "Atualização de proposta no Integraall";
 
                         $nomeStatusAtual = strtoupper($propostaIntegraall['firstRow']->nomeStatus);
                         $statusAdicionalAtual = strtoupper($propostaIntegraall['firstRow']->statusAdicional);
 
                         $nomeStatusNovo = strtoupper($data['nomeStatus']);
                         $statusAdicionalNovo = strtoupper($data['statusAdicional']);
+                        
 
                         if (($nomeStatusNovo <> $nomeStatusAtual) or ($statusAdicionalNovo <> $statusAdicionalAtual)){
                             $totalUpdates = $totalUpdates + 1;
@@ -224,19 +226,27 @@ class Integraall extends BaseController
                             $strDelta .= $mudanca;
                             $strDelta .= "👉 $nomeStatusNovo / $statusAdicionalNovo";
 
+                            
                             //condições da proposta averbada
                             if  (($nomeStatusNovo == 'AGUARDANDO AUDITORIA' and $statusAdicionalNovo == 'AGUARDANDO AVERBAçãO ENTIDADE') 
                             OR ($nomeStatusNovo == 'AGUARDANDO AUDITORIA' and $statusAdicionalNovo == 'AVERBADO GOV.')  
                             OR ($nomeStatusNovo == 'AGUARDANDO AVERBAçãO' and $statusAdicionalNovo == 'AGUARDANDO AVERBAçãO ENTIDADE') 
                             OR ($nomeStatusNovo == 'AGUARDANDO AVERBAçãO' and $statusAdicionalNovo == 'AVERBADO GOV.')) {
                                 $strDelta .= "\n\n⭐️⭐️🎉 Proposta aprovada!";
+
+                                $dataExtra['statusFinal'] = 'APROVADA';
+                            } else {
+                                $dataExtra['statusFinal'] = '';
                             }
 
-                            if ($totalUpdates > 10) {
-                                $strDelta .= "\n + propostas não listadas.";  
-                                break;
-                            } 
+                            // if ($totalUpdates > 10) {
+                            //     $strDelta .= "\n + propostas não listadas.";  
+                            //     break;
+                            // } 
 
+
+                            $dataNotificacao['json_detalhes'] = json_encode($data + $dataExtra);
+                            $added = $this->dbMasterDefault->insert('insight_notificacoes', $dataNotificacao);
                         }
 
                         $updated = $this->dbMasterDefault->update('aaspa_propostas', $data, ['integraallId' => $data['integraallId']]);
@@ -245,7 +255,7 @@ class Integraall extends BaseController
 
                 if (!empty($strDelta)){
                     $strDelta = "♻️♻️♻️ SYNC INTEGRAALL" . $strDelta;
-                    $result = $this->telegram->notifyTelegramGroup($strDelta, telegramQuid);
+                    //$result = $this->telegram->notifyTelegramGroup($strDelta, telegramQuid);
                 }
                 echo "Resultado: " . $strDelta;
             }

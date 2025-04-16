@@ -26,6 +26,9 @@ class M_seguranca extends Model {
             $this->my_session->set('nickname', $login['firstRow']->nickname);
             $this->my_session->set('email', $login['firstRow']->email);
             $this->my_session->set('empresa', $login['firstRow']->empresa);
+            $this->my_session->set('role', $login['firstRow']->role);
+            $this->my_session->set('report_to', $login['firstRow']->report_to);
+            $this->my_session->set('equipe', $login['firstRow']->equipe);
             $this->my_session->set('perfil', $login['firstRow']->perfil_acesso);
             $this->my_session->set('observacao', $login['firstRow']->observacao);
             $this->my_session->set('parameters', json_decode($login['firstRow']->parameters ?? "", true));
