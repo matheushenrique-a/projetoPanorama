@@ -9,13 +9,12 @@ use Symfony\Component\Panther\Client;
 
 class M_argus extends Model {
     protected $dbMasterDefault;
-    protected $my_session;
     protected $telegram;
     protected $m_http;
 
     public function __construct(){
 		$this->dbMasterDefault = new dbMaster();
-        $this->my_session = session();
+        $this->session = session();
         $this->telegram =  new M_telegram();
         $this->m_http =  new M_http();
     }
@@ -44,6 +43,12 @@ class M_argus extends Model {
             $sql .= " order by data_criacao DESC LIMIT 30;";    
         }
 
+        return $this->dbMasterDefault->runQuery($sql);
+    }
+
+    public function ultimasLigacoes($limit = 6){
+        $sql = "select * from aaspa_cliente where assessor = '" . $this->session->nickname . "' or 1=1 ";
+        $sql .= " order by data_criacao DESC LIMIT $limit;"; 
         return $this->dbMasterDefault->runQuery($sql);
     }
     

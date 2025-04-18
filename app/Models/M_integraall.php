@@ -9,13 +9,13 @@ use Symfony\Component\Panther\Client;
 
 class M_integraall extends Model {
     protected $dbMasterDefault;
-    protected $my_session;
+    protected $session;
     protected $telegram;
     protected $m_http;
 
     public function __construct(){
 		$this->dbMasterDefault = new dbMaster();
-        $this->my_session = session();
+        $this->session = session();
         $this->telegram =  new M_telegram();
         $this->m_http =  new M_http();
     }
@@ -108,6 +108,14 @@ class M_integraall extends Model {
         $result = $this->dbMasterDefault->runQuery($query);
         return $result;
     }
+
+    public function ultimasPropostas($limit = 6){
+        $sql = "select * from aaspa_propostas where vendedorUsuarioId = '" . $this->session->parameters["integraallId"] . "' or 1=1 ";
+        $sql .= " order by data_criacao DESC LIMIT $limit;"; 
+        
+        return $this->dbMasterDefault->runQuery($sql);
+    }
+
 
     public function tse($data){
         $headers = [];

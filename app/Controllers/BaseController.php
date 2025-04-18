@@ -90,10 +90,17 @@ abstract class BaseController extends Controller
     function checkSession(){
 
         if (!$this->my_session->has('userId')){
-           //echo "09:52:56 - <h3>Dump 49</h3> <br><br>" . var_dump(!$this->my_session->has('userId')); exit;					//<-------DEBUG
-           redirectHelper('sign-in');
+            helper('cookie');
+            $email = get_cookie('insight');
+
+            if (!empty($email)){
+                $this->my_security->auth($email);
+            } else {
+                redirectHelper('sign-in');
+            }
         }        
     }
+
     function getpost($valor, $cookie_persist = false) {
 	   
 		$aux = "";

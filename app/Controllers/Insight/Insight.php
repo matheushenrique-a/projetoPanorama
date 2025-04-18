@@ -11,6 +11,7 @@ use App\Models\M_twilio;
 use Config\Services;
 use App\Models\M_integraall;
 use App\Models\M_argus;
+use App\Models\M_insight;
 use App\Models\M_seguranca;
 
 class Insight extends BaseController
@@ -22,6 +23,7 @@ class Insight extends BaseController
     protected $m_integraall;
     protected $m_argus;
     protected $m_security;
+    protected $m_insight;
 
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger) {
         parent::initController($request, $response, $logger);
@@ -35,6 +37,7 @@ class Insight extends BaseController
         $this->m_integraall =  new M_integraall();
         $this->m_argus =  new M_argus();
         $this->m_security = new M_seguranca();
+        $this->m_insight = new M_insight();
     }
 
 
@@ -47,6 +50,16 @@ class Insight extends BaseController
         
 
     }
+
+    //http://localhost/InsightSuite/public/insight-listar-notificacoes
+    public function insight_listar_notificacoes(){
+        $dados['pageTitle'] = 'Listar Notificações';
+        
+        $htmlNotificacoes = $this->m_insight->gerarTimelineNotificacoes(200);
+        $dados['htmlNotificacoes'] = $htmlNotificacoes;
+        return $this->loadpage('insight/listar_notificacoes', $dados);
+    }
+
 
     
     

@@ -48,9 +48,13 @@ class Home extends BaseController
         $this->checkSession();
         $dados['pageTitle'] = "Simplificando sua vida financeira";
         
-        $notificacoes = $this->m_insight->load_notifications();
+        $htmlNotificacoes = $this->m_insight->gerarTimelineNotificacoes();
+        $ultimasLigacoes = $this->m_argus->ultimasLigacoes(7);
+        $ultimasPropostas = $this->m_integraall->ultimasPropostas(6);
 
-        $dados['notificacoes'] = $notificacoes;
+        $dados['htmlNotificacoes'] = $htmlNotificacoes;
+        $dados['ultimasLigacoes'] = $ultimasLigacoes;
+        $dados['ultimasPropostas'] = $ultimasPropostas;
         return $this->loadpage('headers/home-default', $dados);
     }
 

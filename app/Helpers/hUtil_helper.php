@@ -157,6 +157,39 @@
 		return $statusMap[$status] ?? [$status, "danger"];
 	}
 
+	function traduzirStatusAdicional($status) {
+		$status = strtoupper($status);
+
+		// Mapeamento de status em inglês para português e cor correspondente
+		$statusMap = [
+			"CANCELADO NO INSS" => ["Canc INSS", "danger"],
+			"AVERBADO GOV." => ["Averbado Gov.", "success"],
+			"POSSUI OUTRO PROCESSO DE ADESÃO EM ANDAMENTO." => ["Já Possui", "warning"],
+			"AGUARDANDO AVERBAçãO ENTIDADE" => ["Aguard. Averbação", "success"],
+			"AGUARDANDO BIOMETRIA" => ["Aguard. Biometria", "warning"],
+			"LINK EXPIRADO" => ["Link Expirado", "danger"],
+		];
+ 
+		// Retorna um array contendo a mensagem e a cor, ou um padrão caso não exista
+		return $statusMap[$status] ?? [$status, "gray"];
+	}
+
+	function traduzirNomeStatus($status) {
+		$status = strtoupper($status);
+
+		// Mapeamento de status em inglês para português e cor correspondente
+		$statusMap = [
+			"CANCELADO" => ["Cancelado", "danger"],
+			"AGUARDANDO AVERBAçãO" => ["Aguard. Averbação", "success"],
+			"AGUARDANDO AUDITORIA" => ["Aguard. Auditoria", "warning"],
+			"AGUARDANDO ACEITE" => ["Aguard. Aceite", "warning"],
+			"AGUARDANDO DOCUMENTO" => ["Aguard. Doc", "warning"],
+		];
+ 
+		// Retorna um array contendo a mensagem e a cor, ou um padrão caso não exista
+		return $statusMap[$status] ?? [$status, "gray"];
+	}
+
 	function traduzirErroTwilio($mensagem) {
 		$mensagem = strtoupper($mensagem);
 

@@ -261,6 +261,74 @@ class Integraall extends BaseController
             }
         }
     }
+
+    //https://8b46-177-73-197-2.ngrok-free.app/InsightSuite/public/integraall-metricas-ativacoes
+    //http://localhost/InsightSuite/public/integraall-metricas-ativacoes
+    //https://insightsuite.pravoce.io/integraall-metricas-ativacoes
+    public function integraall_metricas_ativacoes(){
+        $sqlAtivacoes = "SELECT DATE(data_criacao) AS data_venda, COUNT(*) AS averbadas
+                                FROM aaspa_propostas 
+                                WHERE data_ativacao IS NOT NULL
+                                AND DATE(data_criacao) BETWEEN CURDATE() - INTERVAL 15 DAY AND CURDATE()
+                                GROUP BY DATE(data_criacao)
+                                ORDER BY DATE(data_criacao) DESC;";
+
+        $ativacoes = $this->dbMasterDefault->runQuery($sqlAtivacoes);
+
+        $sendData = "⭐️⭐️⭐️ ATIVAÇÕES ÚLTIMOS 15 DIAS \n";
+        $totalGeral = 0;
+        if ($ativacoes['existRecord']){
+            foreach ($ativacoes["result"]->getResult() as $row){
+                $data_venda = dataUsPt($row->data_venda, true);
+                $averbadas = $row->averbadas;
+                $totalGeral = $averbadas + $totalGeral;
+
+                $sendData .=  "- $data_venda [$averbadas] \n";
+            }
+        }
+        $sendData .=  "\nTotal Geral: $totalGeral\n";
+
+        //echo '15:25:56 - <h3>Dump 20 </h3> <br><br>' . var_dump($sendData); exit;					//<-------DEBUG
+
+        $this->telegram->notifyTelegramGroup($sendData, telegramQuid);
+
+
+        /////RANKING
+        $sqlAtivacoes = "SELECT assessor, COUNT(*) AS averbadas
+                        FROM aaspa_propostas 
+                        WHERE data_ativacao IS NOT NULL
+                        AND DATE(data_criacao) BETWEEN CURDATE() - INTERVAL 7 DAY AND CURDATE()
+                        GROUP BY assessor
+                        ORDER BY averbadas DESC;;";
+
+        $ativacoes = $this->dbMasterDefault->runQuery($sqlAtivacoes);
+
+        $sendData = "⭐️⭐️⭐️ RANKING ATIVAÇÕES 7 DIAS \n";
+        $totalGeral = 0;
+        $pos = 0;
+        if ($ativacoes['existRecord']){
+            foreach ($ativacoes["result"]->getResult() as $row){
+                $assessor = strtoupper(substr($row->assessor, 0, 17) . "...");
+                $averbadas = $row->averbadas;
+                $totalGeral = $averbadas + $totalGeral;
+
+                $pos += 1;
+                $sendData .=  "$pos- $assessor [$averbadas] \n";
+            }
+        }
+        $sendData .=  "\nTotal Ativações: $totalGeral";
+        $sendData .=  "\nTotal Assessores: $pos";
+        $media = SimpleRound((($totalGeral / $pos) / 7 ));
+        $sendData .=  "\nMédia por Assessor: $media";
+
+        //echo '15:25:56 - <h3>Dump 20 </h3> <br><br>' . var_dump($sendData); exit;					//<-------DEBUG
+
+        $this->telegram->notifyTelegramGroup($sendData, telegramQuid);
+
+
+
+
+    }
     
     ///http://localhost/InsightSuite/public/calculadora-qualificacao/00001421743
     public function calculadora_qualificacao($cpf = null){

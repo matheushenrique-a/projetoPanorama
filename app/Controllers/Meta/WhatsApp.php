@@ -477,6 +477,7 @@ class WhatsApp extends BaseController
         echo json_encode($returnData);
     }
 
+    //http://localhost/InsightSuite/public/whatsapp-auditoria
     public function whatsapp_auditoria($telefoneCliente = null){
 
         if (!empty($telefoneCliente)){
@@ -529,12 +530,32 @@ class WhatsApp extends BaseController
 
                 if (isset($data['auditoria'])){
                     foreach ($data['auditoria'] as $item) {
-                        echo "Telefone do cliente: " . $item['telefone_cliente'] . "<bR>";
-                        echo "Gravidade: " . $item['gravidade'] . "<bR>";
-                        echo "Feedback: " . $item['frase_feedback'] . "<bR>";
-                        echo str_repeat("-", 50) . "<bR>";
-    
-                        $this->telegram->notifyTelegramGroup("❌❌❌ AUDITORIA WhatsApp - [" . $item['telefone_cliente'] . "][" . $item['gravidade'] . "\n" . $item['frase_feedback'] . "\nInspecionar:\n" . rootURL  . "whatsapp-auditoria/" . $item['telefone_cliente'], telegramQuid);
+                        // echo "Telefone do cliente: " . $item['telefone_cliente'] . "<bR>";
+                        // echo "Gravidade: " . $item['gravidade'] . "<bR>";
+                        // echo "Feedback: " . $item['frase_feedback'] . "<bR>";
+                        // echo str_repeat("-", 50) . "<bR>";
+
+                        $userId = null;
+                        $ultimaLigacao = $this->m_argus->ultimaLigacao(['celular' => $item['telefone_cliente']]);
+                        if ($ultimaLigacao['existRecord']){
+                            $userId = $this->dbMasterDefault->select('user_account', ['nickname' => $ultimaLigacao['firstRow']->assessor])['firstRow']->userId;
+                        }
+
+                        $dataNotificacao = [
+                            'userId' => $userId,
+                            'notifica_user' => true,
+                            'notifica_supervisor' => true,
+                            'notifica_manager' => true,
+                            'contexto_grupo' => "AASPA",
+                            'last_updated' => date('Y-m-d H:i:s'),
+                            'tipo' => "auditoria_whatsapp",
+                            'titulo' => "Inspetor WhatsApp IA",
+                            'json_detalhes' => json_encode($item),
+                        ];
+
+                        $added = $this->dbMasterDefault->insert('insight_notificacoes', $dataNotificacao);
+
+                        $this->telegram->notifyTelegramGroup("❌❌❌ AUDITORIA WhatsApp - [" . numberOnly($item['telefone_cliente']) . "][" . $item['gravidade'] . "\n" . $item['frase_feedback'] . "\nInspecionar:\n" . rootURL  . "whatsapp-auditoria/" . $item['telefone_cliente'], telegramQuid);
                     }
                 } else {
                     $this->telegram->notifyTelegramGroup("❌❌❌ AUDITORIA WhatsApp ERRO - Auditoria Inválida", telegramQuid);

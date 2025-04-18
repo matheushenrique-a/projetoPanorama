@@ -53,6 +53,9 @@ $routes->match(['get', 'post'], '/whatsapp-chat', 'Meta\WhatsApp::whatsapp_chat'
 $routes->match(['get', 'post'], '/whatsapp-auditoria', 'Meta\WhatsApp::whatsapp_auditoria');
 $routes->match(['get', 'post'], '/whatsapp-auditoria/(:any)', 'Meta\WhatsApp::whatsapp_auditoria/$1');
 
+//INSIGHT
+$routes->match(['get', 'post'], '/insight-listar-notificacoes', 'Insight\Insight::insight_listar_notificacoes');
+
 //AASPA
 $routes->match(['get', 'post'], '/comecar/(:any)', 'Frontline\Frontline::comecar/$1');
 $routes->match(['get', 'post'], '/aaspa-zapsms', 'Aaspa\Aaspa::zapsms');
@@ -68,6 +71,7 @@ $routes->match(['get', 'post'], '/integraall-cep/(:any)', 'Aaspa\Integraall::cep
 $routes->match(['get', 'post'], '/integraall-cpf', 'Aaspa\Integraall::cpf');
 $routes->match(['get', 'post'], '/integraall-detalhes-proposta', 'Aaspa\Integraall::detalhes_proposta');
 $routes->match(['get', 'post'], '/integraall-listar-propostas', 'Aaspa\Integraall::listar_propostas');
+$routes->match(['get', 'post'], '/integraall-metricas-ativacoes', 'Aaspa\Integraall::integraall_metricas_ativacoes');
 $routes->match(['get', 'post'], '/integraall-buscar-propostas/(:any)', 'Aaspa\Integraall::buscar_propostas/$1');
 $routes->match(['get', 'post'], '/integraall-criar-proposta', 'Aaspa\Integraall::criar_proposta');
 $routes->match(['get', 'post'], '/integraall-validar-cpf/(:any)', 'Aaspa\Integraall::validar_cpf/$1');

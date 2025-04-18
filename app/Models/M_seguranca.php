@@ -13,12 +13,16 @@ class M_seguranca extends Model {
             $this->my_session = session();
         }
 
-    function auth($email, $password){        
+    function auth($email, $password = ''){        
         $email = trim($email);
         $password = trim($password);
-        $iam = new M_aws();
 
-        $whereCheck = array('email' => $email, 'password' => $password);
+        if (empty($password)) {
+            $whereCheck = array('email' => $email);
+        } else {
+            $whereCheck = array('email' => $email, 'password' => $password);
+        }
+
         $login = $this->dbMaster->select('user_account', $whereCheck);
         
         if ($login['existRecord']) {
@@ -32,6 +36,9 @@ class M_seguranca extends Model {
             $this->my_session->set('perfil', $login['firstRow']->perfil_acesso);
             $this->my_session->set('observacao', $login['firstRow']->observacao);
             $this->my_session->set('parameters', json_decode($login['firstRow']->parameters ?? "", true));
+            
+            helper('cookie');
+            set_cookie('insight', $login['firstRow']->email, time()+60*60*24*7); //30 days 
             return true;
         } else {
             return false;

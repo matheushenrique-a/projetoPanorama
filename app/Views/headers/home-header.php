@@ -100,10 +100,19 @@ License: For each use you must have a valid license purchased only from above li
 								<!--begin::Menu-->
 								<div class="menu menu-rounded menu-column menu-lg-row my-5 my-lg-0 align-items-stretch fw-semibold px-2 px-lg-0" id="kt_app_header_menu" data-kt-menu="true">
 									<!--begin:Menu item-->
+									<div class="menu-item here show menu-lg-down-accordion menu-here-bg me-0 me-lg-2">
+										<!--begin:Menu link-->
+										<span class="menu-link">
+											<span class="menu-title"><a href="<?php echo assetfolder;?>"> &#x3C;&#x3C; Voltar</a></span>
+											<span class="menu-arrow d-lg-none"></span>
+										</span>
+										<!--end:Menu link-->
+									</div>
+									<!--begin:Menu item-->
 									<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="bottom-start" class="menu-item here show menu-lg-down-accordion menu-here-bg me-0 me-lg-2">
 										<!--begin:Menu link-->
 										<span class="menu-link">
-											<span class="menu-title">Home</span>
+											<span class="menu-title">Ferramentas</span>
 											<span class="menu-arrow d-lg-none"></span>
 										</span>
 										<!--end:Menu link-->

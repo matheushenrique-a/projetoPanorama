@@ -20,13 +20,13 @@ class M_insight extends Model {
         $this->m_http =  new M_http();
     }
 
-    public function load_notifications(){
+    public function load_notifications($limit = 7){
         $userId = $this->session->userId;
         $role = $this->session->role;
         $notificacoes = null;
 
         if ($role == "OPERADOR") {
-            $sqlQuery = 'SELECT * from insight_notificacoes where userId = ' . $userId .  ' or 1=1 and notifica_user = TRUE order by id DESC LIMIT 7;';
+            $sqlQuery = 'SELECT * from insight_notificacoes where userId = ' . $userId .  ' or 1=1 and notifica_user = TRUE order by id DESC LIMIT '. $limit . ';';
             $notificacoes = $this->dbMasterDefault->runQuery($sqlQuery);		
         } else if ($role == "SUPERVISOR") {
             $notificacoes = $this->dbMasterDefault->select('insight_notificacoes', ['notifica_supervisor' => true]);
@@ -35,6 +35,86 @@ class M_insight extends Model {
         }
         return $notificacoes;
 	}
+
+    function gerarTimelineNotificacoes($limit = 7) {
+        $html = '<div class="timeline">';
+        $tituloInicial = "";
+        $i = 0;
+    
+        $notificacoes = $this->load_notifications($limit);
+
+        foreach ($notificacoes["result"]->getResult() as $row) {
+            $json_detalhes = $row->json_detalhes;
+            $detalhes = json_decode($json_detalhes, true);
+            $tipo = $row->tipo;
+            $titulo = $row->titulo;
+            $data_criacao = $row->data_criacao;
+    
+            $icon = "";
+    
+            if ($tituloInicial != $titulo) {
+                $tituloInicial = $titulo;
+                if ($i > 0) {
+                    $html .= '</div></div></div>'; // Fecha bloco anterior
+                }
+                $i++;
+    
+                $html .= '<div class="timeline-item">';
+                $html .= '<div class="timeline-line w-40px"></div>';
+                $html .= '<div class="timeline-icon symbol symbol-circle symbol-40px me-4">
+                            <div class="symbol-label bg-light">
+                                <span class="svg-icon svg-icon-2 svg-icon-gray-500">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                        <path opacity="0.3" d="M2 4V16C2 16.6 2.4 17 3 17H13L16.6 20.6C17.1 21.1 18 20.8 18 20V17H21C21.6 17 22 16.6 22 16V4C22 3.4 21.6 3 21 3H3C2.4 3 2 3.4 2 4Z" fill="currentColor" />
+                                        <path d="M18 9H6C5.4 9 5 8.6 5 8C5 7.4 5.4 7 6 7H18C18.6 7 19 7.4 19 8C19 8.6 18.6 9 18 9ZM16 12C16 11.4 15.6 11 15 11H6C5.4 11 5 11.4 5 12C5 12.6 5.4 13 6 13H15C15.6 13 16 12.6 16 12Z" fill="currentColor" />
+                                    </svg>
+                                </span>
+                            </div>
+                        </div>';
+                $html .= '<div class="timeline-content mb-3 mt-n1">
+                            <div class="pe-3 mb-5">
+                                <div class="fs-5 fw-bold mb-2">' . htmlspecialchars($titulo) . '</div>
+                                <div class="d-flex align-items-center mt-1 fs-6">
+                                    <div class="text-muted me-2 fs-7">Recebida em ' . dataUsPtHours($data_criacao, true) . '</div>
+                                </div>
+                            </div>
+                            <div class="overflow-auto pb-5">';
+            }
+    
+            if (($tipo == 'proposta_criada') || ($tipo == 'proposta_atualizada')) {
+                if ($row->tipo == "proposta_criada") {
+                    $icon = "👋🏻 ";
+                } else if ($row->tipo == "proposta_atualizada") {
+                    if ((isset($detalhes['statusFinal'])) && ($detalhes['statusFinal'] == 'APROVADA')) {
+                        $icon = "🎉 ";
+                    } else if (((strpos(strtoupper($detalhes['statusAdicional']), 'CANCEL') !== false)) || (strpos(strtoupper($detalhes['nomeStatus']), 'CANCEL') !== false)) {
+                        $icon = "❌ ";
+                    } else if (((strpos(strtoupper($detalhes['statusAdicional']), 'AGUARDA') !== false)) || (strpos(strtoupper($detalhes['nomeStatus']), 'AGUARDA') !== false)) {
+                        $icon = "⏱️ ";
+                    }
+                }
+    
+                $html .= '<div class="d-flex align-items-center border border-dashed border-gray-300 rounded min-w-1000px px-7 py-2 mb-2">
+                            <a href="" class="fs-5 text-dark text-hover-primary fw-semibold w-275px min-w-275px">' . $icon . htmlspecialchars($detalhes['integraallId']) . ' | ' . substr(htmlspecialchars($detalhes['nomeCliente']), 0, 15) . '...</a>
+                            <div class="min-w-275px pe-2"><span class="badge badge-light-' . traduzirNomeStatus($detalhes['nomeStatus'])[1] . '">' . traduzirNomeStatus($detalhes['nomeStatus'])[0] . '</span> <span class="badge badge-light-' . traduzirStatusAdicional($detalhes['statusAdicional'])[1] . '">' . traduzirStatusAdicional($detalhes['statusAdicional'])[0] . '</span></div>
+                            <a href="" class="btn btn-sm btn-light btn-active-light-primary">Detalhes</a>
+                        </div>';
+            } else if ($tipo == 'auditoria_whatsapp') {
+                $icon = ($detalhes['gravidade'] == "alta") ? "🚨 " : "⚠️ ";
+    
+                $html .= '<div class="d-flex align-items-center border border-dashed border-gray-300 rounded min-w-1000px px-7 py-2 mb-2">
+                            <a href="" class="fs-5 text-dark text-hover-primary fw-semibold w-275px min-w-275px">' . $icon . htmlspecialchars($detalhes['gravidade']) . ' | ' . htmlspecialchars($detalhes['telefone_cliente']) . '</a>
+                            <div class="min-w-275px pe-2"><span class="badge badge-light text-muted">Feedback: ' . substr(htmlspecialchars($detalhes['frase_feedback']), 0, $limit) . '...</span></div>
+                            <a href="" class="btn btn-sm btn-light btn-active-light-primary">Detalhes</a>
+                        </div>';
+            }
+        }
+    
+        $html .= '</div></div></div>'; // fecha último bloco
+        $html .= '</div>'; // fecha timeline principal
+    
+        return $html;
+    }
 
 
     
