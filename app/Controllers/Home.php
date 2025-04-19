@@ -50,11 +50,18 @@ class Home extends BaseController
         
         $htmlNotificacoes = $this->m_insight->gerarTimelineNotificacoes();
         $ultimasLigacoes = $this->m_argus->ultimasLigacoes(7);
+        $countLigacoes = $this->m_argus->countLigacoes();
+        $countPropostas = $this->m_integraall->countPropostas();
         $ultimasPropostas = $this->m_integraall->ultimasPropostas(6);
+        $graficoAvebacoes = $this->m_integraall->graficoAvebacoes();
 
+        $dados['graficoAvebacoes'] = $graficoAvebacoes;
         $dados['htmlNotificacoes'] = $htmlNotificacoes;
         $dados['ultimasLigacoes'] = $ultimasLigacoes;
+        $dados['session'] = $this->session;
         $dados['ultimasPropostas'] = $ultimasPropostas;
+        $dados['countLigacoes'] = $countLigacoes;
+        $dados['countPropostas'] = $countPropostas;
         return $this->loadpage('headers/home-default', $dados);
     }
 

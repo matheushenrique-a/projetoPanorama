@@ -116,6 +116,29 @@ class M_integraall extends Model {
         return $this->dbMasterDefault->runQuery($sql);
     }
 
+    public function countPropostas(){
+        $sql = "select count(*) from aaspa_propostas where vendedorUsuarioId = '" . $this->session->parameters["integraallId"] . "' ";
+        $sql .= " AND DATE(data_criacao) = CURDATE();"; 
+        return $this->dbMasterDefault->runQuery($sql)['countAll'];
+    }
+
+    public function graficoAvebacoes(){
+        $sql = "SELECT
+                    CONCAT('\"', GROUP_CONCAT(DATE_FORMAT(data_venda, '%d/%m') ORDER BY data_venda ASC SEPARATOR '\", \"'), '\"') AS Datas,
+                    CONCAT('', GROUP_CONCAT(averbadas ORDER BY data_venda ASC SEPARATOR ', ')) AS Averbacoes
+                FROM (
+                    SELECT DATE(data_criacao) AS data_venda, COUNT(*) AS averbadas
+                    FROM aaspa_propostas
+                    WHERE data_ativacao IS NOT NULL
+                        AND data_criacao >= CURDATE() - INTERVAL 14 DAY
+                        AND (vendedorUsuarioId = '" . $this->session->parameters["integraallId"] . "' OR 1=1)
+                    GROUP BY DATE(data_criacao)
+                ) AS sub;";
+            
+        return $this->dbMasterDefault->runQuery($sql);
+    }
+
+
 
     public function tse($data){
         $headers = [];

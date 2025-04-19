@@ -51,6 +51,12 @@ class M_argus extends Model {
         $sql .= " order by data_criacao DESC LIMIT $limit;"; 
         return $this->dbMasterDefault->runQuery($sql);
     }
+
+    public function countLigacoes(){
+        $sql = "select count(*) from aaspa_cliente where assessor = '" . $this->session->nickname . "' ";
+        $sql .= " AND DATE(data_criacao) = CURDATE();"; 
+        return $this->dbMasterDefault->runQuery($sql)['countAll'];
+    }
     
     public function buscarCliente($filters){
         return $this->dbMasterDefault->select('aaspa_cliente', $filters);
