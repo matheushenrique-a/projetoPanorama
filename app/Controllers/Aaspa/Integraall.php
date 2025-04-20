@@ -299,7 +299,7 @@ class Integraall extends BaseController
                         WHERE data_ativacao IS NOT NULL
                         AND DATE(data_criacao) BETWEEN CURDATE() - INTERVAL 7 DAY AND CURDATE()
                         GROUP BY assessor
-                        ORDER BY averbadas DESC;;";
+                        ORDER BY averbadas DESC;";
 
         $ativacoes = $this->dbMasterDefault->runQuery($sqlAtivacoes);
 

@@ -54,7 +54,9 @@ class Home extends BaseController
         $countPropostas = $this->m_integraall->countPropostas();
         $ultimasPropostas = $this->m_integraall->ultimasPropostas(6);
         $graficoAvebacoes = $this->m_integraall->graficoAvebacoes();
+        $ranking_ativacoes = $this->m_integraall->ranking_ativacoes();
 
+        $dados['ranking_ativacoes'] = $ranking_ativacoes;
         $dados['graficoAvebacoes'] = $graficoAvebacoes;
         $dados['htmlNotificacoes'] = $htmlNotificacoes;
         $dados['ultimasLigacoes'] = $ultimasLigacoes;

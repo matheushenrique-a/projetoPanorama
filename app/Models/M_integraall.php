@@ -138,6 +138,19 @@ class M_integraall extends Model {
         return $this->dbMasterDefault->runQuery($sql);
     }
 
+    public function ranking_ativacoes(){
+        $sqlAtivacoes = "SELECT vendedorUsuarioId, assessor, COUNT(*) AS averbadas, (COUNT(*) / 7) media 
+                        FROM aaspa_propostas 
+                        WHERE data_ativacao IS NOT NULL
+                        AND DATE(data_criacao) BETWEEN CURDATE() - INTERVAL 7 DAY AND CURDATE()
+                        GROUP BY assessor
+                        ORDER BY averbadas DESC;";
+
+        $ativacoes = $this->dbMasterDefault->runQuery($sqlAtivacoes);
+
+        return $ativacoes;
+    }
+
 
 
     public function tse($data){
