@@ -22,7 +22,7 @@ class M_seguranca extends Model {
         } else {
             $whereCheck = array('email' => $email, 'password' => $password);
         }
-
+ 
         $login = $this->dbMaster->select('user_account', $whereCheck);
         
         if ($login['existRecord']) {

@@ -423,7 +423,7 @@
 																	$vendedorUsuarioId = $row->vendedorUsuarioId;
 																	$averbadas = $row->averbadas;
 																	$media = simpleRound($row->media);
-
+ 
 																	$autoresClassicos = array_map('strtoupper', ["Machado de Assis", "José de Alencar", "Gonçalves Dias", "Castro Alves", "Aluísio Azevedo", "Raul Pompeia", "Olavo Bilac", "Manuel Bandeira", "Carlos Drummond de Andrade", "Cecília Meireles", "Graciliano Ramos", "Jorge Amado", "Erico Verissimo", "Clarice Lispector", "Lima Barreto", "Monteiro Lobato", "Euclides da Cunha", "João Cabral de Melo Neto", "Rachel de Queiroz", "José Lins do Rego"]); 
 																	?>					
 																	<tr class="m-0 p-2">

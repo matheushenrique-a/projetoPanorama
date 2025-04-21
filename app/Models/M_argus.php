@@ -10,6 +10,7 @@ use Symfony\Component\Panther\Client;
 class M_argus extends Model {
     protected $dbMasterDefault;
     protected $telegram;
+    protected $session;
     protected $m_http;
 
     public function __construct(){

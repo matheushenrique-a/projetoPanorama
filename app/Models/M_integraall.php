@@ -110,7 +110,7 @@ class M_integraall extends Model {
     }
 
     public function ultimasPropostas($limit = 6){
-        $sql = "select * from aaspa_propostas where vendedorUsuarioId = '" . $this->session->parameters["integraallId"] . "' or 1=1 ";
+        $sql = "select * from aaspa_propostas where vendedorUsuarioId = '" . $this->session->parameters["integraallId"] . "' ";
         $sql .= " order by data_criacao DESC LIMIT $limit;"; 
         
         return $this->dbMasterDefault->runQuery($sql);
@@ -131,13 +131,17 @@ class M_integraall extends Model {
                     FROM aaspa_propostas
                     WHERE data_ativacao IS NOT NULL
                         AND data_criacao >= CURDATE() - INTERVAL 14 DAY
-                        AND (vendedorUsuarioId = '" . $this->session->parameters["integraallId"] . "' OR 1=1)
+                        AND (vendedorUsuarioId = '" . $this->session->parameters["integraallId"] . "' )
                     GROUP BY DATE(data_criacao)
                 ) AS sub;";
             
         return $this->dbMasterDefault->runQuery($sql);
     }
 
+    //
+    //
+    //
+    //
     public function ranking_ativacoes(){
         $sqlAtivacoes = "SELECT vendedorUsuarioId, assessor, COUNT(*) AS averbadas, (COUNT(*) / 7) media 
                         FROM aaspa_propostas 

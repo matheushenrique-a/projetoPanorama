@@ -164,7 +164,7 @@
 		$statusMap = [
 			"CANCELADO NO INSS" => ["Canc INSS", "danger"],
 			"AVERBADO GOV." => ["Averbado Gov.", "success"],
-			"POSSUI OUTRO PROCESSO DE ADESÃO EM ANDAMENTO." => ["Já Possui", "warning"],
+			"POSSUI OUTRO PROCESSO DE ADESãO EM ANDAMENTO." => ["Já Possui Outro Processo", "warning"],
 			"AGUARDANDO AVERBAçãO ENTIDADE" => ["Aguard. Averbação", "success"],
 			"AGUARDANDO BIOMETRIA" => ["Aguard. Biometria", "warning"],
 			"LINK EXPIRADO" => ["Link Expirado", "danger"],

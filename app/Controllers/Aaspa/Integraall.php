@@ -293,7 +293,8 @@ class Integraall extends BaseController
         $this->telegram->notifyTelegramGroup($sendData, telegramQuid);
 
 
-        /////RANKING
+        /////RANKING//
+        //
         $sqlAtivacoes = "SELECT assessor, COUNT(*) AS averbadas
                         FROM aaspa_propostas 
                         WHERE data_ativacao IS NOT NULL
