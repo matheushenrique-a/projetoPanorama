@@ -262,7 +262,7 @@
 													<!--begin::Title-->
 													<h3 class="card-title align-items-start flex-column">
 														<span class="card-label fw-bold text-dark">Suas Averbações por Dia</span>
-														<span class="text-gray-400 mt-1 fw-semibold fs-6">Últimos 15 dias</span>
+														<span class="text-gray-400 mt-1 fw-semibold fs-6">Últimos 30 dias</span>
 													</h3>
 													<!--end::Title-->
 												</div>
@@ -425,33 +425,30 @@
 																	$media = simpleRound($row->media);
  
 																	$autoresClassicos = array_map('strtoupper', ["Machado de Assis", "José de Alencar", "Gonçalves Dias", "Castro Alves", "Aluísio Azevedo", "Raul Pompeia", "Olavo Bilac", "Manuel Bandeira", "Carlos Drummond de Andrade", "Cecília Meireles", "Graciliano Ramos", "Jorge Amado", "Erico Verissimo", "Clarice Lispector", "Lima Barreto", "Monteiro Lobato", "Euclides da Cunha", "João Cabral de Melo Neto", "Rachel de Queiroz", "José Lins do Rego"]); 
+																	
+																	$applyBlur = false;
+																	if (($i <= 3) or ($session->parameters["integraallId"] == $vendedorUsuarioId)){
+																		$assessor = substr($assessor, 0, 21);
+																	} else{
+																		$applyBlur = true;
+																		$assessor = substr($autoresClassicos[$i], 0, 21);
+																	}
+
 																	?>					
 																	<tr class="m-0 p-2">
 																		<td class="m-0 p-2">
 																			<div class="d-flex align-items-center">
 																				<div class="symbol symbol- symbol-40px me-3 "><?php echo  "#$i " . (isset($medal[$i])  ? $medal[$i] : '<i class="fa-solid fa-medal fs-2x text-gray-200"></i>');?></div>
-																				<div class="d-flex justify-content-start flex-column " style="<?php echo ($session->parameters["integraallId"] == $vendedorUsuarioId ? '' : 'filter: blur(3px)');?>"><?php echo substr(($session->parameters["integraallId"] == $vendedorUsuarioId ? $assessor : $autoresClassicos[$i]), 0, 21);?>...
-																					<!-- <span class="text-gray-400 fw-bold d-block fs-7">33 propostas</span>-->
+																				<div class="d-flex justify-content-start flex-column " style="<?php echo (!$applyBlur ? '' : 'filter: blur(3px)');?>">
+																					<?php echo $assessor?>...
 																				</div> 
 																			</div>
 																		</td>
 																		<td class="text-end m-0 p-2">
 																			<span class="text-gray-800 d-block mb-1 fs-6 text-center"><?php echo $averbadas;?></span>
-																			<!-- <span class="fw-bold text-gray-400 d-block">Averbações</span> -->
 																		</td>
 																		<td class="text-end m-0 p-2">
 																			<a href="#" class="text-gray-800  text-hover-primary d-block mb-1 fs-6 text-center"><?php echo $media;?></a>
-																			<!-- <span class="text-gray-400 fw-bold d-block fs-7">Média Dia</span> -->
-																		</td>
-																		<!-- <td class="float-end text-end border-0 m-0 p-2">
-																			<div class="rating">
-																				<div class="rating-label checked"><i class="bi bi-star-fill fs-6s"></i></div>
-																				<div class="rating-label checked"><i class="bi bi-star-fill fs-6s"></i></div>
-																				<div class="rating-label checked"><i class="bi bi-star-fill fs-6s"></i></div>
-																				<div class="rating-label checked"><i class="bi bi-star-fill fs-6s"></i></div>
-																				<div class="rating-label checked"><i class="bi bi-star-fill fs-6s"></i></div>
-																			</div>
-																			<span class="text-gray-400 fw-bold d-block fs-7 mt-1">Média dia</span> -->
 																		</td>
 																		<td class="text-end m-0 p-2">
 																			<a href="#" class="btn btn-sm btn-icon btn-bg-light btn-active-color-primary w-25px h-25px">

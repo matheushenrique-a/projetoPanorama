@@ -130,7 +130,7 @@ class M_integraall extends Model {
                     SELECT DATE(data_criacao) AS data_venda, COUNT(*) AS averbadas
                     FROM aaspa_propostas
                     WHERE data_ativacao IS NOT NULL
-                        AND data_criacao >= CURDATE() - INTERVAL 14 DAY
+                        AND data_criacao >= CURDATE() - INTERVAL 30 DAY
                         AND (vendedorUsuarioId = '" . $this->session->parameters["integraallId"] . "' )
                     GROUP BY DATE(data_criacao)
                 ) AS sub;";
