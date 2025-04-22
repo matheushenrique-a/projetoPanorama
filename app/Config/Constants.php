@@ -20,6 +20,11 @@ define ('API_Produto', 6); //quid
 //calculadora
 define ('API_Calculadora', 'https://api2.calculadoraconsignado.com.br/api/');
 
+//TSE API
+define ('API_TSE', "http://localhost:3002/consultar-cpf");
+define ('URL_TSE', "https://www.tse.jus.br/servicos-eleitorais/autoatendimento-eleitoral#/atendimento-eleitor/consultar-situacao-titulo-eleitor");
+//define ('API_TSE', "https://0cd0-177-73-197-2.ngrok-free.app/consultar-cpf");
+
 //WHATSAPP CLOUD API
 define ('META_CLOUD_PHONE_ID', "631093443420913"); //phone number id do Sender WhatsApp = +1 555 641 8758
 define ('META_CLOUD_BUSINESS_ID', "1180147207074114"); //Asset_id pela URL do Gerenciador WhatsApp

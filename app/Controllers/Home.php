@@ -49,10 +49,10 @@ class Home extends BaseController
         $dados['pageTitle'] = "Simplificando sua vida financeira";
         
         $htmlNotificacoes = $this->m_insight->gerarTimelineNotificacoes();
-        $ultimasLigacoes = $this->m_argus->ultimasLigacoes(7);
+        $ultimasLigacoes = $this->m_argus->ultimasLigacoes(12);
         $countLigacoes = $this->m_argus->countLigacoes();
         $countPropostas = $this->m_integraall->countPropostas();
-        $ultimasPropostas = $this->m_integraall->ultimasPropostas(6);
+        $ultimasPropostas = $this->m_integraall->ultimasPropostas(9);
         $graficoAvebacoes = $this->m_integraall->graficoAvebacoes();
         $ranking_ativacoes = $this->m_integraall->ranking_ativacoes();
 

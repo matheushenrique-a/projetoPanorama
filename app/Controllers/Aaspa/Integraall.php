@@ -377,7 +377,7 @@ class Integraall extends BaseController
             "aaspaCheck" => $returnData["status"],
         ];
         
-        $propostaAdded = $this->m_integraall->criar_proposta_insight($dataPropostaInsight, ["cpf" => $cpf]);
+        //$propostaAdded = $this->m_integraall->criar_proposta_insight($dataPropostaInsight, ["cpf" => $cpf]);
 
         echo json_encode($returnData);
     }
@@ -465,11 +465,11 @@ class Integraall extends BaseController
                         $returnData["email"] = trim($cadastro['email']  ?? "");
                         if (empty($returnData['email'])){ $returnData["email"] = strtolower(firstName($returnData["nomeCliente"])) . "@sem_email.com.br"; } 
 
-                        $returnData["telefone"] = $cadastro['telefone'];
-
                         $ultimaLigacao = $this->m_argus->ultimaLigacao(['cpf' => $cpf]);
                         if ($ultimaLigacao['existRecord']){
                             $returnData["telefone"] = substr($ultimaLigacao['firstRow']->celular, 2);
+                        } else {
+                            $returnData["telefone"] = $cadastro['telefone'];
                         }
 
                         $returnData["logradouro"] = strtoupper($cadastro['logradouro']  ?? "");
@@ -508,7 +508,7 @@ class Integraall extends BaseController
             "inssCheck" => $returnData["status"],
         ];
         
-        $propostaAdded = $this->m_integraall->criar_proposta_insight($dataPropostaInsight, ["cpf" => $cpf]);
+        //$propostaAdded = $this->m_integraall->criar_proposta_insight($dataPropostaInsight, ["cpf" => $cpf]);
 
         echo json_encode($returnData);
     }

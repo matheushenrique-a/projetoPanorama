@@ -48,7 +48,7 @@ class M_argus extends Model {
     }
 
     public function ultimasLigacoes($limit = 6){
-        $sql = "select * from aaspa_cliente where assessor = '" . $this->session->nickname . "' or 1=1 ";
+        $sql = "select * from aaspa_cliente where assessor = '" . $this->session->nickname . "' ";
         $sql .= " order by data_criacao DESC LIMIT $limit;"; 
         return $this->dbMasterDefault->runQuery($sql);
     }

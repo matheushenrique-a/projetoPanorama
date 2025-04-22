@@ -65,39 +65,48 @@
 																</h2>
 																<div id="kt_accordion_1_body_133" class="accordion-collapse collapse show" aria-labelledby="kt_accordion_1_header_1" data-bs-parent="#kt_accordion_1">
 																	<div class="accordion-body">
-																		<div class="input-group">
-																			<span class="input-group-text" style="width: 155px">CPF</span> 
-																			<input type="text" class="form-control fs-3 fw-bold" placeholder="" name="cpf" id="cpf" value="<?php echo $cpf;?>" /><span>&nbsp;&nbsp;<i class="fa-regular fa-copy pt-4 fs-3" style="color: #b3b1b1; cursor: pointer" onclick="navigator.clipboard.writeText(document.getElementById('cpf').value)""></i></span>
+																		<div style="display: <?php echo (empty($integraallId)  ? 'block' : 'none');?>">
+																			<div class="input-group">
+																				<span class="input-group-text" style="width: 155px">CPF</span> 
+																				<input type="text" class="form-control fs-3 fw-bold" placeholder="" name="cpf" id="cpf" value="<?php echo $cpf;?>" /><span>&nbsp;&nbsp;<i class="fa-regular fa-copy pt-4 fs-3" style="color: #b3b1b1; cursor: pointer" onclick="navigator.clipboard.writeText(document.getElementById('cpf').value)""></i></span>
+																			</div>
+																			<div class="input-group">
+																				<span class="ms-2 mt-2" id="lblInfo">Informe o CPF para consulta.</span>
+																			</div>
+																			<?php if ((!$returnData["status"]) and (!empty($returnData["mensagem"]))){?>
+																			<div class="input-group">
+																				<span class="ms-2 mt-2" style="width: 100%; color: #ff0000;"><?php echo $returnData["mensagem"];?></span>
+																			</div>
+																			<?php }?>
+																			<div class="d-flex align-items-center position-relative my-1 mt-5 mb-0">
+																				<button type="submit" class="btn btn-primary" name="btnConsultar" value="btnConsultar" >Consultar</button>										
+																			</div>
+
+																			<div class="mt-10 mb-3">
+																				<div>
+																					<span style="color: <?php if($aaspaCheck == "LIBERADO") echo '#008001';if($aaspaCheck == "FALHA") echo '#f22e46';; if(empty($aaspaCheck)) echo '#b3b1b1';?>" id='lblAaspaTop'>
+																						<svg role="img" aria-hidden="true" width="25px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg>
+																					</span>
+																					<span class="fs-4">AASPA:</span> <span class="fs-4" id='lblAaspa'><?php echo $aaspaCheck;?></span><span class="fs-4">&nbsp;&nbsp;<i class="fa-solid fa-arrows-rotate fs-3" id='lblAaspaUpdate' style="color: #b3b1b1; cursor: pointer; display: inline;" onclick="checkAaspa();"></i></span>
+																				</div>
+																				<div class="mt-2">
+																					<span style="color: <?php if($inssCheck == "LIBERADO") echo '#008001';if($inssCheck == "BLOQUEADO") echo '#f22e46';; if(empty($inssCheck)) echo '#b3b1b1';?>" id='lblINSSTop'>
+																						<svg role="img" aria-hidden="true" width="25px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg>
+																					</span>
+																					<span class="fs-4">INSS:</span> <span class="fs-4" id='lblINSS'><?php echo $inssCheck;?></span><span class="fs-4">&nbsp;&nbsp;<i class="fa-solid fa-arrows-rotate fs-3" id='lblINSSUpdate' style="color: #b3b1b1; cursor: pointer; display: inline;" onclick="checkINSS();"></i></span>
+																				</div>
+																				<div class="mt-2">
+																					<span style="color: <?php if($tseCheck == "LIBERADO") echo '#008001';if($tseCheck == "FALHA") echo '#f22e46'; if(empty($tseCheck)) echo '#b3b1b1';?>" id='lblTSETop'>
+																					<svg role="img" aria-hidden="true" width="25px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg>
+																					</span>
+																					<span class="fs-4">TSE:</span> <span class="fs-4" id='lblTSE'><?php echo (empty($tseCheck)  ? '' : $tseCheck);?></span><span class="fs-4"></span>&nbsp;&nbsp;<a href="<?php echo URL_TSE;?>" target="_blank"><i class="fa-solid fa-arrow-up-right-from-square fs-3" id='lblTSESite' style="color: #b3b1b1; cursor: pointer; display: inline;" alt="Abrir Site TSE"></i></a>
+																				</div>
+																			</div>
 																		</div>
-																		<div class="input-group">
-																			<span class="ms-2 mt-2" id="lblInfo">Informe o CPF para consulta.</span>
-																		</div>
-																		<div class="d-flex align-items-center position-relative my-1 mt-5 mb-0">
-																			<button type="submit" class="btn btn-primary" name="btnConsultar" value="btnConsultar" >Consultar</button>										
+																		<div style="display: <?php echo (!empty($integraallId)  ? 'block' : 'none');?>">
 																		</div>
 
-																		<div class="mt-10 mb-3">
-																			<div>
-																				<span style="color: <?php if($aaspaCheck == "LIBERADO") echo '#008001';if($aaspaCheck == "FALHA") echo '#f22e46';; if(empty($aaspaCheck)) echo '#b3b1b1';?>" id='lblAaspaTop'>
-																					<svg role="img" aria-hidden="true" width="25px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg>
-																				</span>
-																				<span class="fs-4">AASPA:</span> <span class="fs-4" id='lblAaspa'><?php echo $aaspaCheck;?></span><span class="fs-4">&nbsp;&nbsp;<i class="fa-solid fa-arrows-rotate fs-3" id='lblAaspaUpdate' style="color: #b3b1b1; cursor: pointer; display: inline;" onclick="checkAaspa();"></i></span>
-																			</div>
-																			<div class="mt-2">
-																				<span style="color: <?php if($inssCheck == "LIBERADO") echo '#008001';if($inssCheck == "BLOQUEADO") echo '#f22e46';; if(empty($inssCheck)) echo '#b3b1b1';?>" id='lblINSSTop'>
-																					<svg role="img" aria-hidden="true" width="25px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg>
-																				</span>
-																				<span class="fs-4">INSS:</span> <span class="fs-4" id='lblINSS'><?php echo $inssCheck;?></span><span class="fs-4">&nbsp;&nbsp;<i class="fa-solid fa-arrows-rotate fs-3" id='lblINSSUpdate' style="color: #b3b1b1; cursor: pointer; display: inline;" onclick="checkINSS();"></i></span>
-																			</div>
-																			<div class="mt-2">
-																				<span style="color: <?php if($tseCheck == "LIBERADO") echo '#008001';if($tseCheck == "FALHA") echo '#f22e46';; if(empty($tseCheck)) echo '#b3b1b1';?>" id='lblTSETop'>
-																				<svg role="img" aria-hidden="true" width="25px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg>
-																				</span>
-																				<span class="fs-4">TSE:</span> <span class="fs-4" id='lblTSE'><?php echo $tseCheck;?></span><span class="fs-4">&nbsp;&nbsp;<i class="fa-solid fa-arrows-rotate fs-3" id='lblTSEUpdate' style="color: #b3b1b1; cursor: pointer; display: inline;" onclick="checkTSE();"></i></span>&nbsp;&nbsp;<a href="https://www.tse.jus.br/servicos-eleitorais/autoatendimento-eleitoral#/atendimento-eleitor/consultar-situacao-titulo-eleitor" target="_blank"><i class="fa-solid fa-arrow-up-right-from-square fs-3" id='lblTSESite' style="color: #b3b1b1; cursor: pointer; display: inline;" alt="Abrir Site TSE"></i></a>
-																			</div>
-																		</div>
-
-																		<div class="card-header p-0" id="headingOne4"><div class="card-title d" data-toggle="" data-target="#validaBancarios">Cadastro Proposta</div></div>
+																		<div class="card-header p-0" id="headingOne4"><div class="card-title d" data-toggle="" data-target="#validaBancarios"><?php echo (empty($integraallId)  ? 'Cadastro' : 'Consulta');?> Proposta</div></div>
 																		<div class="input-group">
 																			<span class="input-group-text" style="width: 155px">CPF</span> 
 																			<input type="text" class="form-control fs-3 fw-bold" readonly placeholder="" name="cpfINSS" id="cpfINSS" value="<?php echo $cpfINSS;?>" /><span>&nbsp;&nbsp;<i class="fa-regular fa-copy pt-4 fs-3" style="color: #b3b1b1; cursor: pointer" onclick="navigator.clipboard.writeText(document.getElementById('cpfINSS').value)""></i></span>
@@ -183,10 +192,11 @@
 																				<span class="input-group-text" style="width: 100%; color:rgb(29, 212, 32);"><?php echo $returnData["mensagem"];?></span>
 																			</div>
 																		<?php }?>
+																		<?php if (empty($integraallId)) {?>
 																		<div class="d-flex align-items-center position-relative my-1 mt-5 mb-0">
 																			<button type="submit" class="btn btn-primary" name="btnSalvar" value="btnSalvar">Criar Proposta Integraall</button>										
 																		</div>
-
+																		<?php }?>
 																	</div>
 																</div>
 															</div>
@@ -513,9 +523,15 @@
 						});
 
 						function checkCpf(){
-							<?php echo (empty($aaspaCheck) ? 'checkAaspa();' : '');?>
-							<?php echo (empty($inssCheck) ? 'checkINSS();' : '');?>
-							<?php echo (empty($tseCheck) ? 'checkTSE();' : '');?>
+							<?php 
+								
+								if ((empty($integraallId))){
+									echo 'checkAaspa();';
+									echo 'checkINSS();';
+								}
+
+							?>
+							<?php //echo (empty($tseCheck) ? 'checkTSE();' : '');?>
 						}
 
 						function limparForm(){

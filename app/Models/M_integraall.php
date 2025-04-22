@@ -163,7 +163,7 @@ class M_integraall extends Model {
 		$headers[] = "Content-Type: application/json";
 
         //$url = "http://localhost:3000/consultar-cpf";
-        $url = "https://0cd0-177-73-197-2.ngrok-free.app/consultar-cpf";
+        $url = API_TSE;
 
         return $this->m_http->http_request('POST', $url, $headers, $data);
     }
@@ -178,24 +178,96 @@ class M_integraall extends Model {
         return $this->m_http->http_request('POST', $url, $headers, $data);
     }
 
-    public function criar_proposta_insight($data, $key){
-        
-        //echo '14:12:37 - <h3>Dump 95 </h3> <br><br>' . var_dump($data); exit;					//<-------DEBUG
+    public function criar_proposta_insight($data, $key = null){
+        if (!is_null($key)){
+            $proposta = $this->dbMasterDefault->select('aaspa_propostas', $key);
 
-        $proposta = $this->dbMasterDefault->select('aaspa_propostas', $key);
-
-        if (!$proposta['existRecord']){
-            $added = $this->dbMasterDefault->insert('aaspa_propostas',$data);
+            if (!$proposta['existRecord']){
+                $added = $this->dbMasterDefault->insert('aaspa_propostas',$data);
+            } else {
+                $updated = $this->dbMasterDefault->update('aaspa_propostas', $data, $key);
+            }    
         } else {
-            $updated = $this->dbMasterDefault->update('aaspa_propostas', $data, $key);
+            $added = $this->dbMasterDefault->insert('aaspa_propostas',$data);
         }
-
     }
 
     public function criar_proposta_integraall($data){
         $headers = $this->getHeader();
         $url = API_Integraall . 'proposta';
-        return $this->m_http->http_request('POST', $url, $headers, $data);
+        $result = $this->m_http->http_request('POST', $url, $headers, $data);
+
+        $returnData["status"] = false;
+        $returnData["mensagem"] = "";
+
+        if ($result['sucesso']){
+            $detalhesGravacao = json_decode($result['retorno'], true);
+
+            //quando decode do resultado é vazio indica que não existe json e sim texto puro com erro
+            if (empty($detalhesGravacao)){
+                $returnData["status"] = false;
+                $returnData["mensagem"] = traduzirErroIntegraall($result['retorno']) . "<br>Detalhes: " . (empty($result['retorno'])  ? 'Nenhum detalhe retornado' : $result['retorno']); ;
+            
+            //quando decode do resultado é um array com 1 elemento, indica lista de erros
+            } else if ((is_array($detalhesGravacao)) and (isset($detalhesGravacao[0]))){
+                $returnData["status"] = false;
+                $returnData["mensagem"] = str_replace("Api Kompleto Respondeu", "Revise a proposta:", $detalhesGravacao[0]);
+                $returnData["mensagem"] = str_replace('\r\n', "<br>", $returnData["mensagem"]);
+                $returnData["mensagem"] = str_replace('"', "", $returnData["mensagem"]);
+                $returnData["mensagem"] = str_replace('::', ":", $returnData["mensagem"]);
+            
+            //cenario onde a proposta foi gravada com sucesso
+            } else if (isset($detalhesGravacao['message'])){
+                $returnData["status"] = true;
+                $returnData["mensagem"] = $detalhesGravacao['message'];
+
+                if (isset($detalhesGravacao['data'])){
+                    $id = $detalhesGravacao['data']['id'];
+                    $token = $detalhesGravacao['data']['token'];
+                    $statusId = $detalhesGravacao['data']['status'];
+                    $nome = $detalhesGravacao['data']['nome'];
+                    
+                    if (isset($detalhesGravacao['data']['termos'])){
+                        $termoCliente = $detalhesGravacao['data']['termos']['cliente'];
+                        $termoVendedor = $detalhesGravacao['data']['termos']['vendedor'];
+                    }
+
+                    if (!empty($id)){
+                        $returnData['integraall']['cpf'] = $cpf;
+                        $returnData['integraall']['integraallId'] = $id;
+                        $returnData['integraall']['statusId'] = $statusId;
+                        $returnData['integraall']['nomeStatus'] = getStatusNomePorId($statusId);
+                    }
+                }
+            //cenário onde o json retorna erro de autorization ou algo de rede (mais baixo nível)
+            } else if (isset($detalhesGravacao['title'])){
+                $returnData["status"] = false;
+                $type = $detalhesGravacao['type'];
+                $title = $detalhesGravacao['title'];
+                $status = $detalhesGravacao['status'];
+                $traceId = $detalhesGravacao['traceId'];
+
+                $returnData["mensagem"] = "Falha geral - " . $detalhesGravacao['title'];
+
+                // Verifica se há erros
+                if (isset($detalhesGravacao['errors']) && is_array($detalhesGravacao['errors'])) {
+                    $returnData["mensagem"] .= "<br>Erros encontrados:<br>";
+
+                    foreach ($detalhesGravacao['errors'] as $campo => $mensagens) {
+                        $returnData["mensagem"] .= "Campo {$campo}";
+                        foreach ($mensagens as $mensagem) {
+                            $returnData["mensagem"] .=  "- {$mensagem}<br>";
+                        }
+                    }
+                } else {
+                    $returnData["mensagem"] .=  "<br>Nenhum detalhe informado.";
+                }
+            }
+        } else {
+            $returnData["mensagem"] = "Erro geral: " . $result['retorno'];
+        }
+
+        return $returnData;
     }
 
     public function cep($cep){
