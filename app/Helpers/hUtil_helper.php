@@ -18,27 +18,83 @@
 		return 'bin'; // extensão genérica como fallback
 	}
 
+	
+	// function traduzirStatusAdicional($status) {
+	// 	$status = strtoupper($status);
+
+	// 	// Mapeamento de status em inglês para português e cor correspondente
+	// 	$statusMap = [
+	// 		"INCLUíDO" => ["Aguard. Biometria", "warning"],
+	// 		"INELEGíVEL" => ["Já Possui", "warning"],
+	// 		"AVERBADO GOV." => ["Averbado Gov.", "success"],
+	// 		"POSSUI OUTRO PROCESSO DE ADESãO EM ANDAMENTO." => ["Já Possui Outro Processo", "warning"],
+	// 		"AGUARDANDO AVERBAçãO ENTIDADE" => ["Aguard. Averbação", "success"],
+	// 		"AGUARDANDO BIOMETRIA" => ["Aguard. Biometria", "warning"],
+	// 		"LINK EXPIRADO" => ["Link Expirado", "danger"],
+	// 		"AGUARDANDO DOCUMENTO / SELFIE" => ["Aguard. Documento", "warning"],
+	// 		"AGUARDANDO AUDITORIA/SELFIE FRáGIL" => ["Aguard. Auditoria Selfie Frágil", "warning"],
+	// 	];
+ 
+	// 	// Retorna um array contendo a mensagem e a cor, ou um padrão caso não exista
+	// 	return $statusMap[$status] ?? [$status, "dark"];
+	// }
+
+	// function traduzirNomeStatus($status) {
+	// 	$status = strtoupper($status);
+
+	// 	// Mapeamento de status em inglês para português e cor correspondente
+	// 	$statusMap = [
+	// 		"CANCELADO" => ["Cancelado", "danger"],
+	// 		"AGUARDANDO AVERBAçãO" => ["Aguard. Averbação", "success"],
+	// 		"AGUARDANDO AUDITORIA" => ["Aguard. Auditoria", "warning"],
+	// 		"AGUARDANDO ACEITE" => ["Aguard. Aceite", "warning"],
+	// 		"AGUARDANDO DOCUMENTO" => ["Aguard. Doc", "warning"],
+	// 	];
+ 
+	// 	// Retorna um array contendo a mensagem e a cor, ou um padrão caso não exista
+	// 	return $statusMap[$status] ?? [$status, "gray"];
+	// }
+
+	function getStatusAdicionalPorId($id) {
+		$statusList = [
+			0  => ["Aguardando Atendimento", "Aguard. Atendimento", "warning"],
+			1  => ["Em Atendimento", "Em Atendimento", "warning"],
+			2  => ["Incluído", "Aguard. Biometria", "warning"],
+			3  => ["Aprovado", "Averbado Gov.", "success"],
+			4  => ["Erro", "Erro", "danger"],
+			5  => ["Elegível", "Elegível", "warning"],
+			6  => ["Inelegível", "Já Possui", "danger"],
+			7  => ["Cancelado no INSS", "Cancelado no INSS", "danger"],
+			8  => ["Sem Digitação", "Sem Digitação", "danger"],
+			9  => ["Prazo Expirado", "Prazo Expirado", "danger"],
+			10 => ["Exclusão INSS Pedido Cliente", "Exclusão INSS Cliente", "danger"],
+			11 => ["Aguardando Averbação Entidade", "Aguard. Averbação", "success"],
+		];
+	
+		return $statusList[$id] ?? ["Status desconhecido", "$id-Status desconhecido", "dark"];
+	}
+
 	function getStatusNomePorId($id) {
 		$statusList = [
-			1 => "Aguardando Aceite",
-			2 => "Aguardando Documento / Selfie",
-			3 => "Aguardando Documento",
-			4 => "Aguardando Selfie",
-			5 => "Aguardando Documento / Selfie Frágil",
-			6 => "Aguardando Selfie/Documento Frágil",
-			7 => "Aguardando Auditoria/Selfie Frágil",
-			8 => "Aguardando Auditoria/Doc Frágil",
-			9 => "Aguardando Auditoria/Doc e Selfie Frágeis",
-			10 => "Aguardando Auditoria",
-			11 => "Aguardando Averbação",
-			12 => "Enviado para Averbação",
-			13 => "Cancelado",
-			14 => "Cancelado/Não averbado",
-			15 => "Averbado",
-			16 => "Ativo/Pago"
+			1 => ["Aguardando Aceite", "Aguard. Aceite", "warning"],
+			2 => ["Aguardando Documento / Selfie", "Aguard. Documento / Selfie", "warning"],
+			3 => ["Aguardando Documento", "Aguard. Documento", "warning"],
+			4 => ["Aguardando Selfie", "Aguard. Selfie", "warning"],
+			5 => ["Aguardando Documento / Selfie Frágil", "Aguard. Doc/Selfie Frágil", "warning"],
+			6 => ["Aguardando Selfie/Documento Frágil", "Aguard. Selfie/Doc Frágil", "warning"],
+			7 => ["Aguardando Auditoria/Selfie Frágil", "Aguard. Auditoria/Selfie Frágil", "warning"],
+			8 => ["Aguardando Auditoria/Doc Frágil", "Aguard. Auditoria/Doc Frágil", "warning"],
+			9 => ["Aguardando Auditoria/Doc e Selfie Frágeis", "Aguard. Auditoria/Doc Selfie Frágeis", "warning"],
+			10 => ["Aguardando Auditoria", "Aguard. Auditoria", "warning"],
+			11 => ["Aguardando Averbação", "Aguard. Averbação", "success"],
+			12 => ["Enviado para Averbação", "Enviado p/ Averbação", "success"],
+			13 => ["Cancelado", "Cancelado", "danger"],
+			14 => ["Cancelado/Não averbado", "Cancelado/Não averbado", "danger"],
+			15 => ["Averbado", "Averbado", "success"],
+			16 => ["Ativo/Pago", "Ativo/Pago", "success"],
 		];
 
-		return $statusList[$id] ?? "Status desconhecido";
+		return $statusList[$id] ?? ["Status desconhecido", "$id-Status desconhecido", "dark"];
 	}
 
 	function estadoCivilParaNumero($estadoCivil) {
@@ -157,38 +213,7 @@
 		return $statusMap[$status] ?? [$status, "danger"];
 	}
 
-	function traduzirStatusAdicional($status) {
-		$status = strtoupper($status);
-
-		// Mapeamento de status em inglês para português e cor correspondente
-		$statusMap = [
-			"CANCELADO NO INSS" => ["Canc INSS", "danger"],
-			"AVERBADO GOV." => ["Averbado Gov.", "success"],
-			"POSSUI OUTRO PROCESSO DE ADESãO EM ANDAMENTO." => ["Já Possui Outro Processo", "warning"],
-			"AGUARDANDO AVERBAçãO ENTIDADE" => ["Aguard. Averbação", "success"],
-			"AGUARDANDO BIOMETRIA" => ["Aguard. Biometria", "warning"],
-			"LINK EXPIRADO" => ["Link Expirado", "danger"],
-		];
- 
-		// Retorna um array contendo a mensagem e a cor, ou um padrão caso não exista
-		return $statusMap[$status] ?? [$status, "gray"];
-	}
-
-	function traduzirNomeStatus($status) {
-		$status = strtoupper($status);
-
-		// Mapeamento de status em inglês para português e cor correspondente
-		$statusMap = [
-			"CANCELADO" => ["Cancelado", "danger"],
-			"AGUARDANDO AVERBAçãO" => ["Aguard. Averbação", "success"],
-			"AGUARDANDO AUDITORIA" => ["Aguard. Auditoria", "warning"],
-			"AGUARDANDO ACEITE" => ["Aguard. Aceite", "warning"],
-			"AGUARDANDO DOCUMENTO" => ["Aguard. Doc", "warning"],
-		];
- 
-		// Retorna um array contendo a mensagem e a cor, ou um padrão caso não exista
-		return $statusMap[$status] ?? [$status, "gray"];
-	}
+	
 
 	function traduzirErroTwilio($mensagem) {
 		$mensagem = strtoupper($mensagem);

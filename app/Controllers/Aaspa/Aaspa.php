@@ -12,6 +12,7 @@ use Config\Services;
 use App\Models\M_integraall;
 use App\Models\M_argus;
 use App\Models\M_seguranca;
+use App\Models\M_insight;
 
 class Aaspa extends BaseController
 {
@@ -22,6 +23,7 @@ class Aaspa extends BaseController
     protected $m_integraall;
     protected $m_argus;
     protected $m_security;
+    protected $m_insight;
 
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger) {
         parent::initController($request, $response, $logger);
@@ -37,6 +39,7 @@ class Aaspa extends BaseController
         $this->m_integraall =  new M_integraall();
         $this->m_argus =  new M_argus();
         $this->m_security = new M_seguranca();
+        $this->m_insight = new M_insight();
     }
 
 
@@ -256,8 +259,9 @@ class Aaspa extends BaseController
         $celularUltima = "";
         $nomeStatus = "";
         $statusId = "";
-        $linkKompletoCliente = "";
         $statusAdicional = "";
+        $statusAdicionalId = "";
+        $linkKompletoCliente = "";
         $assessor = "";
         $assessorId = "";
         $aaspaCheck = "";
@@ -269,8 +273,9 @@ class Aaspa extends BaseController
         
         $cpf = numberOnly($cpf);
         if ((empty($cpf)) or ($cpf == "0")) { $cpf = numberOnly($this->getpost('cpf'));}
+
         
-        //SALVAR PROPOPOSTA
+        //CENÁRIO 04: SALVAR PROPOSTA BOTÃO SALVAR
         if (!empty($btnSalvar)){
             $dataProposta = [
                 "nomeCliente" => $nomeCliente,
@@ -292,7 +297,7 @@ class Aaspa extends BaseController
                 "docIdentidade" => $docIdentidade,
                 "produtoId" => API_Produto,
                 "revendedorId" => API_Revendedor,
-                "vendedorUsuarioId" => $session->parameters["integraallId"], //dantas
+                "vendedorUsuarioId" => $this->session->parameters["integraallId"], //dantas
             ];
 
             $dataPropostaInsight = [
@@ -300,11 +305,24 @@ class Aaspa extends BaseController
                 "assessorId" => $this->session->user_id,
             ];
 
-            $result = $this->m_integraall->criar_proposta_integraall($dataProposta);
+            $returnData = $this->m_integraall->criar_proposta_integraall($dataProposta);
 
-            if ($request['status']) {
-                //Grava proposta no Insight
-                $propostaAdded = $this->m_integraall->criar_proposta_insight($dataProposta + $dataPropostaInsight + $request['integraall']);
+            //Grava proposta no Insight se gravada com sucesso no Integrall
+            if ($returnData['status']) {
+                $propostaInsight = $dataProposta + $dataPropostaInsight + $returnData['integraall'];
+                
+                //Integraall está retornando o código do Kompleto e não do Integraall. Como alternativa busca todas as propostas do CPF e pega a última ate a API ser melhorada.
+                $lastIntegraallId = $this->m_integraall->buscaUltimaProposta(['TermoDaBusca' => $cpf]);
+                if ($lastIntegraallId != 0) {
+                    $returnData['integraall']['integraallId'] = $lastIntegraallId;
+                }
+
+                $propostaAdded = $this->m_integraall->criar_proposta_insight($dataProposta + $dataPropostaInsight + $returnData['integraall']);
+                
+                $integraallId = $returnData['integraall']['integraallId'];
+                $nomeStatus = $returnData['integraall']['nomeStatus'];
+                $statusId = $returnData['integraall']['statusId'];
+
             }
         
         //CENÁRIO 01: CPF DIGITADO OU RECEBIDO VIA QUERY OU BOTÃO CONSULTAR CLICADO
@@ -332,6 +350,7 @@ class Aaspa extends BaseController
         //CENÁRIO 02: INTEGRAAL ID PASSADO VIA QUERY - OBJETIVO DE LEITURA
         //apenas carregar dados pelo ID, bloquear edição e ocultar botão gravar (consulta apenas)
         } else if (!empty($integraallId)) {
+            $this->m_integraall->buscar_propostas($integraallId);
             $cliente = $this->m_integraall->proposta_integraall($integraallId);
 
             if ($cliente['existRecord']){
@@ -354,11 +373,14 @@ class Aaspa extends BaseController
                 $matricula = $cliente['firstRow']->matricula;
                 $docIdentidade = $cliente['firstRow']->docIdentidade;
 
-                $integraallId = $cliente['firstRow']->integraallId;
-                $nomeStatus = $cliente['firstRow']->nomeStatus;
                 $statusId = $cliente['firstRow']->statusId;
-                $linkKompletoCliente = $cliente['firstRow']->linkKompletoCliente;
+                $nomeStatus = $cliente['firstRow']->nomeStatus;
+
+                $statusAdicionalId = $cliente['firstRow']->statusAdicionalId;
                 $statusAdicional = $cliente['firstRow']->statusAdicional;
+
+                $integraallId = $cliente['firstRow']->integraallId;
+                $linkKompletoCliente = $cliente['firstRow']->linkKompletoCliente;
                 $assessor = $cliente['firstRow']->assessor;
                 $assessorId = $cliente['firstRow']->assessorId;
                 $aaspaCheck = $cliente['firstRow']->aaspaCheck;
@@ -369,44 +391,12 @@ class Aaspa extends BaseController
             }
         }
         
-
-            
-        
-
-        //CENÁRIO 04: SALVAR PROPOSTA BOTÃO SALVAR
-            //Tentar gravar no Integraall primeiro:
-                //Se gravada com sucesso grava também no Insight;
-                //Se gravada com erro exibe problema e não gravan o Insight;
-
         //CENÁRIO 05: FETCH - BOTÃO ASSPA OU INSS CHECK CHAMADOS VIA PAGELOAD OU CLICK BOTÃO
             //Realizar check no calculadora ou INSS sem gravar draft de proposta
 
 
-
-
-        //CHAT
-        $chat = null;
-        if ((!empty($celular))){
-            $db =  $this->dbMasterDefault->getDB();
-            $builder = $db->table('whatsapp_log');
-            $builder->Like('whatsapp_log.To', $telefoneWaId); //bug do número 9 no whatsapp
-            $builder->orLike('whatsapp_log.From', $telefoneWaId);
-            $builder->orderBy('id', 'DESC');
-            $builder->select('*');
-            //echo $builder->getCompiledSelect();exit;
-            $chat = $this->dbMasterDefault->resultfy($builder->get());
-        }
-        $data['chat'] = $chat;
-
-        //JOURNEY
-        $db =  $this->dbMasterDefault->getDB();
-        $builder = $db->table('customer_journey');
-        $builder->Where('verificador', $telefoneWaId);
-        $builder->orderBy('id_interaction', 'DESC');
-        $builder->select('*');
-		//echo $builder->getCompiledSelect();exit;
-		$journey = $this->dbMasterDefault->resultfy($builder->get());
-        $data['journey'] = $journey;
+        $data['chat'] = $this->m_insight->getChat($telefoneWaId);
+        $data['journey'] = $this->m_insight->getJourney($telefoneWaId);
 
         $data['cpf'] = $cpf;
         $data['cpfINSS'] = $cpfINSS;
@@ -435,632 +425,14 @@ class Aaspa extends BaseController
         $data['session'] = $this->session;
 
         $data['integraallId'] = $integraallId;
+        
         $data['statusId'] = $statusId;
         $data['nomeStatus'] = $nomeStatus;
-        $data['linkKompletoCliente'] = $linkKompletoCliente;
+        $data['statusAdicionalId'] = $statusAdicionalId;
         $data['statusAdicional'] = $statusAdicional;
-        $data['assessor'] = $assessor;
-        $data['assessorId'] = $assessorId;
-        $data['aaspaCheck'] = $aaspaCheck;
-        $data['inssCheck'] = $inssCheck;
-        $data['tseCheck'] = $tseCheck;
-        $data['last_update'] = $last_update;
-
-        $data['nomeCompletoUltima'] = $nomeCompletoUltima;
-        $data['celularUltima'] = $celularUltima;
-
-        $data['returnData'] = $returnData;
-
-        return $this->loadpage('aaspa/receptivo', $data);
-
-        exit;
-
-
-        //caso CPF não tenha vindo pela querystring tenta recuperar via post
-       
-
-        //ao consultar limpa os campos eventualmente existentes de outro proposta anterior consultada
-        if (!empty($btnConsultar)){
-            $nomeCliente = "";
-            $estadoCivil = "";
-            $sexo = "";
-            $nomeMae = "";
-            $email = "";
-            $telefone = "";
-            $logradouro = "";
-            $bairro = "";
-            $cep = "";
-            $cidade = "";
-            $uf = "";
-            $complemento = "";
-            $endNumero = "";
-            $dataNascimento = "";
-            $last_update = "";
-            $matricula = "";
-            $docIdentidade = "";
-            $integraallId = "";
-            $nomeStatus = "";
-            $statusId = "";
-            $linkKompletoCliente = "";
-            $statusAdicional = "";
-            $assessor = "";
-            $assessorId = "";
-            $aaspaCheck = "";
-            $inssCheck = "";
-            $tseCheck = "";
-        }
-
-        //campo integraallId só é passado via querystring vindo da tela de consulta proposta integraall
-        if ((!empty($integraallId)) and (($integraallId) != 0)){
-            $cliente = $this->m_integraall->proposta_integraall($integraallId);
-        } else if ((!empty($cpf)) and (strlen($cpf) == 11)){
-            $cliente = $this->m_integraall->ultima_proposta($cpf);
-           //echo '10:25:37 - <h3>Dump 50 </h3> <br><br>' . var_dump($cliente); exit;					//<-------DEBUG
-        }
-
-        //Tenta carregar a tela com os dados existentes seja com base no integraallId ou CPF
-        //Para CPF novo, nunca consultado pula a parte abaixo
-        if (!is_null($cliente)){
-            if ($cliente['existRecord']){
-                $cpfINSS = $cliente['firstRow']->cpf;
-                $nomeCliente = $cliente['firstRow']->nomeCliente;
-                $estadoCivil = $cliente['firstRow']->estadoCivil;
-                $sexo = $cliente['firstRow']->sexo;
-                $nomeMae = $cliente['firstRow']->nomeMae;
-                $email = $cliente['firstRow']->emailPessoal;
-                $telefone = $cliente['firstRow']->telefonepessoal;
-                $logradouro = $cliente['firstRow']->logradouro;
-                $bairro = $cliente['firstRow']->bairro;
-                $cep = $cliente['firstRow']->cep;
-                $cidade = $cliente['firstRow']->cidade;
-                $uf = $cliente['firstRow']->uf;
-                $complemento = $cliente['firstRow']->complemento;
-                $endNumero = $cliente['firstRow']->endNumero;
-                $dataNascimento = dataUsPt($cliente['firstRow']->datanascimento);
-                $last_update = $cliente['firstRow']->last_update;
-                $matricula = $cliente['firstRow']->matricula;
-                $docIdentidade = $cliente['firstRow']->docIdentidade;
-
-                $integraallId = $cliente['firstRow']->integraallId;
-                $nomeStatus = $cliente['firstRow']->nomeStatus;
-                $statusId = $cliente['firstRow']->statusId;
-                $linkKompletoCliente = $cliente['firstRow']->linkKompletoCliente;
-                $statusAdicional = $cliente['firstRow']->statusAdicional;
-                $assessor = $cliente['firstRow']->assessor;
-                $assessorId = $cliente['firstRow']->assessorId;
-                $aaspaCheck = $cliente['firstRow']->aaspaCheck;
-                $inssCheck = $cliente['firstRow']->inssCheck;
-                $tseCheck = $cliente['firstRow']->tseCheck;
-            }
-        } else if ((!empty($cpf)) and (strlen($cpf) != 11)){
-            $returnData["mensagem"] = "O CPF deve ser preenchido.";
-        }
         
-        //GRAVAR PROPOSTA
-        if (!empty($btnSalvar)){
-            if ((strlen($cpf) != 11)){
-                $returnData["mensagem"] = "O CPF deve ser preenchido.";
-            } else {
-                //verifica se a proposta já está integrada com o Integraall, seja por cadastro aqui ou carga
-                if ($cliente['existRecord']){
-                    $integraallId = $cliente['firstRow']->integraallId;
-                    $last_update = $cliente['firstRow']->last_update;
-                    $nomeStatus = $cliente['firstRow']->nomeStatus;
-                    $statusId = $cliente['firstRow']->statusId;
-                    $linkKompletoCliente = $cliente['firstRow']->linkKompletoCliente;
-                    $statusAdicional = $cliente['firstRow']->statusAdicional;
-                    $aaspaCheck = $cliente['firstRow']->aaspaCheck;
-                    $inssCheck = $cliente['firstRow']->inssCheck;
-                    $tseCheck = $cliente['firstRow']->tseCheck;
-                }
-
-                $dataProposta = [
-                    "nomeCliente" => $nomeCliente,
-                    "cpf" => $cpf,
-                    "estadoCivil" => (int)$estadoCivil,
-                    "sexo" => (int)$sexo,
-                    "nomeMae" => $nomeMae,
-                    "emailPessoal" => $email,
-                    "telefonePessoal" => $telefone,
-                    "logradouro" => $logradouro,
-                    "bairro" => $bairro,
-                    "cep" => $cep,
-                    "cidade" => $cidade,
-                    "uf" => $uf,
-                    "complemento" => $complemento,
-                    "endNumero" => $endNumero,
-                    "dataNascimento" => str_replace(' ', 'T', dataPtUs($dataNascimento)),
-                    "matricula" => $matricula,
-                    "docIdentidade" => $docIdentidade,
-                    "produtoId" => API_Produto,
-                    "revendedorId" => API_Revendedor,
-                    "vendedorUsuarioId" => $session->parameters["integraallId"], //dantas
-                ];
-
-                $dataPropostaInsight = [
-                    "assessor" => $this->session->nickname,
-                    "assessorId" => $this->session->user_id,
-                ];
-
-                $propostaAdded = $this->m_integraall->criar_proposta_insight($dataProposta + $dataPropostaInsight);
-
-                $returnData["status"] = true;
-                $returnData["mensagem"] = "Proposta atualiza no Insight. Faça edições manualmente no Integraall.";
-        
-                //propostas ainda não criadas no integraall
-                if (empty($integraallId)) {
-                    $result = $this->m_integraall->criar_proposta_integraall($dataProposta);
-
-                    if ($result['sucesso']){
-                        $detalhesGravacao = json_decode($result['retorno'], true);
-    
-                        //quando decode do resultado é vazio indica que não existe json e sim texto puro com erro
-                        if (empty($detalhesGravacao)){
-                            $returnData["status"] = false;
-                            $returnData["mensagem"] = traduzirErroIntegraall($result['retorno']) . "<br>Detalhes: " . (empty($result['retorno'])  ? 'Nenhum detalhe retornado' : $result['retorno']); ;
-                        
-                        //quando decode do resultado é um array com 1 elemento, indica lista de erros
-                        } else if ((is_array($detalhesGravacao)) and (isset($detalhesGravacao[0]))){
-                            $returnData["status"] = false;
-                            $returnData["mensagem"] = str_replace("Api Kompleto Respondeu", "Revise a proposta:", $detalhesGravacao[0]);
-                            $returnData["mensagem"] = str_replace('\r\n', "<br>", $returnData["mensagem"]);
-                            $returnData["mensagem"] = str_replace('"', "", $returnData["mensagem"]);
-                            $returnData["mensagem"] = str_replace('::', ":", $returnData["mensagem"]);
-                        
-                        //cenario onde a proposta foi gravada com sucesso
-                        } else if (isset($detalhesGravacao['message'])){
-                            $returnData["status"] = true;
-                            $returnData["mensagem"] = $detalhesGravacao['message'];
-    
-                            if (isset($detalhesGravacao['data'])){
-                                $id = $detalhesGravacao['data']['id'];
-                                $token = $detalhesGravacao['data']['token'];
-                                $statusId = $detalhesGravacao['data']['status'];
-                                $nome = $detalhesGravacao['data']['nome'];
-                                if (isset($detalhesGravacao['data']['termos'])){
-                                    $termoCliente = $detalhesGravacao['data']['termos']['cliente'];
-                                    $termoVendedor = $detalhesGravacao['data']['termos']['vendedor'];
-                                }
-    
-                                if (!empty($id)){
-                                    $dataPropostaIntegraall['cpf'] = $cpf;
-                                    $dataPropostaIntegraall['integraallId'] = $id;
-                                    $dataPropostaIntegraall['statusId'] = $statusId;
-                                    $dataPropostaIntegraall['nomeStatus'] = getStatusNomePorId($statusId);
-                                    //$dataPropostaIntegraall['token'] = $token;
-
-                                    $propostaAdded = $this->m_integraall->criar_proposta_insight($dataPropostaIntegraall, ['integraallId' => $id]);
-                                    $returnData["mensagem"] = "Proposta criar no Insight e Integraall com ID: $id";
-                                }
-    
-                            }
-                        //cenário onde o json retorna erro de autorization ou algo de rede (mais baixo nível)
-                        } else if (isset($detalhesGravacao['title'])){
-                            $returnData["status"] = false;
-                            $type = $detalhesGravacao['type'];
-                            $title = $detalhesGravacao['title'];
-                            $status = $detalhesGravacao['status'];
-                            $traceId = $detalhesGravacao['traceId'];
-    
-                            $returnData["mensagem"] = "Falha geral - " . $detalhesGravacao['title'];
-    
-                            // Verifica se há erros
-                            if (isset($detalhesGravacao['errors']) && is_array($detalhesGravacao['errors'])) {
-                                $returnData["mensagem"] .= "<br>Erros encontrados:<br>";
-    
-                                foreach ($detalhesGravacao['errors'] as $campo => $mensagens) {
-                                    $returnData["mensagem"] .= "Campo {$campo}";
-                                    foreach ($mensagens as $mensagem) {
-                                        $returnData["mensagem"] .=  "- {$mensagem}<br>";
-                                    }
-                                }
-                            } else {
-                                $returnData["mensagem"] .=  "<br>Nenhum detalhe informado.";
-                            }
-                        }
-                    }
-                }
-            }
-        } else {
-            //PEGA ULTIMA LIGACAO DO ASSESSOR
-            $ultimaLigacao = $this->m_argus->ultimaLigacao(['cpf' => $cpf]);
-            if ($ultimaLigacao['existRecord']){
-                $nomeCompletoUltima = $ultimaLigacao['firstRow']->nome;
-                $celularUltima = $ultimaLigacao['firstRow']->celular;
-            }
-        }
-
-
-        //CHAT
-        $chat = null;
-        if ((!empty($celular))){
-            $db =  $this->dbMasterDefault->getDB();
-            $builder = $db->table('whatsapp_log');
-            $builder->Like('whatsapp_log.To', $telefoneWaId); //bug do número 9 no whatsapp
-            $builder->orLike('whatsapp_log.From', $telefoneWaId);
-            $builder->orderBy('id', 'DESC');
-            $builder->select('*');
-            //echo $builder->getCompiledSelect();exit;
-            $chat = $this->dbMasterDefault->resultfy($builder->get());
-        }
-        $data['chat'] = $chat;
-
-        //JOURNEY
-        $db =  $this->dbMasterDefault->getDB();
-        $builder = $db->table('customer_journey');
-        $builder->Where('verificador', $telefoneWaId);
-        $builder->orderBy('id_interaction', 'DESC');
-        $builder->select('*');
-		//echo $builder->getCompiledSelect();exit;
-		$journey = $this->dbMasterDefault->resultfy($builder->get());
-        $data['journey'] = $journey;
-
-        $data['cpf'] = $cpf;
-        $data['cpfINSS'] = $cpfINSS;
-        $data['nomeCliente'] = $nomeCliente;
-        $data['estadoCivil'] = $estadoCivil;
-        $data['sexo'] = $sexo;
-        $data['nomeMae'] = $nomeMae;
-        $data['email'] = $email;
-        $data['telefone'] = $telefone;
-        $data['logradouro'] = $logradouro;
-        $data['bairro'] = $bairro;
-        $data['cep'] = $cep;
-        $data['cidade'] = $cidade;
-        $data['uf'] = $uf;
-        $data['complemento'] = $complemento;
-        $data['endNumero'] = $endNumero;
-        $data['dataNascimento'] = $dataNascimento;
-        $data['matricula'] = $matricula;
-        $data['instituidorMatricula'] = $instituidorMatricula;
-        $data['orgao'] = $orgao;
-        $data['codigoOrgao'] = $codigoOrgao;
-        $data['docIdentidade'] = $docIdentidade;
-        $data['docIdentidadeUf'] = $docIdentidadeUf;
-        $data['docIdentidadeOrgEmissor'] = $docIdentidadeOrgEmissor;
-        $data['bloqueio'] = $bloqueio;
-        $data['session'] = $this->session;
-
-        $data['integraallId'] = $integraallId;
-        $data['statusId'] = $statusId;
-        $data['nomeStatus'] = $nomeStatus;
         $data['linkKompletoCliente'] = $linkKompletoCliente;
-        $data['statusAdicional'] = $statusAdicional;
-        $data['assessor'] = $assessor;
-        $data['assessorId'] = $assessorId;
-        $data['aaspaCheck'] = $aaspaCheck;
-        $data['inssCheck'] = $inssCheck;
-        $data['tseCheck'] = $tseCheck;
-        $data['last_update'] = $last_update;
 
-        $data['nomeCompletoUltima'] = $nomeCompletoUltima;
-        $data['celularUltima'] = $celularUltima;
-
-        $data['returnData'] = $returnData;
-
-        return $this->loadpage('aaspa/receptivo', $data);
-    }
-
-    //http://localhost/InsightSuite/public/aaspa-receptivo
-    public function receptivo_BACKUP($cpf, $integraallId = null){
-        $data['pageTitle'] = "AASPA - Receptivo";
-
-        $btnSalvar = $this->getpost('btnSalvar');
-        $btnConsultar = $this->getpost('btnConsultar');
-        $nomeCliente = strtoupper($this->getpost('nomeCliente'));
-        $estadoCivil = strtoupper($this->getpost('estadoCivil'));
-        $sexo = strtoupper($this->getpost('sexo'));
-        $nomeMae = strtoupper($this->getpost('nomeMae'));
-        $email = strtoupper($this->getpost('email'));
-        $telefone = numberOnly(strtoupper($this->getpost('telefone')));
-        $telefoneWaId = celularToWaId($telefone);
-        $logradouro = strtoupper($this->getpost('logradouro'));
-        $bairro = strtoupper($this->getpost('bairro'));
-        $cep = strtoupper($this->getpost('cep'));
-        $cidade = strtoupper($this->getpost('cidade'));
-        $uf = strtoupper($this->getpost('uf'));
-        $complemento = strtoupper($this->getpost('complemento'));
-        $endNumero = strtoupper($this->getpost('endNumero'));
-        $dataNascimento = strtoupper($this->getpost('dataNascimento'));
-        $matricula = strtoupper($this->getpost('matricula'));
-        $instituidorMatricula = strtoupper($this->getpost('instituidorMatricula'));
-        $orgao = strtoupper($this->getpost('orgao'));
-        $codigoOrgao = strtoupper($this->getpost('codigoOrgao'));
-        $docIdentidade = strtoupper($this->getpost('docIdentidade'));
-        $docIdentidadeUf = strtoupper($this->getpost('docIdentidadeUf'));
-        $docIdentidadeOrgEmissor = strtoupper($this->getpost('docIdentidadeOrgEmissor'));
-        $bloqueio = strtoupper($this->getpost('bloqueio'));
-
-        $returnData["status"] = false;
-		$returnData["mensagem"] = "";
-        $nomeCompletoUltima = "";
-        $celularUltima = "";
-        //$integraallId = "";
-        $nomeStatus = "";
-        $statusId = "";
-        $linkKompletoCliente = "";
-        $statusAdicional = "";
-        $assessor = "";
-        $assessorId = "";
-        $aaspaCheck = "";
-        $inssCheck = "";
-        $tseCheck = "";
-        $last_update = "";
-        $cpfINSS = "";
-        $cliente = null;
-        
-        //caso CPF não tenha vindo pela querystring tenta recuperar via post
-        $cpf = numberOnly($cpf);
-        if ((empty($cpf)) or ($cpf == "0")) { $cpf = numberOnly($this->getpost('cpf'));}
-        if (empty($cpf)){ $cpf = numberOnly($this->getpost('cpfINSS'));}
-
-        //ao consultar limpa os campos eventualmente existentes de outro proposta anterior consultada
-        if (!empty($btnConsultar)){
-            $nomeCliente = "";
-            $estadoCivil = "";
-            $sexo = "";
-            $nomeMae = "";
-            $email = "";
-            $telefone = "";
-            $logradouro = "";
-            $bairro = "";
-            $cep = "";
-            $cidade = "";
-            $uf = "";
-            $complemento = "";
-            $endNumero = "";
-            $dataNascimento = "";
-            $last_update = "";
-            $matricula = "";
-            $docIdentidade = "";
-            $integraallId = "";
-            $nomeStatus = "";
-            $statusId = "";
-            $linkKompletoCliente = "";
-            $statusAdicional = "";
-            $assessor = "";
-            $assessorId = "";
-            $aaspaCheck = "";
-            $inssCheck = "";
-            $tseCheck = "";
-        }
-
-        //campo integraallId só é passado via querystring vindo da tela de consulta proposta integraall
-        if ((!empty($integraallId)) and (($integraallId) != 0)){
-            $cliente = $this->m_integraall->proposta_integraall($integraallId);
-        } else if ((!empty($cpf)) and (strlen($cpf) == 11)){
-            $cliente = $this->m_integraall->ultima_proposta($cpf);
-           //echo '10:25:37 - <h3>Dump 50 </h3> <br><br>' . var_dump($cliente); exit;					//<-------DEBUG
-        }
-
-        //Tenta carregar a tela com os dados existentes seja com base no integraallId ou CPF
-        //Para CPF novo, nunca consultado pula a parte abaixo
-        if (!is_null($cliente)){
-            if ($cliente['existRecord']){
-                $cpfINSS = $cliente['firstRow']->cpf;
-                $nomeCliente = $cliente['firstRow']->nomeCliente;
-                $estadoCivil = $cliente['firstRow']->estadoCivil;
-                $sexo = $cliente['firstRow']->sexo;
-                $nomeMae = $cliente['firstRow']->nomeMae;
-                $email = $cliente['firstRow']->emailPessoal;
-                $telefone = $cliente['firstRow']->telefonepessoal;
-                $logradouro = $cliente['firstRow']->logradouro;
-                $bairro = $cliente['firstRow']->bairro;
-                $cep = $cliente['firstRow']->cep;
-                $cidade = $cliente['firstRow']->cidade;
-                $uf = $cliente['firstRow']->uf;
-                $complemento = $cliente['firstRow']->complemento;
-                $endNumero = $cliente['firstRow']->endNumero;
-                $dataNascimento = dataUsPt($cliente['firstRow']->datanascimento);
-                $last_update = $cliente['firstRow']->last_update;
-                $matricula = $cliente['firstRow']->matricula;
-                $docIdentidade = $cliente['firstRow']->docIdentidade;
-
-                $integraallId = $cliente['firstRow']->integraallId;
-                $nomeStatus = $cliente['firstRow']->nomeStatus;
-                $statusId = $cliente['firstRow']->statusId;
-                $linkKompletoCliente = $cliente['firstRow']->linkKompletoCliente;
-                $statusAdicional = $cliente['firstRow']->statusAdicional;
-                $assessor = $cliente['firstRow']->assessor;
-                $assessorId = $cliente['firstRow']->assessorId;
-                $aaspaCheck = $cliente['firstRow']->aaspaCheck;
-                $inssCheck = $cliente['firstRow']->inssCheck;
-                $tseCheck = $cliente['firstRow']->tseCheck;
-            }
-        } else if ((!empty($cpf)) and (strlen($cpf) != 11)){
-            $returnData["mensagem"] = "O CPF deve ser preenchido.";
-        }
-        
-        //GRAVAR PROPOSTA
-        if (!empty($btnSalvar)){
-            if ((strlen($cpf) != 11)){
-                $returnData["mensagem"] = "O CPF deve ser preenchido.";
-            } else {
-                //verifica se a proposta já está integrada com o Integraall, seja por cadastro aqui ou carga
-                if ($cliente['existRecord']){
-                    $integraallId = $cliente['firstRow']->integraallId;
-                    $last_update = $cliente['firstRow']->last_update;
-                    $nomeStatus = $cliente['firstRow']->nomeStatus;
-                    $statusId = $cliente['firstRow']->statusId;
-                    $linkKompletoCliente = $cliente['firstRow']->linkKompletoCliente;
-                    $statusAdicional = $cliente['firstRow']->statusAdicional;
-                    $aaspaCheck = $cliente['firstRow']->aaspaCheck;
-                    $inssCheck = $cliente['firstRow']->inssCheck;
-                    $tseCheck = $cliente['firstRow']->tseCheck;
-                }
-
-                $dataProposta = [
-                    "nomeCliente" => $nomeCliente,
-                    "cpf" => $cpf,
-                    "estadoCivil" => (int)$estadoCivil,
-                    "sexo" => (int)$sexo,
-                    "nomeMae" => $nomeMae,
-                    "emailPessoal" => $email,
-                    "telefonePessoal" => $telefone,
-                    "logradouro" => $logradouro,
-                    "bairro" => $bairro,
-                    "cep" => $cep,
-                    "cidade" => $cidade,
-                    "uf" => $uf,
-                    "complemento" => $complemento,
-                    "endNumero" => $endNumero,
-                    "dataNascimento" => str_replace(' ', 'T', dataPtUs($dataNascimento)),
-                    "matricula" => $matricula,
-                    "docIdentidade" => $docIdentidade,
-                    "produtoId" => API_Produto,
-                    "revendedorId" => API_Revendedor,
-                    "vendedorUsuarioId" => $session->parameters["integraallId"], //dantas
-                ];
-
-                $dataPropostaInsight = [
-                    "assessor" => $this->session->nickname,
-                    "assessorId" => $this->session->user_id,
-                ];
-
-                $propostaAdded = $this->m_integraall->criar_proposta_insight($dataProposta + $dataPropostaInsight);
-
-                $returnData["status"] = true;
-                $returnData["mensagem"] = "Proposta atualiza no Insight. Faça edições manualmente no Integraall.";
-        
-                //propostas ainda não criadas no integraall
-                if (empty($integraallId)) {
-                    $result = $this->m_integraall->criar_proposta_integraall($dataProposta);
-
-                    if ($result['sucesso']){
-                        $detalhesGravacao = json_decode($result['retorno'], true);
-    
-                        //quando decode do resultado é vazio indica que não existe json e sim texto puro com erro
-                        if (empty($detalhesGravacao)){
-                            $returnData["status"] = false;
-                            $returnData["mensagem"] = traduzirErroIntegraall($result['retorno']) . "<br>Detalhes: " . (empty($result['retorno'])  ? 'Nenhum detalhe retornado' : $result['retorno']); ;
-                        
-                        //quando decode do resultado é um array com 1 elemento, indica lista de erros
-                        } else if ((is_array($detalhesGravacao)) and (isset($detalhesGravacao[0]))){
-                            $returnData["status"] = false;
-                            $returnData["mensagem"] = str_replace("Api Kompleto Respondeu", "Revise a proposta:", $detalhesGravacao[0]);
-                            $returnData["mensagem"] = str_replace('\r\n', "<br>", $returnData["mensagem"]);
-                            $returnData["mensagem"] = str_replace('"', "", $returnData["mensagem"]);
-                            $returnData["mensagem"] = str_replace('::', ":", $returnData["mensagem"]);
-                        
-                        //cenario onde a proposta foi gravada com sucesso
-                        } else if (isset($detalhesGravacao['message'])){
-                            $returnData["status"] = true;
-                            $returnData["mensagem"] = $detalhesGravacao['message'];
-    
-                            if (isset($detalhesGravacao['data'])){
-                                $id = $detalhesGravacao['data']['id'];
-                                $token = $detalhesGravacao['data']['token'];
-                                $statusId = $detalhesGravacao['data']['status'];
-                                $nome = $detalhesGravacao['data']['nome'];
-                                if (isset($detalhesGravacao['data']['termos'])){
-                                    $termoCliente = $detalhesGravacao['data']['termos']['cliente'];
-                                    $termoVendedor = $detalhesGravacao['data']['termos']['vendedor'];
-                                }
-    
-                                if (!empty($id)){
-                                    $dataPropostaIntegraall['cpf'] = $cpf;
-                                    $dataPropostaIntegraall['integraallId'] = $id;
-                                    $dataPropostaIntegraall['statusId'] = $statusId;
-                                    $dataPropostaIntegraall['nomeStatus'] = getStatusNomePorId($statusId);
-                                    //$dataPropostaIntegraall['token'] = $token;
-
-                                    $propostaAdded = $this->m_integraall->criar_proposta_insight($dataPropostaIntegraall, ['integraallId' => $id]);
-                                    $returnData["mensagem"] = "Proposta criar no Insight e Integraall com ID: $id";
-                                }
-    
-                            }
-                        //cenário onde o json retorna erro de autorization ou algo de rede (mais baixo nível)
-                        } else if (isset($detalhesGravacao['title'])){
-                            $returnData["status"] = false;
-                            $type = $detalhesGravacao['type'];
-                            $title = $detalhesGravacao['title'];
-                            $status = $detalhesGravacao['status'];
-                            $traceId = $detalhesGravacao['traceId'];
-    
-                            $returnData["mensagem"] = "Falha geral - " . $detalhesGravacao['title'];
-    
-                            // Verifica se há erros
-                            if (isset($detalhesGravacao['errors']) && is_array($detalhesGravacao['errors'])) {
-                                $returnData["mensagem"] .= "<br>Erros encontrados:<br>";
-    
-                                foreach ($detalhesGravacao['errors'] as $campo => $mensagens) {
-                                    $returnData["mensagem"] .= "Campo {$campo}";
-                                    foreach ($mensagens as $mensagem) {
-                                        $returnData["mensagem"] .=  "- {$mensagem}<br>";
-                                    }
-                                }
-                            } else {
-                                $returnData["mensagem"] .=  "<br>Nenhum detalhe informado.";
-                            }
-                        }
-                    }
-                }
-            }
-        } else {
-            //PEGA ULTIMA LIGACAO DO ASSESSOR
-            $ultimaLigacao = $this->m_argus->ultimaLigacao(['cpf' => $cpf]);
-            if ($ultimaLigacao['existRecord']){
-                $nomeCompletoUltima = $ultimaLigacao['firstRow']->nome;
-                $celularUltima = $ultimaLigacao['firstRow']->celular;
-            }
-        }
-
-
-        //CHAT
-        $chat = null;
-        if ((!empty($celular))){
-            $db =  $this->dbMasterDefault->getDB();
-            $builder = $db->table('whatsapp_log');
-            $builder->Like('whatsapp_log.To', $telefoneWaId); //bug do número 9 no whatsapp
-            $builder->orLike('whatsapp_log.From', $telefoneWaId);
-            $builder->orderBy('id', 'DESC');
-            $builder->select('*');
-            //echo $builder->getCompiledSelect();exit;
-            $chat = $this->dbMasterDefault->resultfy($builder->get());
-        }
-        $data['chat'] = $chat;
-
-        //JOURNEY
-        $db =  $this->dbMasterDefault->getDB();
-        $builder = $db->table('customer_journey');
-        $builder->Where('verificador', $telefoneWaId);
-        $builder->orderBy('id_interaction', 'DESC');
-        $builder->select('*');
-		//echo $builder->getCompiledSelect();exit;
-		$journey = $this->dbMasterDefault->resultfy($builder->get());
-        $data['journey'] = $journey;
-
-        $data['cpf'] = $cpf;
-        $data['cpfINSS'] = $cpfINSS;
-        $data['nomeCliente'] = $nomeCliente;
-        $data['estadoCivil'] = $estadoCivil;
-        $data['sexo'] = $sexo;
-        $data['nomeMae'] = $nomeMae;
-        $data['email'] = $email;
-        $data['telefone'] = $telefone;
-        $data['logradouro'] = $logradouro;
-        $data['bairro'] = $bairro;
-        $data['cep'] = $cep;
-        $data['cidade'] = $cidade;
-        $data['uf'] = $uf;
-        $data['complemento'] = $complemento;
-        $data['endNumero'] = $endNumero;
-        $data['dataNascimento'] = $dataNascimento;
-        $data['matricula'] = $matricula;
-        $data['instituidorMatricula'] = $instituidorMatricula;
-        $data['orgao'] = $orgao;
-        $data['codigoOrgao'] = $codigoOrgao;
-        $data['docIdentidade'] = $docIdentidade;
-        $data['docIdentidadeUf'] = $docIdentidadeUf;
-        $data['docIdentidadeOrgEmissor'] = $docIdentidadeOrgEmissor;
-        $data['bloqueio'] = $bloqueio;
-        $data['session'] = $this->session;
-
-        $data['integraallId'] = $integraallId;
-        $data['statusId'] = $statusId;
-        $data['nomeStatus'] = $nomeStatus;
-        $data['linkKompletoCliente'] = $linkKompletoCliente;
-        $data['statusAdicional'] = $statusAdicional;
         $data['assessor'] = $assessor;
         $data['assessorId'] = $assessorId;
         $data['aaspaCheck'] = $aaspaCheck;
@@ -1126,9 +498,10 @@ class Aaspa extends BaseController
         if (!empty($cpf)) $likeCheck['cpf'] = $cpf;
         //if (!empty($paginas)) $whereCheck['paginas'] = $paginas;
         if (!empty($integraallId)) $likeCheck['integraallId'] = $integraallId;
-        if (!empty($celular)) $likeCheck['celular'] = $celular;
+        if (!empty($celular)) $likeCheck['telefonepessoal'] = $celular;
         if (!empty($statusPropostaFiltro)) $whereCheck['statusProposta'] = $statusPropostaFiltro;
-        if (!empty($nome)) $likeCheck['nome'] = $nome;
+        $whereCheck['vendedorUsuarioId'] = $this->session->parameters["integraallId"];
+        if (!empty($nome)) $likeCheck['nomeCliente'] = $nome;
         if (!empty($emailPessoal)) $likeCheck['emailPessoal'] = $emailPessoal;
         if ($flag == "OPTIN") $whereCheck['Optin_pan'] = "V";
 
@@ -1170,17 +543,17 @@ class Aaspa extends BaseController
         $dados['emailPessoal'] = $emailPessoal;
         $dados['statusPropostaFiltro'] = $statusPropostaFiltro;
         $dados['operadorFiltro'] = $operadorFiltro;
+        $dados['session'] = $this->session;
 
         return $this->loadpage('aaspa/listar_propostas', $dados);
     }
 
     public function indicadores(){
         $indicadores = [];
-        $indicadores['clicks_campanha'] = $this->dbMaster->runQuery("select count(*) total from campanha_click_count where DATE(last_updated) = CURDATE();")['firstRow']->total;
-        $indicadores['clicks_campanha_inbound'] = $this->dbMaster->runQuery("select slug, count(*) total from campanha_click_count where DATE(last_updated) = CURDATE() group by slug order by total desc;")['firstRow'];
-        $indicadores['clicks_campanha_ontem'] = $this->dbMaster->runQuery("select count(*) total from campanha_click_count where DATE(last_updated) = DATE_SUB(CURDATE(), INTERVAL 1 DAY);")['firstRow']->total;
-        $indicadores['propostas_cadastradas'] = $this->dbMaster->runQuery("select count(*) total from aaspa_propostas where DATE(data_criacao) = CURDATE();")['firstRow']->total;
-        $indicadores['propostas_cadastradas_ontem'] = $this->dbMaster->runQuery("select count(*) total from aaspa_propostas where DATE(data_criacao) = DATE_SUB(CURDATE(), INTERVAL 1 DAY);")['firstRow']->total;
+        $indicadores['propostas_hoje'] = $this->dbMaster->runQuery("select count(*) total from aaspa_propostas where DATE(data_criacao) = CURDATE() AND vendedorUsuarioId = " . $this->session->parameters["integraallId"] . ";")['firstRow']->total;
+        $indicadores['propostas_ontem'] = $this->dbMaster->runQuery("select count(*) total from aaspa_propostas where DATE(data_criacao) = DATE_SUB(CURDATE(), INTERVAL 1 DAY)  AND vendedorUsuarioId = " . $this->session->parameters["integraallId"] . ";")['firstRow']->total;
+        $indicadores['propostas_7dias'] = $this->dbMaster->runQuery("SELECT COUNT(*) AS total FROM aaspa_propostas WHERE DATE(data_criacao) BETWEEN DATE_SUB(CURDATE(), INTERVAL 7 DAY) AND CURDATE()  AND vendedorUsuarioId = " . $this->session->parameters["integraallId"] . ";")['firstRow']->total;
+        $indicadores['propostas_30dias'] = $this->dbMaster->runQuery("SELECT COUNT(*) AS total FROM aaspa_propostas WHERE DATE(data_criacao) BETWEEN DATE_SUB(CURDATE(), INTERVAL 30 DAY) AND CURDATE()  AND vendedorUsuarioId = " . $this->session->parameters["integraallId"] . ";")['firstRow']->total;
         //$indicadores['top_indicacao'] = $this->dbMaster->runQuery("select chave_origem, count(*) total from aaspa_propostas where DATE(data_criacao) = CURDATE() and chave_origem is not null group by chave_origem order by total desc")['firstRow'];
 
         return $indicadores;

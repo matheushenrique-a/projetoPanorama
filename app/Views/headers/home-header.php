@@ -103,7 +103,7 @@ License: For each use you must have a valid license purchased only from above li
 									<div class="menu-item here show menu-lg-down-accordion menu-here-bg me-0 me-lg-2">
 										<!--begin:Menu link-->
 										<span class="menu-link">
-											<span class="menu-title"><a href="<?php echo assetfolder;?>"> &#x3C;&#x3C; Voltar</a></span>
+											<span class="menu-title"><a href="<?php echo assetfolder;?>"> &#x3C;&#x3C; Home</a></span>
 											<span class="menu-arrow d-lg-none"></span>
 										</span>
 										<!--end:Menu link-->
@@ -159,7 +159,7 @@ License: For each use you must have a valid license purchased only from above li
 																<!--begin:Menu item-->
 																<div class="menu-item p-0 m-0">
 																	<!--begin:Menu link-->
-																	<a href="<?php echo assetfolder;?>aaspa-receptivo" class="menu-link">
+																	<a href="<?php echo assetfolder;?>aaspa-receptivo/0" class="menu-link">
 																		<span class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-40px h-40px me-3">
 																			<!--begin::Svg Icon | path: icons/duotune/ecommerce/ecm002.svg-->
 																			<span class="svg-icon svg-icon-danger svg-icon-1">
@@ -4966,11 +4966,11 @@ License: For each use you must have a valid license purchased only from above li
 											<!--begin:Menu item-->
 											<div class="menu-item">
 												<!--begin:Menu link-->
-												<a class="menu-link" href="<?php echo assetfolder;?>integraall-listar-propostas">
+												<a class="menu-link" href="<?php echo assetfolder;?>integraall-importar-propostas">
 													<span class="menu-bullet">
 														<span class="bullet bullet-dot"></span>
 													</span>
-													<span class="menu-title">Sincronizar Integraall</span>
+													<span class="menu-title">Importar Propostas Integraall</span>
 												</a>
 												<!--end:Menu link-->
 											</div>

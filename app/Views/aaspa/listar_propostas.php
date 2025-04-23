@@ -47,7 +47,7 @@
 							<div id="kt_app_content" class="app-content flex-column-fluid">
 								<!--begin::Content container-->
 								<div id="kt_app_content_container" class="app-container container-xxl">
-								<div class="row g-5 g-xl-8">
+									<div class="row g-5 g-xl-8">
 										<div class="col-xl-3">
 											<!--begin::Statistics Widget 5-->
 											<a href="#" class="card bg-body hoverable card-xl-stretch mb-xl-8">
@@ -63,8 +63,8 @@
 														</svg>
 													</span>
 													<!--end::Svg Icon-->
-													<div class="text-gray-900 fw-bold fs-2 mb-2 mt-5"><?php echo $indicadores['clicks_campanha'];?> cliques</div>
-													<div class="fw-semibold text-gray-400">recebidos hoje de campanhas contra <?php echo $indicadores['clicks_campanha_ontem'];?> recebidos ontem.</div>
+													<div class="text-gray-900 fw-bold fs-2 mb-2 mt-5"><?php echo $indicadores['propostas_hoje'];?> proposta(s)</div>
+													<div class="fw-semibold text-gray-400">criada(s) na data de hoje.</div>
 												</div>
 												<!--end::Body-->
 											</a>
@@ -85,8 +85,8 @@
 														</svg>
 													</span>
 													<!--end::Svg Icon-->
-													<div class="text-gray-900 fw-bold fs-2 mb-2 mt-5"><?php echo number_format($propostas['num_rows'], 0, ',', '.');?></div>
-													<div class="fw-semibold text-gray-400">Propostas filtradas abaixo</div>
+													<div class="text-gray-900 fw-bold fs-2 mb-2 mt-5"><?php echo $indicadores['propostas_ontem'];?></div>
+													<div class="fw-semibold text-gray-400">Proposta(s) criada(s) ontem</div>
 												</div>
 												<!--end::Body-->
 											</a>
@@ -107,8 +107,8 @@
 														</svg>
 													</span>
 													<!--end::Svg Icon-->
-													<div class="text-gray-900 fw-bold fs-2 mb-2 mt-5"><?php echo $indicadores['propostas_cadastradas'];?> propostas</div>
-													<div class="fw-semibold text-gray-400">recebidas hoje contra <?php echo $indicadores['propostas_cadastradas_ontem'];?> recebidas ontem.</div>
+													<div class="text-gray-900 fw-bold fs-2 mb-2 mt-5"><?php echo $indicadores['propostas_7dias'];?> proposta(s)</div>
+													<div class="fw-semibold text-gray-400">criada(s) nos últimos 7 dias.</div>
 												</div>
 												<!--end::Body-->
 											</a>
@@ -127,8 +127,8 @@
 														</svg>
 													</span>
 													<!--end::Svg Icon-->
-													<div class="text-white fw-bold fs-2 mb-2 mt-5"><?php echo (isset($indicadores['top_indicacao']->total)  ? $indicadores['top_indicacao']->total : 0);?> propostas</div>
-													<div class="fw-semibold text-white">vindas de <?php echo (isset(($indicadores['top_indicacao']->chave_origem))  ? strtoupper($indicadores['top_indicacao']->chave_origem) : '-'); ;?> e <?php echo strtoupper(( isset($indicadores['clicks_campanha_inbound']->total) ? isset($indicadores['clicks_campanha_inbound']->total) : ''));?> clicks vindos de <?php echo strtoupper(( isset($indicadores['clicks_campanha_inbound']->slug) ? $indicadores['clicks_campanha_inbound']->slug : ''));?></div>
+													<div class="text-white fw-bold fs-2 mb-2 mt-5"><?php echo $indicadores['propostas_30dias'];?> proposta(s)</div>
+													<div class="fw-semibold text-white">criadas nos últimos 30 dias</div>
 												</div>
 												<!--end::Body-->
 											</a>
@@ -182,7 +182,7 @@
 															<div class="d-flex align-items-center position-relative my-1">
 																<select class="form-select form-control-solid" aria-label="" name="operadorFiltro">
 																	<?php
-																		echo '<option value="" ' .  ($operadorFiltro == "" ? 'selected' : '') . '> TODOS </option>';
+																		echo '<option value="" ' .  ($operadorFiltro == "" ? 'selected' : '') . '> ' . $session->nickname . ' </option>';
 																		// foreach ($users["result"]->getResult() as $row){
 																		// 	echo '<option value="' . $row->userId . '" ' .  ($operadorFiltro == $row->userId ? 'selected' : '') . '>' . $row->nickname . '</option>';
 																		// }
@@ -283,8 +283,8 @@
 														<th class="min-w-100px">CPF / Matrícula</th>
 														<th class="min-w-25">Celular</th>
 														<th class="min-w-50">Criação</th>
-														<th class="min-w-50px">Link.</th>
 														<th class="min-w-125px">Status</th>
+														<th class="min-w-50px">Ver</th>
 														<th class="min-w-25px">AÇÃO</th>
 													</tr>
 													<!--end::Table row-->
@@ -302,39 +302,34 @@
 																	<!--begin::PopUp menu-->
 																	<a href="#" class="btn btn-sm btn-icon btn-light btn-active-light-primary" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" data-bs-toggle="tooltip" data-bs-placement="top" title=""><!--begin::Svg Icon | path: icons/duotune/general/gen052.svg--><i class="las la-copy"></i><!--end::Svg Icon--></a>
 																	<div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-250px py-4" data-kt-menu="true">
-																	<div class="menu-item px-3"><a href="#" onclick="copyText('<?php echo strtoUpper($row->integraallId  ?? "");?>'); return false;" class="menu-link px-2"><i class="bi bi-card-text fs-2"></i><span class="mx-2"><?php echo strtoUpper($row->integraallId  ?? "");?></span></a></div>
-																	<div class="menu-item px-3"><a href="#" onclick="copyText('<?php echo $row->cpf;?>'); return false;"class="menu-link px-2"><i class="bi bi-card-text fs-2"></i><span class="mx-2"><?php echo $row->cpf;?></span></a></div>
-																	<div class="menu-item px-3"><a href="#" onclick="copyText('<?php echo limparMascara($row->cpf);?>'); return false;"class="menu-link px-2"><i class="bi bi-card-text fs-2"></i><span class="mx-2"><?php echo limparMascara($row->cpf);?></span></a></div>
+																	<div class="menu-item px-3"><a href="#" onclick="copyText('<?php echo strtoUpper($row->integraallId  ?? "");?>'); return false;" class="menu-link px-2"><i class="bi bi-card-text fs-2"></i><span class="mx-2">Integraall Id:<?php echo strtoUpper($row->integraallId  ?? "");?></span></a></div>
+																	<div class="menu-item px-3"><a href="#" onclick="copyText('<?php echo $row->cpf;?>'); return false;"class="menu-link px-2"><i class="bi bi-card-text fs-2"></i><span class="mx-2">CPF: <?php echo $row->cpf;?></span></a></div>
 																	<div class="separator my-5"></div>
 																	<div class="menu-item px-3"><a href="#" onclick="copyText('<?php echo $row->emailPessoal;?>'); return false;"class="menu-link px-2"><i class="bi bi-card-text fs-2"></i><span class="mx-2"><?php echo $row->emailPessoal;?></span></a></div>
-																	<div class="menu-item px-3"><a href="#" onclick="copyText('<?php echo shortURL . strtoUpper($row->integraallId  ?? "");?>'); return false;"class="menu-link px-2"><i class="bi bi-card-text fs-2"></i><span class="mx-2"><?php echo shortURL . strtoUpper($row->integraallId  ?? "");?></span></a></div>
+																	<div class="menu-item px-3"><a href="#" onclick="copyText('<?php echo strtolower($row->linkKompletoCliente  ?? "");?>'); return false;" class="menu-link px-2"><i class="bi bi-card-text fs-2"></i><span class="mx-2">Link Kompleto</span></a></div>
 																	<div class="separator my-5"></div>
-																	<div class="menu-item px-3"><a href="#" onclick="copyText('<?php echo $row->telefonepessoal;?>'; return false;"class="menu-link px-2"><i class="bi bi-card-text fs-2"></i><span class="mx-2"><?php echo $row->telefonepessoal;?></span></a></div>
+																	<div class="menu-item px-3"><a href="#" onclick="copyText('<?php echo $row->telefonepessoal;?>'); return false;"class="menu-link px-2"><i class="bi bi-card-text fs-2"></i><span class="mx-2">Telefone: <?php echo $row->telefonepessoal;?></span></a></div>
 																	<div class="separator my-5"></div>
-																	<div class="menu-item px-3"><a href="#" onclick="copyText('<?php echo dataUsPt($row->datanascimento, true);?>'); return false;"class="menu-link px-2"><i class="bi bi-card-text fs-2"></i><span class="mx-2"><?php echo dataUsPt($row->datanascimento, true);?></span></a></div>
+																	<div class="menu-item px-3"><a href="#" onclick="copyText('<?php echo dataUsPt($row->datanascimento, true);?>'); return false;"class="menu-link px-2"><i class="bi bi-card-text fs-2"></i><span class="mx-2">Nascimento: <?php echo dataUsPt($row->datanascimento, true);?></span></a></div>
 																	<!--end::PopUp menu-->	
 																</div>
 															</td>
 															<!--begin::integraallId=-->
 															<td>
 																	<?php echo $row->id_proposta;?><br>
-																	<a href="<?php echo FGTSUrl ?>fgts/proposta-status/<?php echo $row->integraallId;?>/DEeDeqqew234deT45" target="_blank"><?php echo $row->integraallId ?? "Rasc.";?></a>	
+																	<?php echo $row->integraallId ?? "Rasc.";?>
 															</td>
 															<!--begin::NOME-->
 															<td>
 																<div class="d-flex flex-column"> 
-																	<a href="<?php echo FGTSUrl ?>fgts/proposta/<?php echo $row->integraallId;?>/<?php echo createToken();?>" target="_blank" class="text-gray-800 text-hover-primary mb-1">
-																		<?php echo substr($row->nomeCliente . '', 0, 20) . "...";?>
-																	</a>
+																	<?php echo substr($row->nomeCliente . '', 0, 20) . "...";?>
 																	<span><?php echo substr($row->assessor, 0, 20) . "...";?></span>	
 																</div>
 															</td>
 															<!--begin::VALORES-->
 															<td>
-																<a href="<?php echo assetfolder;?>aaspa-receptivo/<?php echo (empty($row->integraallId)  ? $row->cpf : '0');?>/<?php echo (empty($row->integraallId)  ? '0' : $row->integraallId);?>" target="_blank" class="text-gray-800 text-hover-primary mb-1">	
-																	<?php echo $row->cpf;?><br>
-																	<?php echo $row->matricula;?>
-																</a>
+																<?php echo $row->cpf;?><br>
+																<?php echo $row->matricula;?>
 															</td>
 															<!--begin::TELEFONE=-->
 															<td>
@@ -342,27 +337,28 @@
 															</td>
 															<!--begin::DATA CRIACAO=-->
 															<td><?php echo time_elapsed_string($row->data_criacao) . "<br>" . date('d-M', strtotime($row->data_criacao))?></td>
+															
+															<!--begin::FASE-->
+															<td>
+																<span class="badge badge-light-<?php echo getStatusNomePorId($row->statusId)[2];?> fs-6"><?php echo getStatusNomePorId($row->statusId)[1];?></span><br>
+																<span class="badge badge-light-<?php echo getStatusAdicionalPorId($row->statusAdicionalId)[2];?> fs-6"><?php echo getStatusAdicionalPorId($row->statusAdicionalId)[1];?></span>
+
+															
+															
+															</td>
 															<!--begin::OPERADOR-->
 															<td>
 																<div>
-																	<!--begin::PopUp menu-->
-																	<a href="#" class="btn btn-sm btn-icon btn-light btn-active-light-primary" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end" data-bs-toggle="tooltip" data-bs-placement="top" title=""><!--begin::Svg Icon | path: icons/duotune/general/gen052.svg--><i class="las la-copy"></i><!--end::Svg Icon--></a>
-																	<div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-semibold fs-7 w-250px py-4" data-kt-menu="true">
-																	<div class="menu-item px-3"><a href="#" onclick="copyText('<?php echo strtoUpper($row->integraallId  ?? "");?>'); return false;" class="menu-link px-2"><i class="bi bi-card-text fs-2"></i><span class="mx-2"><?php echo strtoUpper($row->integraallId  ?? "");?></span></a></div>
-																	<div class="menu-item px-3"><a href="#" onclick="copyText('<?php echo $row->cpf;?>'); return false;"class="menu-link px-2"><i class="bi bi-card-text fs-2"></i><span class="mx-2"><?php echo $row->cpf;?></span></a></div>
-																	<div class="menu-item px-3"><a href="#" onclick="copyText('<?php echo limparMascara($row->cpf);?>'); return false;"class="menu-link px-2"><i class="bi bi-card-text fs-2"></i><span class="mx-2"><?php echo limparMascara($row->cpf);?></span></a></div>
-																	<div class="separator my-5"></div>
-																	<div class="menu-item px-3"><a href="#" onclick="copyText('<?php echo $row->emailPessoal;?>'); return false;"class="menu-link px-2"><i class="bi bi-card-text fs-2"></i><span class="mx-2"><?php echo $row->emailPessoal;?></span></a></div>
-																	<div class="menu-item px-3"><a href="#" onclick="copyText('<?php echo shortURL . strtoUpper($row->integraallId  ?? "");?>'); return false;"class="menu-link px-2"><i class="bi bi-card-text fs-2"></i><span class="mx-2"><?php echo shortURL . strtoUpper($row->integraallId  ?? "");?></span></a></div>
-																	<div class="separator my-5"></div>
-																	<div class="menu-item px-3"><a href="#" onclick="copyText('<?php echo $row->telefonepessoal;?>'; return false;"class="menu-link px-2"><i class="bi bi-card-text fs-2"></i><span class="mx-2"><?php echo $row->telefonepessoal;?></span></a></div>
-																	<div class="separator my-5"></div>
-																	<div class="menu-item px-3"><a href="#" onclick="copyText('<?php echo dataUsPt($row->datanascimento, true);?>'); return false;"class="menu-link px-2"><i class="bi bi-card-text fs-2"></i><span class="mx-2"><?php echo dataUsPt($row->datanascimento, true);?></span></a></div>
-																	<!--end::PopUp menu-->	
+																	<a href="<?php echo assetfolder;?>aaspa-receptivo/<?php echo (empty($row->integraallId)  ? $row->cpf : '0');?>/<?php echo (empty($row->integraallId)  ? '0' : $row->integraallId);?>" class="btn btn-sm btn-icon btn-bg-light btn-active-color-primary w-25px h-25px">
+																		<span class="svg-icon svg-icon-5 svg-icon-gray-700">
+																			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+																				<path d="M14.4 11H3C2.4 11 2 11.4 2 12C2 12.6 2.4 13 3 13H14.4V11Z" fill="currentColor" />
+																				<path opacity="0.3" d="M14.4 20V4L21.7 11.3C22.1 11.7 22.1 12.3 21.7 12.7L14.4 20Z" fill="currentColor" />
+																			</svg>
+																		</span>
+																	</a>
 																</div>	
 															</td>
-															<!--begin::FASE-->
-															<td><?php echo $row->nomeStatus ?? "Rascunho local";?><br><?php echo $row->statusAdicional ?? "Proposta em digitação";?></td>
 															<td>
 																<div><!--begin::PopUp menu-->
 																	<a href="#" class="btn btn-sm btn-icon btn-light btn-active-light-primary" onclick="showHideRow('linha_<?php echo $row->cpf;?>'); return false;"><!--begin::Svg Icon | path: icons/duotune/general/gen052.svg--><span class="svg-icon svg-icon-2 m-0"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="10" y="10" width="4" height="4" rx="2" fill="currentColor"/><rect x="17" y="10" width="4" height="4" rx="2" fill="currentColor"/><rect x="3" y="10" width="4" height="4" rx="2" fill="currentColor"/></svg></span><!--end::Svg Icon--></a>
@@ -371,58 +367,20 @@
 														</tr>
 														<tr id="linha_<?php echo $row->cpf;?>"  valign="top" hidden="hidden">
 															<td colspan="3">
-																<span class="badge py-3 px-4 fs-7 badge-light-success mb-2 mt-2">AÇÕES: PAN | FACTA</span><br>
-																<a href="<?php echo FGTSUrl ?>fgts/sacar-fgts/<?php echo $row->cpf;?>/<?php echo createToken();?>" class="px-2 py-20" target="_blank">Gravar Proposta PAN</a><br>
-																<a href="<?php echo FGTSUrl ?>fgts/gerar-link-formalizacao/<?php echo $row->cpf;?>/<?php echo createToken();?>" class="menu-link px-2 mt-3" target="_blank">Link Formalização PAN</a><br>
-																<a href="<?php echo FGTSUrl ?>fgts/validar-cpf-api/<?php echo $row->cpf;?>/0/0/0/0/<?php echo createToken();?>" class="menu-link px-2 mt-3" target="_blank">Validar Adesão PAN</a><br>
-																<a href="<?php echo FGTSUrl ?>fgts/validar-cpf-optin/<?php echo $row->cpf;?>/<?php echo createToken();?>" class="menu-link px-2 mt-3" target="_blank">Validar Optin PAN</a><br>
-																<a href="<?php echo FGTSUrl ?>fgts/validar-cpf-api-facta/<?php echo $row->cpf;?>/A/0/0/<?php echo createToken();?>" class="menu-link px-2 mt-3" target="_blank">Adesão FACTA - <?php echo facta_tabela;?></a><br>
-																<a href="<?php echo FGTSUrl ?>fgts/validar-cpf-api-facta/<?php echo $row->cpf;?>/A/0/0/<?php echo createToken();?>/<?php echo facta_tabela_light;?>/<?php echo facta_taxa_ligjt;?>" class="menu-link px-2 mt-3" target="_blank">Adesão FACTA - <?php echo facta_tabela_light;?></a><br>
-																<a href="<?php echo FGTSUrl ?>fgts/consulta-proposta-banco/<?php echo $row->cpf;?>/<?php echo createToken();?>" class="menu-link px-2 mt-3" target="_blank">Status Banco</a><br>
-																
-																<span class="badge py-3 px-4 fs-7 badge-light-warning mb-2 mt-2">AÇÕES: PROPOSTA</span><br>
-																<a href="<?php echo FGTSUrl ?>fgts/notificar-cliente/<?php echo $row->integraallId;?>/<?php echo createToken();?>" class="menu-link px-2 mt-3" target="_blank"><span class="mx-2">Mudança Fase</span></a><br>
-																<a href="<?php echo assetfolder;?>aaspa-receptivo/<?php echo $row->cpf;?>" class="menu-link px-2 mt-3" target="_blank"><span class="mx-2">Histórico Proposta</span></a><br>
-																<a href="<?php echo FGTSUrl ?>fgts/proposta-status/<?php echo $row->integraallId;?>/<?php echo createToken();?>" class="menu-link px-2 mt-3" target="_blank"><span class="mx-2">Visualizar Proposta</span></a><br>
-																<a href="<?php echo FGTSUrl ?>fgts/proposta/<?php echo $row->integraallId;?>/<?php echo createToken();?>" class="menu-link px-2 mt-3" target="_blank"><span class="mx-2">Editar Proposta</span></a><br>
-																<!-- <a href="<?php echo FGTSUrl ?>fgts/notificar-cliente-sem-compromisso/<?php echo $row->integraallId;?>/<?php echo createToken();?>" class="menu-link px-2 mt-3" target="_blank"><span class="mx-2">Sem Compromisso</span></a><br> -->
-																<a href="<?php echo FGTSUrl ?>fgts/enviar-pesquisa/<?php echo $row->integraallId;?>/<?php echo createToken();?>" class="menu-link px-2 mt-3" target="_blank"><span class="mx-2">Enviar Pesquisa</span></a><br>
-																<a href="<?php echo assetfolder;?>fgts-operador-owner/<?php echo $row->cpf;?>"  class="menu-link px-2 py-2 mt-3"><span class="mx-2">Atuar Proposta</span></a><br>
+																<span class="badge py-3 px-4 fs-7 badge-light-info mb-2 mt-2">AÇÕES INTEGRAALL</span><br>
+																<a href="" onclick="return false;" class="px-2 py-20" target="_blank">Cancelar Proposta</a><br>
+																<a href="" onclick="return false;" class="menu-link px-2 mt-3" target="_blank">Duplicar Proposta</a><br>														
 															</td>
 															<td colspan="2">
-																<span class="badge py-3 px-4 fs-7 badge-light-info mb-2 mt-2">FASES: PENDÊNCIAS</span><br>
-																<a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->cpf;?>/MDI" class="menu-link px-2 mt-3"><span class="mx-2">Mensagem Direta</span></a><br>
-																<a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->cpf;?>/GRO" class="menu-link px-2 mt-3"><span class="mx-2">Pendente Formalização</span></a><br>
-																<a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->cpf;?>/CNH" class="menu-link px-2 mt-3"><span class="mx-2">Pendente Documento</span></a><br>
-																<a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->cpf;?>/CAD" class="menu-link px-2 mt-3"><span class="mx-2">Pendente Cadastro</span></a><br>
-																<a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->cpf;?>/ADE" class="menu-link px-2 mt-3"><span class="mx-2">Pendente Adesão</span></a><br>
-																<a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->cpf;?>/INS" class="menu-link px-2 mt-3"><span class="mx-2">Pendente Banco</span></a><br>
-																
-																<span class="badge py-3 px-4 fs-7 badge-light-danger mb-2 mt-2">FASES: REPROVAÇÕES</span><br>
-																<a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->cpf;?>/CCN" class="menu-link px-2 mt-3"><span class="mx-2">Depósito devolvido</span></a><br>
-																<a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->cpf;?>/PEX" class="menu-link px-2 mt-3"><span class="mx-2">Exclusividade PAN</span></a><br>
-																<a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->cpf;?>/RPA" class="menu-link px-2 mt-3"><span class="mx-2">Reprovado PAN</span></a><br>
-																<a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->cpf;?>/RFA" class="menu-link px-2 mt-3"><span class="mx-2">Reprovado FACTA</span></a><br>
-																<a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->cpf;?>/RGE" class="menu-link px-2 mt-3"><span class="mx-2">Reprovado GERAL</span></a><br>
-																<a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->cpf;?>/CAN" class="menu-link px-2 mt-3"><span class="mx-2">Cancelada Perdida </span></a><br>
-																
+																<span class="badge py-3 px-4 fs-7 badge-light-success mb-2 mt-2">AÇÕES WHATSAPP</span><br>
+																<a href="" onclick="return false;" class="menu-link px-2 mt-3" target="_blank">Enviar WhatsApp Frontline</a><br>
+																<a href="" onclick="return false;" class="menu-link px-2 mt-3" target="_blank">Enviar Link Kompleto</a><br>
+																<a href="" onclick="return false;" class="menu-link px-2 mt-3" target="_blank">Enviar Link Meeting</a><br>																
 															</td>
 															<td colspan="3">
-																<span class="badge py-3 px-4 fs-7 badge-light-success mb-2 mt-2">FASES: SUCESSO</span><br>
-																<a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->cpf;?>/PGT" class="menu-link px-2 mt-3"><span class="mx-2">Aguardando Pagamento</span></a><br>
-																<a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->cpf;?>/FOR" class="menu-link px-2 mt-3"><span class="mx-2">Formalização feita</span></a><br>
-																<a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->cpf;?>/FIM" class="menu-link px-2 mt-3"><span class="mx-2">Finalizada Paga</span></a><br>
-																<a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->cpf;?>/SEL" class="menu-link px-2 mt-3"><span class="mx-2">Proposta selecionada</span></a><br>
-																<a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->cpf;?>/DIS" class="menu-link px-2 mt-3"><span class="mx-2">Proposta disponível</span></a><br>
-																
-																<span class="badge py-3 px-4 fs-7 badge-light-info mb-2 mt-2">FASES: OUTRAS</span><br>
-																<a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->cpf;?>/ATS" class="menu-link px-2 mt-3"><span class="mx-2">Pagamento Atrasado</span></a><br>
-																<a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->cpf;?>/LCX" class="menu-link px-2 mt-3"><span class="mx-2">Lentidão CAIXA</span></a><br>
-																<a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->cpf;?>/VUL" class="menu-link px-2 mt-3"><span class="mx-2">Cliente Vulnerável</span></a><br>
-																<a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->cpf;?>/NIV" class="menu-link px-2 mt-3"><span class="mx-2">Aniversário Próximo</span></a><br>
-																<a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->cpf;?>/ARQ" class="menu-link px-2 mt-3"><span class="mx-2">Arquivar Proposta</span></a><br>
-																<a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->cpf;?>/SAL" class="menu-link px-2 mt-3"><span class="mx-2">Saldo Insuficiente</span></a><br>
-																<a href="<?php echo assetfolder;?>fgts-proposta-disponivel/<?php echo $row->cpf;?>/GRF" class="menu-link px-2 mt-3"><span class="mx-2">Enviar Robô</span></a><br>
+																<span class="badge py-3 px-4 fs-7 badge-light-warning mb-2 mt-2">OUTRAS AÇÕES</span><br>
+																<a href="" onclick="return false;" class="menu-link px-2 mt-3"><span class="mx-2">Aguardando Pagamento</span></a><br>
+																<a href="" onclick="return false;" class="menu-link px-2 mt-3"><span class="mx-2">Formalização feita</span></a><br>
 															</td>
 														</tr>
 													<?php 
@@ -449,8 +407,8 @@
 							<div class="app-container container-fluid d-flex flex-column flex-md-row flex-center flex-md-stack py-3">
 								<!--begin::Copyright-->
 								<div class="text-dark order-2 order-md-1">
-									<span class="text-muted fw-semibold me-1">2022&copy;</span>
-									<a href="https://keenthemes.com" target="_blank" class="text-gray-800 text-hover-primary">Keenthemes</a>
+									<span class="text-muted fw-semibold me-1">2025&copy;</span>
+									<a href="https://keenthemes.com" target="_blank" class="text-gray-800 text-hover-primary">Insight</a>
 								</div>
 								<!--end::Copyright-->
 								<!--begin::Menu-->

@@ -188,7 +188,7 @@ class M_integraall extends Model {
                 $updated = $this->dbMasterDefault->update('aaspa_propostas', $data, $key);
             }    
         } else {
-            $added = $this->dbMasterDefault->insert('aaspa_propostas',$data);
+            $added = $this->dbMasterDefault->insert('aaspa_propostas', $data);
         }
     }
 
@@ -197,12 +197,34 @@ class M_integraall extends Model {
         $url = API_Integraall . 'proposta';
         $result = $this->m_http->http_request('POST', $url, $headers, $data);
 
+        //echo '08:12:04 - <h3>Dump 41 </h3> <br><br>' . var_dump($result); exit;					//<-------DEBUG
+
+        //DEBUG 01 - ERRO IDADE
+        //$result['sucesso'] = true; 
+        //$result['retorno'] = '["\"Erro ao criar proposta: Idade não permitida!\""]';
+
+        //DEBUG 02 - ERRO AUTENTICACAO / REDE
+        //$result['sucesso'] = true; 
+        //$result['retorno'] = '';
+
+        //DEBUG 03 - CAMPOS NÃO PRENCHIDOS
+        //$result['sucesso'] = true; 
+        //$result['retorno'] = '["\"Api Kompleto Respondeu: \\r\\nCelular deve ter exatamente 11 dígitos.\\r\\nNome da Mãe é obrigatório.\\r\\nNúmero é obrigatório.\\r\\n\""]';
+
+        //DEBUG 04 - AUTORIZATION ERROR
+        //$result['sucesso'] = true; 
+        //$result['retorno'] = '{"type":"https://tools.ietf.org/html/rfc7235#section-3.1","title":"Unauthorized","status":401,"traceId":"00-71520932c3d279465b93420dd521c8e2-44ad56f541ab87cf-00"}';
+
+        //DEBUG 05 - SUCESSO PROPOSTA GRAVADA
+        //$result['sucesso'] = true;
+        //$result['retorno'] = '{"message":"Proposta criada com sucesso!","data":{"id":37588,"token":null,"status":1,"nome":"LENA MARCIA AYRES LIMA","cpf":"28135113234","celular":"31995781355","email":"LENALEIXO@IG.COM.BR","termos":{"cliente":"https://kompleto.app.br/ASS37588","vendedor":"https://kompleto.app.br/TUV37588"}}}';
+
         $returnData["status"] = false;
-        $returnData["mensagem"] = "";
+        $returnData["mensagem"] = "";       
 
         if ($result['sucesso']){
             $detalhesGravacao = json_decode($result['retorno'], true);
-
+            
             //quando decode do resultado é vazio indica que não existe json e sim texto puro com erro
             if (empty($detalhesGravacao)){
                 $returnData["status"] = false;
@@ -210,11 +232,21 @@ class M_integraall extends Model {
             
             //quando decode do resultado é um array com 1 elemento, indica lista de erros
             } else if ((is_array($detalhesGravacao)) and (isset($detalhesGravacao[0]))){
+                
                 $returnData["status"] = false;
-                $returnData["mensagem"] = str_replace("Api Kompleto Respondeu", "Revise a proposta:", $detalhesGravacao[0]);
-                $returnData["mensagem"] = str_replace('\r\n', "<br>", $returnData["mensagem"]);
-                $returnData["mensagem"] = str_replace('"', "", $returnData["mensagem"]);
+                $returnData["mensagem"] = str_replace("Api Kompleto Respondeu", "REVISE A PROPOSTA:", $detalhesGravacao[0]);
+                $returnData["mensagem"] = str_replace("\r\n", "<br>- ", $returnData["mensagem"]);
+                $returnData["mensagem"] = str_replace('\r\n', "<br>- ", $returnData["mensagem"]);
                 $returnData["mensagem"] = str_replace('::', ":", $returnData["mensagem"]);
+
+                //remove ultimo bullet
+                $toRemove = "<br>- "; $lastPos = strrpos($returnData["mensagem"], $toRemove);
+                if ($lastPos !== false) {
+                    $returnData["mensagem"] = substr_replace($returnData["mensagem"], '', $lastPos, strlen($toRemove));
+                }
+
+                $returnData["mensagem"] = str_replace("Erro ao criar proposta:", "REVISE A PROPOSTA:<br>- ", $returnData["mensagem"]);
+                $returnData["mensagem"] = str_replace('"', "", $returnData["mensagem"]);
             
             //cenario onde a proposta foi gravada com sucesso
             } else if (isset($detalhesGravacao['message'])){
@@ -226,17 +258,26 @@ class M_integraall extends Model {
                     $token = $detalhesGravacao['data']['token'];
                     $statusId = $detalhesGravacao['data']['status'];
                     $nome = $detalhesGravacao['data']['nome'];
+                    $cpf = $detalhesGravacao['data']['cpf'];
+                    $celular = $detalhesGravacao['data']['celular'];
+                    $email = $detalhesGravacao['data']['email'];
+
+                    $returnData['integraallExtra']['token'] = $token;
+                    $returnData['integraallExtra']['nome'] = $nome;
+                    $returnData['integraallExtra']['cpf'] = $cpf;
+                    $returnData['integraallExtra']['email'] = $email;
                     
                     if (isset($detalhesGravacao['data']['termos'])){
-                        $termoCliente = $detalhesGravacao['data']['termos']['cliente'];
-                        $termoVendedor = $detalhesGravacao['data']['termos']['vendedor'];
+                        $returnData['integraallExtra']['termoCliente'] = $detalhesGravacao['data']['termos']['cliente'];
+                        $returnData['integraallExtra']['termoVendedor'] = $detalhesGravacao['data']['termos']['vendedor'];
                     }
 
                     if (!empty($id)){
-                        $returnData['integraall']['cpf'] = $cpf;
                         $returnData['integraall']['integraallId'] = $id;
+                        //$returnData['integraall']['token'] = $token;
+                        //$returnData['integraall']['nome'] = $nome;
                         $returnData['integraall']['statusId'] = $statusId;
-                        $returnData['integraall']['nomeStatus'] = getStatusNomePorId($statusId);
+                        $returnData['integraall']['nomeStatus'] = getStatusNomePorId($statusId)[1];
                     }
                 }
             //cenário onde o json retorna erro de autorization ou algo de rede (mais baixo nível)
@@ -247,7 +288,7 @@ class M_integraall extends Model {
                 $status = $detalhesGravacao['status'];
                 $traceId = $detalhesGravacao['traceId'];
 
-                $returnData["mensagem"] = "Falha geral - " . $detalhesGravacao['title'];
+                $returnData["mensagem"] = "Falha geral - " . $detalhesGravacao['title'] . "<br>Rastreio: $traceId";
 
                 // Verifica se há erros
                 if (isset($detalhesGravacao['errors']) && is_array($detalhesGravacao['errors'])) {
@@ -260,7 +301,7 @@ class M_integraall extends Model {
                         }
                     }
                 } else {
-                    $returnData["mensagem"] .=  "<br>Nenhum detalhe informado.";
+                    $returnData["mensagem"] .=  "<br>Nenhum detalhe adicional informado.";
                 }
             }
         } else {
@@ -291,7 +332,7 @@ class M_integraall extends Model {
         return $this->m_http->http_request('GET', $url, $headers);
     }
 
-    ///http://localhost/InsightSuite/public/integraall-buscar-propostas/1/24458
+    ///http://localhost/InsightSuite/public/integraall-buscar-propostas/31315
     public function buscar_propostas($integraallId){
         $result = $this->buscarProposta($integraallId);
 
@@ -308,8 +349,13 @@ class M_integraall extends Model {
             if (isset($retorno['id'])){
                 $returnData["linkKompletoCliente"] = $retorno['linkKompletoCliente'];
                 $returnData["vendedorUsuarioId"] = $retorno['vendedorUsuarioId'];
-                $returnData["nomeStatus"] = strtoupper($retorno['nomeStatus']  ?? "");
+
+                $returnData["statusId"] = $retorno['statusId'];
+                $returnData["nomeStatus"] = getStatusNomePorId($retorno['statusId']); //array
+
                 $returnData["statusAdicionalId"] = $retorno['statusAdicionalId'];
+                $returnData["statusAdicional"] = getStatusAdicionalPorId($retorno['statusAdicionalId']); //array
+
                 $returnData["nomeCliente"] = strtoupper($retorno['nomeCliente']  ?? "");
                 $returnData["estadoCivil"] = strtoupper($retorno['estadoCivil']  ?? "");
                 $returnData["sexo"] = strtoupper($retorno['sexo']  ?? "");
@@ -324,7 +370,6 @@ class M_integraall extends Model {
                 $returnData["uf"] = strtoupper($retorno['uf']  ?? "");
                 $returnData["complemento"] = strtoupper($retorno['complemento'] ?? "");
                 $returnData["endNumero"] = ($retorno['endNumero'] );
-                $returnData["statusId"] = strtoupper($retorno['statusId']  ?? "");
                 $returnData["dataNascimento"] = ($retorno['dataNascimento']);
                 $returnData["matricula"] = ($retorno['matricula']);
 
@@ -335,10 +380,13 @@ class M_integraall extends Model {
 
                 $dataPropostaInsight = [
                     "vendedorUsuarioId" => $returnData["vendedorUsuarioId"],
-                    "nomeStatus" => $returnData["nomeStatus"],
-                    "statusAdicional" => $returnData["statusAdicionalId"],
+
+                    "statusId" => $returnData["statusId"],
+                    "nomeStatus" => strtoupper($returnData["nomeStatus"][1]),   //extrai apenas o nome do status
+                    "statusAdicionalId" => $returnData["statusAdicionalId"],
+                    "statusAdicional" => strtoupper($returnData["statusAdicional"][1]), //extrai apenas o nome do status
+
                     "linkKompletoCliente" => $returnData["linkKompletoCliente"],
-                    "nomeStatus" => $returnData["nomeStatus"],
                     "nomeCliente" => $returnData["nomeCliente"],
                     "estadoCivil" => $returnData["estadoCivil"],
                     "sexo" => $returnData["sexo"],
@@ -353,11 +401,10 @@ class M_integraall extends Model {
                     "uf" => $returnData["uf"],
                     "complemento" => $returnData["complemento"],
                     "endNumero" => $returnData["endNumero"],
-                    "statusId" => $returnData["statusId"],
                     "dataNascimento" => $returnData["dataNascimento"],
                     "matricula" => $returnData["matricula"],
                 ];
-                
+
                 $propostaAdded = $this->criar_proposta_insight($dataPropostaInsight, ['integraallId' => $integraallId]);
             } else {
                 $returnData["color"] = "#f22e46";
@@ -371,10 +418,13 @@ class M_integraall extends Model {
         $headers = $this->getHeader();
         $url = API_Integraall . 'Proposta/' . $id;
         
-        return $this->m_http->http_request('GET', $url, $headers);
+        $saida = $this->m_http->http_request('GET', $url, $headers);
+        //echo '15:01:07 - <h3>Dump 52 </h3> <br><br>' . var_dump($saida); exit;					//<-------DEBUG
+        return $saida;
     }
 
-    public function listarPropostas($filters){
+    //sync
+    public function integraall_importar_propostas($filters){
         $headers = $this->getHeader();
         $queryString = http_build_query($filters);
         $url = API_Integraall . 'Proposta/ListarPropostas/?' . $queryString;
@@ -382,37 +432,65 @@ class M_integraall extends Model {
         return $this->m_http->http_request('GET', $url, $headers);
     }
 
+    //sync
+    public function buscaUltimaProposta($filters){
+        $result = $this->integraall_importar_propostas($filters);
 
-    // {
-    //     "cadastros": [
-    //       {
-    //         "nomeCliente": "SANDRA MARIA DA CONCEICAO BARBOSA",
-    //         "cpf": "00914447726",
-    //         "estadoCivil": null,
-    //         "sexo": "F",
-    //         "nomeMae": null,
-    //         "email": null,
-    //         "telefone": null,
-    //         "logradouro": "Rua Paraná",
-    //         "bairro": "Araras",
-    //         "cep": "25957247",
-    //         "cidade": "Teresópolis",
-    //         "uf": "RJ",
-    //         "complemento": "até 1000 - lado par",
-    //         "endNumero": null,
-    //         "dataNascimento": "1964-02-28T00:00:00",
-    //         "matricula": "1382806237",
-    //         "instituidorMatricula": null,
-    //         "orgao": null,
-    //         "codigoOrgao": null,
-    //         "docIdentidade": null,
-    //         "docIdentidadeUf": null,
-    //         "docIdentidadeOrgEmissor": null,
-    //         "bloqueio": false
-    //       }
-    //     ],
-    //     "proposta": null
-    //   }
+        $lastIntegraallId = 0;
+        if ($result['sucesso']){
+            $retorno = json_decode($result['retorno'], true);
+            if (isset($retorno['qtdResultado']) && $retorno['qtdResultado'] > 0){
+                $propostas = $retorno['resultado'];
+
+                foreach ($propostas as $proposta){
+
+                    if ($proposta['id'] > $lastIntegraallId) {
+                        $lastIntegraallId = $proposta['id'];
+                    }
+
+                    $data = [
+                        'integraallId' => $proposta['id'],
+                        "nomeCliente" => $proposta['nomeCliente'],
+                        "cpf" => $proposta['cpf'],
+                        "telefonepessoal" => $proposta['telefonePessoal'],
+
+                        'statusId' => $proposta['statusId'],
+                        'nomeStatus' => strtoupper(getStatusNomePorId($proposta['statusId'])[1] ?? ""),
+
+                        'statusAdicionalId' => $proposta['statusAdicionalId'],
+                        'statusAdicional' => strtoupper(getStatusAdicionalPorId($proposta['statusAdicionalId'])[1]  ?? ""),
+                        
+                        'assessor' => $proposta['nomeVendedor'],
+                        'data_criacao' => $proposta['dataCadastro'],
+                        'linkKompletoCliente' => $proposta['linkKompletoCliente'],
+                        'matricula' => $proposta['matricula'],
+                        'linkAtivo' => $proposta['linkAtivo'],
+                        'produtoId' => $proposta['produtoId'],
+                        "revendedorId" => $proposta['revendedorId'],
+                        "data_ativacao" => $proposta['dataSolicitacaoAtivacao'],
+                        "vendedorUsuarioId" => $proposta['vendedorUsuarioId']
+                    ];
+
+                    $propostaIntegraall = $this->dbMasterDefault->select('aaspa_propostas', ['integraallId' => $data['integraallId']]);
+
+                    //faz lookup do Id Integraall com Id Insight
+                    $userId = $proposta['vendedorUsuarioId'];
+                    $sqlQuery = 'select * from user_account where parameters like "%{\"integraallId\": ' . $proposta['vendedorUsuarioId'] . ',%"';
+                    $userContext = $this->dbMasterDefault->runQuery($sqlQuery);
+                    if ($userContext['existRecord']){$userId = $userContext['firstRow']->userId;}
+                    
+                    if (!$propostaIntegraall['existRecord']){
+                        $added = $this->dbMasterDefault->insert('aaspa_propostas', $data);
+                    } else {
+                        $updated = $this->dbMasterDefault->update('aaspa_propostas', $data, ['integraallId' => $data['integraallId']]);
+                    }
+                }
+            }
+        }
+
+        return $lastIntegraallId;        
+    }
+    
     public function validarCpf($filters){
         $headers = $this->getHeader();
         $queryString = http_build_query($filters);

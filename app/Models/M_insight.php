@@ -103,7 +103,7 @@ class M_insight extends Model {
         
                     $html .= '<div class="d-flex align-items-center border border-dashed border-gray-300 rounded min-w-1000px px-7 py-2 mb-2">
                                 <a href="" class="fs-5 text-dark text-hover-primary fw-semibold w-275px min-w-275px">' . $icon . htmlspecialchars($detalhes['integraallId']) . ' | ' . substr(htmlspecialchars($detalhes['nomeCliente']), 0, 15) . '...</a>
-                                <div class="min-w-275px pe-2"><span class="badge badge-light-' . traduzirNomeStatus($detalhes['nomeStatus'])[1] . '">' . traduzirNomeStatus($detalhes['nomeStatus'])[0] . '</span> <span class="badge badge-light-' . traduzirStatusAdicional($detalhes['statusAdicional'])[1] . '">' . traduzirStatusAdicional($detalhes['statusAdicional'])[0] . '</span></div>
+                                <div class="min-w-275px pe-2"><span class="badge badge-light-' . getStatusNomePorId($detalhes['statusId'])[2] . '">' . getStatusNomePorId($detalhes['statusId'])[1] . '</span> <span class="badge badge-light-' . getStatusAdicionalPorId($detalhes['statusAdicionalId'])[2] . '">' . getStatusAdicionalPorId($detalhes['statusAdicionalId'])[1] . '</span></div>
                                 <a href="" class="btn btn-sm btn-light btn-active-light-primary">Detalhes</a>
                             </div>';
                 } else if ($tipo == 'auditoria_whatsapp') {
@@ -126,7 +126,35 @@ class M_insight extends Model {
         
     }
 
+    public function getChat($telefoneWaId){
+        $chat = null;
+        if ((!empty($telefoneWaId))){
+            $db =  $this->dbMasterDefault->getDB();
+            $builder = $db->table('whatsapp_log');
+            $builder->Like('whatsapp_log.To', $telefoneWaId); //bug do número 9 no whatsapp
+            $builder->orLike('whatsapp_log.From', $telefoneWaId);
+            $builder->orderBy('id', 'DESC');
+            $builder->select('*');
+            //echo $builder->getCompiledSelect();exit;
+            $chat = $this->dbMasterDefault->resultfy($builder->get());
+        }
+        return $chat;
+    }
 
+    public function getJourney($telefoneWaId){
+        $journey = null;
+        if ((!empty($telefoneWaId))){
+            //JOURNEY
+            $db =  $this->dbMasterDefault->getDB();
+            $builder = $db->table('customer_journey');
+            $builder->Where('verificador', $telefoneWaId);
+            $builder->orderBy('id_interaction', 'DESC');
+            $builder->select('*');
+            //echo $builder->getCompiledSelect();exit;
+            $journey = $this->dbMasterDefault->resultfy($builder->get());
+        }
+        return  $journey;
+    }
     
 }
 

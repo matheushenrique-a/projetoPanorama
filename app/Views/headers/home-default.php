@@ -144,7 +144,9 @@
 														$integraallId = $row->integraallId;
 														$cpf = $row->cpf;
 														$statusAdicional = $row->statusAdicional;
+														$statusAdicionalId = $row->statusAdicionalId;
 														$nomeStatus = $row->nomeStatus;
+														$statusId = $row->statusId;
 														$data_criacao = $row->data_criacao;
 														$linkKompletoCliente = $row->linkKompletoCliente;
 														$telefonepessoal = "55" . normalizePhone(numberOnly($row->telefonepessoal));
@@ -169,17 +171,19 @@
 													<div class="d-flex flex-stack">
 														
 														<div class="text-gray-400 fw-bolder fs-7 text-star mt-1 ms-15">
-															<span class="badge badge-light-<?php echo traduzirNomeStatus($nomeStatus)[1];?>"><?php echo traduzirNomeStatus($nomeStatus)[0];?></span>
-															<span class="badge badge-light-<?php echo traduzirStatusAdicional($statusAdicional)[1];?>"><?php echo traduzirStatusAdicional($statusAdicional)[0];?></span>
+															<span class="badge badge-light-<?php echo getStatusNomePorId($statusId)[2];?>"><?php echo getStatusNomePorId($statusId)[1];?></span>
+															<span class="badge badge-light-<?php echo getStatusAdicionalPorId($statusAdicionalId)[2];?>"><?php echo getStatusAdicionalPorId($statusAdicionalId)[1];?></span>
 														</div>
 													</div>
 													<div class="separator separator-dashed my-3"></div>
 													<!--end::Item-->
 
 													<?php };?>
-													<!-- <div class="text-center pt-9">
-														<a href="../../demo1/dist/apps/ecommerce/catalog/add-product.html" class="btn btn-primary">Add Vehicle</a>
-													</div> -->
+													<div class="pt-9">
+													<a href="<?php echo assetfolder;?>aaspa-listar-propostas" class="text-primary opacity-75-hover fs-6 fw-semibold">Ver mais propostas</a>
+													<span class="text-gray-500 opacity-75-hover fs-6 fw-semibold">| </span>
+													<a href="<?php echo assetfolder;?>aaspa-receptivo/0" class="text-primary opacity-75-hover fs-6 fw-semibold">Criar nova proposta</a>
+													</div>
 												</div>
 												<!--end::Body-->
 											</div>
@@ -1594,8 +1598,8 @@
 							<div class="app-container container-fluid d-flex flex-column flex-md-row flex-center flex-md-stack py-3">
 								<!--begin::Copyright-->
 								<div class="text-dark order-2 order-md-1">
-									<span class="text-muted fw-semibold me-1">2022&copy;</span>
-									<a href="https://keenthemes.com" target="_blank" class="text-gray-800 text-hover-primary">Keenthemes</a>
+									<span class="text-muted fw-semibold me-1">2025&copy;</span>
+									<a href="https://keenthemes.com" target="_blank" class="text-gray-800 text-hover-primary">Insight</a>
 								</div>
 								<!--end::Copyright-->
 								<!--begin::Menu-->

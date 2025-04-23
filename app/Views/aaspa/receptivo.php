@@ -68,15 +68,20 @@
 																		<div style="display: <?php echo (empty($integraallId)  ? 'block' : 'none');?>">
 																			<div class="input-group">
 																				<span class="input-group-text" style="width: 155px">CPF</span> 
-																				<input type="text" class="form-control fs-3 fw-bold" placeholder="" name="cpf" id="cpf" value="<?php echo $cpf;?>" /><span>&nbsp;&nbsp;<i class="fa-regular fa-copy pt-4 fs-3" style="color: #b3b1b1; cursor: pointer" onclick="navigator.clipboard.writeText(document.getElementById('cpf').value)""></i></span>
+																				<input type="text" class="form-control fs-3 fw-bold" placeholder="" name="cpf" id="cpf" value="<?php echo $cpf;?>" /><span>&nbsp;&nbsp;<i class="fa-regular fa-copy pt-4 fs-3" style="color: #b3b1b1; cursor: pointer" onclick="navigator.clipboard.writeText(document.getElementById('cpf').value)" alt="Copiar CPF e abrir TSE"></i></span>
 																			</div>
 																			<div class="input-group">
 																				<span class="ms-2 mt-2" id="lblInfo">Informe o CPF para consulta.</span>
 																			</div>
 																			<?php if ((!$returnData["status"]) and (!empty($returnData["mensagem"]))){?>
-																			<div class="input-group">
-																				<span class="ms-2 mt-2" style="width: 100%; color: #ff0000;"><?php echo $returnData["mensagem"];?></span>
-																			</div>
+																				<div class="input-group">
+																					<span class="mt-2 ms-2" style="width: 100%; color: #ff0000;"><?php echo $returnData["mensagem"];?></span>
+																				</div>
+																			<?php }?>
+																			<?php if (($returnData["status"]) and (!empty($returnData["mensagem"]))){?>
+																				<div class="input-group">
+																					<span class="input-group-text mt-2 ms-2" style="width: 100%; color:rgb(29, 212, 32);"><?php echo $returnData["mensagem"];?></span>
+																				</div>
 																			<?php }?>
 																			<div class="d-flex align-items-center position-relative my-1 mt-5 mb-0">
 																				<button type="submit" class="btn btn-primary" name="btnConsultar" value="btnConsultar" >Consultar</button>										
@@ -99,7 +104,7 @@
 																					<span style="color: <?php if($tseCheck == "LIBERADO") echo '#008001';if($tseCheck == "FALHA") echo '#f22e46'; if(empty($tseCheck)) echo '#b3b1b1';?>" id='lblTSETop'>
 																					<svg role="img" aria-hidden="true" width="25px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg>
 																					</span>
-																					<span class="fs-4">TSE:</span> <span class="fs-4" id='lblTSE'><?php echo (empty($tseCheck)  ? '' : $tseCheck);?></span><span class="fs-4"></span>&nbsp;&nbsp;<a href="<?php echo URL_TSE;?>" target="_blank"><i class="fa-solid fa-arrow-up-right-from-square fs-3" id='lblTSESite' style="color: #b3b1b1; cursor: pointer; display: inline;" alt="Abrir Site TSE"></i></a>
+																					<span class="fs-4">TSE:</span> <span class="fs-4" id='lblTSE'><?php echo (empty($tseCheck)  ? '' : $tseCheck);?></span><span class="fs-4"></span>&nbsp;&nbsp;<a href="<?php echo URL_TSE;?>" target="_blank"><i class="fa-solid fa-arrow-up-right-from-square fs-3" id='lblTSESite' onclick="copyText(document.getElementById('cpf').value);" style="color: #b3b1b1; cursor: pointer; display: inline;" alt="Abrir Site TSE"></i></a>
 																				</div>
 																			</div>
 																		</div>
@@ -387,14 +392,18 @@
 																	</span>
 																	<span class="fs-4 fw-bold">PROPOSTA: <?php echo $integraallId;?></span> <span class="fs-4" id='lblIntegraall'></span><span class="fs-4">&nbsp;&nbsp;<i class="fa-solid fa-arrows-rotate fs-3" id='lblIntegraallUpdate' style="color: #b3b1b1; cursor: pointer; display: inline;" onclick="checkIntegraall(<?php echo $integraallId;?>);"></i></span>
 																</div>
+																<div class="text-gray-400 fw-bolder fs-7 text-star mt-1 ms-15">
+																</div>
 																<div class="mt-4">
-																	<span class="fs-4 fw-bold">Última atualização:</span> <div class="fs-4"><span class="badge py-3 px-4 fs-7 badge-light-dark" id='lblLastUpdate'><?php echo (time_elapsed_string($last_update, false));?></span></div></span>
+																	<span class="fs-4 fw-bold mb-4">Integrall:</span> 
+																		<div class="fs-4" id=''>
+																			<span id="lblStatusIntegraall1" class="badge py-3 px-4 fs-7 mt-2 badge-light-<?php echo getStatusNomePorId($statusId)[2];?>"><?php echo strtoupper(getStatusNomePorId($statusId)[1]);?></span>
+																			<span id="lblStatusIntegraall2" class="badge py-3 px-4 fs-7 mt-2 badge-light-<?php echo getStatusAdicionalPorId($statusAdicionalId)[2];?>"><?php echo strtoupper(getStatusAdicionalPorId($statusAdicionalId)[1]);?></span>
+																		</div>
+																	</span>
 																</div>
 																<div class="mt-2">
-																	<span class="fs-4 fw-bold">Integrall:</span> <div class="fs-4" id=''><span class="badge py-3 px-4 fs-7 badge-light-primary" id='lblStatusIntegraall1'><?php echo strtoupper($nomeStatus  ?? "");?></span> <span class="badge py-3 px-4 fs-7 badge-light-primary" id='lblStatusIntegraall2'><?php echo strtoupper($statusAdicional  ?? "");?></span></div></span>
-																</div>
-																<div class="mt-2">
-																	<span class="fs-4 fw-bold">Link Cliente:</span> <div class="fs-4" id=''><span class="badge py-3 px-4 fs-7 badge-light-info" id='lblStatusIntegraall2'><?php echo ($linkKompletoCliente);?></span></div></span>
+																	<span class="fs-4 fw-bold">Link Cliente:</span> <div class="fs-4" id=''><span class="badge py-3 px-4 fs-7 badge-light-info" id='lblStatusIntegraall3'><?php echo ($linkKompletoCliente);?></span></div></span>
 																</div>
 															</div>
 
@@ -463,17 +472,10 @@
 																</div>
 															</div>
 															<!--end: TIMELINE-->
-														
-
 														</div>
 													</div>
 												</div>
 											</div>
-											
-											
-											
-											
-											
 										</div>
 									</div>
 									
@@ -489,8 +491,8 @@
 							<div class="app-container container-fluid d-flex flex-column flex-md-row flex-center flex-md-stack py-3">
 								<!--begin::Copyright-->
 								<div class="text-dark order-2 order-md-1">
-									<span class="text-muted fw-semibold me-1">2022&copy;</span>
-									<a href="https://keenthemes.com" target="_blank" class="text-gray-800 text-hover-primary">Keenthemes</a>
+									<span class="text-muted fw-semibold me-1">2025&copy;</span>
+									<a href="https://keenthemes.com" target="_blank" class="text-gray-800 text-hover-primary">Insight</a>
 								</div>
 								<!--end::Copyright-->
 								<!--begin::Menu-->
@@ -525,7 +527,8 @@
 						function checkCpf(){
 							<?php 
 								
-								if ((empty($integraallId))){
+								//faz verificações apenas se a proposta já não estiver gravada(IntegraallId) e se não existir erro (mensagem)
+								if ((empty($integraallId)) and (empty($returnData["mensagem"]))){
 									echo 'checkAaspa();';
 									echo 'checkINSS();';
 								}
@@ -690,18 +693,33 @@
 
 						function checkIntegraall(propostaIntegraall){
 							const lblTopIntegraall = document.getElementById("lblTopIntegraall");lblTopIntegraall.style.color = "#ddb100";
-							const lblLastUpdate = document.getElementById("lblLastUpdate"); let pontoIntegraall = 0;lblLastUpdate.innerHTML = "<b> ⏱️ consultando</b>";
-							const intervalIntegraall1 = setInterval(() => {pontoIntegraall = (pontoIntegraall + 1) % 4; lblLastUpdate.innerHTML = "<b> ⏱️ consultando" + ".".repeat(pontoIntegraall) + "</b>";}, 500);
+							// const lblLastUpdate = document.getElementById("lblLastUpdate"); let pontoIntegraall = 0;lblLastUpdate.innerHTML = "<b> ⏱️ consultando</b>";
+							// const intervalIntegraall1 = setInterval(() => {pontoIntegraall = (pontoIntegraall + 1) % 4; lblLastUpdate.innerHTML = "<b> ⏱️ consultando" + ".".repeat(pontoIntegraall) + "</b>";}, 500);
 							
 							fetch('<?php echo assetfolder;?>integraall-buscar-propostas/' + propostaIntegraall, {method: "GET", cache: "no-cache"})
 							.then(response => {
 								if (!response.ok) {throw new Error('HTTP error! Status: ${response.status}');}
 								return response.json();
 							}) .then(data => {
-								setTimeout(() => {clearInterval(intervalIntegraall1);}, 1);
-								if (data.hasOwnProperty('nomeStatus')) { const lblStatusIntegraall1 = document.getElementById("lblStatusIntegraall1"); lblStatusIntegraall1.innerHTML = data.nomeStatus; }
-								if (data.hasOwnProperty('statusAdicionalId')) { const lblStatusIntegraall2 = document.getElementById("lblStatusIntegraall2"); lblStatusIntegraall2.innerHTML = data.statusAdicionalId; }
-								if (data.hasOwnProperty('last_update')) { lblLastUpdate.innerHTML = data.last_update; }
+								//setTimeout(() => {clearInterval(intervalIntegraall1);}, 1);
+								if (data.hasOwnProperty('nomeStatus')) { 
+									const lblStatusIntegraall1 = document.getElementById("lblStatusIntegraall1"); 
+									lblStatusIntegraall1.classList.remove("badge-light-warning");
+									lblStatusIntegraall1.classList.remove("badge-light-danger");
+									lblStatusIntegraall1.classList.remove("badge-light-success");
+									lblStatusIntegraall1.classList.add("badge-light-" + data.nomeStatus[2]);
+									lblStatusIntegraall1.innerHTML = data.nomeStatus[1].toUpperCase();
+								}
+								if (data.hasOwnProperty('statusAdicional')) {
+									const lblStatusIntegraall2 = document.getElementById("lblStatusIntegraall2"); 
+									lblStatusIntegraall2.classList.remove("badge-light-warning");
+									lblStatusIntegraall2.classList.remove("badge-light-danger");
+									lblStatusIntegraall2.classList.remove("badge-light-success");
+									lblStatusIntegraall2.classList.add("badge-light-" + data.statusAdicional[2]);
+									lblStatusIntegraall2.innerHTML = data.statusAdicional[1].toUpperCase();					
+								}
+								if (data.hasOwnProperty('linkKompletoCliente')) { const lblStatusIntegraall3 = document.getElementById("lblStatusIntegraall3"); lblStatusIntegraall3.innerHTML = data.linkKompletoCliente; }
+								//if (data.hasOwnProperty('last_update')) { lblLastUpdate.innerHTML = data.last_update; }
 								const lblTopIntegraall = document.getElementById("lblTopIntegraall");lblTopIntegraall.style.color = data.color;
 							
 							}) .catch(error => {

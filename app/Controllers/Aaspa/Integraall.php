@@ -104,12 +104,12 @@ class Integraall extends BaseController
     }
 
     //SYNC INTEGRAALL e INSIGHT
-    ///http://localhost/InsightSuite/public/integraall-listar-propostas
-    ///https://insightsuite.pravoce.io/integraall-listar-propostas
-    public function listar_propostas(){
-        $filters = ['DataCadastroInicio' => date('Y-m-d 00:00:00', strtotime('-7 days')), 'DataCadastroFim' => date('Y-m-d 23:59:59')]; 
+    ///http://localhost/InsightSuite/public/integraall-importar-propostas
+    ///https://insightsuite.pravoce.io/integraall-importar-propostas
+    public function integraall_importar_propostas(){
+        $filters = ['DataCadastroInicio' => date('Y-m-d 00:00:00', strtotime('-5 days')), 'DataCadastroFim' => date('Y-m-d 23:59:59')]; 
         //$filters = ['TermoDaBusca' => '100.320.817-74']; 
-        $result = $this->m_integraall->listarPropostas($filters);
+        $result = $this->m_integraall->integraall_importar_propostas($filters);
 
         if ($result['sucesso']){
             $retorno = json_decode($result['retorno'], true);
@@ -125,11 +125,15 @@ class Integraall extends BaseController
                     //     "nomeCliente": "AILTON DOS SANTOS",
                     //     "cpf": "08251517591",
                     //     "telefonePessoal": "(71)98166-5444",
+
                     //     "nomeProduto": "AASPA",
                     //     "nomeStatus": "Aguardando Aceite",
+                    //     "statusAdicional": "Aguardando biometria",
+                    //     "statusAdicionalId": 2,
+
+                    //     "statusId": 1,
                     //     "nomeRevendedor": "QUID PROMOTORA",
                     //     "nomeVendedor": "Maria Luiza Da Silva",
-                    //     "statusId": 1,
                     //     "dataCadastro": "2025-03-31T09:29:04",
                     //     "linkKompletoCliente": "https://kompleto.app.br/ASS30377",
                     //     "dataSolicitacaoAtivacao": null,
@@ -141,8 +145,6 @@ class Integraall extends BaseController
                     //     "nomeGerenteIndicador": null,
                     //     "linkAtivo": true,
                     //     "produtoId": 6,
-                    //     "statusAdicional": "Aguardando biometria",
-                    //     "statusAdicionalId": 2,
                     //     "revendedorId": 144,
                     //     "vendedorUsuarioId": 1030
                     //   }
@@ -152,15 +154,19 @@ class Integraall extends BaseController
                         "nomeCliente" => $proposta['nomeCliente'],
                         "cpf" => $proposta['cpf'],
                         "telefonepessoal" => $proposta['telefonePessoal'],
-                        'nomeStatus' => $proposta['nomeStatus'],
-                        'assessor' => $proposta['nomeVendedor'],
+
                         'statusId' => $proposta['statusId'],
+                        'nomeStatus' => strtoupper(getStatusNomePorId($proposta['statusId'])[1] ?? ""),
+
+                        'statusAdicionalId' => $proposta['statusAdicionalId'],
+                        'statusAdicional' => strtoupper(getStatusAdicionalPorId($proposta['statusAdicionalId'])[1]  ?? ""),
+                        
+                        'assessor' => $proposta['nomeVendedor'],
                         'data_criacao' => $proposta['dataCadastro'],
                         'linkKompletoCliente' => $proposta['linkKompletoCliente'],
                         'matricula' => $proposta['matricula'],
                         'linkAtivo' => $proposta['linkAtivo'],
                         'produtoId' => $proposta['produtoId'],
-                        'statusAdicional' => $proposta['statusAdicional'],
                         "revendedorId" => $proposta['revendedorId'],
                         "data_ativacao" => $proposta['dataSolicitacaoAtivacao'],
                         "vendedorUsuarioId" => $proposta['vendedorUsuarioId']
@@ -207,8 +213,8 @@ class Integraall extends BaseController
 
                         if (($nomeStatusNovo <> $nomeStatusAtual) or ($statusAdicionalNovo <> $statusAdicionalAtual)){
                             $totalUpdates = $totalUpdates + 1;
-                            $strDelta .= "\n\n<b>" . $data['integraallId'] . " | " . substr(strtoupper($data['nomeCliente']), 0, 17) . "...</b>\n";
-                            $strDelta .= "🥷🏻 " . substr(strtoupper($data['assessor']), 0, 20) . "...\n";
+                            $strDelta .= "<br><br><b>" . $data['integraallId'] . " | " . substr(strtoupper($data['nomeCliente']), 0, 17) . "...</b><br>";
+                            $strDelta .= "🥷🏻 " . substr(strtoupper($data['assessor']), 0, 20) . "...<br>";
 
                             $mudanca = "";
                             if (($nomeStatusAtual != $nomeStatusNovo)) {
@@ -218,9 +224,9 @@ class Integraall extends BaseController
                             }
 
                             if (($statusAdicionalAtual != $statusAdicionalNovo)) {
-                                $mudanca .= "<s>$statusAdicionalAtual</s>\n";
+                                $mudanca .= "<s>$statusAdicionalAtual</s><br>";
                             } else {
-                                $mudanca .= "\n";
+                                $mudanca .= "<br>";
                             }
 
                             $strDelta .= $mudanca;
@@ -228,23 +234,16 @@ class Integraall extends BaseController
 
                             
                             //condições da proposta averbada
-                            if  (($nomeStatusNovo == 'AGUARDANDO AUDITORIA' and $statusAdicionalNovo == 'AGUARDANDO AVERBAçãO ENTIDADE') 
-                            OR ($nomeStatusNovo == 'AGUARDANDO AUDITORIA' and $statusAdicionalNovo == 'AVERBADO GOV.')  
-                            OR ($nomeStatusNovo == 'AGUARDANDO AVERBAçãO' and $statusAdicionalNovo == 'AGUARDANDO AVERBAçãO ENTIDADE') 
-                            OR ($nomeStatusNovo == 'AGUARDANDO AVERBAçãO' and $statusAdicionalNovo == 'AVERBADO GOV.')) {
-                                $strDelta .= "\n\n⭐️⭐️🎉 Proposta aprovada!";
+                            if  (($nomeStatusNovo == 'AGUARD. AUDITORIA' and $statusAdicionalNovo == 'AGUARD. AVERBAçãO') 
+                            OR ($nomeStatusNovo == 'AGUARD. AUDITORIA' and $statusAdicionalNovo == 'AVERBADO GOV.')  
+                            OR ($nomeStatusNovo == 'AGUARD. AVERBAçãO' and $statusAdicionalNovo == 'AGUARD. AVERBAçãO') 
+                            OR ($nomeStatusNovo == 'AGUARD. AVERBAçãO' and $statusAdicionalNovo == 'AVERBADO GOV.')) {
+                                $strDelta .= "<br><br>⭐️⭐️🎉 Proposta aprovada!";
 
                                 $dataExtra['statusFinal'] = 'APROVADA';
                             } else {
                                 $dataExtra['statusFinal'] = '';
                             }
-
-                            // if ($totalUpdates > 10) {
-                            //     $strDelta .= "\n + propostas não listadas.";  
-                            //     break;
-                            // } 
-
-
                             $dataNotificacao['json_detalhes'] = json_encode($data + $dataExtra);
                             $added = $this->dbMasterDefault->insert('insight_notificacoes', $dataNotificacao);
                         }
@@ -256,8 +255,8 @@ class Integraall extends BaseController
                 if (!empty($strDelta)){
                     $strDelta = "♻️♻️♻️ SYNC INTEGRAALL" . $strDelta;
                     //$result = $this->telegram->notifyTelegramGroup($strDelta, telegramQuid);
+                    echo $strDelta;
                 }
-                echo "Resultado: " . $strDelta;
             }
         }
     }
@@ -463,7 +462,7 @@ class Integraall extends BaseController
                         //echo $cadastro['sexo'] . "---" . $returnData["sexo"];exit;
                         $returnData["nomeMae"] = strtoupper($cadastro['nomeMae']  ?? "");
                         $returnData["email"] = trim($cadastro['email']  ?? "");
-                        if (empty($returnData['email'])){ $returnData["email"] = strtolower(firstName($returnData["nomeCliente"])) . "@sem_email.com.br"; } 
+                        if (empty($returnData['email'])){ $returnData["email"] = strtolower(firstName($returnData["nomeCliente"])) . "_sememail@gmail.com"; } 
 
                         $ultimaLigacao = $this->m_argus->ultimaLigacao(['cpf' => $cpf]);
                         if ($ultimaLigacao['existRecord']){

@@ -70,7 +70,7 @@ $routes->match(['get', 'post'], '/integraall-token', 'Aaspa\Integraall::integraa
 $routes->match(['get', 'post'], '/integraall-cep/(:any)', 'Aaspa\Integraall::cep/$1');
 $routes->match(['get', 'post'], '/integraall-cpf', 'Aaspa\Integraall::cpf');
 $routes->match(['get', 'post'], '/integraall-detalhes-proposta', 'Aaspa\Integraall::detalhes_proposta');
-$routes->match(['get', 'post'], '/integraall-listar-propostas', 'Aaspa\Integraall::listar_propostas');
+$routes->match(['get', 'post'], '/integraall-importar-propostas', 'Aaspa\Integraall::integraall_importar_propostas');
 $routes->match(['get', 'post'], '/integraall-metricas-ativacoes', 'Aaspa\Integraall::integraall_metricas_ativacoes');
 $routes->match(['get', 'post'], '/integraall-buscar-propostas/(:any)', 'Aaspa\Integraall::buscar_propostas/$1');
 $routes->match(['get', 'post'], '/integraall-criar-proposta', 'Aaspa\Integraall::criar_proposta');
