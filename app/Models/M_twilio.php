@@ -18,6 +18,8 @@ class m_twilio extends Model {
 		 $this->dbMasterDefault = new dbMaster();
 	}
 
+	
+
 	//SMS Via Twilio
 	function sendSMS($telefone, $mensagem, $author = 'INSIGHT'){
 		$sid = TWILIO_ACCOUNT_SID_SMS;
@@ -31,8 +33,6 @@ class m_twilio extends Model {
 		$message = null;
 		$messageSid = "";
 		
-		$this->dbMasterDefault->insert('record_log',['log' => "SMS Enviado $telefone - $mensagem"]);
-
 		try {
 			$message = $twilio->messages->create("+" . $telefone, ["body" => $mensagem, "from" => "+" . fromWhatsAppSMS, "statusCallback" => rootURL . "frontline-conversations-webhook"]);
 			//echo '09:11:00 - <h3>Dump 42 </h3> <br><br>' . var_dump($message); exit;					//<-------DEBUG
@@ -60,9 +60,8 @@ class m_twilio extends Model {
 			} else {
 				$returnData["mensagem"] = "Erro inesperado: " . $e->getMessage();
 			}
-
-			$this->dbMasterDefault->insert('record_log',['log' => "SMS ERRO $telefone - $mensagem - " . $returnData["mensagem"]]);
 		}
+		$this->dbMasterDefault->insert('record_log',['log' => "SMS REQUEST $telefone - " . $returnData["mensagem"]]);
 
 		$returnData["raw"] = $message;
 
@@ -73,28 +72,121 @@ class m_twilio extends Model {
 		return $returnData;
 	}
 
-	//mensagens enviadas pelo chatbot, mas sensiveis a opção de notificação via whatsapp
+	function newConversationWithTemplate($display_name, $to, $workedEmail){
+		$sid = TWILIO_ACCOUNT_SID_SMS;
+		$token = TWILIO_AUTH_TOKEN_SMS;
+		$twilio = new Client($sid, $token);
+
+		$returnData["status"] = false;
+		$returnData["mensagem"] = "";
+
+		//echo "$display_name, $to, $workedEmail";exit;
+		
+		try {
+			//criar uma conversa com um participante do whatsapp e outro com o identity
+			$conversation = $twilio->conversations->v1->conversationWithParticipants->create(
+				[
+					"friendlyName" => $display_name,
+					"participant" => [
+						"{\"messaging_binding\": {\"address\": \"whatsapp:+" . $to . "\", \"proxy_address\": \"whatsapp:+" . fromWhatsApp .  "\"}}",
+						"{\"identity\": \"" . $workedEmail . "\"}",
+					],
+				]
+			);
+			$returnData["status"] = true;
+		} catch (\Exception $e) {
+			$returnData["status"] = false;
+			$returnData["mensagem"] = "Erro ao criar conversa - " . $e->getMessage();	
+		}
+
+		$this->dbMasterDefault->insert('record_log',['log' => "WPP TEMPLATE $to - " . $returnData["mensagem"]]);
+		
+		//envia uma mensagem para o participante do whatsapp
+		$returnData =  $this->sendWhatsAppTemplate(templateAberturaAASPA, $to); //Tudo bem, vamos seguir com sua solicitação por aqui, basta escolher CONTINUAR abaixo:.
+	
+		$this->dbMasterDefault->insert('record_log',['log' => "WPP TEMPLATE MSG $to - " . $returnData["mensagem"]]);
+
+		return $returnData;
+	}
+
+	//mensagens enviadas pelo chatbot
 	function sendWhatsApp($body, $to){
 		if (whatAppMsg) {
 			$sid = TWILIO_ACCOUNT_SID_SMS;
 			$token = TWILIO_AUTH_TOKEN_SMS;
 			$twilio = new Client($sid, $token);
 
-			$params = array(       
-				"from" => "whatsapp:+" . fromWhatsApp,
-				"body" => $body
-			);
+			$returnData = array();
+			$returnData["status"] = true;
+			$returnData["mensagem"] = "";
+			$returnData["raw"] = null;
+			$messaging_service_sid = TWILIO_MESSAGE_SERVICES;
+			$message = null;
 
-			$message = $twilio->messages->create("whatsapp:+" . $to, $params);
+			try {
+				$params = array(       
+					"from" => "whatsapp:+" . fromWhatsApp,
+					"body" => $body,
+					"messagingServiceSid" => $messaging_service_sid
+				);
 
+				$message = $twilio->messages->create("whatsapp:+" . $to, $params);
+				//echo '15:20:23 - <h3>Dump 59 </h3> <br><br>' . var_dump($message); exit;					//<-------DEBUG
+
+				$messageSid = $message->sid;
+				$status = $message->status;
+				$body = $message->body;
+				$error_code = $message->errorCode; // Pode ser null se não houver erro
+				$error_message = $message->errorMessage; // Pode ser null se não houver erro
+				$date_created = $message->dateCreated; // Objeto DateTime
+				$date_sent = $message->dateSent; // Objeto DateTime ou null
+	
+				if ($error_code){
+					$returnData["status"] = false;
+					$returnData["mensagem"] = "Erro ao enviar WhatsApp - " . $error_message;
+				} else {
+					$returnData["status"] = true;
+					$returnData["mensagem"] = "WhatsApp enviado com sucesso - Status: " . $status;
+				}
+			} catch (\Exception $e) {
+				$returnData["status"] = false;
+				$returnData["mensagem"] = "Erro inesperado: " . $e->getMessage();
+			}
+
+			$this->dbMasterDefault->insert('record_log',['log' => "WPP Enviado $to - " . $returnData["mensagem"]]);
+
+			//echo $returnData["mensagem"];exit;
+			
 			//Registra conversa no histórico
-			$MessageSid = substr($message, strpos($message, " sid=")+5, -1);
-			$data = (array('MessageSid' => $MessageSid, 'Type' => 'WHATSAPP', 'ProfileName' => 'INSIGHT', 'Body' => $body, 'SmsStatus' => 'Gravada', 'To' => normalizePhone($to), 'WaId' => normalizePhone(fromWhatsApp), 'From' => normalizePhone(fromWhatsApp)));
+			$data = (array('MessageSid' => $messageSid, 'Type' => 'WHATSAPP', 'ProfileName' => 'INSIGHT', 'Body' => $body, 'SmsStatus' => 'Gravada', 'To' => normalizePhone($to), 'WaId' => normalizePhone(fromWhatsApp), 'From' => normalizePhone(fromWhatsApp)));
 			$result = $this->dbMasterDefault->insert('whatsapp_log', $data);
 
-			return $message;
+			return $returnData;
 		}
 	}
+
+	// //mensagens enviadas pelo chatbot, mas sensiveis a opção de notificação via whatsapp
+	// function sendWhatsApp2($body, $to){
+	// 	if (whatAppMsg) {
+	// 		$sid = TWILIO_ACCOUNT_SID_SMS;
+	// 		$token = TWILIO_AUTH_TOKEN_SMS;
+	// 		$twilio = new Client($sid, $token);
+
+	// 		$params = array(       
+	// 			"from" => "whatsapp:+" . fromWhatsApp,
+	// 			"body" => $body
+	// 		);
+
+	// 		$message = $twilio->messages->create("whatsapp:+" . $to, $params);
+
+	// 		//Registra conversa no histórico
+	// 		$MessageSid = substr($message, strpos($message, " sid=")+5, -1);
+	// 		$data = (array('MessageSid' => $MessageSid, 'Type' => 'WHATSAPP', 'ProfileName' => 'INSIGHT', 'Body' => $body, 'SmsStatus' => 'Gravada', 'To' => normalizePhone($to), 'WaId' => normalizePhone(fromWhatsApp), 'From' => normalizePhone(fromWhatsApp)));
+	// 		$result = $this->dbMasterDefault->insert('whatsapp_log', $data);
+
+	// 		return $message;
+	// 	}
+	// }
 
 
 	//mensagens enviadas pelo chatbot, mas sensiveis a opção de notificação via whatsapp
@@ -110,7 +202,7 @@ class m_twilio extends Model {
 			$returnData["status"] = true;
 			$returnData["mensagem"] = "";
 			$returnData["raw"] = null;
-			$messaging_service_sid = "MGe5bf2163a347b3c4f98c248e4459529f";
+			$messaging_service_sid = TWILIO_MESSAGE_SERVICES;
 			$message = null;
 
 			try {
@@ -530,39 +622,7 @@ class m_twilio extends Model {
 		return $participant;
 	}
 
-	function newConversationWithTemplate($display_name, $to, $workedEmail){
-		$sid = TWILIO_ACCOUNT_SID_SMS;
-		$token = TWILIO_AUTH_TOKEN_SMS;
-		$twilio = new Client($sid, $token);
-
-		$returnData["status"] = false;
-		$returnData["mensagem"] = "";
-
-		//echo "$display_name, $to, $workedEmail";exit;
-		
-
-		try {
-			//criar uma conversa com um participante do whatsapp e outro com o identity
-			$conversation = $twilio->conversations->v1->conversationWithParticipants->create(
-				[
-					"friendlyName" => $display_name,
-					"participant" => [
-						"{\"messaging_binding\": {\"address\": \"whatsapp:+" . $to . "\", \"proxy_address\": \"whatsapp:+" . fromWhatsApp .  "\"}}",
-						"{\"identity\": \"" . $workedEmail . "\"}",
-					],
-				]
-			);
-			$returnData["status"] = true;
-		} catch (\Exception $e) {
-			$returnData["status"] = false;
-			$returnData["mensagem"] = "Erro ao criar conversa - " . $e->getMessage();	
-		}
-		
-		//envia uma mensagem para o participante do whatsapp
-		$returnData =  $this->sendWhatsAppTemplate(templateAberturaAASPA, $to); //Tudo bem, vamos seguir com sua solicitação por aqui, basta escolher CONTINUAR abaixo:.
 	
-		return $returnData;
-	}
 
 	function listUsers(){
 		$sid = TWILIO_ACCOUNT_SID_SMS;

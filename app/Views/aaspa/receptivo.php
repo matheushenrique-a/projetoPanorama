@@ -32,7 +32,7 @@
 											</li>
 											<!--end::Item-->
 											<!--begin::Item-->
-											<li class="breadcrumb-item text-muted">WHATSAPP e SMS</li>
+											<li class="breadcrumb-item text-muted">Proposta Integraall</li>
 											<!--end::Item-->
 										</ul>
 										<!--end::Breadcrumb-->
@@ -272,6 +272,57 @@
 											<!--end::Accordion-->
 
 											<!--begin::Accordion-->
+											<div class="accordion" id="kt_accordion_integraall  ms-lg-7 ms-xl-10">
+												<div class="accordion-item">
+													<h2 class="accordion-header" id="kt_accordion_integraall_header_1">
+														<button class="accordion-button fs-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#kt_accordion_integraall_body_133" aria-expanded="true" aria-controls="kt_accordion_integraall_body_1">
+														INTEGRAALL
+														</button>
+													</h2>
+													<div id="kt_accordion_integraall_body_133" class="accordion-collapse collapse <?php echo (!empty($integraallId)  ? 'show' : '');?>" aria-labelledby="kt_accordion_integraall_header_1" data-bs-parent="#kt_accordion_integraall">
+														<div class="accordion-body">
+
+															<div class="mt-3 mb-3">
+																<div>
+																	<span style="color: <?php echo (!empty($integraallId)  ? '#008001' : '#b3b1b1');?>" id='lblTopIntegraall'>
+																		<svg role="img" aria-hidden="true" width="25px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg>
+																	</span>
+																	<span class="fs-4 fw-bold">PROPOSTA: <?php echo $integraallId;?></span> <span class="fs-4" id='lblIntegraall'></span><span class="fs-4">&nbsp;&nbsp;<i class="fa-solid fa-arrows-rotate fs-3" id='lblIntegraallUpdate' style="color: #b3b1b1; cursor: pointer; display: inline;" onclick="checkIntegraall(<?php echo $integraallId;?>);"></i></span>
+																</div>
+																<div class="text-gray-400 fw-bolder fs-7 text-star mt-1 ms-15">
+																</div>
+																<div class="mt-4">
+																	<span class="fs-4 fw-bold mb-4">Integrall:</span> 
+																		<div class="fs-4" id=''>
+																			<span id="lblStatusIntegraall1" class="badge py-3 px-4 fs-7 mt-2 badge-light-<?php echo getStatusNomePorId($statusId)[2];?>"><?php echo strtoupper(getStatusNomePorId($statusId)[1]);?></span>
+																			<span id="lblStatusIntegraall2" class="badge py-3 px-4 fs-7 mt-2 badge-light-<?php echo getStatusAdicionalPorId($statusAdicionalId)[2];?>"><?php echo strtoupper(getStatusAdicionalPorId($statusAdicionalId)[1]);?></span>
+																		</div>
+																	</span>
+																</div>
+																<div class="mt-3">
+																	<span class="fs-4 fw-bold">Link Cliente:</span> <div class="fs-4" id=''><span class="badge py-3 px-4 fs-7 badge-light-dark mt-1" id='lblStatusIntegraall3'><?php echo (empty($linkKompletoCliente)  ? 'Aguardando Geração' : $linkKompletoCliente); ;?></span></div></span>
+																</div>
+																<div class="mt-4">
+																	<span class="fs-4 fw-bold mb-4">Enviar WhatsApps/SMS:</span> 
+																		<div class="fs-4 mt-2">
+																			<a href="<?php echo assetfolder;?>aaspa-enviar-whatsapp/<?php echo $integraallId;?>/WPPCONTINUAR" id='enviarWhatsApp' class="btn btn-<?php echo (empty($linkKompletoCliente) ? 'light-dark' : 'success');?> p-2 px-4" name="btnConsultar" onclick="<?php echo (empty($linkKompletoCliente) ? 'return false;' : '');?>" value="btnConsultar" >CONTINUAR</a>	
+																			<a href="<?php echo assetfolder;?>aaspa-enviar-whatsapp/<?php echo $integraallId;?>/WPPKOMPLETO" id='enviarLinkKompleto'  class="btn btn-<?php echo (empty($linkKompletoCliente) ? 'light-dark' : 'info');?> p-2 px-4 ms-2 " name="btnConsultar" value="btnConsultar" onclick="<?php echo (empty($linkKompletoCliente) ? 'return false;' : '');?>">Link Kompleto</a>	
+																			<a href="<?php echo assetfolder;?>aaspa-enviar-whatsapp/<?php echo $integraallId;?>/WPPGOOGLE" id='enviarLinkGoogle'  class="btn btn-<?php echo (empty($linkKompletoCliente) ? 'light-dark' : 'warning');?> p-2 px-4 ms-2 " name="btnConsultar" value="btnConsultar" onclick="<?php echo (empty($linkKompletoCliente) ? 'return false;' : '');?>">Link Google</a>	
+																			<a href="<?php echo assetfolder;?>aaspa-enviar-whatsapp/<?php echo $integraallId;?>/SMS" id='enviarSMS'  class="btn btn-<?php echo (empty($linkKompletoCliente) ? 'light-dark' : 'primary');?> p-2 px-4 ms-2 " name="btnConsultar" value="btnConsultar" onclick="<?php echo (empty($linkKompletoCliente) ? 'return false;' : '');?>">SMS Carteirinha</a>	
+																		</div>
+																	</span>
+																</div>
+															</div>
+
+															
+														</div>
+													</div>
+												</div>
+											</div>
+
+											<!--begin::Accordion-->
+
+											<!--begin::Accordion-->
 											<div class="accordion" id="kt_accordion_2  ms-lg-7 ms-xl-10">
 												<div class="accordion-item">
 													<h2 class="accordion-header" id="kt_accordion_2_header_1">
@@ -279,8 +330,8 @@
 														CONVERSAS
 														</button>
 													</h2>
-													<div id="kt_accordion_2_body_133" class="accordion-collapse collapse" aria-labelledby="kt_accordion_2_header_1" data-bs-parent="#kt_accordion_2">
-														<div class="accordion-body">
+													<div id="kt_accordion_2_body_133" class="accordion-collapse collapse collapse <?php echo (!empty($chat["existRecord"])  ? 'show' : '');?>"" aria-labelledby="kt_accordion_2_header_1" data-bs-parent="#kt_accordion_2">
+														<div class="accordion-body p-0 pt-4">
 
 															<!--CHAT START  -->
 															<div class="flex-lg-row-fluid">
@@ -292,7 +343,7 @@
 																		<div class="card-title">
 																			<!--begin::User-->
 																			<div class="d-flex justify-content-center flex-column me-3">
-																				<span class="fs-4 fw-bold text-gray-900 me-1 mb-2 lh-1"><?php echo strtoupper($nomeCompleto  ?? "NÃO INFORMADO");?></span>
+																				<span class="fs-4 fw-bold text-gray-900 me-1 mb-2 lh-1"><?php echo strtoupper($nomeCliente  ?? "NÃO INFORMADO");?></span>
 																				<!--begin::Info-->
 																				<div class="mb-0 lh-1">
 																					<span class="badge badge-success badge-circle w-10px h-10px me-1"></span>
@@ -325,41 +376,41 @@
 																		<!--begin::Messages-->
 																		<div class="scroll-y me-n5 pe-5 h-300px h-lg-auto" data-kt-element="messages" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#kt_header, #kt_app_header, #kt_app_toolbar, #kt_toolbar, #kt_footer, #kt_app_footer, #kt_chat_messenger_header, #kt_chat_messenger_footer" data-kt-scroll-wrappers="#kt_content, #kt_app_content, #kt_chat_messenger_body" data-kt-scroll-offset="5px" style="max-height: 421px;">
 																			
-																			<?php 
-																			
-																			if ((!is_null($chat)) and ($chat['num_rows'] > 0 )){
-																				foreach ($chat["result"]->getResult() as $row){
-																					$SmsStatus = $row->SmsStatus;
-																					$statusMessage["status"] = traduzirStatusTwilio($SmsStatus);
-																					
-																					//echo '10:39:56 - <h3>Dump 82 </h3> <br><br>' . var_dump($statusMessage); exit;					//<-------DEBUG
-																			?>
-																						<!--begin::Message(in)-->
-																						<div class="d-flex justify-content-start mb-10 ">
-																							<div class="d-flex flex-column align-items-start">
-																								<div class="d-flex align-items-center mb-2">
-																									<div class="symbol  symbol-35px symbol-circle "><div class="symbol-label fs-3 bg-light-success text-success"><?php echo substr(strtoupper($row->Type ?? "") ,0,1);?></div></div><!--end::Avatar-->
-																									<div class="ms-3">
-																										<a href="#" class="fs-5 fw-bold text-gray-900 text-hover-primary me-1"><?php echo strtoupper($row->Type ?? "");?> (<?php echo ($row->ProfileName);?>)</a>
-																										<span class="text-muted fs-7 mb-1"><?php echo time_elapsed_string($row->last_updated) . ' - ' . date_format(date_create($row->last_updated),"d/M H:i:s") . '<span class="badge badge-light-' . $statusMessage["status"][1] .  ' ms-auto">' . $statusMessage["status"][0] . '</span>'?></span>
-																									</div>
+																		<?php 
+																
+																		if ((!is_null($chat)) and ($chat['num_rows'] > 0 )){
+																			foreach ($chat["result"]->getResult() as $row){
+																				$SmsStatus = $row->SmsStatus;
+																				$statusMessage["status"] = traduzirStatusTwilio($SmsStatus);
+																				
+																				//echo '10:39:56 - <h3>Dump 82 </h3> <br><br>' . var_dump($statusMessage); exit;					//<-------DEBUG
+																		?>
+																					<!--begin::Message(in)-->
+																					<div class="d-flex justify-content-start mb-10 ">
+																						<div class="d-flex flex-column align-items-start">
+																							<div class="d-flex align-items-center mb-2">
+																								<div class="symbol  symbol-35px symbol-circle "><div class="symbol-label fs-3 bg-light-success text-success"><?php echo substr(strtoupper($row->Type ?? "") ,0,1);?></div></div><!--end::Avatar-->
+																								<div class="ms-3">
+																									<a href="#" class="fs-5 fw-bold text-gray-900 text-hover-primary me-1"><?php echo strtoupper($row->Type ?? "");?> (<?php echo ($row->ProfileName);?>)</a>
+																									<span class="text-muted fs-7 mb-1"><?php echo time_elapsed_string($row->last_updated) . ' - ' . date_format(date_create($row->last_updated),"d/M H:i:s") . '<span class="badge badge-light-' . $statusMessage["status"][1] .  ' ms-auto">' . $statusMessage["status"][0] . '</span>'?></span>
 																								</div>
-																								<div class="p-5 rounded bg-light-success text-dark mw-lg-400px text-start" data-kt-element="message-text">
-																									<?php echo $row->Body;?>      
-																								</div>
-																								<div class="d-flex align-items-center mb-2">
-																									<div class="ms-3">
-																										<span class="text-muted fs-7 mb-1">
-																											<?php echo $row->To;?> - 
-																											<?php echo $row->MessageSid;?>
-																										
-																										</span>
-																									</div>
+																							</div>
+																							<div class="p-5 rounded bg-light-success text-dark mw-lg-400px text-start" data-kt-element="message-text">
+																								<?php echo $row->Body;?>      
+																							</div>
+																							<div class="d-flex align-items-center mb-2">
+																								<div class="ms-3">
+																									<span class="text-muted fs-7 mb-1">
+																										<?php echo $row->To;?> - 
+																										<a href="<?php echo assetfolder;?>aaspa-message-status/<?php echo $row->MessageSid;?>" target="_blank"><?php echo $row->MessageSid;?></a>
+																									
+																									</span>
 																								</div>
 																							</div>
 																						</div>
-																						<!--end::Message(in)-->
-																			<?php }}?>
+																					</div>
+																					<!--end::Message(in)-->
+																		<?php }}?>
 																		</div>
 																		<!--end::Messages-->
 																	</div>
@@ -374,46 +425,7 @@
 												</div>
 											</div>
 
-											<!--begin::Accordion-->
-											<div class="accordion" id="kt_accordion_integraall  ms-lg-7 ms-xl-10">
-												<div class="accordion-item">
-													<h2 class="accordion-header" id="kt_accordion_integraall_header_1">
-														<button class="accordion-button fs-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#kt_accordion_integraall_body_133" aria-expanded="true" aria-controls="kt_accordion_integraall_body_1">
-														INTEGRAALL
-														</button>
-													</h2>
-													<div id="kt_accordion_integraall_body_133" class="accordion-collapse collapse <?php echo (!empty($integraallId)  ? 'show' : '');?>" aria-labelledby="kt_accordion_integraall_header_1" data-bs-parent="#kt_accordion_integraall">
-														<div class="accordion-body">
-
-															<div class="mt-3 mb-3">
-																<div>
-																	<span style="color: <?php echo (!empty($integraallId)  ? '#008001' : '#b3b1b1');?>" id='lblTopIntegraall'>
-																		<svg role="img" aria-hidden="true" width="25px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg>
-																	</span>
-																	<span class="fs-4 fw-bold">PROPOSTA: <?php echo $integraallId;?></span> <span class="fs-4" id='lblIntegraall'></span><span class="fs-4">&nbsp;&nbsp;<i class="fa-solid fa-arrows-rotate fs-3" id='lblIntegraallUpdate' style="color: #b3b1b1; cursor: pointer; display: inline;" onclick="checkIntegraall(<?php echo $integraallId;?>);"></i></span>
-																</div>
-																<div class="text-gray-400 fw-bolder fs-7 text-star mt-1 ms-15">
-																</div>
-																<div class="mt-4">
-																	<span class="fs-4 fw-bold mb-4">Integrall:</span> 
-																		<div class="fs-4" id=''>
-																			<span id="lblStatusIntegraall1" class="badge py-3 px-4 fs-7 mt-2 badge-light-<?php echo getStatusNomePorId($statusId)[2];?>"><?php echo strtoupper(getStatusNomePorId($statusId)[1]);?></span>
-																			<span id="lblStatusIntegraall2" class="badge py-3 px-4 fs-7 mt-2 badge-light-<?php echo getStatusAdicionalPorId($statusAdicionalId)[2];?>"><?php echo strtoupper(getStatusAdicionalPorId($statusAdicionalId)[1]);?></span>
-																		</div>
-																	</span>
-																</div>
-																<div class="mt-2">
-																	<span class="fs-4 fw-bold">Link Cliente:</span> <div class="fs-4" id=''><span class="badge py-3 px-4 fs-7 badge-light-info" id='lblStatusIntegraall3'><?php echo ($linkKompletoCliente);?></span></div></span>
-																</div>
-															</div>
-
-															
-														</div>
-													</div>
-												</div>
-											</div>
-
-											<!--begin::Accordion-->
+											
 											<div class="accordion" id="kt_accordion_historico  ms-lg-7 ms-xl-10">
 												<div class="accordion-item">
 													<h2 class="accordion-header" id="kt_accordion_historico_header_1">
@@ -457,8 +469,9 @@
 																<!--begin::Body-->
 																<div class="card-body pt-6">
 																	<?php 
-																		if ($journey['num_rows'] > 0 ){
-																			foreach ($journey["result"]->getResult() as $row){
+																		if ((!is_null($journey)) and ($journey['num_rows'] > 0 )){
+																			if ($journey['num_rows'] > 0 ){
+																				foreach ($journey["result"]->getResult() as $row){
 																				
 																	?>
 																	<div class="timeline-label mb-5">
@@ -468,7 +481,7 @@
 																			<div class="fw-semibold text-gray-700 ps-3 fs-7"><?php echo "<b>via " . $row->channel . "</b> - " . $row->descricao;?></div>
 																		</div>
 																	</div>
-																	<?php }}?>
+																	<?php }}}?>
 																</div>
 															</div>
 															<!--end: TIMELINE-->
@@ -718,7 +731,37 @@
 									lblStatusIntegraall2.classList.add("badge-light-" + data.statusAdicional[2]);
 									lblStatusIntegraall2.innerHTML = data.statusAdicional[1].toUpperCase();					
 								}
-								if (data.hasOwnProperty('linkKompletoCliente')) { const lblStatusIntegraall3 = document.getElementById("lblStatusIntegraall3"); lblStatusIntegraall3.innerHTML = data.linkKompletoCliente; }
+								if (data.hasOwnProperty('linkKompletoCliente')) { 
+									const lblStatusIntegraall3 = document.getElementById("lblStatusIntegraall3"); 
+									lblStatusIntegraall3.innerHTML = data.linkKompletoCliente;
+									const enviarWhatsApp = document.getElementById("enviarWhatsApp"); 
+									const enviarLinkKompleto = document.getElementById("enviarLinkKompleto"); 
+									const enviarLinkGoogle = document.getElementById("enviarLinkGoogle"); 
+									const enviarSMS = document.getElementById("enviarSMS"); 
+
+									if (data.linkKompletoCliente) {
+										enviarWhatsApp.classList.remove("btn-light-dark");
+										enviarLinkKompleto.classList.remove("btn-light-dark");
+										enviarLinkGoogle.classList.remove("btn-light-dark");
+										enviarSMS.classList.remove("btn-light-dark");
+
+										enviarWhatsApp.classList.add("btn-success");
+										enviarLinkKompleto.classList.add("btn-info");
+										enviarLinkGoogle.classList.add("btn-warning");
+										enviarSMS.classList.add("btn-primary");
+									} else {
+										enviarWhatsApp.classList.remove("btn-success");
+										enviarLinkKompleto.classList.remove("btn-info");
+										enviarLinkGoogle.classList.remove("btn-warning");
+										enviarSMS.classList.remove("btn-primary");
+
+										enviarWhatsApp.classList.add("light-dark");
+										enviarLinkKompleto.classList.add("light-dark");
+										enviarLinkGoogle.classList.add("light-dark");
+										enviarSMS.classList.add("light-dark");
+									}
+
+								}
 								//if (data.hasOwnProperty('last_update')) { lblLastUpdate.innerHTML = data.last_update; }
 								const lblTopIntegraall = document.getElementById("lblTopIntegraall");lblTopIntegraall.style.color = data.color;
 							

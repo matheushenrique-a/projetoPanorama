@@ -50,7 +50,58 @@ class Aaspa extends BaseController
 
     }
 
-   
+    //http://localhost/InsightSuite/public/aaspa-enviar-whatsapp
+    public function aaspa_enviar_whatsapp($integraallId, $template){
+        $cliente = $this->m_integraall->proposta_integraall($integraallId);
+
+        if ($cliente['existRecord']){
+            $nomeCliente = $cliente['firstRow']->nomeCliente;
+            $fname = firstName($nomeCliente);
+            $telefone = $cliente['firstRow']->telefonepessoal;
+            $linkKompletoCliente = $cliente['firstRow']->linkKompletoCliente;
+            $assessor = $this->session->nickname;
+            $emailAssessor = $this->session->email;
+
+            $telefone = "31995781355";
+            $telefoneWaId = celularToWaId($telefone);
+            $googleMeeting = $this->session->parameters["google-meeting"];
+
+            if ($template == "WPPCONTINUAR"){
+                $display_name = $nomeCliente . " | " . formatarTelefone($telefone);
+                $returnData = $this->twilio->newConversationWithTemplate($display_name, $telefoneWaId, $emailAssessor);
+            } else if ($template == "WPPKOMPLETO"){
+            
+                if (!empty($linkKompletoCliente)){
+                    $body = "Obrigado, conforme ligação segue link para receber a carteirinha:";
+                    $returnData = $this->twilio->sendWhatsApp($body, $telefoneWaId);
+
+                    if ($returnData['status']) {
+                        $body = $linkKompletoCliente;
+                        $returnData = $this->twilio->sendWhatsApp($body, $telefoneWaId);
+                    }
+                }
+            } else if ($template == "WPPGOOGLE"){
+                if (!empty($googleMeeting)){
+                    $body = "Obrigado, conforme ligação segue link para eu te ajudar com a carteirinha:";
+                    $returnData = $this->twilio->sendWhatsApp($body, $telefoneWaId);
+
+                    if ($returnData['status']) {
+                        $body = $googleMeeting;
+                        $returnData = $this->twilio->sendWhatsApp($body, $telefoneWaId);
+                    }
+                }
+            } else if ($template == "SMS"){
+                //cria um link conjugado para envio por SMS contendo Google + Kompleto
+                $smsMSG = $this->dbMasterDefault->insert('aaspa_sms',['linkKompletoCliente' => $linkKompletoCliente, 'linkMeeting' => $googleMeeting, 'assessor' => $assessor, 'nomeCliente' => $nomeCliente, 'telefone' => $telefoneWaId, 'status' => 'ENVIADO']);
+                
+                $body = "Ola $fname, segue seu link https://carteirinha.pravoce.io/comecar/id" . $smsMSG["insert_id"];
+                $returnData =  $this->twilio->sendSMS($telefoneWaId, $body, $assessor);  
+            }
+        }
+
+        return redirect()->to('aaspa-receptivo/0/' . $integraallId);
+    }
+
 
     //http://localhost/InsightSuite/public/aaspa-zapsms
     public function zapsms($celular = null){
@@ -79,7 +130,6 @@ class Aaspa extends BaseController
 
         $returnData["status"] = false;
 		$returnData["mensagem"] = "";
-
         if (!empty($btnSalvar)){
             if ((strlen($celularWaId) != 13)){
                 $returnData["mensagem"] = "O telefone deve conter 11 números. Exemplo 31-99999-9999";
@@ -144,21 +194,9 @@ class Aaspa extends BaseController
 		                $fname = firstName($nomeCompleto);
 
                         $cliente = $this->dbMasterDefault->select('aaspa_sms', ['telefone' => $celularWaId]);
-
-                        // if ($cliente['existRecord']){
-                        //     $this->dbMasterDefault->update('aaspa_sms', ['linkKompletoCliente' => $linkAaspa2, 'linkMeeting' => $linkMeeting, 'assessor' => $assessor, 'nomeCliente' => $nomeCompleto, 'status' => 'ATUALIZADO'], ['telefone' => $celularWaId], ['last_update' => 'current_timestamp()']);
-                        //     $returnData["status"] = true;
-                        //     $returnData["mensagem"] = "SMS já havia sido enviado, link Kompleto atualizado.";
-
-                        // } else {
-                            $smsMSG = $this->dbMasterDefault->insert('aaspa_sms',['linkKompletoCliente' => $linkAaspa2, 'linkMeeting' => $linkMeeting, 'assessor' => $assessor, 'nomeCliente' => $nomeCompleto, 'telefone' => $celularWaId, 'status' => 'ENVIADO']);
-                            //$msg1 = "Ola $fname, segue o caminho para continuarmos a ligacao:";
-                            $msg2 = "Ola $fname, segue seu link https://carteirinha.pravoce.io/comecar/id" . $smsMSG["insert_id"]; strtolower($linkAaspa2);
-        
-                            //$returnData =  $this->twilio->sendSMS($celularWaId, $msg1, $this->session->nickname);                        
-                            $returnData =  $this->twilio->sendSMS($celularWaId, $msg2, $this->session->nickname);                        
-                            //$returnData =  $this->twilio->sendSMS($celularWaId, $msg1, $this->session->nickname);
-                        // }
+                        $smsMSG = $this->dbMasterDefault->insert('aaspa_sms',['linkKompletoCliente' => $linkAaspa2, 'linkMeeting' => $linkMeeting, 'assessor' => $assessor, 'nomeCliente' => $nomeCompleto, 'telefone' => $celularWaId, 'status' => 'ENVIADO']);
+                        $msg2 = "Ola $fname, segue seu link https://carteirinha.pravoce.io/comecar/id" . $smsMSG["insert_id"]; strtolower($linkAaspa2);
+                        $returnData =  $this->twilio->sendSMS($celularWaId, $msg2, $this->session->nickname);                        
                     }
                 }   
             }
@@ -275,7 +313,7 @@ class Aaspa extends BaseController
         if ((empty($cpf)) or ($cpf == "0")) { $cpf = numberOnly($this->getpost('cpf'));}
 
         
-        //CENÁRIO 04: SALVAR PROPOSTA BOTÃO SALVAR
+        //CENÁRIO 01: SALVAR PROPOSTA
         if (!empty($btnSalvar)){
             $dataProposta = [
                 "nomeCliente" => $nomeCliente,
@@ -323,9 +361,10 @@ class Aaspa extends BaseController
                 $nomeStatus = $returnData['integraall']['nomeStatus'];
                 $statusId = $returnData['integraall']['statusId'];
 
+                return redirect()->to('aaspa-receptivo/0/' . $lastIntegraallId);exit;
             }
         
-        //CENÁRIO 01: CPF DIGITADO OU RECEBIDO VIA QUERY OU BOTÃO CONSULTAR CLICADO
+        //CENÁRIO 02: BUSCAR CPF
         } else if (!empty($cpf)){
             if ((strlen($cpf) != 11)){
                 $returnData["mensagem"] = "O CPF deve ser preenchido.";
@@ -347,11 +386,9 @@ class Aaspa extends BaseController
                 }
             }
 
-        //CENÁRIO 02: INTEGRAAL ID PASSADO VIA QUERY - OBJETIVO DE LEITURA
-        //apenas carregar dados pelo ID, bloquear edição e ocultar botão gravar (consulta apenas)
+        //CENÁRIO 03: EXIBIR PROPOSTA POR INTEGRAAL ID
         } else if (!empty($integraallId)) {
-            $this->m_integraall->buscar_propostas($integraallId);
-            $cliente = $this->m_integraall->proposta_integraall($integraallId);
+            $cliente = $this->m_integraall->proposta_integraall($integraallId, true);
 
             if ($cliente['existRecord']){
                 $cpfINSS = $cliente['firstRow']->cpf;
@@ -395,8 +432,9 @@ class Aaspa extends BaseController
             //Realizar check no calculadora ou INSS sem gravar draft de proposta
 
 
-        $data['chat'] = $this->m_insight->getChat($telefoneWaId);
-        $data['journey'] = $this->m_insight->getJourney($telefoneWaId);
+        $telefone = "31995781355";
+        $data['chat'] = $this->m_insight->getChat(celularToWaId($telefone));
+        $data['journey'] = $this->m_insight->getJourney(celularToWaId($telefone));
 
         $data['cpf'] = $cpf;
         $data['cpfINSS'] = $cpfINSS;

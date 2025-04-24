@@ -128,7 +128,7 @@ class M_insight extends Model {
 
     public function getChat($telefoneWaId){
         $chat = null;
-        if ((!empty($telefoneWaId))){
+        if ((!empty($telefoneWaId)) and (strlen($telefoneWaId) == 13)){
             $db =  $this->dbMasterDefault->getDB();
             $builder = $db->table('whatsapp_log');
             $builder->Like('whatsapp_log.To', $telefoneWaId); //bug do número 9 no whatsapp
@@ -143,7 +143,7 @@ class M_insight extends Model {
 
     public function getJourney($telefoneWaId){
         $journey = null;
-        if ((!empty($telefoneWaId))){
+        if ((!empty($telefoneWaId)) and (strlen($telefoneWaId) == 13)){
             //JOURNEY
             $db =  $this->dbMasterDefault->getDB();
             $builder = $db->table('customer_journey');

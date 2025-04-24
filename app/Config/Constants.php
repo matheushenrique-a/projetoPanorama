@@ -35,6 +35,7 @@ define('PATH_SAVE_MEDIA', "/Applications/XAMPP/xamppfiles/htdocs/InsightSuite/pu
 //SMS Account - US SMS ONLY
 define('TWILIO_ACCOUNT_SID_SMS','ACbec7bd36bb5c1d809c7fd76c0e06bb5c');
 define('TWILIO_AUTH_TOKEN_SMS','f9b35782bcc14ea689826783314dab9e');
+define('TWILIO_MESSAGE_SERVICES','MGe5bf2163a347b3c4f98c248e4459529f'); //Messaging Services // Servico Mensagem FRONT-LINE-QUID // CONTA QUID BRASIL
 
 //WHATSAPP Account - BRASIL
 define('TWILIO_ACCOUNT_SID','ACd07f72009069ead82dcf03497b6cb3b1');
@@ -80,12 +81,12 @@ define('facta_taxa_ligjt', 1.80);
 
 if (IsProduction){
     define ('assetfolder', '/');
-    define ('rootURL', 'https://a613-2804-1b3-6149-9c04-d1cc-cd1c-6041-2e1c.ngrok-free.app/InsightSuite/public/');
+    define ('rootURL', 'https://insightsuite.pravoce.io/');
     define ('FGTSUrl', '/');
     define ('ConsorcioUrl', '/');
 } else {
     define ('assetfolder', '/InsightSuite/public/');
-    define ('rootURL', 'http://localhost/InsightSuite/public/');
+    define ('rootURL', 'https://2ff8-2804-1b3-6149-92ba-1d5-e266-2b71-4c38.ngrok-free.app/InsightSuite/public/');
     define ('urlInstitucional', '/');
     define ('FGTSUrl', 'http://localhost/fintech/');
     define ('ConsorcioUrl', 'http://localhost/fintech/');

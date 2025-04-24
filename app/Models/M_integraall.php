@@ -102,8 +102,12 @@ class M_integraall extends Model {
         return $result;
     }
 
-    public function proposta_integraall($integraallId){
-        $this->buscar_propostas($integraallId);
+    public function proposta_integraall($integraallId, $autoRefresh = false){
+
+        if ($autoRefresh){
+            //busca atualização no integraall antes de retornar dados locais
+            //$this->buscar_propostas($integraallId);
+        }
         $query = "select * from aaspa_propostas where integraallId = '$integraallId'";
         $result = $this->dbMasterDefault->runQuery($query);
         return $result;

@@ -62,6 +62,7 @@ $routes->match(['get', 'post'], '/aaspa-zapsms', 'Aaspa\Aaspa::zapsms');
 $routes->match(['get', 'post'], '/aaspa-message-status/(:any)', 'Aaspa\Aaspa::message_status/$1');
 $routes->match(['get', 'post'], '/aaspa-zapsms/(:any)', 'Aaspa\Aaspa::zapsms/$1');
 $routes->match(['get', 'post'], '/aaspa-receptivo/(:any)/(:any)', 'Aaspa\Aaspa::receptivo/$1/$2');
+$routes->match(['get', 'post'], '/aaspa-enviar-whatsapp/(:any)/(:any)', 'Aaspa\Aaspa::aaspa_enviar_whatsapp/$1/$2');
 $routes->match(['get', 'post'], '/aaspa-receptivo/(:any)', 'Aaspa\Aaspa::receptivo/$1');
 $routes->match(['get', 'post'], '/aaspa-receptivo/', 'Aaspa\Aaspa::receptivo');
 $routes->match(['get', 'post'], '/aaspa-listar-propostas', 'Aaspa\Aaspa::listarPropostas');
