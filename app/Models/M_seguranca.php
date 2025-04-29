@@ -4,12 +4,12 @@ use CodeIgniter\Model;
 use App\Libraries\dbMaster;
 
 class M_seguranca extends Model {
-    protected $dbMaster;
+    protected $dbMasterDefault;
     protected $my_session;
 
     public function __construct()
         {
-			$this->dbMaster = new dbMaster();
+			$this->dbMasterDefault = new dbMaster();
             $this->my_session = session();
         }
 
@@ -23,7 +23,7 @@ class M_seguranca extends Model {
             $whereCheck = array('email' => $email, 'password' => $password);
         }
  
-        $login = $this->dbMaster->select('user_account', $whereCheck);
+        $login = $this->dbMasterDefault->select('user_account', $whereCheck);
         
         if ($login['existRecord']) {
             $this->my_session->set('userId', $login['firstRow']->userId);
@@ -49,6 +49,20 @@ class M_seguranca extends Model {
        $perfil = json_decode($this->my_session->perfil, true);
        
        echo (!in_array($modulo, $perfil)  ? 'display: none; visibility: hidden;' : 'display: block; visibility: visible;');
+    }
+
+    public function buscarUsuarios($search){
+        if ($search == "WORK") {
+            $sql = "SELECT * from user_account where status='ATIVO' order by nickname LIMIT 30;";
+        } else {
+            $sql = "SELECT * from user_account where status='ATIVO' AND nickname like '%$search%' order by nickname LIMIT 30;";    
+        }
+
+        return $this->dbMasterDefault->runQuery($sql);
+    }
+
+    public function buscarUsuario($filters){
+        return $this->dbMasterDefault->select('user_account', $filters);
     }
 
 }

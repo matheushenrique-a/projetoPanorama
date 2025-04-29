@@ -37,6 +37,8 @@ class m_whatsapp extends Model {
 			$headers = $this->getHeader();
 			$url = META_CLOUD_API;
 
+			//echo '13:58:36 - <h3>Dump 4 </h3> <br><br>' . var_dump($url); exit;					//<-------DEBUG
+
 			$data = [
 				"messaging_product" => "whatsapp",
 				"to" => $to,
@@ -50,6 +52,9 @@ class m_whatsapp extends Model {
 			];
 			
 			$result = $this->m_http->http_request('POST', $url, $headers, $data);
+
+			echo '14:27:10 - <h3>Dump 95 </h3> <br><br>' . var_dump($result); exit;					//<-------DEBUG
+
 
 			$messageId = 'N/I';
 			$messageStatus = "TOBE";
@@ -77,7 +82,7 @@ class m_whatsapp extends Model {
 
 			//Registra conversa no histórico
 			$data = (array('ConversationSid' => $conversation['firstRow']->ConversationSid, 'MessageSid' => $messageId, 'Type' => 'WHATSAPP', 'ProfileName' => 'INSIGHT', 'direction' => 'B2C', 'Body' => $body, 'SmsStatus' => strtoupper($messageStatus), 'error' => $returnData["error"], 'To' => normalizePhone($to), 'From' => (fromWhatsApp)));
-			$added = $this->createMessage($data);
+			$added = $this->createMessage($data, $conversation);
 			$returnData["id"] = $added["insert_id"];
 		} else {
 			$returnData["error"] = "Envio WhatsApp desativado nas configurações.";
@@ -119,6 +124,7 @@ class m_whatsapp extends Model {
 				if (isset($retorno['messaging_product'])){
 					$returnData["sucesso"] = true;
 					$returnData["messageId"] = $retorno['messages'][0]['id'];
+					$messageStatus = "SENT";
 				} else {
 					$returnData["error"] = "Erro ao enviar mensagem: " . $result['retorno'];
 					$messageStatus = "ERROR";
@@ -146,7 +152,7 @@ class m_whatsapp extends Model {
 		$headers = [];
 		$headers[] = "Authorization: Bearer " . META_TOKEN_WHATSAPP;
 
-		$url = META_CLOUD_API_RAW . META_CLOUD_BUSINESS_ID . '/message_templates?search=continuar_chamada';
+		$url = META_CLOUD_API_RAW . META_CLOUD_ASSET_ID . '/message_templates?search=continuar_chamada';
 		$result = $this->m_http->http_request('GET', $url, $headers);
 
 		return $result;
@@ -177,6 +183,8 @@ class m_whatsapp extends Model {
 				];
 			
 			$result = $this->m_http->http_request('POST', $url, $headers, $data);
+
+			echo '13:54:45 - <h3>Dump 63 </h3> <br><br>' . var_dump($result); exit;					//<-------DEBUG
 			 
 			if ($result['sucesso']){
 				$retorno = json_decode($result['retorno'], true);
@@ -295,8 +303,9 @@ class m_whatsapp extends Model {
 				FROM 
 				whatsapp_conversations
 				WHERE 
-				telefoneCliente = '$telefoneCliente';";
-	
+				telefoneCliente = '$telefoneCliente' ORDER BY dataUltimaMensagemCliente DESC limit 1;";
+
+		//echo '15:35:33 - <h3>Dump 31 </h3> <br><br>' . var_dump($sql); exit;					//<-------DEBUG
 		$result = $this->dbMasterDefault->runQuery($sql);
 
 		if ($result['existRecord']){
@@ -319,11 +328,11 @@ class m_whatsapp extends Model {
 	}
 
 	public function getConversationTopMsg($userId){
-		$sql = "select c.id, c.ConversationSid, c.atendenteId, c.atendenteNome, c.telefoneCliente, c.nomeCliente, c.last_updated, c.data_criacao, MAX(l.id) topMsgId 
+		$sql = "select c.id, c.ConversationSid, c.nomeBot, c.atendenteId, c.atendenteNome, c.telefoneCliente, c.nomeCliente, c.last_updated, c.data_criacao, MAX(l.id) topMsgId 
 				FROM whatsapp_conversations c LEFT JOIN whatsapp_log l 
 				ON c.ConversationSid = l.ConversationSid
 				WHERE c.atendenteId = $userId AND status = 'OPEN'
-				GROUP BY c.id, c.ConversationSid, c.atendenteId, c.atendenteNome, c.telefoneCliente, c.nomeCliente, c.last_updated, c.data_criacao;";
+				GROUP BY c.id, c.ConversationSid, c.nomeBot, c.atendenteId, c.atendenteNome, c.telefoneCliente, c.nomeCliente, c.last_updated, c.data_criacao ORDER BY data_criacao DESC;";
 	
 		return $this->dbMasterDefault->runQuery($sql);
 	}

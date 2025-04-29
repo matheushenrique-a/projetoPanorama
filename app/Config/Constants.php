@@ -26,11 +26,18 @@ define ('URL_TSE', "https://www.tse.jus.br/servicos-eleitorais/autoatendimento-e
 //define ('API_TSE', "https://0cd0-177-73-197-2.ngrok-free.app/consultar-cpf");
 
 //WHATSAPP CLOUD API
-define ('META_CLOUD_PHONE_ID', "631093443420913"); //phone number id do Sender WhatsApp = +1 555 641 8758
-define ('META_CLOUD_BUSINESS_ID', "1180147207074114"); //Asset_id pela URL do Gerenciador WhatsApp
+define ('META_CLOUD_PHONE_ID', "631093443420913"); //phone number id do Sender WhatsApp = +1 555 642 0620 - Pegar em developers Whatsapp -> Configuração API - Id Numero Telefone
+define ('META_CLOUD_ASSET_ID', "1180147207074114"); //Asset_id pela URL do Gerenciador WhatsApp. Usado para listar templates apenas
 define ('META_CLOUD_API_RAW', "https://graph.facebook.com/v22.0/"); 
 define ('META_CLOUD_API', META_CLOUD_API_RAW . META_CLOUD_PHONE_ID . "/messages");
+define('META_TOKEN_WHATSAPP', "EAAaYwsrh9DcBO5aLs0Paf3roaPmChzJ4ZC0e5ZAk5OG25cfx02bZBxZBU5YP98TXSoqRVAfQGwAkZBZBZCcVKhVw63oTjIY3GmVWoSZB8tBK9P7ZAslpEVfCf3zbTB170ILZCZAkIowVbmeFqUomknHZBkyBk8cpFLZBd57sYWOEU0bJnKrxjOUeGhQZDZD"); //token convertido
 define('PATH_SAVE_MEDIA', "/Applications/XAMPP/xamppfiles/htdocs/InsightSuite/public/assets/media/whatsapp/");
+
+//FACEBOOK ADS
+define('META_GRAPH_API', "https://graph.facebook.com/v20.0/");
+//APP ADS TOKEN
+define('META_TOKEN', "EAAMqjXZAxYiUBOxXAUzj9qYwNGRWDQKGdpMAneTRZBK65XDTAHc2hyzZC9mUMk2yWYM66yoDSQZCopNmXSzQmlxNSgy6YYf0yVt8Qkv9PYenDqZBFmjCUREXOU9E4Wxz2MGGbqhdqgye3AEcqnyKkwHFJsPVDK9NhKHRlg657SGvZAO25Y7DfTCA2ZA");
+
 
 //SMS Account - US SMS ONLY
 define('TWILIO_ACCOUNT_SID_SMS','ACbec7bd36bb5c1d809c7fd76c0e06bb5c');
@@ -53,13 +60,6 @@ define('emailMsg', false);
 define('whatAppMsg', true);
 define('telegramAlerts', true);
 
-
-//FACEBOOK ADS
-define('META_GRAPH_API', "https://graph.facebook.com/v20.0/");
-//APP ADS TOKEN
-define('META_TOKEN', "EAAMqjXZAxYiUBOxXAUzj9qYwNGRWDQKGdpMAneTRZBK65XDTAHc2hyzZC9mUMk2yWYM66yoDSQZCopNmXSzQmlxNSgy6YYf0yVt8Qkv9PYenDqZBFmjCUREXOU9E4Wxz2MGGbqhdqgye3AEcqnyKkwHFJsPVDK9NhKHRlg657SGvZAO25Y7DfTCA2ZA");
-//APP WHATSAPP TOKEN
-define('META_TOKEN_WHATSAPP', "EAAaYwsrh9DcBOZBJgP3SGSeiNEF6LD78zdhXIpij9i65NRVZBKUfL4oYTvGReO7zZBwZBqZAYsvWoucQ41VVwZCwhQ5TAhStuhUZCOi52olqp6ZCDFrNyLmjbHZCmbhq5MgzQrxkZCAyLmqgmrBpi2ZCZAARZCjIvZBgcyXWVmSPb7GDZCB4fKaBRjrfIoyZAgZDZD");
 
 //CHAT_GPT
 define('API_KEY_CHATGPT','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');
@@ -86,7 +86,8 @@ if (IsProduction){
     define ('ConsorcioUrl', '/');
 } else {
     define ('assetfolder', '/InsightSuite/public/');
-    define ('rootURL', 'https://2ff8-2804-1b3-6149-92ba-1d5-e266-2b71-4c38.ngrok-free.app/InsightSuite/public/');
+    define ('rootURL', 'http://localhost/InsightSuite/public/');
+    //define ('rootURL', 'https://99fe-177-73-197-2.ngrok-free.app/InsightSuite/public/');
     define ('urlInstitucional', '/');
     define ('FGTSUrl', 'http://localhost/fintech/');
     define ('ConsorcioUrl', 'http://localhost/fintech/');

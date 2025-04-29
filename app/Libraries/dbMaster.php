@@ -61,9 +61,9 @@ class dbMaster {
 		
 		if (!is_null($whereCheck)) $builder->where($whereCheck);
 		$builder->limit($this->limit);
-		// if ($table == 'proposta_consorcio'){
-		// 	echo $builder->getCompiledSelect();exit;
-		// }
+		//  if ($table == 'whatsapp_conversations'){
+		//  	echo $builder->getCompiledSelect();exit;
+		//  }
 		return $this->resultfy($builder->get());
 	}
 

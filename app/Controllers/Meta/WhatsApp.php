@@ -11,6 +11,7 @@ use Config\Services;
 use App\Models\M_chatGpt;
 use App\Models\M_whatsapp;
 use App\Models\M_argus;
+use App\Models\M_seguranca;
 
 class WhatsApp extends BaseController
 {
@@ -20,6 +21,7 @@ class WhatsApp extends BaseController
     protected $chatgpt;
     protected $m_whatsapp;
     protected $m_argus;
+    protected $m_security;
 
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger) {
         parent::initController($request, $response, $logger);
@@ -33,6 +35,13 @@ class WhatsApp extends BaseController
         $this->chatgpt =  new M_chatGpt();
         $this->m_whatsapp =  new M_whatsapp();
         $this->m_argus =  new M_argus();
+        $this->m_security = new M_seguranca();
+    }
+
+    public function checkWindow(){
+        $conversationWindow = $this->m_whatsapp->getConversationWindow('5531995781355');
+        echo '15:59:41 - <h3>Dump 23 </h3> <br><br>' . var_dump($conversationWindow); exit;					//<-------DEBUG
+
     }
 
     //http://localhost/InsightSuite/public/whatsapp-chat
@@ -41,8 +50,10 @@ class WhatsApp extends BaseController
 
         $ConversationSid =  $this->getpost('ConversationSid') ?? '';
         $currentConversationSid =  $this->getpost('currentConversationSid') ?? '';
-        $search =  $this->getpost('search');
+        $searchCRM =  $this->getpost('searchCRM');
+        $searchWORK =  $this->getpost('searchWORK');
         $newConversation =  $this->getpost('newConversation');
+        $newConversationWork =  $this->getpost('newConversationWork');
         $closeConversation =  $this->getpost('closeConversation');
         $messageToSend =  $this->getpost('messageToSend');
         $btnSendMsg =  $this->getpost('btnSendMsg');
@@ -54,19 +65,40 @@ class WhatsApp extends BaseController
         $currentConversation = null;
         $conversationWindow = null;
         $clientesCRM = null;
+        $usuariosInternos = null;
         $topConversation = null;
+        $searchTerm = "";
+        $typeSearch ="";
 
         //se o usuario clicou em uma conversa específica
         if (!empty($ConversationSid)){
             $messages = $this->m_whatsapp->getMessages(['ConversationSid' => $ConversationSid]);
             $currentConversation = $this->m_whatsapp->getConversation(['ConversationSid' => $ConversationSid]);
             $conversationWindow = $this->m_whatsapp->getConversationWindow($currentConversation['firstRow']->telefoneCliente);
-
         } 
         //caso uma busca no CRM tenha sido feita
-        else  if (!empty($search)){
-            $clientesCRM = $this->m_argus->buscarClienteCRM($search);
-        } 
+        else  if ((!empty($searchCRM))){
+            $clientesCRM = $this->m_argus->buscarClienteCRM($searchCRM);
+            $typeSearch = "CRM";
+
+            if ($searchCRM == "CRM"){
+                $searchTerm = "";
+            } else {
+                $searchTerm = $searchCRM;
+            }
+
+        //busca colegas de trabalho
+        } else  if ((!empty($searchWORK))){
+            $typeSearch = "WORK";
+            $usuariosInternos = $this->m_security->buscarUsuarios($searchWORK);
+
+            if ($searchWORK == "WORK"){
+                $searchTerm = "";
+            } else {
+                $searchTerm = $searchWORK;
+            }
+        }
+
         //caso uma nova conversa tenha sido solicitada com um cliente do CRM
         else if (!empty($newConversation)){
             $clientesCRMNew = $this->m_argus->buscarCliente(['id_proposta' => $newConversation]);
@@ -82,6 +114,25 @@ class WhatsApp extends BaseController
 
                 return redirect()->to('whatsapp-chat?ConversationSid=' . $conversation['firstRow']->ConversationSid);exit;
             }
+        
+        }
+
+        //caso uma nova conversa tenha sido solicitada com um colaborador interno (chat interno)
+        else if (!empty($newConversationWork)){
+            $usuarioInterno = $this->m_security->buscarUsuario(['userId' => $newConversationWork]);
+            if ($usuarioInterno['existRecord']){
+                $conversation = $this->m_whatsapp->createConversation([
+                    'telefoneCliente' => null,
+                    'telefoneBot' => null,
+                    'nomeCliente' => $usuarioInterno['firstRow']->nickname,
+                    'nomeBot' => 'WORK',
+                    'atendenteId' => $this->session->userId,
+                    'atendenteNome' => $this->session->nickname,
+                ]);
+                
+                return redirect()->to('whatsapp-chat?ConversationSid=' . $conversation['firstRow']->ConversationSid);exit;
+            }
+        
         //Cria conversa com número avulso / direto
         } else if (!empty($directContact)){
                 $conversation = $this->m_whatsapp->createConversation([
@@ -96,7 +147,7 @@ class WhatsApp extends BaseController
                 return redirect()->to('whatsapp-chat?ConversationSid=' . $conversation['firstRow']->ConversationSid);exit;
         //fecha uma conversa
         } else if (!empty ($closeConversation)) {
-            $this->m_whatsapp->deleteConversation(['conversationSid' => $closeConversation], ['status' => 'CLOSED']);
+            $this->m_whatsapp->updateConversation(['status' => 'CLOSED'], ['conversationSid' => $closeConversation]);
 
         //envia uma nova mensagem após pressionar o botão Enviar
         } else if (!empty($btnSendMsg) or !empty($messageToSend)) {
@@ -139,7 +190,11 @@ class WhatsApp extends BaseController
         $data['currentConversation'] = $currentConversation;
         $data['conversationWindow'] = $conversationWindow;
         $data['clientesCRM'] = $clientesCRM;
-        $data['search'] = $search;
+        $data['usuariosInternos'] = $usuariosInternos;
+        $data['searchCRM'] = $searchCRM;
+        $data['searchWORK'] = $searchWORK;
+        $data['typeSearch'] = $typeSearch;
+        $data['searchTerm'] = $searchTerm;
         $data['session'] = $this->session;
         $data['topConversation'] = $topConversation;
         $data['templates'] = $templates;
@@ -149,7 +204,7 @@ class WhatsApp extends BaseController
 
 
     //http://localhost/InsightSuite/public/whatsapp-webhook
-    // https://2ff8-2804-1b3-6149-92ba-1d5-e266-2b71-4c38.ngrok-free.app/InsightSuite/public/whatsapp-webhook
+    // https://99fe-177-73-197-2.ngrok-free.app/InsightSuite/public/whatsapp-webhook
     public function whatsapp_webhook(){
         //$result = $this->m_whatsapp->getWhatsAppMedia("1357103935532763", "image/jpeg");
         //http_response_code(200);
@@ -300,6 +355,7 @@ class WhatsApp extends BaseController
                             }
 
                             $this->m_whatsapp->createMessage($data, $conversation);
+                            //echo '15:42:09 - <h3>Dump 16 </h3> <br><br>' . var_dump($conversation['firstRow']->id); exit;					//<-------DEBUG
                             $this->m_whatsapp->updateConversation(['dataUltimaMensagemCliente' => date('Y-m-d H:i:s'), 'msgCount' => $conversation['firstRow']->msgCount + 1], ['id' => $conversation['firstRow']->id], ['last_updated' => 'current_timestamp()']);
                         }
                     }
@@ -319,7 +375,7 @@ class WhatsApp extends BaseController
 
         $to = '5531995781355';
         $nomeCliente = 'Dantas';
-        $templateName = "antedimento_telefonico";
+        $templateName = "continuar_chamada";
         $atendenteId = $this->session->userId ?? 1;
         $atendenteNome = $this->session->nickname ?? 'Dantas';
 
@@ -381,6 +437,7 @@ class WhatsApp extends BaseController
         //verifica se existe uma conversa aberta
         $conversation = $this->m_whatsapp->getConversation(['telefoneCliente' => normalizePhone($to), 'status' => 'OPEN']);
         
+        
         //cria conversa se necessário
         if (!$conversation['existRecord']) $conversation = $this->m_whatsapp->createConversation(['telefoneCliente' => normalizePhone($to),'telefoneBot' => fromWhatsApp,'nomeCliente' => $nomeCliente,'nomeBot' => 'INSIGHT','atendenteId' => $this->session->userId,'atendenteNome' => $this->session->nickname,]);
 
@@ -391,6 +448,10 @@ class WhatsApp extends BaseController
 
     //http://localhost/InsightSuite/public/whatsapp-listner/1/1/6128123e-12e0-11f0-983b-fe427d5affb6/14
     public function whatsapp_listner($atendenteId, $topConversation, $ConversationSid, $topMessage){
+
+        if (empty($ConversationSid) or ($ConversationSid == 0)){
+            echo json_encode(['error' => 'ConversationSid não informado.']);exit;
+        }
 
         //NOVAS CONVERSAS
         //Todas novas conversas acima dos ids já buscados
@@ -438,18 +499,18 @@ class WhatsApp extends BaseController
         $tipo = $request['tipo'] ?? '';
         $templateName = $request['templateName'] ?? '';
 
-        $messageToSend = "Olá";
-        $conversation =  ' fb85faf8-1a01-11f0-9224-fe427d5affb6';
-        $tipo = 'template';
-        $telefoneCliente = '5531995010050';
-        $templateName = 'continuar_chamada';
+        //  $messageToSend = "Olá";
+        //  $conversation =  ' fb85faf8-1a01-11f0-9224-fe427d5affb6';
+        //  $tipo = 'message';
+        //  $telefoneCliente = '5531995781355';
+        // $templateName = 'continuar_chamada';
 
-        $result = $this->whatsapp_send_template_cloud($templateName, $messageToSend, $telefoneCliente, $conversation);
-        echo '11:53:22 - <h3>Dump 32 </h3> <br><br>' . var_dump($result); exit;					//<-------DEBUG
+        //$result = $this->whatsapp_send_template_cloud($templateName, $messageToSend, $telefoneCliente, $conversation);
+        //echo '11:53:22 - <h3>Dump 32 </h3> <br><br>' . var_dump($result); exit;					//<-------DEBUG
 
-        exit;
+        //exit;
 
-        $returnData["sucesso"] = false;
+        $returnData = [];
         if (empty($messageToSend)) {$returnData["error"] = "Mensagem vazia.";}
 
         //verifica se existe uma conversa aberta o que sera o normal no envio direct

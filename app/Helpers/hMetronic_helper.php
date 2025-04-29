@@ -75,7 +75,7 @@ function chatList($type, $recordId, $titulo, $subtitulo, $sideLable, $url, $colo
     }
 
     $output = '<!--begin::User-->
-            <div class="d-flex flex-stack py-4 bg-hover-light-dark ' . ($selectedLine  ? 'bg-light-success' : '') . ' border-bottom" >
+            <div class="d-flex flex-stack py-4 bg-hover-light-dark ' . ($selectedLine  ? 'bg-light-' . $color : '') . ' border-bottom" >
                 <div class="d-flex align-items-center ">
                     <div class="symbol symbol-45px symbol-circle ms-2" >
                         <span class="symbol-label bg-light-' . $color . ' text-' . $color . ' fs-6 fw-bolder">' . substr($titulo, 0, 1) . '</span>

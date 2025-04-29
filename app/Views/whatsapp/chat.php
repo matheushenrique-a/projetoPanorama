@@ -40,11 +40,11 @@
 								</div>
 								<!--end::Page title-->
 								<!--begin::Actions-->
-								<div class="d-flex align-items-center gap-2 gap-lg-3">
+								<div class="d-flex align-items-center gap-2 gap-lg-3" >
 									<!--begin::Filter menu-->
 									<div class="m-0">
 										<!--begin::Menu toggle-->
-										<a href="#" class="btn btn-sm btn-flex btn-light btn-active-primary fw-bolder" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
+										<a style="display: none;" href="#" class="btn btn-sm btn-flex btn-light btn-active-primary fw-bolder" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
 										<!--begin::Svg Icon | path: icons/duotune/general/gen031.svg-->
 										<span class="svg-icon svg-icon-5 svg-icon-gray-500 me-1">
 											<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -134,7 +134,7 @@
 									<!--begin::Secondary button-->
 									<!--end::Secondary button-->
 									<!--begin::Primary button-->
-									<a href="../../demo1/dist/.html" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_create_app">Create</a>
+									<a href="<?php echo (isset($session->parameters['google-meeting'])  ? $session->parameters['google-meeting'] : '');?>" class="btn btn-sm btn-primary me-4" target="_blank" style="display: <?php echo (isset($session->parameters['google-meeting'])  ? 'block' : 'none');?>">Google Meeting</a>
 									<!--end::Primary button-->
 								</div>
 								<!--end::Actions-->
@@ -164,7 +164,7 @@
 													<!--end::Svg Icon-->
 												</a>
 
-												<a href="<?php echo assetfolder;?>whatsapp-chat?search=CRM" class="btn btn-sm btn-icon btn-clear btn-active-light-primary me-3" data-bs-toggle="tooltip" data-bs-placement="top" title="" data-bs-original-title="Reload">
+												<a href="<?php echo assetfolder;?>whatsapp-chat?searchCRM=CRM" class="btn btn-sm btn-icon btn-clear btn-active-light-primary me-3" data-bs-toggle="tooltip" data-bs-placement="top" title="" data-bs-original-title="Reload">
 													<!--begin::Svg Icon | path: /var/www/preview.keenthemes.com/keenthemes/metronic/docs/core/html/src/media/icons/duotune/communication/com014.svg-->
 													<span class="svg-icon svg-icon-muted svg-icon-2qx"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 														<path d="M16.0173 9H15.3945C14.2833 9 13.263 9.61425 12.7431 10.5963L12.154 11.7091C12.0645 11.8781 12.1072 12.0868 12.2559 12.2071L12.6402 12.5183C13.2631 13.0225 13.7556 13.6691 14.0764 14.4035L14.2321 14.7601C14.2957 14.9058 14.4396 15 14.5987 15H18.6747C19.7297 15 20.4057 13.8774 19.912 12.945L18.6686 10.5963C18.1487 9.61425 17.1285 9 16.0173 9Z" fill="currentColor"/>
@@ -176,17 +176,7 @@
 													<!--end::Svg Icon-->
 												</a>
 
-												<a href="<?php echo assetfolder;?>whatsapp-chat?search=PINNED" class="btn btn-sm btn-icon btn-clear btn-active-light-primary me-3" data-bs-toggle="tooltip" data-bs-placement="top" title="" data-bs-original-title="Reload">
-													<!--begin::Svg Icon | path: /var/www/preview.keenthemes.com/keenthemes/metronic/docs/core/html/src/media/icons/duotune/communication/com009.svg-->
-													<span class="svg-icon svg-icon-muted svg-icon-2qx"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-														<path opacity="0.3" d="M5.78001 21.115L3.28001 21.949C3.10897 22.0059 2.92548 22.0141 2.75004 21.9727C2.57461 21.9312 2.41416 21.8418 2.28669 21.7144C2.15923 21.5869 2.06975 21.4264 2.0283 21.251C1.98685 21.0755 1.99507 20.892 2.05201 20.7209L2.886 18.2209L7.22801 13.879L10.128 16.774L5.78001 21.115Z" fill="currentColor"/>
-														<path d="M21.7 8.08899L15.911 2.30005C15.8161 2.2049 15.7033 2.12939 15.5792 2.07788C15.455 2.02637 15.3219 1.99988 15.1875 1.99988C15.0531 1.99988 14.92 2.02637 14.7958 2.07788C14.6717 2.12939 14.5589 2.2049 14.464 2.30005L13.74 3.02295C13.548 3.21498 13.4402 3.4754 13.4402 3.74695C13.4402 4.01849 13.548 4.27892 13.74 4.47095L14.464 5.19397L11.303 8.35498C10.1615 7.80702 8.87825 7.62639 7.62985 7.83789C6.38145 8.04939 5.2293 8.64265 4.332 9.53601C4.14026 9.72817 4.03256 9.98855 4.03256 10.26C4.03256 10.5315 4.14026 10.7918 4.332 10.984L13.016 19.667C13.208 19.859 13.4684 19.9668 13.74 19.9668C14.0115 19.9668 14.272 19.859 14.464 19.667C15.3575 18.77 15.9509 17.618 16.1624 16.3698C16.374 15.1215 16.1932 13.8383 15.645 12.697L18.806 9.53601L19.529 10.26C19.721 10.452 19.9814 10.5598 20.253 10.5598C20.5245 10.5598 20.785 10.452 20.977 10.26L21.7 9.53601C21.7952 9.44108 21.8706 9.32825 21.9221 9.2041C21.9737 9.07995 22.0002 8.94691 22.0002 8.8125C22.0002 8.67809 21.9737 8.54505 21.9221 8.4209C21.8706 8.29675 21.7952 8.18392 21.7 8.08899Z" fill="currentColor"/>
-														</svg>
-													</span>
-													<!--end::Svg Icon-->
-												</a>
-
-												<a href="#" class="btn btn-sm btn-icon btn-clear btn-active-light-primary me-3" data-bs-toggle="tooltip" data-bs-placement="top" title="" data-bs-original-title="Reload">
+												<a href="<?php echo assetfolder;?>whatsapp-chat?searchWORK=WORK" class="btn btn-sm btn-icon btn-clear btn-active-light-primary me-3" data-bs-toggle="tooltip" data-bs-placement="top" title="" data-bs-original-title="Reload">
 													<!--begin::Svg Icon | path: /var/www/preview.keenthemes.com/keenthemes/metronic/docs/core/html/src/media/icons/duotune/communication/com014.svg-->
 													<span class="svg-icon svg-icon-muted svg-icon-2qx"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 														<path d="M16.0173 9H15.3945C14.2833 9 13.263 9.61425 12.7431 10.5963L12.154 11.7091C12.0645 11.8781 12.1072 12.0868 12.2559 12.2071L12.6402 12.5183C13.2631 13.0225 13.7556 13.6691 14.0764 14.4035L14.2321 14.7601C14.2957 14.9058 14.4396 15 14.5987 15H18.6747C19.7297 15 20.4057 13.8774 19.912 12.945L18.6686 10.5963C18.1487 9.61425 17.1285 9 16.0173 9Z" fill="currentColor"/>
@@ -214,7 +204,7 @@
 													<!--end::Svg Icon-->
 													<!--end::Icon-->
 													<!--begin::Input-->
-													<input type="text" class="form-control form-control-solid px-15" name="search" value="<?php echo ($search == "CRM"  ? '' : $search);?>" placeholder="Digite dados cliente ou telefone" />
+													<input type="text" class="form-control form-control-solid px-15" name="search<?php echo $typeSearch;?>" value="<?php echo $searchTerm;?>" placeholder="Digite dados da busca" />
 													<!--end::Input-->
 													<div class="mb-0 mt-2 ms-2">
 														<span id="lblOnlineGreen" class="badge badge-success badge-circle w-10px h-10px me-1"></span>
@@ -237,7 +227,7 @@
 
 
 															//Direct Contact First
-															$celular = numberOnly($search);
+															$celular = numberOnly($searchCRM);
 															if (strlen($celular) == 11) {
 																$nome = "CONTATO DIRETO | " . formatarTelefone($celular);
 																$data_criacao = date("Y-m-d H:i:s");					
@@ -261,6 +251,20 @@
 																echo chatList($type, $recordId, $nome, formatarTelefone($celular), time_elapsed_string($data_criacao), $url, 'primary');
 															}
 
+														//Usuários Internos
+														} else if (!empty($usuariosInternos)) {
+
+															foreach ($usuariosInternos["result"]->getResult() as $user){
+																$nome = $user->nickname;
+																$empresa = $user->empresa;
+																$last_updated = $user->last_updated;
+																$userId = $user->userId;
+	
+																$url = assetfolder . 'whatsapp-chat?newConversationWork=' . $userId;
+																$type = "contact";
+																echo chatList($type, $userId, $nome, $empresa, time_elapsed_string($last_updated), $url, 'info');
+															}
+
 														//Conversas abertas
 														} else if (!empty($conversations)){
 															foreach ($conversations["result"]->getResult() as $conversation){
@@ -272,6 +276,7 @@
 																$atendenteId = $conversation->atendenteId;
 																$atendenteNome = $conversation->atendenteNome;
 																$topMsgId = $conversation->topMsgId;
+																$nomeBot = $conversation->nomeBot;
 	
 																$url = assetfolder . 'whatsapp-chat?ConversationSid=' . $ConversationSid;
 
@@ -285,10 +290,14 @@
 
 																$type = "conversation";
 																$recordId = $ConversationSid;
-																echo chatList($type, $recordId, $nomeCliente, formatarTelefone($telefoneCliente), time_elapsed_string($data_criacao), $url, 'success', $params);
+																if ($nomeBot == "INSIGHT") {
+
+																}
+																echo chatList($type, $recordId, $nomeCliente, formatarTelefone($telefoneCliente), time_elapsed_string($data_criacao), $url, ($nomeBot == "INSIGHT"  ? 'success' : 'info'), $params);
 															}	
 														} 
 													 ?>
+													 
 
 												</div>
 												<!--end::List-->
@@ -301,14 +310,14 @@
 									<!--begin::Content-->
 									<div class="flex-lg-row-fluid ms-lg-7 ms-xl-10">
 										<!--begin::Messenger-->
-										<div class="card" id="kt_chat_messenger">
+										<div class="card" id="kt_chat_messenger" style="<?php echo (empty($currentConversation['firstRow']->ConversationSid)  ? 'pointer-events: none; opacity: 0.6;' : '');?>">
 											<!--begin::Card header-->
 											<div class="card-header" id="kt_chat_messenger_header">
 												<!--begin::Title-->
 												<div class="card-title">
 													<!--begin::User-->
-													<div class="d-flex justify-content-center flex-column me-3">
-														<a href="#" class="fs-4 fw-bolder text-gray-900 text-hover-primary me-1 mb-2 lh-1 mt-4"><?php echo $currentConversation['firstRow']->nomeCliente ?? "ESCOLHA UM CLIENTE";?></a>
+													<div class="d-flex justify-content-center flex-column me-3" >
+														<a href="#" class="fs-4 fw-bolder text-gray-900 text-hover-primary me-1 mb-2 lh-1 mt-4"><?php echo $currentConversation['firstRow']->nomeCliente ?? "CHAT DESATIVADO";?></a>
 														<!--begin::Info-->
 														<div class="mb-0 lh-1">
 															<span class="badge badge-success badge-circle w-10px h-10px me-1"></span>
@@ -343,11 +352,6 @@
 																<div class="menu-content text-muted pb-2 px-3 fs-7 text-uppercase">Ações</div>
 															</div>
 															<!--end::Heading-->
-															<!--begin::Menu item-->
-															<div class="menu-item px-3">
-																<a href="<?php echo assetfolder;?>whatsapp-chat?closeConversation=<?php echo $currentConversation['firstRow']->ConversationSid ?? 0;?>" class="menu-link px-3" data-bs-toggle="modal" data-bs-target="#kt_modal_users_search">Consultar</a>
-															</div>
-															<!--begin::Menu item-->
 															<div class="menu-item px-3">
 																<a href="<?php echo assetfolder;?>whatsapp-chat?closeConversation=<?php echo $currentConversation['firstRow']->ConversationSid ?? 0;?>" class="menu-link px-3" data-bs-toggle="tooltip" title="Coming soon">Fechar Conversa</a>
 															</div>
@@ -357,38 +361,6 @@
 															<div class="menu-item px-3">
 																<a href="#" class="menu-link flex-stack px-3" data-bs-toggle="modal" data-bs-target="#kt_modal_invite_friends">Templates
 																<i class="fas fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="Envie mensagens padronizadas"></i></a>
-															</div>
-															<!--end::Menu item-->
-															<!--begin::Menu item-->
-															<div class="menu-item px-3" data-kt-menu-trigger="hover" data-kt-menu-placement="right-start">
-																<a href="#" class="menu-link px-3">
-																	<span class="menu-title">Groups</span>
-																	<span class="menu-arrow"></span>
-																</a>
-																<!--begin::Menu sub-->
-																<div class="menu-sub menu-sub-dropdown w-175px py-4">
-																	<!--begin::Menu item-->
-																	<div class="menu-item px-3">
-																		<a href="#" class="menu-link px-3" data-bs-toggle="tooltip" title="Coming soon">Create Group</a>
-																	</div>
-																	<!--end::Menu item-->
-																	<!--begin::Menu item-->
-																	<div class="menu-item px-3">
-																		<a href="#" class="menu-link px-3" data-bs-toggle="tooltip" title="Coming soon">Invite Members</a>
-																	</div>
-																	<!--end::Menu item-->
-																	<!--begin::Menu item-->
-																	<div class="menu-item px-3">
-																		<a href="#" class="menu-link px-3" data-bs-toggle="tooltip" title="Coming soon">Settings</a>
-																	</div>
-																	<!--end::Menu item-->
-																</div>
-																<!--end::Menu sub-->
-															</div>
-															<!--end::Menu item-->
-															<!--begin::Menu item-->
-															<div class="menu-item px-3 my-1">
-																<a href="#" class="menu-link px-3" data-bs-toggle="tooltip" title="Coming soon">Settings</a>
 															</div>
 															<!--end::Menu item-->
 														</div>
@@ -437,11 +409,15 @@
 													<input type="hidden" name="currentConversationSid" id="currentConversationSid" value="<?php echo $currentConversation['firstRow']->ConversationSid ?? ''; ?>">
 													<input type="hidden" name="topConversation" id="topConversation" value="<?php echo $topConversation;?>">
 													<input type="hidden" name="toptMessage" id="toptMessage" value="<?php echo $toptMessage;?>">
-													<?php if (((isset($conversationWindow['janela_aberta']))) and ($conversationWindow['janela_aberta'])) {?>
-														<textarea class="form-control form-control-flush mb-3" rows="1" data-kt-element="input" placeholder="Digite sua mensagem" name="messageToSend"  id="messageToSend" onkeydown="if(event.key === 'Enter'){ sendWhatsApp('message'); return false; }"></textarea>
-													<?php } else {;?>
-														<textarea class="form-control form-control-flush mb-3" rows="1" data-kt-element="input" placeholder="Para iniciar a conversa envie um template primeiro." disabled name="messageToSend"  id="messageToSend" onkeydown="if(event.key === 'Enter'){ sendWhatsApp('message'); return false; }"></textarea>
-													<?php }?>
+													<?php 
+														if (((isset($conversationWindow['janela_aberta']))) and ($conversationWindow['janela_aberta'])){
+															$janelaLiberada = true;
+														} else {
+															$janelaLiberada = false;
+														}
+													?>
+													<textarea class="form-control form-control-flush mb-3" rows="1" data-kt-element="input" placeholder="Digite sua mensagem" name="messageToSend"  id="messageToSend" onkeydown="if(event.key === 'Enter'){ sendWhatsApp('message'); return false; }" style="display: <?php echo ($janelaLiberada  ? 'block' : 'none');?>"></textarea>
+													<textarea class="form-control form-control-flush mb-3" rows="1" data-kt-element="input" placeholder="Para iniciar a conversa envie um template primeiro." disabled name="messageToSendBlock"  id="messageToSendBlock" style="display: <?php echo ($janelaLiberada  ? 'none' : 'block');?>"></textarea>
 													<!--end::Input-->
 													<!--begin:Toolbar-->
 													<div class="d-flex flex-stack">
@@ -456,12 +432,8 @@
 														</div>
 														<!--end::Actions-->
 														<!--begin::Send-->
-														<?php if (((isset($conversationWindow['janela_aberta']))) and ($conversationWindow['janela_aberta'])) {?>
-															<button class="btn btn-primary" type="button" value="sendMsg" name="btnSendMsg" id="btnSendMsg" onclick="sendWhatsApp('message');">Enviar</button>
-														<?php } else {;?>
-															<a class="btn btn-info" type="button" value="sendMsg" data-bs-toggle="modal" data-bs-target="#kt_modal_invite_friends">Templates</a>
-														<?php }?>
-
+														<button class="btn btn-primary" type="button" value="sendMsg" name="btnSendMsg" id="btnSendMsg" onclick="sendWhatsApp('message');" style="display: <?php echo ($janelaLiberada  ? 'block' : 'none');?>">Enviar</button>
+														<a class="btn btn-info" type="button" value="sendMsg" data-bs-toggle="modal" id="btnSendTemplate" data-bs-target="#kt_modal_invite_friends" style="display: <?php echo ($janelaLiberada  ? 'none' : 'block');?>">Templates</a>
 														<!--end::Send-->
 													</div>
 												</form>
@@ -520,7 +492,7 @@
 															<div class="d-flex align-items-center">
 																<!--begin::Avatar-->
 																<div class="symbol symbol-35px symbol-circle">
-																	<img alt="Pic" src="assets/media/avatars/300-6.jpg" />
+																	<img alt="Pic" src="<?php echo assetfolder;?>assets/media/avatars/blank.png" />
 																</div>
 																<!--end::Avatar-->
 																<!--begin::Details-->
@@ -588,7 +560,7 @@
 															<div class="d-flex align-items-center">
 																<!--begin::Avatar-->
 																<div class="symbol symbol-35px symbol-circle">
-																	<img alt="Pic" src="assets/media/avatars/300-1.jpg" />
+																	<img alt="Pic" src="<?php echo assetfolder;?>assets/media/avatars/blank.png" />
 																</div>
 																<!--end::Avatar-->
 																<!--begin::Details-->
@@ -622,7 +594,7 @@
 															<div class="d-flex align-items-center">
 																<!--begin::Avatar-->
 																<div class="symbol symbol-35px symbol-circle">
-																	<img alt="Pic" src="assets/media/avatars/300-5.jpg" />
+																	<img alt="Pic" src="<?php echo assetfolder;?>assets/media/avatars/blank.png" />
 																</div>
 																<!--end::Avatar-->
 																<!--begin::Details-->
@@ -656,7 +628,7 @@
 															<div class="d-flex align-items-center">
 																<!--begin::Avatar-->
 																<div class="symbol symbol-35px symbol-circle">
-																	<img alt="Pic" src="assets/media/avatars/300-25.jpg" />
+																	<img alt="Pic" src="<?php echo assetfolder;?>assets/media/avatars/blank.png" />
 																</div>
 																<!--end::Avatar-->
 																<!--begin::Details-->
@@ -724,7 +696,7 @@
 															<div class="d-flex align-items-center">
 																<!--begin::Avatar-->
 																<div class="symbol symbol-35px symbol-circle">
-																	<img alt="Pic" src="assets/media/avatars/300-9.jpg" />
+																	<img alt="Pic" src="<?php echo assetfolder;?>assets/media/avatars/blank.png" />
 																</div>
 																<!--end::Avatar-->
 																<!--begin::Details-->
@@ -826,7 +798,7 @@
 															<div class="d-flex align-items-center">
 																<!--begin::Avatar-->
 																<div class="symbol symbol-35px symbol-circle">
-																	<img alt="Pic" src="assets/media/avatars/300-23.jpg" />
+																	<img alt="Pic" src="<?php echo assetfolder;?>assets/media/avatars/blank.png" />
 																</div>
 																<!--end::Avatar-->
 																<!--begin::Details-->
@@ -894,7 +866,7 @@
 															<div class="d-flex align-items-center">
 																<!--begin::Avatar-->
 																<div class="symbol symbol-35px symbol-circle">
-																	<img alt="Pic" src="assets/media/avatars/300-12.jpg" />
+																	<img alt="Pic" src="<?php echo assetfolder;?>assets/media/avatars/blank.png" />
 																</div>
 																<!--end::Avatar-->
 																<!--begin::Details-->
@@ -1032,7 +1004,6 @@
 														<!--end::Svg Icon-->
 														<!--end::Icon-->
 														<!--begin::Input-->
-														
 														<input type="text" class="form-control form-control-lg form-control-solid px-15" name="search" placeholder="Digite os dados do cliente ou telefone" data-kt-search-element="input" />
 														<!--end::Input-->
 														<!--begin::Spinner-->
@@ -1067,7 +1038,7 @@
 																<a href="#" class="d-flex align-items-center p-3 rounded bg-state-light bg-state-opacity-50 mb-1">
 																	<!--begin::Avatar-->
 																	<div class="symbol symbol-35px symbol-circle me-5">
-																		<img alt="Pic" src="assets/media/avatars/300-6.jpg" />
+																		<img alt="Pic" src="<?php echo assetfolder;?>assets/media/avatars/blank.png" />
 																	</div>
 																	<!--end::Avatar-->
 																	<!--begin::Info-->
@@ -1097,7 +1068,7 @@
 																<a href="#" class="d-flex align-items-center p-3 rounded bg-state-light bg-state-opacity-50 mb-1">
 																	<!--begin::Avatar-->
 																	<div class="symbol symbol-35px symbol-circle me-5">
-																		<img alt="Pic" src="assets/media/avatars/300-1.jpg" />
+																		<img alt="Pic" src="<?php echo assetfolder;?>assets/media/avatars/blank.png" />
 																	</div>
 																	<!--end::Avatar-->
 																	<!--begin::Info-->
@@ -1112,7 +1083,7 @@
 																<a href="#" class="d-flex align-items-center p-3 rounded bg-state-light bg-state-opacity-50 mb-1">
 																	<!--begin::Avatar-->
 																	<div class="symbol symbol-35px symbol-circle me-5">
-																		<img alt="Pic" src="assets/media/avatars/300-5.jpg" />
+																		<img alt="Pic" src="<?php echo assetfolder;?>assets/media/avatars/blank.png" />
 																	</div>
 																	<!--end::Avatar-->
 																	<!--begin::Info-->
@@ -1127,7 +1098,7 @@
 																<a href="#" class="d-flex align-items-center p-3 rounded bg-state-light bg-state-opacity-50 mb-1">
 																	<!--begin::Avatar-->
 																	<div class="symbol symbol-35px symbol-circle me-5">
-																		<img alt="Pic" src="assets/media/avatars/300-25.jpg" />
+																		<img alt="Pic" src="<?php echo assetfolder;?>assets/media/avatars/blank.png" />
 																	</div>
 																	<!--end::Avatar-->
 																	<!--begin::Info-->
@@ -1157,7 +1128,7 @@
 																		<!--end::Checkbox-->
 																		<!--begin::Avatar-->
 																		<div class="symbol symbol-35px symbol-circle">
-																			<img alt="Pic" src="assets/media/avatars/300-6.jpg" />
+																			<img alt="Pic" src="<?php echo assetfolder;?>assets/media/avatars/blank.png" />
 																		</div>
 																		<!--end::Avatar-->
 																		<!--begin::Details-->
@@ -1229,7 +1200,7 @@
 																		<!--end::Checkbox-->
 																		<!--begin::Avatar-->
 																		<div class="symbol symbol-35px symbol-circle">
-																			<img alt="Pic" src="assets/media/avatars/300-1.jpg" />
+																			<img alt="Pic" src="<?php echo assetfolder;?>assets/media/avatars/blank.png" />
 																		</div>
 																		<!--end::Avatar-->
 																		<!--begin::Details-->
@@ -1265,7 +1236,7 @@
 																		<!--end::Checkbox-->
 																		<!--begin::Avatar-->
 																		<div class="symbol symbol-35px symbol-circle">
-																			<img alt="Pic" src="assets/media/avatars/300-5.jpg" />
+																			<img alt="Pic" src="<?php echo assetfolder;?>assets/media/avatars/blank.png" />
 																		</div>
 																		<!--end::Avatar-->
 																		<!--begin::Details-->
@@ -1301,7 +1272,7 @@
 																		<!--end::Checkbox-->
 																		<!--begin::Avatar-->
 																		<div class="symbol symbol-35px symbol-circle">
-																			<img alt="Pic" src="assets/media/avatars/300-25.jpg" />
+																			<img alt="Pic" src="<?php echo assetfolder;?>assets/media/avatars/blank.png" />
 																		</div>
 																		<!--end::Avatar-->
 																		<!--begin::Details-->
@@ -1373,7 +1344,7 @@
 																		<!--end::Checkbox-->
 																		<!--begin::Avatar-->
 																		<div class="symbol symbol-35px symbol-circle">
-																			<img alt="Pic" src="assets/media/avatars/300-9.jpg" />
+																			<img alt="Pic" src="<?php echo assetfolder;?>assets/media/avatars/blank.png" />
 																		</div>
 																		<!--end::Avatar-->
 																		<!--begin::Details-->
@@ -1481,7 +1452,7 @@
 																		<!--end::Checkbox-->
 																		<!--begin::Avatar-->
 																		<div class="symbol symbol-35px symbol-circle">
-																			<img alt="Pic" src="assets/media/avatars/300-23.jpg" />
+																			<img alt="Pic" src="<?php echo assetfolder;?>assets/media/avatars/blank.png" />
 																		</div>
 																		<!--end::Avatar-->
 																		<!--begin::Details-->
@@ -1553,7 +1524,7 @@
 																		<!--end::Checkbox-->
 																		<!--begin::Avatar-->
 																		<div class="symbol symbol-35px symbol-circle">
-																			<img alt="Pic" src="assets/media/avatars/300-12.jpg" />
+																			<img alt="Pic" src="<?php echo assetfolder;?>assets/media/avatars/blank.png" />
 																		</div>
 																		<!--end::Avatar-->
 																		<!--begin::Details-->
@@ -1625,7 +1596,7 @@
 																		<!--end::Checkbox-->
 																		<!--begin::Avatar-->
 																		<div class="symbol symbol-35px symbol-circle">
-																			<img alt="Pic" src="assets/media/avatars/300-13.jpg" />
+																			<img alt="Pic" src="<?php echo assetfolder;?>assets/media/avatars/blank.png" />
 																		</div>
 																		<!--end::Avatar-->
 																		<!--begin::Details-->
@@ -1697,7 +1668,7 @@
 																		<!--end::Checkbox-->
 																		<!--begin::Avatar-->
 																		<div class="symbol symbol-35px symbol-circle">
-																			<img alt="Pic" src="assets/media/avatars/300-21.jpg" />
+																			<img alt="Pic" src="<?php echo assetfolder;?>assets/media/avatars/blank.png" />
 																		</div>
 																		<!--end::Avatar-->
 																		<!--begin::Details-->
@@ -1733,7 +1704,7 @@
 																		<!--end::Checkbox-->
 																		<!--begin::Avatar-->
 																		<div class="symbol symbol-35px symbol-circle">
-																			<img alt="Pic" src="assets/media/avatars/300-13.jpg" />
+																			<img alt="Pic" src="<?php echo assetfolder;?>assets/media/avatars/blank.png" />
 																		</div>
 																		<!--end::Avatar-->
 																		<!--begin::Details-->
@@ -1976,15 +1947,27 @@
 								if (data.hasOwnProperty('conversationWindow')) {
 									const lblStatusJanela = document.getElementById('statusJanela');
 									const lblStatusJanelaBullet = document.getElementById('statusJanelaBullet');
-									//console.log(data.conversationWindow['janela_aberta'] + " - " + data.conversationWindow['hora_fechamento'] + " - " + data.conversationWindow['minutos_passados'] + " - " + data.conversationWindow['minutos_restantes']);
+									const btnSendMsg = document.getElementById('btnSendMsg');
+									const btnSendTemplate = document.getElementById('btnSendTemplate');
+									const messageToSend = document.getElementById('messageToSend');
+									const messageToSendBlock = document.getElementById('messageToSendBlock');
+
 									if (data.conversationWindow['janela_aberta']){
 										lblStatusJanela.innerHTML = "Status Janela: Aberta até " + data.conversationWindow['hora_fechamento'];
 										lblStatusJanelaBullet.classList.remove('badge-danger');
 										lblStatusJanelaBullet.classList.add('badge-success');
+										btnSendMsg.style.display = 'block';
+										btnSendTemplate.style.display = 'none';
+										messageToSend.style.display = 'block';
+										messageToSendBlock.style.display = 'none';
 									} else {
 										lblStatusJanela.innerHTML = "Status Janela: Fechada";
 										lblStatusJanelaBullet.classList.remove('badge-success');
 										lblStatusJanelaBullet.classList.add('badge-danger');
+										btnSendMsg.style.display = 'none';
+										btnSendTemplate.style.display = 'block';
+										messageToSend.style.display = 'none';
+										messageToSendBlock.style.display = 'block';
 									}
 								}
 							}).catch(error => {
@@ -2044,11 +2027,10 @@
 								lblOnlineGreen.classList.add('badge-success');
 
 								const elementEnviando = document.getElementById('msgBlock-000');
-								if (elementEnviando) {elementEnviando.remove();}
-
+								if (elementEnviando) {
+									elementEnviando.remove();}
 								
 								document.getElementById('messageToSend').focus();
-
 								addToMessageList(data.id, data.direction, data.last_updated, data.Body, data.ProfileName, data.status, data.media_format, data.media_name);
 
 								if (!data.sucesso){
@@ -2069,7 +2051,7 @@
 						function addToChatList(titulo, subtitulo, sideLabel, url, color, params = {}) {
 							const selectedLine = params.selectedLine ?? false;
 
-							const bgSelected = selectedLine ? 'bg-light-success' : '';
+							const bgSelected = selectedLine ? 'bg-light-' + color : '';
 							const badgeDisplay = selectedLine ? 'block' : 'none';
 							const letraInicial = titulo.charAt(0);
 
