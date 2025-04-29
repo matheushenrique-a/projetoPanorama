@@ -58,7 +58,8 @@ class WhatsApp extends BaseController
         $messageToSend =  $this->getpost('messageToSend');
         $btnSendMsg =  $this->getpost('btnSendMsg');
         $directContact =  $this->getpost('directContact');
-
+        
+        $selectedTab = "CHAT";
         $userId = $this->session->userId;
         $atendenteNome = $this->session->nickname;
         $messages = [];
@@ -75,6 +76,7 @@ class WhatsApp extends BaseController
             $messages = $this->m_whatsapp->getMessages(['ConversationSid' => $ConversationSid]);
             $currentConversation = $this->m_whatsapp->getConversation(['ConversationSid' => $ConversationSid]);
             $conversationWindow = $this->m_whatsapp->getConversationWindow($currentConversation['firstRow']->telefoneCliente);
+            $selectedTab = "CHAT";
         } 
         //caso uma busca no CRM tenha sido feita
         else  if ((!empty($searchCRM))){
@@ -86,6 +88,7 @@ class WhatsApp extends BaseController
             } else {
                 $searchTerm = $searchCRM;
             }
+            $selectedTab = "CRM";
 
         //busca colegas de trabalho
         } else  if ((!empty($searchWORK))){
@@ -97,6 +100,7 @@ class WhatsApp extends BaseController
             } else {
                 $searchTerm = $searchWORK;
             }
+            $selectedTab = "WORK";
         }
 
         //caso uma nova conversa tenha sido solicitada com um cliente do CRM
@@ -114,6 +118,7 @@ class WhatsApp extends BaseController
 
                 return redirect()->to('whatsapp-chat?ConversationSid=' . $conversation['firstRow']->ConversationSid);exit;
             }
+            $selectedTab = "CHAT";
         
         }
 
@@ -132,6 +137,7 @@ class WhatsApp extends BaseController
                 
                 return redirect()->to('whatsapp-chat?ConversationSid=' . $conversation['firstRow']->ConversationSid);exit;
             }
+            $selectedTab = "CHAT";
         
         //Cria conversa com número avulso / direto
         } else if (!empty($directContact)){
@@ -143,12 +149,12 @@ class WhatsApp extends BaseController
                     'atendenteId' => $userId,
                     'atendenteNome' => $atendenteNome,
                 ]);
-
+                $selectedTab = "CHAT";
                 return redirect()->to('whatsapp-chat?ConversationSid=' . $conversation['firstRow']->ConversationSid);exit;
         //fecha uma conversa
         } else if (!empty ($closeConversation)) {
             $this->m_whatsapp->updateConversation(['status' => 'CLOSED'], ['conversationSid' => $closeConversation]);
-
+            $selectedTab = "CHAT";
         //envia uma nova mensagem após pressionar o botão Enviar
         } else if (!empty($btnSendMsg) or !empty($messageToSend)) {
             
@@ -162,9 +168,10 @@ class WhatsApp extends BaseController
                 $currentConversation = $this->m_whatsapp->getConversation(['ConversationSid' => $currentConversationSid]);
                 $conversationWindow = $this->m_whatsapp->getConversationWindow($currentConversation['firstRow']->telefoneCliente);
             }
+            $selectedTab = "CHAT";
         }
 
-        //listar conversas abertas para o usuario logado
+        //LISTA TODAS CONVERSAS ABERTAS / CORRENTES DO USUARIO
         $conversations = $this->m_whatsapp->getConversationTopMsg($userId);
 
         //elege a primeira conversa com a selecionada caso nenhuma outra esteja marcada
@@ -180,7 +187,7 @@ class WhatsApp extends BaseController
         $topConversation = $this->m_whatsapp->getTopConversation($userId);
         $toptMessage = $this->m_whatsapp->getTopMessage((isset($currentConversation['firstRow']->ConversationSid)  ? $currentConversation['firstRow']->ConversationSid : 0));
 
-        $templates = $this->whatsapp_list_templates();
+        $templates = $this->whatsapp_list_templates((isset($conversationWindow['janela_aberta'])) ? $conversationWindow['janela_aberta'] : false);
         
         $data['pageTitle'] = "WhatsApp Chat";
         $data['ConversationSid'] = $ConversationSid;
@@ -198,6 +205,7 @@ class WhatsApp extends BaseController
         $data['session'] = $this->session;
         $data['topConversation'] = $topConversation;
         $data['templates'] = $templates;
+        $data['selectedTab'] = $selectedTab;
         return $this->loadpage('whatsapp/chat', $data);
 
     }
@@ -417,9 +425,13 @@ class WhatsApp extends BaseController
 
     //http://localhost/InsightSuite/public/whatsapp-list-templates
     //META CLOUD API
-    public function whatsapp_list_templates(){
-        $result = $this->m_whatsapp->searchTempalte();
-        return $result;
+    public function whatsapp_list_templates($status){
+
+        //Direto da Meta
+        //$result = $this->m_whatsapp->searchTempalte();
+        $templates = $this->dbMasterDefault->select('whatsapp_templates', ['whatsAppApproved' => !$status]);
+
+        return $templates;
 
 
     }
@@ -637,6 +649,124 @@ class WhatsApp extends BaseController
             }
         }
 
+    }
+
+    public function whatsapp_listar_templates(){
+        $buscarProp = $this->getpost('buscarProp');
+        $fases = $this->listarCategoriaTemplates();
+
+        if (!empty($buscarProp)){
+            helper('cookie');
+            $content = $this->getpost('content', false);
+            $display_name = $this->getpost('display_name', false);
+            $whatsAppApproved = $this->getpost('whatsAppApproved', false);
+               
+            Services::response()->setCookie('content', $content);
+            Services::response()->setCookie('display_name', $display_name);
+            Services::response()->setCookie('whatsAppApproved', $whatsAppApproved);
+        } else {
+            $content = $this->getpost('content', true);
+            $display_name = $this->getpost('display_name', true);
+            $whatsAppApproved = $this->getpost('whatsAppApproved', true);
+        }
+        
+        $whereCheck = [];
+        $likeCheck = [];
+        $whereNotIn = [];
+        $whereIn = [];
+        
+        if (!empty($content)) $likeCheck['content'] = $content;
+        if (!empty($display_name)) $whereCheck['display_name'] = $display_name;
+        if (!empty($whatsAppApproved)) $whereCheck['whatsAppApproved'] = $whatsAppApproved;
+
+        $likeCheck = array("likeCheck" => $likeCheck);
+
+        $paginas = (empty($paginas)  ? 10 : $paginas); 
+        $this->dbMaster->setLimit($paginas);
+        $this->dbMaster->setOrderBy(array('template_id', 'DESC'));
+        $templates = $this->dbMaster->select('whatsapp_templates', $whereCheck, $whereNotIn + $likeCheck + $whereIn);
+
+        $dados['pageTitle'] = "WhatsApp - Listar propostas";
+        $dados['templates'] = $templates;
+        $dados['content'] = $content;
+        $dados['display_name'] = $display_name;
+        $dados['whatsAppApproved'] = $whatsAppApproved;
+        $dados['paginas'] = $paginas;
+        
+        //echo '15:27:27 - <h3>Dump 91 </h3> <br><br>' . var_dump($fases); exit;					//<-------DEBUG
+        $dados['fases'] = $fases;
+
+        return $this->loadpage('whatsapp/whatsapp-listar-templates', $dados);
+    }
+
+    public function whatsapp_criar_templates($template_id = 0, $action){
+        $dados['pageTitle'] = "WhatsApp - Criar/Editar Template";
+        
+        $btnSalvar = $this->getpost('btnSalvar');
+        $display_name = $this->getpost('display_name');
+        $content = $this->getpost('content');
+        $whatsAppApproved = $this->getpost('whatsAppApproved');
+        $fases = $this->listarCategoriaTemplates();
+
+        if ($action == "remove") {
+            $this->dbMaster->delete('whatsapp_templates', ['template_id' => $template_id]);
+            return redirect()->to('whatsapp-listar-templates');exit;
+        
+        //Entrada da Inclusão
+        } else if ((empty($btnSalvar)) and ($template_id == 0)) {
+            $label = "Incluir Template WhatsApp";
+            $display_name = "";
+            $content = "";
+            $conwhatsAppApprovedtent = "";
+            $template_id = 0;
+
+        //Entrada da Edicao
+        } else  if ((empty($btnSalvar)) and ($template_id != 0)) { 
+            $label = "Editar Template WhatsApp";
+            $template = $this->dbMaster->select('whatsapp_templates', ['template_id' => $template_id]);
+            $display_name = $template['firstRow']->display_name;
+            $content = $template['firstRow']->content;
+            $whatsAppApproved = $template['firstRow']->whatsAppApproved;
+            $whatsAppApproved = ($whatsAppApproved ? "1" : "0");
+
+        //Submit da Inclusão
+        } else  if ((!empty($btnSalvar)) and ($template_id == 0)) {  
+            $display_name = (empty($display_name)  ? 'GERAL' : $display_name); 
+            $content = (empty($content)  ? 'Nenhuma mensagem digitara' : $content); 
+            $whatsAppApproved = ($whatsAppApproved == "0"  ? false : true);
+
+            $added = $this->dbMaster->insert('whatsapp_templates',['display_name' => $display_name, 'content' => $content, 'whatsAppApproved' => $whatsAppApproved]);
+            return redirect()->to('whatsapp-listar-templates');exit;
+
+        //Submit da Edição
+        } else  if ((!empty($btnSalvar)) and ($template_id != 0)) {
+            $display_name = (empty($display_name)  ? 'GERAL' : $display_name); 
+            $content = (empty($content)  ? 'Nenhuma mensagem digitara' : $content); 
+            $whatsAppApproved = ($whatsAppApproved == "0"  ? false : true);
+            
+            $this->dbMaster->update('whatsapp_templates', ['display_name' => $display_name, 'content' => $content, 'whatsAppApproved' => $whatsAppApproved], ['template_id' => $template_id], ['last_update' => 'current_timestamp()']);
+            return redirect()->to('whatsapp-listar-templates');exit;
+        }
+
+
+        $dados['label'] = $label;
+        $dados['fases'] = $fases;
+        $dados['display_name'] = $display_name;
+        $dados['content'] = $content;
+        $dados['whatsAppApproved'] = $whatsAppApproved;
+        $dados['template_id'] = $template_id;
+
+        return $this->loadpage('whatsapp/whatsapp-criar-templates', $dados);
+    }
+
+    public function listarCategoriaTemplates(){
+        $db =  $this->dbMaster->getDB();
+        $builder = $db->table('whatsapp_templates');
+        $builder->orderBy('display_name', 'ASC');
+        $builder->distinct();
+        $builder->select('display_name');
+		//echo $builder->getCompiledSelect();exit;
+		return $this->dbMaster->resultfy($builder->get());
     }
         
 }

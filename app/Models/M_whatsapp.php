@@ -155,6 +155,18 @@ class m_whatsapp extends Model {
 		$url = META_CLOUD_API_RAW . META_CLOUD_ASSET_ID . '/message_templates?search=continuar_chamada';
 		$result = $this->m_http->http_request('GET', $url, $headers);
 
+		// if ($templates['sucesso']){
+		// 	$listaTemplates = json_decode($templates['retorno'], true);
+		// 	if (isset($listaTemplates['data'])) {
+		// 		foreach ($listaTemplates['data'] as $template) {
+		// 			if (isset($template['language'], $template['status']) &&  strtoupper($template['language']) === 'PT_BR' && $template['status'] === 'APPROVED') {
+		// 				echo $template['name'] . " [" . $template['id'] . "]" . "<br>";
+		// 			}
+		// 		}
+		// 	}
+		// }
+
+
 		return $result;
 	}
 

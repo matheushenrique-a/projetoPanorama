@@ -431,113 +431,7 @@ class Fgts extends BaseController
     }
 
 
-    public function listarTemplates(){
-        $buscarProp = $this->getpost('buscarProp');
-        $fases = $this->listarCategoriaTemplates();
-
-        if (!empty($buscarProp)){
-            helper('cookie');
-            $content = $this->getpost('content', false);
-            $display_name = $this->getpost('display_name', false);
-            $whatsAppApproved = $this->getpost('whatsAppApproved', false);
-               
-            Services::response()->setCookie('content', $content);
-            Services::response()->setCookie('display_name', $display_name);
-            Services::response()->setCookie('whatsAppApproved', $whatsAppApproved);
-        } else {
-            $content = $this->getpost('content', true);
-            $display_name = $this->getpost('display_name', true);
-            $whatsAppApproved = $this->getpost('whatsAppApproved', true);
-        }
-        
-        $whereCheck = [];
-        $likeCheck = [];
-        $whereNotIn = [];
-        $whereIn = [];
-        
-        if (!empty($content)) $likeCheck['content'] = $content;
-        if (!empty($display_name)) $whereCheck['display_name'] = $display_name;
-        if (!empty($whatsAppApproved)) $whereCheck['whatsAppApproved'] = $whatsAppApproved;
-
-        $likeCheck = array("likeCheck" => $likeCheck);
-
-        $paginas = (empty($paginas)  ? 10 : $paginas); 
-        $this->dbMaster->setLimit($paginas);
-        $this->dbMaster->setOrderBy(array('template_id', 'DESC'));
-        $templates = $this->dbMaster->select('frontline_templates', $whereCheck, $whereNotIn + $likeCheck + $whereIn);
-
-        $dados['pageTitle'] = "FGTS - Listar propostas";
-        $dados['templates'] = $templates;
-        $dados['content'] = $content;
-        $dados['display_name'] = $display_name;
-        $dados['whatsAppApproved'] = $whatsAppApproved;
-        $dados['paginas'] = $paginas;
-        
-        //echo '15:27:27 - <h3>Dump 91 </h3> <br><br>' . var_dump($fases); exit;					//<-------DEBUG
-        $dados['fases'] = $fases;
-
-        return $this->loadpage('fgts/listar_templates', $dados);
-    }
-
-    public function criarTemplates($template_id = 0, $action){
-        $dados['pageTitle'] = "Frontline - Criar/Editar Template";
-        
-        $btnSalvar = $this->getpost('btnSalvar');
-        $display_name = $this->getpost('display_name');
-        $content = $this->getpost('content');
-        $whatsAppApproved = $this->getpost('whatsAppApproved');
-        $fases = $this->listarCategoriaTemplates();
-
-        if ($action == "remove") {
-            $this->dbMaster->delete('frontline_templates', ['template_id' => $template_id]);
-            return redirect()->to('fgts-templates-frontlne');exit;
-        
-        //Entrada da Inclusão
-        } else if ((empty($btnSalvar)) and ($template_id == 0)) {
-            $label = "Incluir Template Frontline";
-            $display_name = "";
-            $content = "";
-            $conwhatsAppApprovedtent = "";
-            $template_id = 0;
-
-        //Entrada da Edicao
-        } else  if ((empty($btnSalvar)) and ($template_id != 0)) { 
-            $label = "Editar Template Frontline";
-            $template = $this->dbMaster->select('frontline_templates', ['template_id' => $template_id]);
-            $display_name = $template['firstRow']->display_name;
-            $content = $template['firstRow']->content;
-            $whatsAppApproved = $template['firstRow']->whatsAppApproved;
-            $whatsAppApproved = ($whatsAppApproved ? "1" : "0");
-
-        //Submit da Inclusão
-        } else  if ((!empty($btnSalvar)) and ($template_id == 0)) {  
-            $display_name = (empty($display_name)  ? 'GERAL' : $display_name); 
-            $content = (empty($content)  ? 'Nenhuma mensagem digitara' : $content); 
-            $whatsAppApproved = ($whatsAppApproved == "0"  ? false : true);
-
-            $added = $this->dbMaster->insert('frontline_templates',['display_name' => $display_name, 'content' => $content, 'whatsAppApproved' => $whatsAppApproved]);
-            return redirect()->to('fgts-templates-frontlne');exit;
-
-        //Submit da Edição
-        } else  if ((!empty($btnSalvar)) and ($template_id != 0)) {
-            $display_name = (empty($display_name)  ? 'GERAL' : $display_name); 
-            $content = (empty($content)  ? 'Nenhuma mensagem digitara' : $content); 
-            $whatsAppApproved = ($whatsAppApproved == "0"  ? false : true);
-            
-            $this->dbMaster->update('frontline_templates', ['display_name' => $display_name, 'content' => $content, 'whatsAppApproved' => $whatsAppApproved], ['template_id' => $template_id], ['last_update' => 'current_timestamp()']);
-            return redirect()->to('fgts-templates-frontlne');exit;
-        }
-
-
-        $dados['label'] = $label;
-        $dados['fases'] = $fases;
-        $dados['display_name'] = $display_name;
-        $dados['content'] = $content;
-        $dados['whatsAppApproved'] = $whatsAppApproved;
-        $dados['template_id'] = $template_id;
-
-        return $this->loadpage('fgts/criar_template', $dados);
-    }
+    
 
     public function atualizarStatusPropostaOperador($id_proposta){
         $where = array('id_proposta' => $id_proposta);
@@ -620,15 +514,7 @@ class Fgts extends BaseController
 		return $builder->get();
     }
 
-    public function listarCategoriaTemplates(){
-        $db =  $this->dbMaster->getDB();
-        $builder = $db->table('frontline_templates');
-        $builder->orderBy('display_name', 'ASC');
-        $builder->distinct();
-        $builder->select('display_name');
-		//echo $builder->getCompiledSelect();exit;
-		return $this->dbMaster->resultfy($builder->get());
-    }
+   
 
     public function listaOPeradores(){
         $users = $this->dbMasterDefault->select('user_account', null);

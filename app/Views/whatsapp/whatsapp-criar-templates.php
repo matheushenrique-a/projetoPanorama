@@ -56,7 +56,7 @@
 								<!--end::Alert-->
 								<div class="row g-5 g-xl-8">
 										<div class="col-xl-12">
-											<form id="frmDataLake" class="form" action="<?php echo assetfolder;?>criar-template/<?php echo $template_id;?>/add" method="POST">
+											<form id="frmDataLake" class="form" action="<?php echo assetfolder;?>whatsapp-criar-templates/<?php echo $template_id;?>/add" method="POST">
 												<!-- Inicio: detalhes -->
 												<div class="flex-lg-row-fluid">
 													<!--begin::Messenger-->

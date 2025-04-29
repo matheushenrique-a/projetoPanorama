@@ -52,6 +52,8 @@ $routes->match(['get', 'post'], '/whatsapp-send-text', 'Meta\WhatsApp::whatsapp_
 $routes->match(['get', 'post'], '/whatsapp-chat', 'Meta\WhatsApp::whatsapp_chat');
 $routes->match(['get', 'post'], '/whatsapp-auditoria', 'Meta\WhatsApp::whatsapp_auditoria');
 $routes->match(['get', 'post'], '/whatsapp-auditoria/(:any)', 'Meta\WhatsApp::whatsapp_auditoria/$1');
+$routes->match(['get', 'post'], '/whatsapp-listar-templates', 'Meta\WhatsApp::whatsapp_listar_templates');
+$routes->match(['get', 'post'], '/whatsapp-criar-templates/(:any)/(:any)', 'Meta\WhatsApp::whatsapp_criar_templates/$1/$2');
 
 //INSIGHT
 $routes->match(['get', 'post'], '/insight-listar-notificacoes', 'Insight\Insight::insight_listar_notificacoes');
@@ -114,10 +116,6 @@ $routes->match(['get', 'post'], '/fgts-listar-propostas', 'Fgts\Fgts::listarProp
 $routes->match(['get', 'post'], '/fgts-cliente-detalhes/(:any)', 'Fgts\Fgts::clienteDetalhes/$1');
 $routes->match(['get', 'post'], '/indicadores-diarios', 'Fgts\Indicadores::indicadores_diarios');
 $routes->match(['get', 'post'], '/indicadores-esteira', 'Fgts\Indicadores::indicadores_esteira');
-
-//FL
-$routes->match(['get', 'post'], '/fgts-templates-frontlne', 'Fgts\Fgts::listarTemplates');
-$routes->match(['get', 'post'], '/criar-template/(:any)/(:any)', 'Fgts\Fgts::criarTemplates/$1/$2');
 
 $routes->match(['get', 'post'], '/metricas-semanais', 'Fgts\Indicadores::metricas_semanais');
 $routes->match(['get', 'post'], '/metricas-semanais/(:any)/(:any)', 'Fgts\Indicadores::metricas_semanais/$1/$2');

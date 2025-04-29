@@ -9,7 +9,7 @@
 									<!--begin::Page title-->
 									<div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
 										<!--begin::Title-->
-										<h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">FGTS - Listar Templates FrontLine</h1>
+										<h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">WhatsApp - Listar Modelos de Mensagem</h1>
 										<!--end::Title-->
 										<!--begin::Breadcrumb-->
 										<ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
@@ -24,7 +24,7 @@
 											</li>
 											<!--end::Item-->
 											<!--begin::Item-->
-											<li class="breadcrumb-item text-muted">FGTS</li>
+											<li class="breadcrumb-item text-muted">WhatsApp</li>
 											<!--end::Item-->
 											<!--begin::Item-->
 											<li class="breadcrumb-item">
@@ -32,7 +32,7 @@
 											</li>
 											<!--end::Item-->
 											<!--begin::Item-->
-											<li class="breadcrumb-item text-muted">Templates Frontline</li>
+											<li class="breadcrumb-item text-muted">Modelos de Mensagem</li>
 											<!--end::Item-->
 										</ul>
 										<!--end::Breadcrumb-->
@@ -51,7 +51,7 @@
 									<div class="card" style="justify-content: start;">
 										<!--begin::Card header-->
 										<!--begin::Form-->
-										<form id="frmDataLake" class="form" action="<?php echo assetfolder;?>fgts-templates-frontlne" method="POST">
+										<form id="frmDataLake" class="form" action="<?php echo assetfolder;?>whatsapp-listar-templates" method="POST">
 											<div class="card-header border-0 pt-6" style="justify-content: start;">
 												<!--begin::Card title-->
 												<div class="card-title">
@@ -100,7 +100,7 @@
 													<div class="mb-0 mx-3">
 															<div class="d-flex align-items-center position-relative my-1 mt-0 mb-0">
 																<button type="submit" class="btn btn-primary mt-4"  name="buscarProp" value="buscarProp">Buscar Template</button>										
-																<a href="<?php echo assetfolder;?>criar-template/0/add" class="btn btn-primary mt-4 ms-3" >+</a>										
+																<a href="<?php echo assetfolder;?>whatsapp-criar-templates/0/add" class="btn btn-primary mt-4 ms-3" >+</a>										
 															</div>
 														</div>													
 													</div>
@@ -153,11 +153,11 @@
 															<td><?php echo ($row->whatsAppApproved ? 'SIM' : 'NÃO');?></td>
 															<td><?php echo $row->display_name;?></td>
 															<td>
-																<a href="<?php echo assetfolder;?>criar-template/<?php echo $row->template_id;?>/add" target="_blank">
+																<a href="<?php echo assetfolder;?>whatsapp-criar-templates/<?php echo $row->template_id;?>/add" target="_blank">
 																	<?php echo $row->content;?>
 																</a>
 															</td>
-															<td><a href="<?php echo assetfolder;?>criar-template/<?php echo $row->template_id;?>/remove">Excluir</a></td>
+															<td><a href="<?php echo assetfolder;?>whatsapp-criar-templates/<?php echo $row->template_id;?>/remove">Excluir</a></td>
 														</tr>
 													<?php 
 														} //End:Foreach

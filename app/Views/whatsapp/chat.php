@@ -25,7 +25,7 @@
 										</li>
 										<!--end::Item-->
 										<!--begin::Item-->
-										<li class="breadcrumb-item text-muted">Chat</li>
+										<li class="breadcrumb-item text-muted">Conversas</li>
 										<!--end::Item-->
 										<!--begin::Item-->
 										<li class="breadcrumb-item">
@@ -33,7 +33,7 @@
 										</li>
 										<!--end::Item-->
 										<!--begin::Item-->
-										<li class="breadcrumb-item text-dark">Private Chat</li>
+										<li class="breadcrumb-item text-dark">[<?php echo $conversations["num_rows"];?>] Chat</li>
 										<!--end::Item-->
 									</ul>
 									<!--end::Breadcrumb-->
@@ -154,9 +154,9 @@
 										<div class="card card-flush">
 											<!--begin::Card header-->
 											<div class="d-flex flex-wrap gap-2 ps-10 pt-5 mb-3">
-												<a href="<?php echo assetfolder;?>whatsapp-chat" class="btn btn-sm btn-icon btn-clear btn-active-light-primary me-3" data-bs-toggle="tooltip" data-bs-placement="top" title="" data-bs-original-title="Reload">
+												<a href="<?php echo assetfolder;?>whatsapp-chat" class="btn btn-sm btn-icon btn-clear btn-active-light-success me-3 <?php echo ($selectedTab == 'CHAT' ? 'bg-success' : '');?>" data-bs-toggle="tooltip" data-bs-placement="top" title="" data-bs-original-title="Reload">
 													<!--begin::Svg Icon | path: /var/www/preview.keenthemes.com/keenthemes/metronic/docs/core/html/src/media/icons/duotune/communication/com007.svg-->
-													<span class="svg-icon svg-icon-muted svg-icon-2qx"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+													<span class="svg-icon svg-icon-<?php echo ($selectedTab == 'CHAT' ? 'white' : 'gray');?> svg-icon-2qx"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 														<path opacity="0.3" d="M8 8C8 7.4 8.4 7 9 7H16V3C16 2.4 15.6 2 15 2H3C2.4 2 2 2.4 2 3V13C2 13.6 2.4 14 3 14H5V16.1C5 16.8 5.79999 17.1 6.29999 16.6L8 14.9V8Z" fill="currentColor"/>
 														<path d="M22 8V18C22 18.6 21.6 19 21 19H19V21.1C19 21.8 18.2 22.1 17.7 21.6L15 18.9H9C8.4 18.9 8 18.5 8 17.9V7.90002C8 7.30002 8.4 6.90002 9 6.90002H21C21.6 7.00002 22 7.4 22 8ZM19 11C19 10.4 18.6 10 18 10H12C11.4 10 11 10.4 11 11C11 11.6 11.4 12 12 12H18C18.6 12 19 11.6 19 11ZM17 15C17 14.4 16.6 14 16 14H12C11.4 14 11 14.4 11 15C11 15.6 11.4 16 12 16H16C16.6 16 17 15.6 17 15Z" fill="currentColor"/>
 														</svg>
@@ -164,9 +164,9 @@
 													<!--end::Svg Icon-->
 												</a>
 
-												<a href="<?php echo assetfolder;?>whatsapp-chat?searchCRM=CRM" class="btn btn-sm btn-icon btn-clear btn-active-light-primary me-3" data-bs-toggle="tooltip" data-bs-placement="top" title="" data-bs-original-title="Reload">
+												<a href="<?php echo assetfolder;?>whatsapp-chat?searchCRM=CRM" class="btn btn-sm btn-icon btn-clear btn-active-light-primary me-3 <?php echo ($selectedTab == 'CRM' ? 'bg-primary' : '');?>" data-bs-toggle="tooltip" data-bs-placement="top" title="" data-bs-original-title="Reload">
 													<!--begin::Svg Icon | path: /var/www/preview.keenthemes.com/keenthemes/metronic/docs/core/html/src/media/icons/duotune/communication/com014.svg-->
-													<span class="svg-icon svg-icon-muted svg-icon-2qx"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+													<span class="svg-icon svg-icon-<?php echo ($selectedTab == 'CRM' ? 'white' : 'gray');?> svg-icon-2qx"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 														<path d="M16.0173 9H15.3945C14.2833 9 13.263 9.61425 12.7431 10.5963L12.154 11.7091C12.0645 11.8781 12.1072 12.0868 12.2559 12.2071L12.6402 12.5183C13.2631 13.0225 13.7556 13.6691 14.0764 14.4035L14.2321 14.7601C14.2957 14.9058 14.4396 15 14.5987 15H18.6747C19.7297 15 20.4057 13.8774 19.912 12.945L18.6686 10.5963C18.1487 9.61425 17.1285 9 16.0173 9Z" fill="currentColor"/>
 														<rect opacity="0.3" x="14" y="4" width="4" height="4" rx="2" fill="currentColor"/>
 														<path d="M4.65486 14.8559C5.40389 13.1224 7.11161 12 9 12C10.8884 12 12.5961 13.1224 13.3451 14.8559L14.793 18.2067C15.3636 19.5271 14.3955 21 12.9571 21H5.04292C3.60453 21 2.63644 19.5271 3.20698 18.2067L4.65486 14.8559Z" fill="currentColor"/>
@@ -176,9 +176,9 @@
 													<!--end::Svg Icon-->
 												</a>
 
-												<a href="<?php echo assetfolder;?>whatsapp-chat?searchWORK=WORK" class="btn btn-sm btn-icon btn-clear btn-active-light-primary me-3" data-bs-toggle="tooltip" data-bs-placement="top" title="" data-bs-original-title="Reload">
+												<a href="<?php echo assetfolder;?>whatsapp-chat?searchWORK=WORK" class="btn btn-sm btn-icon btn-clear btn-active-light-info me-3 <?php echo ($selectedTab == 'WORK' ? 'bg-info' : '');?>" data-bs-toggle="tooltip" data-bs-placement="top" title="" data-bs-original-title="Reload">
 													<!--begin::Svg Icon | path: /var/www/preview.keenthemes.com/keenthemes/metronic/docs/core/html/src/media/icons/duotune/communication/com014.svg-->
-													<span class="svg-icon svg-icon-muted svg-icon-2qx"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+													<span class="svg-icon svg-icon-<?php echo ($selectedTab == 'WORK' ? 'white' : 'gray');?> svg-icon-2qx"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 														<path d="M16.0173 9H15.3945C14.2833 9 13.263 9.61425 12.7431 10.5963L12.154 11.7091C12.0645 11.8781 12.1072 12.0868 12.2559 12.2071L12.6402 12.5183C13.2631 13.0225 13.7556 13.6691 14.0764 14.4035L14.2321 14.7601C14.2957 14.9058 14.4396 15 14.5987 15H18.6747C19.7297 15 20.4057 13.8774 19.912 12.945L18.6686 10.5963C18.1487 9.61425 17.1285 9 16.0173 9Z" fill="currentColor"/>
 														<rect opacity="0.3" x="14" y="4" width="4" height="4" rx="2" fill="currentColor"/>
 														<path d="M4.65486 14.8559C5.40389 13.1224 7.11161 12 9 12C10.8884 12 12.5961 13.1224 13.3451 14.8559L14.793 18.2067C15.3636 19.5271 14.3955 21 12.9571 21H5.04292C3.60453 21 2.63644 19.5271 3.20698 18.2067L4.65486 14.8559Z" fill="currentColor"/>
@@ -267,34 +267,41 @@
 
 														//Conversas abertas
 														} else if (!empty($conversations)){
-															foreach ($conversations["result"]->getResult() as $conversation){
-																$nomeCliente = $conversation->nomeCliente;
-																$ConversationSid = $conversation->ConversationSid;
-																$telefoneCliente = $conversation->telefoneCliente;
-																$last_updated = $conversation->last_updated;
-																$data_criacao = $conversation->data_criacao;
-																$atendenteId = $conversation->atendenteId;
-																$atendenteNome = $conversation->atendenteNome;
-																$topMsgId = $conversation->topMsgId;
-																$nomeBot = $conversation->nomeBot;
+															if ($conversations['existRecord']){
+																foreach ($conversations["result"]->getResult() as $conversation){
+																	$nomeCliente = $conversation->nomeCliente;
+																	$ConversationSid = $conversation->ConversationSid;
+																	$telefoneCliente = $conversation->telefoneCliente;
+																	$last_updated = $conversation->last_updated;
+																	$data_criacao = $conversation->data_criacao;
+																	$atendenteId = $conversation->atendenteId;
+																	$atendenteNome = $conversation->atendenteNome;
+																	$topMsgId = $conversation->topMsgId;
+																	$nomeBot = $conversation->nomeBot;
+		
+																	$url = assetfolder . 'whatsapp-chat?ConversationSid=' . $ConversationSid;
 	
-																$url = assetfolder . 'whatsapp-chat?ConversationSid=' . $ConversationSid;
-
-																$selectedLine = false;
-																if ($ConversationSid == $currentConversation['firstRow']->ConversationSid) {$selectedLine = true;}
-
-																$params = [
-																	'selectedLine' => $selectedLine,
-																	'topMsgId' => $topMsgId
-																];
-
-																$type = "conversation";
-																$recordId = $ConversationSid;
-																if ($nomeBot == "INSIGHT") {
-
+																	$selectedLine = false;
+																	if ($ConversationSid == $currentConversation['firstRow']->ConversationSid) {$selectedLine = true;}
+	
+																	$params = [
+																		'selectedLine' => $selectedLine,
+																		'topMsgId' => $topMsgId
+																	];
+	
+																	$type = "conversation";
+																	$recordId = $ConversationSid;
+																	if ($nomeBot == "INSIGHT") {
+	
+																	}
+																	echo chatList($type, $recordId, $nomeCliente, formatarTelefone($telefoneCliente), time_elapsed_string($data_criacao), $url, ($nomeBot == "INSIGHT"  ? 'success' : 'info'), $params);
 																}
-																echo chatList($type, $recordId, $nomeCliente, formatarTelefone($telefoneCliente), time_elapsed_string($data_criacao), $url, ($nomeBot == "INSIGHT"  ? 'success' : 'info'), $params);
-															}	
+															} else {
+																echo '<div class="text-center mt-7"><img src="' . assetfolder . 'assets/media/illustrations/dozzy-1/17.png" style="width: 350px"></div>';
+																echo '<div class="text-center mt-7 mb-5">Nenhuma conversa por aqui!</div>';
+															}
+
+																
 														} 
 													 ?>
 													 
@@ -310,19 +317,25 @@
 									<!--begin::Content-->
 									<div class="flex-lg-row-fluid ms-lg-7 ms-xl-10">
 										<!--begin::Messenger-->
-										<div class="card" id="kt_chat_messenger" style="<?php echo (empty($currentConversation['firstRow']->ConversationSid)  ? 'pointer-events: none; opacity: 0.6;' : '');?>">
+										<?php 
+											if ((empty($currentConversation['firstRow']->ConversationSid)) or ($selectedTab != 'CHAT')) {
+												$disableChat = true;
+											} else {
+												$disableChat = false;
+											}
+										?>
+										<div class="card" id="kt_chat_messenger" style="<?php echo ($disableChat  ? 'pointer-events: none; opacity: 0.4;' : '');?>">
 											<!--begin::Card header-->
 											<div class="card-header" id="kt_chat_messenger_header">
 												<!--begin::Title-->
 												<div class="card-title">
 													<!--begin::User-->
 													<div class="d-flex justify-content-center flex-column me-3" >
-														<a href="#" class="fs-4 fw-bolder text-gray-900 text-hover-primary me-1 mb-2 lh-1 mt-4"><?php echo $currentConversation['firstRow']->nomeCliente ?? "CHAT DESATIVADO";?></a>
+														<a href="#" class="fs-4 fw-bolder text-gray-900 text-hover-primary me-1 mb-2 lh-1 mt-4"><?php echo $currentConversation['firstRow']->nomeCliente ?? "CHAT INATIVO";?></a>
 														<!--begin::Info-->
 														<div class="mb-0 lh-1">
-															<span class="badge badge-success badge-circle w-10px h-10px me-1"></span>
 															<?php if (isset($conversationWindow['janela_aberta'])) {?>
-																<span class="fs-7 fw-bold text-muted"><?php echo formatarTelefone($currentConversation['firstRow']->telefoneCliente ?? "");?> - <?php echo ($currentConversation['firstRow']->ConversationSid ?? "");?></span>
+																<span class="fs-5 fw-bold text-muted"><?php echo formatarTelefone($currentConversation['firstRow']->telefoneCliente ?? "");?> - <?php echo ($currentConversation['firstRow']->ConversationSid ?? "");?></span>
 															<?php } else {?>
 																<span class="fs-7 fw-bold text-muted">Inicie uma conversa para ver os detalhes</span>
 															<?php };?>
@@ -330,7 +343,7 @@
 														<?php if (isset($conversationWindow['janela_aberta'])) {?>
 														<div class="mb-0 lh-1">
 															<span class="badge badge-<?php echo ($conversationWindow['janela_aberta'] ?? false  ? 'success' : 'danger');?> badge-circle w-10px h-10px me-1" id="statusJanelaBullet"></span>
-															<span class="fs-7 fw-bold text-muted" id="statusJanela">Status Janela: <?php echo ($conversationWindow['janela_aberta'] ?? false  ? 'Aberta até ' .  $conversationWindow['hora_fechamento']: 'Fechada');?></span>
+															<span class="fs-7 fw-light text-muted" id="statusJanela">Janela <?php echo ($conversationWindow['janela_aberta'] ?? false  ? 'Aberta até ' .  $conversationWindow['hora_fechamento']: 'Fechada');?></span>
 														</div>
 														<?php };?>
 														<!--end::Info-->
@@ -416,8 +429,8 @@
 															$janelaLiberada = false;
 														}
 													?>
-													<textarea class="form-control form-control-flush mb-3" rows="1" data-kt-element="input" placeholder="Digite sua mensagem" name="messageToSend"  id="messageToSend" onkeydown="if(event.key === 'Enter'){ sendWhatsApp('message'); return false; }" style="display: <?php echo ($janelaLiberada  ? 'block' : 'none');?>"></textarea>
-													<textarea class="form-control form-control-flush mb-3" rows="1" data-kt-element="input" placeholder="Para iniciar a conversa envie um template primeiro." disabled name="messageToSendBlock"  id="messageToSendBlock" style="display: <?php echo ($janelaLiberada  ? 'none' : 'block');?>"></textarea>
+													<textarea class="form-control form-control-flush mb-3" rows="2" data-kt-element="input" placeholder="Digite sua mensagem" name="messageToSend"  id="messageToSend" onkeydown="if(event.key === 'Enter'){ sendWhatsApp('message'); return false; }" style="display: <?php echo ($janelaLiberada  ? 'block' : 'none');?>"></textarea>
+													<textarea class="form-control form-control-flush mb-3" rows="2" data-kt-element="input" placeholder="Para iniciar uma conversa, envie um modelo primeiro." disabled name="messageToSendBlock"  id="messageToSendBlock" style="display: <?php echo ($janelaLiberada  ? 'none' : 'block');?>"></textarea>
 													<!--end::Input-->
 													<!--begin:Toolbar-->
 													<div class="d-flex flex-stack">
@@ -433,7 +446,7 @@
 														<!--end::Actions-->
 														<!--begin::Send-->
 														<button class="btn btn-primary" type="button" value="sendMsg" name="btnSendMsg" id="btnSendMsg" onclick="sendWhatsApp('message');" style="display: <?php echo ($janelaLiberada  ? 'block' : 'none');?>">Enviar</button>
-														<a class="btn btn-info" type="button" value="sendMsg" data-bs-toggle="modal" id="btnSendTemplate" data-bs-target="#kt_modal_invite_friends" style="display: <?php echo ($janelaLiberada  ? 'none' : 'block');?>">Templates</a>
+														<a class="btn btn-info" type="button" value="sendMsg" data-bs-toggle="modal" id="btnSendTemplate" data-bs-target="#kt_modal_invite_friends" style="display: <?php echo ($janelaLiberada  ? 'none' : 'block');?>">Modelos</a>
 														<!--end::Send-->
 													</div>
 												</form>
@@ -1812,35 +1825,36 @@
 
 													<?php 
 													
-													if ($templates['sucesso']){
-														$listaTemplates = json_decode($templates['retorno'], true);
-														if (isset($listaTemplates['data'])) {
-															foreach ($listaTemplates['data'] as $template) {
-																if (isset($template['language'], $template['status']) &&  strtoupper($template['language']) === 'PT_BR' && $template['status'] === 'APPROVED') {
-																	?>
+													if ($templates['existRecord']){
+														foreach ($templates["result"]->getResult() as $row){
+															$template_id = $row->template_id;
+															$display_name = $row->display_name;
+															$content = $row->content;
+															$whatsAppApproved = $row->whatsAppApproved;
 
-																	<!--begin::User-->
-																	<div class="d-flex flex-stack py-4 border-bottom border-gray-300 border-bottom-dashed">
-																		<div class="d-flex align-items-center">
-																			<div class="symbol symbol-35px symbol-circle"><span class="symbol-label bg-light-danger text-info fw-semibold"><?php echo substr($template['components'][0]['text'], 0, 1);?></span></div>
-																			<div class="ms-5" style="width: 450px">
-																				<span class="fs-5 fw-semi-bold text-gray-900 text-hover-primary mb-2" id="template-body-<?php echo $template['name'];?>"><?php echo $template['components'][0]['text'];?></span>
-																				<div class="fw-semibold text-muted"><?php echo $template['name'] . " [" . $template['id'] . "]";?></div>
-																			</div>
-																		</div>
-																		<div class="ms-2 w-100px">
-																			<button class="btn btn-sm btn-primary" type="button" value="sendMsg" name="btnSendMsg" id="btnSendMsg" onclick="sendWhatsApp('template', '<?php echo $template['name'];?>');" data-bs-dismiss="modal">Enviar</button>
-																		</div>
-																	</div>
-																	<!--end::User-->
+													
+													?>
 
-																<?php
-																}
-															}
+														<!--begin::User-->
+														<div class="d-flex flex-stack py-4 border-bottom border-gray-300 border-bottom-dashed">
+															<div class="d-flex align-items-center">
+																<div class="symbol symbol-35px symbol-circle"><span class="symbol-label bg-light-danger text-info fw-semibold"><?php echo substr($content, 0, 1);?></span></div>
+																<div class="ms-5" style="width: 450px">
+																	<span class="fs-5 fw-semi-bold text-gray-900 text-hover-primary mb-2" id="template-body-<?php echo $display_name;?>"><?php echo $content;?></span>
+																	<div class="fw-semibold text-muted"><?php echo $display_name . " [" . $template_id . "]";?></div>
+																</div>
+															</div>
+															<div class="ms-2 w-100px">
+																<button class="btn btn-sm btn-primary" type="button" value="sendMsg" name="btnSendMsg" id="btnSendMsg" onclick='sendWhatsApp("<?php echo ($janelaLiberada  ? "templateLivre" : "template");?>", <?php echo json_encode($janelaLiberada  ? $content : $display_name);?>);' data-bs-dismiss="modal"><?php echo ($janelaLiberada  ? 'Editar' : 'Enviar');?></button>
+															</div>
+														</div>
+														<!--end::User-->
+
+													<?php
 														}
 													}
 											
-													;?>
+													?>
 
 																									
 													
@@ -1985,16 +1999,21 @@
 
 						function sendWhatsApp(tipo = 'message', templateName = ''){
 							const currentConversationSid = document.getElementById('currentConversationSid').value;
+							const messageToSendInput = document.getElementById('messageToSend');
 							let messageToSendText = "";
 
 							if (tipo == 'message'){
-								const messageToSendInput = document.getElementById('messageToSend');
 								messageToSendText = messageToSendInput.value;
+								if (messageToSendText == "") {
+									return false;
+								}
 								messageToSendInput.value = "";
-							} else {
+							} else if (tipo == 'template') {
 								const messageToSendInput = document.getElementById('template-body-' + templateName);
 								messageToSendText = messageToSendInput.innerHTML;
-								console.log(messageToSendText);
+							} else if (tipo == 'templateLivre') {
+								messageToSendInput.value = templateName;
+								return true;
 							}
 							
 							const btnSendMsg = document.getElementById('btnSendMsg');
