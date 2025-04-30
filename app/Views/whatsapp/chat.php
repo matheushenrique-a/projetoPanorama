@@ -1880,6 +1880,7 @@
 								<!--end::Modal dialog-->
 							</div>
 							<!--end::Modal - Invite Friend-->
+							<div><audio id="notificationSound" src="<?php echo assetfolder;?>assets/media/audio/ping3.mp3" preload="auto"></audio></div>
 
 					<script>
 
@@ -1891,6 +1892,22 @@
 							const input = document.getElementById('messageToSend');
 							if (input) {input.focus();}
 						});
+
+						window.addEventListener("focus", function () {
+							document.title = "Insight Suite - WhatsApp Chat"; 
+						});
+
+
+						// ⚠️ Precisa de uma interação para permitir futuros .play()
+						document.addEventListener("click", () => {
+							const notificationSound = document.getElementById("notificationSound");
+							notificationSound.play().then(() => {
+							notificationSound.pause();  // Pausa imediatamente
+							notificationSound.currentTime = 0; // Reseta o tempo
+							}).catch((error) => {
+								console.log("Autoplay not allowed yet:", error);
+							});
+						}, { once: true }); // Executa só na primeira vez que clicar
 
 						function checkStatus(){
 							const inputTopConversation = document.getElementById('topConversation');
@@ -1929,9 +1946,11 @@
 								//bullet vermelho de nova mensagem
 								if (data.hasOwnProperty('newMessages')) {
 									//adiciona cada nova conversa recebida a lista
+									
 									data.newMessages.forEach((message, index) => {
 										let objConversation = document.getElementById('topmsg-' + message.ConversationSid);
 										if (objConversation) {
+											
 											//console.log('Hidden: ' +  objConversation.value + ' - API: ' + (message.topMsgId ?? 0));
 											if (objConversation.value < (message.topMsgId ?? 0)){
 												document.getElementById('bullet-' + message.ConversationSid).style.display = 'block';
@@ -1940,13 +1959,16 @@
 										//console.log(message.ConversationSid);
 										//console.log(message.topMsgId);
 									});
+									
 								}
 								
 								//novas mensagens da conversa corrente
 								if (data.hasOwnProperty('newMessageDetails')) {
 									//adiciona cada nova conversa recebida a lista
+									countMsg = 0;
 									data.newMessageDetails.forEach((messageDetail, index) => {
 										if (!document.getElementById('msgBlock-' + messageDetail.id)) {
+											countMsg++;
 											addToMessageList(messageDetail.id, messageDetail.direction, messageDetail.last_updated, messageDetail.Body, messageDetail.ProfileName, messageDetail.SmsStatus, messageDetail.media_format, messageDetail.media_name);
 										} else {
 											//console.log('msgStatus-' + messageDetail.id + " - " + messageDetail.SmsStatus);
@@ -1955,6 +1977,12 @@
 										//console.log('check: ' + messageDetail.id);
 										if (topMessage < (messageDetail.id)){inputTopMessage.value = messageDetail.id;}
 									});
+
+									console.log('newMessages: ' + countMsg);
+									if (countMsg > 0){
+										document.title = "(" + countMsg + ") Mensagens";
+										playNotificationSound();
+									}
 								}
 
 								//status da janela de comunicacao
@@ -1967,7 +1995,7 @@
 									const messageToSendBlock = document.getElementById('messageToSendBlock');
 
 									if (data.conversationWindow['janela_aberta']){
-										lblStatusJanela.innerHTML = "Status Janela: Aberta até " + data.conversationWindow['hora_fechamento'];
+										lblStatusJanela.innerHTML = "Janela Aberta até " + data.conversationWindow['hora_fechamento'];
 										lblStatusJanelaBullet.classList.remove('badge-danger');
 										lblStatusJanelaBullet.classList.add('badge-success');
 										btnSendMsg.style.display = 'block';
@@ -1975,7 +2003,7 @@
 										messageToSend.style.display = 'block';
 										messageToSendBlock.style.display = 'none';
 									} else {
-										lblStatusJanela.innerHTML = "Status Janela: Fechada";
+										lblStatusJanela.innerHTML = "Janela Fechada";
 										lblStatusJanelaBullet.classList.remove('badge-success');
 										lblStatusJanelaBullet.classList.add('badge-danger');
 										btnSendMsg.style.display = 'none';
@@ -2170,6 +2198,14 @@
 
 							objMessage.insertAdjacentHTML('beforeend', html);
 							scrollToBottom()
+						}
+
+						// Step 2: Play sound when a new message arrives
+						function playNotificationSound() {
+							const audio = document.getElementById('notificationSound');
+							audio.play().catch((error) => {
+								console.error("Error playing notification sound:", error);
+							});
 						}
 
 					</script>	

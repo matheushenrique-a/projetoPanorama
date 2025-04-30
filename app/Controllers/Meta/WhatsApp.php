@@ -458,7 +458,7 @@ class WhatsApp extends BaseController
         echo $result["message"]['messageId'] ?? $result["error"];
     }
 
-    //http://localhost/InsightSuite/public/whatsapp-listner/1/1/6128123e-12e0-11f0-983b-fe427d5affb6/14
+    //http://localhost/InsightSuite/public/whatsapp-listner/1/1/454900de-252b-11f0-9800-fe427d5affb8/1
     public function whatsapp_listner($atendenteId, $topConversation, $ConversationSid, $topMessage){
 
         if (empty($ConversationSid) or ($ConversationSid == 0)){
@@ -477,7 +477,7 @@ class WhatsApp extends BaseController
         //NOVAS MENSAGENS DA CONVERTA ABERTA - ultimas 10 mensagens
         //todas novas mensagens acima dos ids já buscados para uma conversa
         //$sql = "select id, ConversationSid, Body, ProfileName, direction, l.Type, media_format, media_name, SmsStatus, l.To, l.From, l.error, last_updated from whatsapp_log l where ConversationSid = '$ConversationSid' and id > $topMessage order by id;";
-        $sql = "select id, ConversationSid, Body, ProfileName, direction, l.Type, media_format, media_name, SmsStatus, l.To, l.From, l.error, last_updated from whatsapp_log l where ConversationSid = '$ConversationSid' order by id DESC LIMIT 10;";
+        $sql = "select id, ConversationSid, Body, ProfileName, direction, l.Type, media_format, media_name, SmsStatus, l.To, l.From, l.error, last_updated from whatsapp_log l where ConversationSid = '$ConversationSid' order by id DESC LIMIT 20;";
         $incomingMessageDetails = $this->dbMasterDefault->runQuery($sql);
         foreach ($incomingMessageDetails["result"]->getResult() as $messagesToConvert){
             $messagesToConvert->SmsStatus = traduzirStatusTwilio($messagesToConvert->SmsStatus)[0];
