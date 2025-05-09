@@ -18,7 +18,7 @@ class Ads extends BaseController
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger) {
         parent::setDB("fgtsDB"); //passa o banco de dados diferente do default (opcional) antes de iniciar o controler
         parent::initController($request, $response, $logger);
-        $this->checkSession();
+        //$this->checkSession();
 
         //nesse caso o dbMaster vai apontar para o banco FGTS
 
@@ -154,18 +154,18 @@ class Ads extends BaseController
         $buscarProp = $this->getpost('buscarProp');
         $favoritos = $this->getpost('favoritos');
         $pages = $this->getpost('pages');
+        $groups = $this->getpost('groups');
         $statusView = $this->getpost('statusView');
         $paginas = $this->getpost('paginas');
 
         $adList = null;
         $adListResult = null;
         
-        if (!empty($pages)){
-            $this->dbMaster->setOrderBy(array("last_update", "DESC"));
-            $this->dbMaster->setLimit($paginas);
-            //$adList = $this->dbMaster->select('ads_pages', null);
-            $sql = 'select p.pageId, p.last_update, s.action from ads_pages p left join ads_saved s on p.pageId = s.pageId and s.userId = ' . $this->session->userId;
-//            $sql = 'select p.pageId, p.last_update, s.action from ads_pages p left join ads_saved s on (p.pageId = s.pageId and (s.userId = ' . $this->session->userId . ' or s.userId is null)) ';
+        
+        //lista todos os ads mas agrupados por páginas para saber quais páginas tem mais ads
+        if (!empty($groups)){
+            $sql = 'select p.pageId, count(*) total, max(p.ad_snapshot_url) urlAd, max(p.last_update) last_update, s.action 
+                    from ads_pages p left join ads_saved s on p.pageId = s.pageId and s.userId = ' . $this->session->userId;
             
             if ($statusView == "view") {
                 $sql .= ' where action = "view" ';
@@ -181,7 +181,45 @@ class Ads extends BaseController
                 $sql .= ' where action = "star" ';
             }
             
-            $sql .= ' order by p.last_update desc;';
+            $sql .= ' group by pageId order by total desc limit ' . $paginas . ';';
+            //echo $sql;exit;
+            $adList = $this->dbMaster->runQuery($sql);
+
+            $keyword = $this->getpost('keyword', true);
+            $preFilter = $this->getpost('preFilter', true);
+            $pageId = $this->getpost('pageId', true);
+            $adType = $this->getpost('adType', true);
+            $country = $this->getpost('country', true);
+            $status = $this->getpost('status', true);
+            //echo '22:16:13 - <h3>Dump 22 </h3> <br><br>' . var_dump($status); exit;					//<-------DEBUG
+            $language = $this->getpost('language', true);
+            $type = $this->getpost('type', true);
+            $platform = $this->getpost('platform', true);
+            $searchType = $this->getpost('searchType',true);
+            $initialDate = $this->getpost('initialDate',true);
+            $ad_delivery_date_max = $this->getpost('ad_delivery_date_max',true);
+            $paginas = $this->getpost('paginas',true);
+        } else if (!empty($pages)){
+            //$this->dbMaster->setOrderBy(array("last_update", "DESC"));
+            //$this->dbMaster->setLimit($paginas);
+            //$adList = $this->dbMaster->select('ads_pages', null);
+            $sql = 'select p.pageId, p.last_update, s.action from ads_pages p left join ads_saved s on p.pageId = s.pageId and s.userId = ' . $this->session->userId;
+            
+            if ($statusView == "view") {
+                $sql .= ' where action = "view" ';
+            } else if ($statusView == "saved") {
+                $sql .= ' where action = "saved" or action = "star" ';
+            } else if ($statusView == "dislike") {
+                $sql .= ' where action = "dislike" ';
+            } else if (($statusView == "all") or (empty($statusView))) {
+                //nada
+            } else if ($statusView == "null") {
+                $sql .= ' where action is null ';
+            } else if ($statusView == "star") {
+                $sql .= ' where action = "star" ';
+            }
+            
+            $sql .= ' order by p.last_update desc limit ' . $paginas . ';';
             //echo $sql;exit;
             $adList = $this->dbMaster->runQuery($sql);
 
@@ -288,7 +326,7 @@ class Ads extends BaseController
             if (!empty($type)) $urlFinal .= "&media_type=$type";
             if (!empty($platform)) $urlFinal .= "&publisher_platforms=$platform";
             if (!empty($ad_delivery_date_max)) $urlFinal .= "&ad_delivery_date_max=$ad_delivery_date_max";
-            if (!empty($initialDate)) $urlFinal .= "&ad_delivery_date_min=$initialDate";
+            if (!empty($initialDate)) $urlFinal .= "&ad_delivery_date_min=$initialDate"; //Search for ads delivered after the date (inclusive) you provide. The date format should be YYYY-mm-dd.
             if (!empty($paginas)) $urlFinal .= "&limit=$paginas";
             
             //echo '11:00:27 - <h3>Dump 20 </h3> <br><br>' . var_dump($urlFinal); exit;					//<-------DEBUG
@@ -344,6 +382,7 @@ class Ads extends BaseController
         $dados['adListResult'] = $adListResult;
         $dados['favoritos'] = $favoritos;
         $dados['pages'] = $pages;
+        $dados['groups'] = $groups;
 
         return $this->loadpage('ads/listar_ads', $dados);
     }
@@ -408,9 +447,121 @@ class Ads extends BaseController
     }
 
 
+    //salva ads por palavra chave para identifiar paginas com grande volumes de ads.
     //http://localhost/InsightSuite/public/ads-load
     //https://insightsuite.pravoce.io/ads-load
     public function loadMiner(){
+
+        $group = "WL";
+        //$group = "COPY2";
+        $limit = 1000;
+        $ad_delivery_date_max = date('Y-m-d', strtotime('-1 days')); //anuncios antes dessa data
+        $ad_delivery_date_min = date('Y-m-d', strtotime('-1 days')); //anuncios depois dessa data
+
+        $keywords = [
+            urlencode("weight"),
+            urlencode("loss"),
+            urlencode("burnning"),
+            urlencode("slim"),
+            urlencode("belly"),
+            urlencode("diet"),
+            urlencode("burn"),
+            urlencode("fat"),
+            urlencode("food"),
+            urlencode("meal"),
+            urlencode("transformation"),
+            urlencode("calories"),
+            urlencode("healthy"),
+            urlencode("keto"),
+            urlencode("fasting"),
+            urlencode("inches"),
+            urlencode("metabolism"),
+            urlencode("cravings"),
+            urlencode("hormone"),
+            urlencode("hunger"),
+            urlencode("ozempic"),
+            urlencode("semaglutide"),
+            urlencode("liraglutide"),
+            urlencode("saxenda"),
+            urlencode("wegovy"),
+            urlencode("Mounjaro"),
+            urlencode("tirzepatide"),
+            urlencode("GLP-1"),
+            urlencode("GLP1"),
+            urlencode("GIP"),
+            urlencode("appetite"),
+            urlencode("sugar"),
+            urlencode("carbs"),
+            urlencode("carbohydrate"),
+            urlencode("calorie"),
+            urlencode("stubborn"),
+            urlencode("detox"),
+            urlencode("thermogenics"),
+            urlencode("boost"),
+            urlencode("cleanse"),
+            urlencode("gut"),
+            urlencode("serotonin"),
+            urlencode("satiety"),
+            urlencode("microbiome"),
+            urlencode("digestion"),
+            urlencode("immune"),
+            urlencode("ingredients"),
+            urlencode("recipe"),
+            urlencode("tea"),
+            urlencode("obesity"),
+            urlencode("bariatric"),
+        ];
+
+        // $keywords = [
+        //     urlencode("copywriting"),
+        //     urlencode("copywriter"),
+        // ];
+
+
+        $totalAdd = 0;
+
+        foreach ($keywords as $keyword) {
+            $url = '&search_terms=' . $keyword . '&search_type=KEYWORD_UNORDERED&ad_type=ALL&ad_reached_countries=US&ad_active_status=ACTIVE&media_type=VIDEO&publisher_platforms=INSTAGRAM&ad_delivery_date_min=' . $ad_delivery_date_min  . '&limit=' . $limit;
+            $adList = $this->getAds($url);
+
+            if ((!is_null($adList)) and ($adList['sucesso'])){
+                $adListResult = json_decode($adList['retorno'], true);
+
+                if (isset($adListResult['data'])){
+                    foreach ($adListResult['data'] as $key => $value) {
+                        $id_ad = $adListResult['data'][$key]['id'];
+                        $pageId = $adListResult['data'][$key]['page_id'];
+                        
+                        $adItem = $this->dbMaster->select('ads_pages', ['id_ad' => $id_ad]);
+                        $isBlocked = $this->dbMaster->select('ads_saved', ['pageId' => $pageId, 'action' => 'dislike'])['existRecord'];
+
+                        if ((!$adItem['existRecord']) and (!$isBlocked)) {
+                            $data = [
+                                'pageId' => $pageId,
+                                'ad_snapshot_url' => $adListResult['data'][$key]['ad_snapshot_url'],
+                                'ad_delivery_start_time' => $adListResult['data'][$key]['ad_delivery_start_time'],
+                                'id_ad' => $id_ad,
+                                'keyword' => $keyword,
+                                'group' => $group,
+                            ];
+
+                            $added = $this->dbMaster->insert('ads_pages',$data);
+                            $totalAdd++; 
+                        }
+                    }
+                }
+            } else {
+                $adListResult = json_decode($adList['retorno'], true);
+                echo 'Error: ' . $adListResult['error']['message'] . '<br>';
+            }
+            sleep(rand(1, 5));
+        }
+        echo "<br><br>Pages Added: $totalAdd <br>";
+    }
+
+    //http://localhost/InsightSuite/public/ads-load
+    //https://insightsuite.pravoce.io/ads-load
+    public function loadMiner_old(){
         ini_set('max_execution_time', 320); 
         //$file_path = fopen('/home/customer/www/insightsuite.pravoce.io/writable/miner.html', 'r');
         $file_path = '/Applications/XAMPP/xamppfiles/htdocs/InsightSuite/writable/miner.html';

@@ -196,7 +196,6 @@ class m_whatsapp extends Model {
 			
 			$result = $this->m_http->http_request('POST', $url, $headers, $data);
 
-			echo '13:54:45 - <h3>Dump 63 </h3> <br><br>' . var_dump($result); exit;					//<-------DEBUG
 			 
 			if ($result['sucesso']){
 				$retorno = json_decode($result['retorno'], true);

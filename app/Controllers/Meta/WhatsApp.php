@@ -75,7 +75,10 @@ class WhatsApp extends BaseController
         if (!empty($ConversationSid)){
             $messages = $this->m_whatsapp->getMessages(['ConversationSid' => $ConversationSid]);
             $currentConversation = $this->m_whatsapp->getConversation(['ConversationSid' => $ConversationSid]);
-            $conversationWindow = $this->m_whatsapp->getConversationWindow($currentConversation['firstRow']->telefoneCliente);
+            if ($currentConversation['existRecord']){
+                $conversationWindow = $this->m_whatsapp->getConversationWindow($currentConversation['firstRow']->telefoneCliente);
+            }
+
             $selectedTab = "CHAT";
         } 
         //caso uma busca no CRM tenha sido feita
@@ -262,18 +265,19 @@ class WhatsApp extends BaseController
                             $recipientId = $status['recipient_id'];
 
                             $returnErros = $status['errors'] ?? [];
+                            $detail = "";
+                            $code = "";
                             foreach ($returnErros as $errorIndex => $errorArray) {
                                 $detail = $errorArray['title'] ?? "";
                                 $this->telegram->notifyTelegramGroup("🚨🚨🚨 Error Message $messageSid \n$detail", telegramQuid);
                             }
 
                             //atualiza o status da mensagem
-                            $this->m_whatsapp->updateMessage(['SmsStatus' => $statusType], ['MessageSid' => $messageSid], ['last_updated' => 'current_timestamp()']);
+                            $this->m_whatsapp->updateMessage(['SmsStatus' => $statusType, 'error' => $detail . "- " . $code], ['MessageSid' => $messageSid], ['last_updated' => 'current_timestamp()']);
                         }
-                    }
-
+                    
                     //NOVAS MENSAGENS RECEBIDAS
-                    if (isset($change['value']['messages'])) {
+                    } else if (isset($change['value']['messages'])) {
                         $messages = $change['value']['messages'] ?? [];
                         $to = $change['value']['metadata']['display_phone_number'] ?? '';
 
@@ -366,6 +370,11 @@ class WhatsApp extends BaseController
                             //echo '15:42:09 - <h3>Dump 16 </h3> <br><br>' . var_dump($conversation['firstRow']->id); exit;					//<-------DEBUG
                             $this->m_whatsapp->updateConversation(['dataUltimaMensagemCliente' => date('Y-m-d H:i:s'), 'msgCount' => $conversation['firstRow']->msgCount + 1], ['id' => $conversation['firstRow']->id], ['last_updated' => 'current_timestamp()']);
                         }
+
+                    //EVENTOS DA CONTA
+                    } else {
+                        $this->telegram->notifyTelegramGroup("🚨🚨🚨 META Webhook Review Event: \n" . $json, telegramPraVoceGroupLogErrors);
+                        $this->dbMasterDefault->insert('record_log',['log' => "Review Webhook Event: " . $json]);
                     }
                 }
             }
@@ -512,11 +521,11 @@ class WhatsApp extends BaseController
         $templateName = $request['templateName'] ?? '';
 
         //  $messageToSend = "Olá";
-        //  $conversation =  ' fb85faf8-1a01-11f0-9224-fe427d5affb6';
-        //  $tipo = 'message';
+        //  $conversationSid =  'fac6f5b6-25e8-11f0-9800-fe427d5affb8';
+        //  $tipo = 'template';
         //  $telefoneCliente = '5531995781355';
         // $templateName = 'continuar_chamada';
-
+        
         //$result = $this->whatsapp_send_template_cloud($templateName, $messageToSend, $telefoneCliente, $conversation);
         //echo '11:53:22 - <h3>Dump 32 </h3> <br><br>' . var_dump($result); exit;					//<-------DEBUG
 

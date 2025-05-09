@@ -38,6 +38,11 @@ $routes->setAutoRoute(true);
 // route since we don't have to scan directories.
 $routes->get('/', 'Home::index');
 
+
+//BMG
+$routes->match(['get', 'post'], '/bmg-receptivo/(:any)', 'Bmg\Bmg::bmg_receptivo/$1');
+
+
 //AMBEC
 $routes->match(['get', 'post'], '/ambec-script', 'Ambec\Ambec::ambec_script');
 

@@ -400,14 +400,15 @@
 																$ProfileName = $conversation->ProfileName;
 																$direction = $conversation->direction;
 																$Type = $conversation->Type;
-																$SmsStatus = $conversation->SmsStatus;
+																$SmsStatus = [$conversation->SmsStatus, $conversation->error];
 																$To = $conversation->To;
 																$From = $conversation->From;
 																$last_updated = $conversation->last_updated;
 																$media_format = $conversation->media_format;
 																$media_name = $conversation->media_name;
 														
-																echo chatMessageHTML($id, $direction, $last_updated, $Body, ($SmsStatus), $ProfileName, $media_format, $media_name);
+
+																echo chatMessageHTML($id, $direction, $last_updated, $Body, $SmsStatus, $ProfileName, $media_format, $media_name);
 															}
 														} ?>
 													
@@ -2081,9 +2082,9 @@
 								addToMessageList(data.id, data.direction, data.last_updated, data.Body, data.ProfileName, data.status, data.media_format, data.media_name);
 
 								if (!data.sucesso){
-									console.log('msgStatus-' + data.id);
+									console.log(data.error);
 									const stsStatus = document.getElementById('msgStatus-' + data.id);
-									stsStatus.innerHTML = "Falha";
+									stsStatus.innerHTML = 'Falha <i class="fas text-warning fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="' + escapeHtml(data.error)  + '"></i>';
 								}
 
 							})
@@ -2092,6 +2093,14 @@
 								lblOnlineGreen.classList.add('badge-danger');
 								console.log('Fetch Error: ' + error.message);
 							});
+						}
+
+						function escapeHtml(text) {
+							return text.replace(/&/g, "&amp;")
+										.replace(/</g, "&lt;")
+										.replace(/>/g, "&gt;")
+										.replace(/"/g, "&quot;")
+										.replace(/'/g, "&#039;");
 						}
 
 						// Adiciona uma nova conversa na lista de chats

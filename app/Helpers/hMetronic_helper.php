@@ -1,6 +1,12 @@
 <?php 
 
 function chatMessageHTML($id, $direction, $last_updated, $Body, $SmsStatus, $ProfileName, $media_format, $media_name) {
+
+    $errorBullet = '';
+    if (strlen($SmsStatus[1]) > 5) {
+        $errorBullet = '<i class="fas text-warning fa-exclamation-circle ms-2 fs-7" data-bs-toggle="tooltip" title="' . htmlspecialchars($SmsStatus[1])  . '"></i>';
+    }
+
     if ($direction === 'B2C') {
         return '
         <!--begin::Message(CLIENTE)-->
@@ -17,7 +23,7 @@ function chatMessageHTML($id, $direction, $last_updated, $Body, $SmsStatus, $Pro
                 </div>
                 <div class="p-5 rounded bg-light-info text-dark fw-bold mw-lg-400px text-start" data-kt-element="message-text" id="msgBody-'.  $id . '">' . ($Body) . '</div>
                 <div class="ms-1">
-                    <span class="text-muted fs-7 mb-1 ms-0 ps-0" id="msgStatus-'.  $id . '">' . traduzirStatusTwilio($SmsStatus)[0] . '</span>
+                    <span class="text-muted fs-7 mb-1 ms-0 ps-0" id="msgStatus-'.  $id . '">' . traduzirStatusTwilio($SmsStatus[0])[0] . (!empty($errorBullet)  ? $errorBullet : '') . '</span>
                 </div>
             </div>
         </div>
@@ -38,7 +44,7 @@ function chatMessageHTML($id, $direction, $last_updated, $Body, $SmsStatus, $Pro
                 </div>
                 <div class="p-5 rounded bg-light-primary text-dark fw-bold mw-lg-400px text-end" data-kt-element="message-text" id="msgBody-'.  $id . '">' . ($Body) . '</div>
                 <div class="ms-1">
-                    <span class="text-muted fs-7 mb-1 ms-0 ps-0" id="msgStatus-'.  $id . '">' . traduzirStatusTwilio($SmsStatus)[0] . '</span>
+                    <span class="text-muted fs-7 mb-1 ms-0 ps-0" id="msgStatus-'.  $id . '">' . traduzirStatusTwilio($SmsStatus[0])[0] . (!empty($errorBullet)  ? $errorBullet : '') . '</span>
                 </div>';
 
                 if (($media_format == 'image') or ($media_format == 'sticker')){

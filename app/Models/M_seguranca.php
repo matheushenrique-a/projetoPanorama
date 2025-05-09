@@ -47,6 +47,8 @@ class M_seguranca extends Model {
 
     public function DisplayMenu($modulo){
        $perfil = json_decode($this->my_session->perfil, true);
+
+      // echo '14:59:41 - <h3>Dump 36 </h3> <br><br>' . var_dump($this->my_session->perfil); exit;					//<-------DEBUG
        
        echo (!in_array($modulo, $perfil)  ? 'display: none; visibility: hidden;' : 'display: block; visibility: visible;');
     }

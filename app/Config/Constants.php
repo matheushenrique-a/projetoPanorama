@@ -17,6 +17,18 @@ define ('API_Password', 'P@drao123');
 define ('API_Revendedor', 144); //quid
 define ('API_Produto', 6); //quid
 
+//SEGURO BMG
+define('BMG_SEGURO_LOGIN', 'robo.55009');
+define('BMG_SEGURO_SENHA', 'Quid@robo102030');
+define('BMG_SEGURO_LOGIN_CONSIG', 'DANTAS.PRAVOCE');
+define('BMG_SEGURO_SENHA_CONSIG', 'B9abfT_6q@-C');
+define('BMG_ENTIDADE', '1581');
+define('BMG_CODIGO_PRODUTO_PAP', 1007);
+define('BMG_CODIGO_PRODUTO_MED', 54);
+define('BMG_CODIGO_PRODUTO_PRESTAMISTA', 5);
+define('BMG_CODIGO_PRODUTO_VIDA', 73);
+
+
 //calculadora
 define ('API_Calculadora', 'https://api2.calculadoraconsignado.com.br/api/');
 
@@ -25,18 +37,26 @@ define ('API_TSE', "http://localhost:3002/consultar-cpf");
 define ('URL_TSE', "https://www.tse.jus.br/servicos-eleitorais/autoatendimento-eleitoral#/atendimento-eleitor/consultar-situacao-titulo-eleitor");
 //define ('API_TSE', "https://0cd0-177-73-197-2.ngrok-free.app/consultar-cpf");
 
+//WHATSAPP CLOUD API - TELEFONE TESTE META APP WPP CONTA UNITY
+// define ('META_CLOUD_PHONE_ID', "631093443420913"); //phone number id do Sender WhatsApp = +1 555 642 0620 - Pegar em developers Whatsapp -> Configuração API - Id Numero Telefone
+// define ('META_CLOUD_ASSET_ID', "1180147207074114"); //Asset_id pela URL do Gerenciador WhatsApp. Usado para listar templates apenas
+// define ('META_CLOUD_API_RAW', "https://graph.facebook.com/v22.0/"); 
+// define ('META_CLOUD_API', META_CLOUD_API_RAW . META_CLOUD_PHONE_ID . "/messages");
+// define('META_TOKEN_WHATSAPP', "EAAaYwsrh9DcBO5aLs0Paf3roaPmChzJ4ZC0e5ZAk5OG25cfx02bZBxZBU5YP98TXSoqRVAfQGwAkZBZBZCcVKhVw63oTjIY3GmVWoSZB8tBK9P7ZAslpEVfCf3zbTB170ILZCZAkIowVbmeFqUomknHZBkyBk8cpFLZBd57sYWOEU0bJnKrxjOUeGhQZDZD"); //token convertido
+
 //WHATSAPP CLOUD API
-define ('META_CLOUD_PHONE_ID', "631093443420913"); //phone number id do Sender WhatsApp = +1 555 642 0620 - Pegar em developers Whatsapp -> Configuração API - Id Numero Telefone
-define ('META_CLOUD_ASSET_ID', "1180147207074114"); //Asset_id pela URL do Gerenciador WhatsApp. Usado para listar templates apenas
+define ('META_CLOUD_PHONE_ID', "568724566335121"); //phone number id do Sender WhatsApp = +55 11 5028 0207
+define ('META_CLOUD_ASSET_ID', "1417572616042066"); //Asset_id pela URL do Gerenciador WhatsApp. Conta Unity fora da Twilio
 define ('META_CLOUD_API_RAW', "https://graph.facebook.com/v22.0/"); 
 define ('META_CLOUD_API', META_CLOUD_API_RAW . META_CLOUD_PHONE_ID . "/messages");
-define('META_TOKEN_WHATSAPP', "EAAaYwsrh9DcBO5aLs0Paf3roaPmChzJ4ZC0e5ZAk5OG25cfx02bZBxZBU5YP98TXSoqRVAfQGwAkZBZBZCcVKhVw63oTjIY3GmVWoSZB8tBK9P7ZAslpEVfCf3zbTB170ILZCZAkIowVbmeFqUomknHZBkyBk8cpFLZBd57sYWOEU0bJnKrxjOUeGhQZDZD"); //token convertido
+define('META_TOKEN_WHATSAPP', "EAAaYwsrh9DcBOzIFlpKZB7qCqrqzymNsvfHqzF0SBsKVaRl2BEAUkuEHwtOEYKTB6sII60sa0UwSQW70LKDxJb4PnvOrYSibLZBqyx6xAiKtMJChbgsr70NVHYSZBSU7cAOaEydaAYZAjMHXZCb4K5Twu0N9U9tZAc7ZBhEzuB0IkAXKkmR9wZDZD"); //token convertido
+
 define('PATH_SAVE_MEDIA', "/Applications/XAMPP/xamppfiles/htdocs/InsightSuite/public/assets/media/whatsapp/");
 
 //FACEBOOK ADS
 define('META_GRAPH_API', "https://graph.facebook.com/v20.0/");
 //APP ADS TOKEN
-define('META_TOKEN', "EAAMqjXZAxYiUBOxXAUzj9qYwNGRWDQKGdpMAneTRZBK65XDTAHc2hyzZC9mUMk2yWYM66yoDSQZCopNmXSzQmlxNSgy6YYf0yVt8Qkv9PYenDqZBFmjCUREXOU9E4Wxz2MGGbqhdqgye3AEcqnyKkwHFJsPVDK9NhKHRlg657SGvZAO25Y7DfTCA2ZA");
+define('META_TOKEN', "EAAMqjXZAxYiUBO2QG3wDFbHWvnTfYyj0zBVLbWrdEJ5DvwTw2RgypppuQKtZAZAMZARgOadqCREDI3rcJdafyrCyi9CZAykLz1mOE4dDZBEz00CSH1YxBFfNFeivucQ6RJLvTm01BZA0gdeC9gnsph7suaUHJGBxuNZBpMTD9yAFB1XlgqaXqGqlZC7O4");
 
 
 //SMS Account - US SMS ONLY
