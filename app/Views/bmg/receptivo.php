@@ -24,7 +24,7 @@
 											</li>
 											<!--end::Item-->
 											<!--begin::Item-->
-											<li class="breadcrumb-item text-muted">AASPA</li>
+											<li class="breadcrumb-item text-muted">BMG</li>
 											<!--end::Item-->
 											<!--begin::Item-->
 											<li class="breadcrumb-item">
@@ -32,7 +32,7 @@
 											</li>
 											<!--end::Item-->
 											<!--begin::Item-->
-											<li class="breadcrumb-item text-muted">Proposta Integraall</li>
+											<li class="breadcrumb-item text-muted">Seguros</li>
 											<!--end::Item-->
 										</ul>
 										<!--end::Breadcrumb-->
@@ -50,7 +50,7 @@
 								<div id="kt_app_content_container" class="app-container container-xxl">
 								<div class="row g-5 g-xl-8">
 										<div class="col-xl-6">
-											<form id="frmDataLake" class="form" action="<?php echo assetfolder;?>aaspa-receptivo/0" method="POST">
+											<form id="frmDataLake" class="form" action="<?php echo assetfolder;?>bmg-receptivo/0" method="POST">
 												<!-- Inicio: detalhes -->
 												<div class="flex-lg-row-fluid">
 													<!--begin::Messenger-->
@@ -87,24 +87,75 @@
 																				<button type="submit" class="btn btn-primary" name="btnConsultar" value="btnConsultar" >Consultar</button>										
 																			</div>
 
+																			
+
+
+
+
 																			<div class="mt-10 mb-3">
 																				<div>
-																					<span style="color: <?php if($aaspaCheck == "LIBERADO") echo '#008001';if($aaspaCheck == "FALHA") echo '#f22e46';; if(empty($aaspaCheck)) echo '#b3b1b1';?>" id='lblAaspaTop'>
-																						<svg role="img" aria-hidden="true" width="25px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg>
+																					<span class="fs-4">
+																						<?php 
+																				
+																							if ((isset($bmgLiberado['cartoes'])) && is_array($bmgLiberado['cartoes'])) {
+
+																								echo "<div class='fw-bold fs-2 mt-5'>";
+																								echo $bmgLiberado['cartoes'][0]['nomeCliente'] . "</div>";
+																								echo "<div class=''>Cidade: " . $bmgLiberado['cartoes'][0]['cidade'] . "</div>";
+
+																								foreach ($bmgLiberado['cartoes'] as $cartao) {
+																									if (!$cartao['ehElegivel']) {
+																										echo "<div class='fw-semibold fs-2 mt-5'>";
+																										echo '<span style="color: #f22e46" class="me-2"><svg role="img" aria-hidden="true" width="25px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg></span>';
+																										echo $cartao['numeroCartao'] . "</div>";
+																										echo "<div class='fw-bold fs-4 mb-5'>";
+																										echo $cartao['motivoElegibilidade'] .  "</div>";
+																										echo '<div class="mt-2 mb-2 p-3" style="border-bottom: 1px solid #ececec;"></div>';
+																									} else {
+																										echo "<div class='fw-semibold fs-2 mt-5'>";
+																										echo '<span style="color: #008001" class="me-2"><svg role="img" aria-hidden="true" width="25px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg></span>';
+																										echo 'CARTÃO: ' . substr($cartao['numeroCartao'], -4, 4) . "</div>";
+																										echo "<div class='ms-10'>";
+
+																										//MED
+																										if ((isset($cartao['planos']['med']->planos)) && (is_array($cartao['planos']['med']->planos) && count($cartao['planos']['med']->planos) > 0)) {
+																											echo '<div class="mt-2  mb-2 bg-light p-3" style="border-bottom: 1px solid #a1a5b7;"><span style="color: #008001" id=""><svg role="img" aria-hidden="true" width="25px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg></span>';
+																											echo '<span class="fs-4 ms-2 fw-bold">MED:</span></div>';
+																											foreach ($cartao['planos']['med']->planos as $plano) {
+																												$script = '<i class="fa-regular fa-file-lines pt-4 fs-3" style="color: #b3b1b1; cursor: pointer" onclick="getScript("' . $cpf . '")" alt="Gerar Script"></i>';
+																												echo "<div><span class='fw-bold'>{$plano->nomePlano}</span> - " . (strtoupper($plano->tipoPagamento) == "PARCELADO"  ? '<span class="badge badge-success">Parcelado</span>' : '<span class="badge badge-light-dark">Mensal</span>') . " - R$ "  . number_format($plano->valorPremio, 2, ',', '.') . " " . $script . "</div>";
+																												echo '<div class="mt-1 mb-1 p-1" style="border-bottom: 1px solid #ececec;"></div>';
+																											}
+																										} else {
+																											echo '<div class="mt-2  mb-2 bg-light p-3"><span style="color: #f22e46" id=""><svg role="img" aria-hidden="true" width="25px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg></span>';
+																											echo '<span class="fs-4 ms-2">MED Indisponível:</span></div>';
+																											echo '<div class="mt-2 mb-2 p-3" style="border-bottom: 1px solid #ececec;"></div>';
+
+																										}
+
+																										//VIDA
+																										if ((isset($cartao['planos']['vida']->planos)) && (is_array($cartao['planos']['vida']->planos) && count($cartao['planos']['vida']->planos) > 0)) {
+																											echo '<div class="mt-2  mb-2 bg-light p-3" style="border-bottom: 1px solid #a1a5b7;"><span style="color: #008001" id=""><svg role="img" aria-hidden="true" width="25px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg></span>';
+																											echo '<span class="fs-4 ms-2 fw-bold">VIDA:</span></div>';					
+																											foreach ($cartao['planos']['vida']->planos as $plano) {
+																												echo "<div><span class='fw-bold'>{$plano->nomePlano}</span> - R$ " . number_format($plano->valorPremio, 2, ',', '.') . "</div>";
+																												echo '<div class="mt-1 mb-1 p-1" style="border-bottom: 1px solid #ececec;"></div>';
+																											}
+																										} else {
+																											echo '<div class="mt-2  mb-2 bg-light p-3"><span style="color: #f22e46" id=""><svg role="img" aria-hidden="true" width="25px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg></span>';
+																											echo '<span class="fs-4 ms-2">VIDA Indisponível:</span></div>';
+																											echo '<div class="mt-2 mb-2 p-3" style="border-bottom: 1px solid #ececec;"></div>';
+
+																										}
+
+																										echo "</div>";
+																									}
+																								}
+
+																							}
+																						
+																						?>
 																					</span>
-																					<span class="fs-4">MED:</span> <span class="fs-4" id='lblAaspa'><?php echo $aaspaCheck;?></span><span class="fs-4">&nbsp;&nbsp;<i class="fa-solid fa-arrows-rotate fs-3" id='lblAaspaUpdate' style="color: #b3b1b1; cursor: pointer; display: inline;" onclick="checkAaspa();"></i></span>
-																				</div>
-																				<div class="mt-2">
-																					<span style="color: <?php if($inssCheck == "LIBERADO") echo '#008001';if($inssCheck == "BLOQUEADO") echo '#f22e46';; if(empty($inssCheck)) echo '#b3b1b1';?>" id='lblINSSTop'>
-																						<svg role="img" aria-hidden="true" width="25px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg>
-																					</span>
-																					<span class="fs-4">PAP CARD:</span> <span class="fs-4" id='lblINSS'><?php echo $inssCheck;?></span><span class="fs-4">&nbsp;&nbsp;<i class="fa-solid fa-arrows-rotate fs-3" id='lblINSSUpdate' style="color: #b3b1b1; cursor: pointer; display: inline;" onclick="checkINSS();"></i></span>
-																				</div>
-																				<div class="mt-2">
-																					<span style="color: <?php if($tseCheck == "LIBERADO") echo '#008001';if($tseCheck == "FALHA") echo '#f22e46'; if(empty($tseCheck)) echo '#b3b1b1';?>" id='lblTSETop'>
-																					<svg role="img" aria-hidden="true" width="25px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg>
-																					</span>
-																					<span class="fs-4">PRESTAMISTA:</span> <span class="fs-4" id='lblTSE'><?php echo (empty($tseCheck)  ? '' : $tseCheck);?></span><span class="fs-4"></span>&nbsp;&nbsp;<a href="<?php echo URL_TSE;?>" target="_blank"><i class="fa-solid fa-arrow-up-right-from-square fs-3" id='lblTSESite' onclick="copyText(document.getElementById('cpf').value);" style="color: #b3b1b1; cursor: pointer; display: inline;" alt="Abrir Site TSE"></i></a>
 																				</div>
 																			</div>
 																		</div>
@@ -219,7 +270,7 @@
 												<div class="accordion-item">
 													<h2 class="accordion-header" id="kt_accordion_abordagem_header_1">
 														<button class="accordion-button fs-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#kt_accordion_abordagem_body_133" aria-expanded="true" aria-controls="kt_accordion_abordagem_body_1">
-														ABORDAGEM
+														SCRIPT VENDAS
 														</button>
 													</h2>
 													<div id="kt_accordion_abordagem_body_133" class="accordion-collapse collapse shown" aria-labelledby="kt_accordion_abordagem_header_1" data-bs-parent="#kt_accordion_abordagem">
@@ -271,178 +322,7 @@
 											</div>
 											<!--end::Accordion-->
 
-											<!--begin::Accordion-->
-											<div class="accordion" id="kt_accordion_integraall  ms-lg-7 ms-xl-10">
-												<div class="accordion-item">
-													<h2 class="accordion-header" id="kt_accordion_integraall_header_1">
-														<button class="accordion-button fs-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#kt_accordion_integraall_body_133" aria-expanded="true" aria-controls="kt_accordion_integraall_body_1">
-														INTEGRAALL
-														</button>
-													</h2>
-													<div id="kt_accordion_integraall_body_133" class="accordion-collapse collapse <?php echo (!empty($integraallId)  ? 'show' : '');?>" aria-labelledby="kt_accordion_integraall_header_1" data-bs-parent="#kt_accordion_integraall">
-														<div class="accordion-body">
-
-															<div class="mt-3 mb-3">
-																<div>
-																	<span style="color: <?php echo (!empty($integraallId)  ? '#008001' : '#b3b1b1');?>" id='lblTopIntegraall'>
-																		<svg role="img" aria-hidden="true" width="25px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg>
-																	</span>
-																	<span class="fs-4 fw-bold">PROPOSTA: <?php echo $integraallId;?></span> <span class="fs-4" id='lblIntegraall'></span><span class="fs-4">&nbsp;&nbsp;<i class="fa-solid fa-arrows-rotate fs-3" id='lblIntegraallUpdate' style="color: #b3b1b1; cursor: pointer; display: inline;" onclick="checkIntegraall(<?php echo $integraallId;?>);"></i></span>
-																</div>
-																<div class="text-gray-400 fw-bolder fs-7 text-star mt-1 ms-15">
-																</div>
-																<div class="mt-4">
-																	<span class="fs-4 fw-bold mb-4">Integrall:</span> 
-																		<div class="fs-4" id=''>
-																			<span id="lblStatusIntegraall1" class="badge py-3 px-4 fs-7 mt-2 badge-light-<?php echo getStatusNomePorId($statusId)[2];?>"><?php echo strtoupper(getStatusNomePorId($statusId)[1]);?></span>
-																			<span id="lblStatusIntegraall2" class="badge py-3 px-4 fs-7 mt-2 badge-light-<?php echo getStatusAdicionalPorId($statusAdicionalId)[2];?>"><?php echo strtoupper(getStatusAdicionalPorId($statusAdicionalId)[1]);?></span>
-																		</div>
-																	</span>
-																</div>
-																<div class="mt-3">
-																	<span class="fs-4 fw-bold">Link Cliente:</span> <div class="fs-4" id=''><span class="badge py-3 px-4 fs-7 badge-light-dark mt-1" id='lblStatusIntegraall3'><?php echo (empty($linkKompletoCliente)  ? 'Aguardando Geração' : $linkKompletoCliente); ;?></span></div></span>
-																</div>
-																<div class="mt-4">
-																	<span class="fs-4 fw-bold mb-4">Enviar WhatsApps/SMS:</span> 
-																		<div class="fs-4 mt-2">
-																			<a href="<?php echo assetfolder;?>aaspa-enviar-whatsapp/<?php echo $integraallId;?>/WPPCONTINUAR" id='enviarWhatsApp' class="btn btn-<?php echo (empty($linkKompletoCliente) ? 'light-dark' : 'success');?> p-2 px-4" name="btnConsultar" onclick="<?php echo (empty($linkKompletoCliente) ? 'return false;' : '');?>" value="btnConsultar" >CONTINUAR</a>	
-																			<a href="<?php echo assetfolder;?>aaspa-enviar-whatsapp/<?php echo $integraallId;?>/WPPKOMPLETO" id='enviarLinkKompleto'  class="btn btn-<?php echo (empty($linkKompletoCliente) ? 'light-dark' : 'info');?> p-2 px-4 ms-2 " name="btnConsultar" value="btnConsultar" onclick="<?php echo (empty($linkKompletoCliente) ? 'return false;' : '');?>">Link Kompleto</a>	
-																			<a href="<?php echo assetfolder;?>aaspa-enviar-whatsapp/<?php echo $integraallId;?>/WPPGOOGLE" id='enviarLinkGoogle'  class="btn btn-<?php echo (empty($linkKompletoCliente) ? 'light-dark' : 'warning');?> p-2 px-4 ms-2 " name="btnConsultar" value="btnConsultar" onclick="<?php echo (empty($linkKompletoCliente) ? 'return false;' : '');?>">Link Google</a>	
-																			<a href="<?php echo assetfolder;?>aaspa-enviar-whatsapp/<?php echo $integraallId;?>/SMS" id='enviarSMS'  class="btn btn-<?php echo (empty($linkKompletoCliente) ? 'light-dark' : 'primary');?> p-2 px-4 ms-2 " name="btnConsultar" value="btnConsultar" onclick="<?php echo (empty($linkKompletoCliente) ? 'return false;' : '');?>">SMS Carteirinha</a>	
-																		</div>
-																	</span>
-																</div>
-															</div>
-
-															
-														</div>
-													</div>
-												</div>
-											</div>
-
-											<!--begin::Accordion-->
-
-											<!--begin::Accordion-->
-											<div class="accordion" id="kt_accordion_2  ms-lg-7 ms-xl-10">
-												<div class="accordion-item">
-													<h2 class="accordion-header" id="kt_accordion_2_header_1">
-														<button class="accordion-button fs-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#kt_accordion_2_body_133" aria-expanded="true" aria-controls="kt_accordion_2_body_1">
-														CONVERSAS
-														</button>
-													</h2>
-													<div id="kt_accordion_2_body_133" class="accordion-collapse collapse collapse <?php echo (!empty($chat["existRecord"])  ? 'show' : '');?>"" aria-labelledby="kt_accordion_2_header_1" data-bs-parent="#kt_accordion_2">
-														<div class="accordion-body p-0 pt-4">
-
-															<!--CHAT START  -->
-															<div class="flex-lg-row-fluid">
-																<!--begin::Messenger-->
-																<div class="card" id="kt_chat_messenger">
-																	<!--begin::Card header-->
-																	<div class="card-header" id="kt_chat_messenger_header">
-																		<!--begin::Title-->
-																		<div class="card-title">
-																			<!--begin::User-->
-																			<div class="d-flex justify-content-center flex-column me-3">
-																				<span class="fs-4 fw-bold text-gray-900 me-1 mb-2 lh-1"><?php echo strtoupper($nomeCliente  ?? "NÃO INFORMADO");?></span>
-																				<!--begin::Info-->
-																				<div class="mb-0 lh-1">
-																					<span class="badge badge-success badge-circle w-10px h-10px me-1"></span>
-																					<span class="fs-7 fw-semibold text-muted">Histório de Mensagens:</span>
-																				</div>
-																				<!--end::Info-->
-																			</div>
-																			<!--end::User-->
-																			</div>
-																		<!--end::Title-->
-																		<!--begin::Card toolbar-->
-																		<div class="card-toolbar">
-																			<!--begin::Menu-->
-																			<div class="me-n3">
-																				<button class="btn btn-sm btn-icon btn-active-light-primary" data-kt-menu-trigger="click" data-kt-menu-placement="bottom-end">
-																					<i class="bi bi-three-dots fs-2"></i>
-																				</button>
-																				<!--begin::Menu 3-->
-																				
-																				<!--end::Menu 3-->
-																			</div>
-																			<!--end::Menu-->
-																		</div>
-																		<!--end::Card toolbar-->
-																	</div>
-																	<!--end::Card header-->
-
-																	<!--begin::Card body-->
-																	<div class="card-body" id="kt_chat_messenger_body">
-																		<!--begin::Messages-->
-																		<div class="scroll-y me-n5 pe-5 h-300px h-lg-auto" data-kt-element="messages" data-kt-scroll="true" data-kt-scroll-activate="{default: false, lg: true}" data-kt-scroll-max-height="auto" data-kt-scroll-dependencies="#kt_header, #kt_app_header, #kt_app_toolbar, #kt_toolbar, #kt_footer, #kt_app_footer, #kt_chat_messenger_header, #kt_chat_messenger_footer" data-kt-scroll-wrappers="#kt_content, #kt_app_content, #kt_chat_messenger_body" data-kt-scroll-offset="5px" style="max-height: 421px;">
-																			
-																		<?php 
-																
-																		if ((!is_null($chat)) and ($chat['num_rows'] > 0 )){
-																			foreach ($chat["result"]->getResult() as $row){
-																				$SmsStatus = $row->SmsStatus;
-																				$statusMessage["status"] = traduzirStatusTwilio($SmsStatus);
-																				
-																				//echo '10:39:56 - <h3>Dump 82 </h3> <br><br>' . var_dump($statusMessage); exit;					//<-------DEBUG
-																		?>
-																					<!--begin::Message(in)-->
-																					<div class="d-flex justify-content-start mb-10 ">
-																						<div class="d-flex flex-column align-items-start">
-																							<div class="d-flex align-items-center mb-2">
-																								<div class="symbol  symbol-35px symbol-circle "><div class="symbol-label fs-3 bg-light-success text-success"><?php echo substr(strtoupper($row->Type ?? "") ,0,1);?></div></div><!--end::Avatar-->
-																								<div class="ms-3">
-																									<a href="#" class="fs-5 fw-bold text-gray-900 text-hover-primary me-1"><?php echo strtoupper($row->Type ?? "");?> (<?php echo ($row->ProfileName);?>)</a>
-																									<span class="text-muted fs-7 mb-1"><?php echo time_elapsed_string($row->last_updated) . ' - ' . date_format(date_create($row->last_updated),"d/M H:i:s") . '<span class="badge badge-light-' . $statusMessage["status"][1] .  ' ms-auto">' . $statusMessage["status"][0] . '</span>'?></span>
-																								</div>
-																							</div>
-																							<div class="p-5 rounded bg-light-success text-dark mw-lg-400px text-start" data-kt-element="message-text">
-																								<?php echo $row->Body;?>      
-																							</div>
-																							<div class="d-flex align-items-center mb-2">
-																								<div class="ms-3">
-																									<span class="text-muted fs-7 mb-1">
-																										<?php echo $row->To;?> - 
-																										<a href="<?php echo assetfolder;?>aaspa-message-status/<?php echo $row->MessageSid;?>" target="_blank"><?php echo $row->MessageSid;?></a>
-																									
-																									</span>
-																								</div>
-																							</div>
-																						</div>
-																					</div>
-																					<!--end::Message(in)-->
-																		<?php }}?>
-																		</div>
-																		<!--end::Messages-->
-																	</div>
-																	<!--end::Card body-->
-																</div>
-																<!--end::Messenger-->   
-															</div>
-															<!--CHAT END  -->
-
-														</div>
-													</div>
-												</div>
-											</div>
-
 											
-											<div class="accordion" id="kt_accordion_historico  ms-lg-7 ms-xl-10">
-												<div class="accordion-item">
-													<h2 class="accordion-header" id="kt_accordion_historico_header_1">
-														<button class="accordion-button fs-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#kt_accordion_historico_body_133" aria-expanded="true" aria-controls="kt_accordion_historico_body_1">
-														HISTÓRICO
-														</button>
-													</h2>
-													<div id="kt_accordion_historico_body_133" class="accordion-collapse collapse" aria-labelledby="kt_accordion_historico_header_1" data-bs-parent="#kt_accordion_historico">
-														<div class="accordion-body">
-
-															
-														
-
-														</div>
-													</div>
-												</div>
-											</div>
 
 
 											<!--begin::Accordion-->
@@ -533,7 +413,7 @@
 						window.addEventListener('load', function () {
 							const cpfInput = document.getElementById('cpf');
 							if (cpfInput && cpfInput.value.trim() !== '') {
-								checkCpf();
+								//checkCpf();
 							}
 						});
 

@@ -128,6 +128,7 @@ class M_bmg extends Model {
         // $cpf = "65849949615";
         // $cpf = "65849949615";
         // $cpf = "65849949615";
+        $response = null;
 
         try {
             $client = new \SoapClient($wsdl, ['trace' => 1, 'exceptions' => true]);
@@ -150,32 +151,34 @@ class M_bmg extends Model {
         
             $response = $client->__soapCall('listaPlanosRating', [$params]);
 
+            
+            //exit;
             // echo "===== PLANOS COM COBERTURAS =====<br>";
 
-            if (isset($response->planos) && is_array($response->planos)) {
-                foreach ($response->planos as $plano) {
-                    echo "<strong>Plano: {$plano->nomePlano} (Código: {$plano->codigoPlano})</strong><br>";
-                    echo " - Produto: {$plano->codigoSeguro}<br>";
-                    echo " - Valor Segurado: R$ " . number_format($plano->valorCapitalSegurado, 2, ',', '.') . "<br>";
-                    echo " - Prêmio: R$ " . number_format($plano->valorPremio, 2, ',', '.') . "<br>";
-                    // echo " - Vigência: {$plano->quantidadeMesVigente} meses<br>";
-                    // echo " - Tipo Pagamento: {$plano->tipoPagamento}<br>";
+            // if (isset($response->planos) && is_array($response->planos)) {
+            //     foreach ($response->planos as $plano) {
+            //         echo "<strong>Plano: {$plano->nomePlano} (Código: {$plano->codigoPlano})</strong><br>";
+            //         echo " - Produto: {$plano->codigoSeguro}<br>";
+            //         echo " - Valor Segurado: R$ " . number_format($plano->valorCapitalSegurado, 2, ',', '.') . "<br>";
+            //         echo " - Prêmio: R$ " . number_format($plano->valorPremio, 2, ',', '.') . "<br>";
+            //         // echo " - Vigência: {$plano->quantidadeMesVigente} meses<br>";
+            //         // echo " - Tipo Pagamento: {$plano->tipoPagamento}<br>";
 
-                    // if (isset($plano->coberturas) && is_array($plano->coberturas)) {
-                    // 	echo "Coberturas:<br>";
-                    // 	foreach ($plano->coberturas as $cobertura) {
-                    // 		echo " &bull; {$cobertura->nomeCobertura} (Código: {$cobertura->codigoCobertura}) - ";
-                    // 		echo "Benefício: R$ " . number_format($cobertura->valorBeneficio, 2, ',', '.') . "<br>";
-                    // 	}
-                    // } else {
-                    // 	echo "Nenhuma cobertura disponível para este plano.<br>";
-                    // }
+            //         // if (isset($plano->coberturas) && is_array($plano->coberturas)) {
+            //         // 	echo "Coberturas:<br>";
+            //         // 	foreach ($plano->coberturas as $cobertura) {
+            //         // 		echo " &bull; {$cobertura->nomeCobertura} (Código: {$cobertura->codigoCobertura}) - ";
+            //         // 		echo "Benefício: R$ " . number_format($cobertura->valorBeneficio, 2, ',', '.') . "<br>";
+            //         // 	}
+            //         // } else {
+            //         // 	echo "Nenhuma cobertura disponível para este plano.<br>";
+            //         // }
 
-                    echo str_repeat('-', 40) . "<br>";
-                }
-            } else {
-                echo "Nenhum plano retornado.<br>";
-            }
+            //         echo str_repeat('-', 40) . "<br>";
+            //     }
+            // } else {
+            //     echo "Nenhum plano retornado.<br>";
+            // }
         
         
 
@@ -187,10 +190,17 @@ class M_bmg extends Model {
         } catch (SoapFault $fault) {
             echo "Erro: {$fault->faultcode} - {$fault->faultstring}";
         }
+
+        return $response;
     }
 
     public function obterCartoesDisponiveis($cpf){
         $wsdl = 'https://ws1.bmgconsig.com.br/webservices/ProdutoSeguroWebService?wsdl';
+
+        $returnData = [];
+        $returnData["status"] = false;
+        $returnData["mensagem"] = "";
+        $returnData["cartoes"] = [];
 
         try {
             $client = new \SoapClient($wsdl, ['trace' => 1, 'exceptions' => true]);
@@ -212,35 +222,58 @@ class M_bmg extends Model {
                 // echo "</pre>";exit;
 
             if (((isset($response->mensagemDeErro))) and ((!empty($response->mensagemDeErro)))){
-                echo "Cliente Inválido: <br>" . $response->mensagemDeErro;
+                $returnData["mensagem"] = "Cliente Inválido: <br>" . $response->mensagemDeErro;
             } else {
-
+                
                 if (isset($response->cartaoClienteAtivoVendaSeguro) && is_array($response->cartaoClienteAtivoVendaSeguro)) {
+                    $returnData["status"] = true;
                     foreach ($response->cartaoClienteAtivoVendaSeguro as $cartao) {
-                        echo "<h3>" . $cartao->nomeCliente . "<br>" . $cartao->numeroCartao . "</h3>";
-                        echo "Limite: R$ " . number_format($cartao->limiteCartao, 2, ',', '.') . "<br>";
-                        echo "Cidade: " . $cartao->cidade . "<br>";
-                        echo "Número Conta Interna: <a href=" . assetfolder . 'index.php/lab/listaPlanosRating/' . $cartao->numeroInternoConta . '/' . $cartao->limiteCartao . ">"  . $cartao->numeroInternoConta  . "</a><br>";
-                        echo "<b><br>MED: </b><br><br>";
-                        $this->listaPlanosRating(BMG_CODIGO_PRODUTO_MED, $cartao->numeroInternoConta, $cartao->limiteCartao);
+                        $returnData["cartoes"][] = [
+                            'nomeCliente'         => $cartao->nomeCliente,
+                            'numeroCartao'        => $cartao->numeroCartao,
+                            'limiteCartao'        => number_format($cartao->limiteCartao, 2, ',', '.'),
+                            'cidade'              => $cartao->cidade,
+                            'numeroInternoConta'  => $cartao->numeroInternoConta,
+                            'cartaoSelecionado'   => $cartao->cartaoSelecionado,
+                            'codigoCliente'       => $cartao->codigoCliente,
+                            'codigoEntidade'      => $cartao->codigoEntidade,
+                            'cpf'                 => $cartao->cpf,
+                            'dataNascimento'      => $cartao->dataNascimento,
+                            'ehElegivel'          => $cartao->ehElegivel,
+                            'motivoElegibilidade' => $cartao->motivoElegibilidade,
+                            'nomeEntidade'        => $cartao->nomeEntidade,
+                            'orgaoFormatado'      => $cartao->orgaoFormatado,
+                            'sequencialOrgao'     => $cartao->sequencialOrgao,
+                            'planos' => [
+                                'med' => $this->listaPlanosRating(BMG_CODIGO_PRODUTO_MED, $cartao->numeroInternoConta, $cartao->limiteCartao),
+                                //'pap' => $this->listaPlanosRating(BMG_CODIGO_PRODUTO_PAP, $cartao->numeroInternoConta, $cartao->limiteCartao),
+                                'vida' => $this->listaPlanosRating(BMG_CODIGO_PRODUTO_VIDA, $cartao->numeroInternoConta, $cartao->limiteCartao)
+                                //'prestamista' => $this->listaPlanosRating(BMG_CODIGO_PRODUTO_PRESTAMISTA, $cartao->numeroInternoConta, $cartao->limiteCartao),
+                            ]
+                        ];
+                        // echo "<h3>" . $cartao->nomeCliente . "<br>" . $cartao->numeroCartao . "</h3>";
+                        // echo "Limite: R$ " . number_format($cartao->limiteCartao, 2, ',', '.') . "<br>";
+                        // echo "Cidade: " . $cartao->cidade . "<br>";
+                        // echo "Número Conta Interna: <a href=" . assetfolder . 'index.php/lab/listaPlanosRating/' . $cartao->numeroInternoConta . '/' . $cartao->limiteCartao . ">"  . $cartao->numeroInternoConta  . "</a><br>";
+                        // echo "<b><br>MED: </b><br><br>";
+                        // $this->listaPlanosRating(BMG_CODIGO_PRODUTO_MED, $cartao->numeroInternoConta, $cartao->limiteCartao);
                         
-                        echo "<b><br>PAPCARD: </b><br><br>";
-                        $this->listaPlanosRating(BMG_CODIGO_PRODUTO_PAP, $cartao->numeroInternoConta, $cartao->limiteCartao);
+                        // echo "<b><br>PAPCARD: </b><br><br>";
+                        // $this->listaPlanosRating(BMG_CODIGO_PRODUTO_PAP, $cartao->numeroInternoConta, $cartao->limiteCartao);
                         
-                        echo "<b><br>PRESTAMISTA: </b><br><br>";
-                        $this->listaPlanosRating(BMG_CODIGO_PRODUTO_PRESTAMISTA, $cartao->numeroInternoConta, $cartao->limiteCartao);
+                        // echo "<b><br>PRESTAMISTA: </b><br><br>";
+                        // $this->listaPlanosRating(BMG_CODIGO_PRODUTO_PRESTAMISTA, $cartao->numeroInternoConta, $cartao->limiteCartao);
 
-                        echo "<b><br>VIDA: </b><br><br>";
-                        $this->listaPlanosRating(BMG_CODIGO_PRODUTO_VIDA, $cartao->numeroInternoConta, $cartao->limiteCartao);
+                        // echo "<b><br>VIDA: </b><br><br>";
+                        // $this->listaPlanosRating(BMG_CODIGO_PRODUTO_VIDA, $cartao->numeroInternoConta, $cartao->limiteCartao);
 
                     }
                 } else {
-                    echo "Nenhum cartão disponível ou retorno inesperado." . "<br>";
+                    $returnData["mensagem"] = "Nenhum cartão disponível ou retorno inesperado.<br>";
                 }
-                exit;
                 //echo $response->cartaoClienteAtivoVendaSeguro[0]->numeroInternoConta;exit;
                 
-                $this->listaPlanosRating($response->cartaoClienteAtivoVendaSeguro[0]);
+                //$this->listaPlanosRating($response->cartaoClienteAtivoVendaSeguro[0]);
                 // echo "<pre>";
                 // print_r($response);
                 // echo "</pre>";	
@@ -248,15 +281,18 @@ class M_bmg extends Model {
 
 
         } catch (SoapFault $fault) {
-            echo "Erro: {$fault->faultcode} - {$fault->faultstring}";
+            $returnData["mensagem"] = "Erro: {$fault->faultcode} - {$fault->faultstring}";
+            //echo "Erro: {$fault->faultcode} - {$fault->faultstring}";
         }
+
+        //exit;
+
+        return $returnData;
     }
 
 
-    public function geraScriptVenda(){
+    public function geraScriptVenda($cpf, $conta, $plano, $codigoTipoPagamento = 4){
         $wsdl = 'https://ws1.bmgconsig.com.br/webservices/ProdutoSeguroWebService?wsdl';
-
-        $cpf = "65849949615";
 
         try {
             $client = new \SoapClient($wsdl, ['trace' => 1, 'exceptions' => true]);
@@ -266,15 +302,15 @@ class M_bmg extends Model {
                 'senha'        => BMG_SEGURO_SENHA,
                 'loginConsig'  => BMG_SEGURO_LOGIN_CONSIG,
                 'senhaConsig'  => BMG_SEGURO_SENHA_CONSIG,
-                'codLoja'                           => 1234,             // Código da loja fornecido pelo BMG
-                'codigoPlano'                       => 567,              // Código do plano de seguro desejado
-                'codigoSeguro'                      => 1007,               // Ex: Seguro Prestamista Consignado
+                'codLoja'                           => BMG_ENTIDADE,             // Código da loja fornecido pelo BMG
+                'codigoPlano'                       => $plano,              // Código do plano de seguro desejado
+                'codigoSeguro'                      => BMG_CODIGO_PRODUTO_MED,               // Ex: Seguro Prestamista Consignado
                 'codigoTipoFormaEnvio'             => 15,               // Ex: 15 = Digital
-                'codigoTipoPagamento'              => 2,                // Ex: 2 = Mensal
-                'cpf'                               => '65849949615',    // CPF do cliente
+                //'codigoTipoPagamento'              => $codigoTipoPagamento,                // Ex: 2 = Mensal  // 4= Parcelado
+                'cpf'                               => $cpf,    // CPF do cliente
                  'formaPagamentoProdutoSeguro'=> 5,                // Ex: 5 = Folha de Pagamento
-                'matricula'                         => '1655645452',      // Matrícula do cliente
-                'numeroInternoConta'               => 7543377,           // Obtido de obterCartoesDisponiveis
+                //'matricula'                         => '1655645452',      // Matrícula do cliente
+                'numeroInternoConta'               => $conta,           // Obtido de obterCartoesDisponiveis
                 'renda'                             => 2500.00,          // Renda do cliente
                 'upgrade'                           => false             // false para venda normal
             ];

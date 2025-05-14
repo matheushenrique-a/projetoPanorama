@@ -47,10 +47,28 @@ class Bmg extends BaseController
 
     //http://localhost/InsightSuite/public/bmg_receptivo
     public function bmg_receptivo($cpf = null){
-        $data['pageTitle'] = "BMG - Receptivo Seguros";
 
-		$this->m_bmg->obterCartoesDisponiveis($cpf);
-		exit;
+
+        // $cpf = '10789022320';
+        // $conta = '8658088';
+        // $plano = 111;
+        // $codigoTipoPagamento = 4;
+        // $this->m_bmg->geraScriptVenda($cpf, $conta, $plano, $codigoTipoPagamento);
+        // exit;
+
+        // stdClass Object
+        // (
+        //     [login] => 
+        //     [senha] => 
+        //     [excecaoDeRegraDeNegocio] => 
+        //     [excecaoGenerica] => 
+        //     [executadoComSucessso] => 1
+        //     [mensagemDeErro] => 
+        //     [script] => SCRIPT DE AUDITORIA BMG MED INDIVIDUAL Conforme estávamos falando Senhor(a) JOAO FERREIRA LUCAS , meu nome é _________, sou correspondente bancário/a do banco BMG e vamos concluir sua adesão do seguro. Informo que a ligação está sendo gravada. Por favor, poderia me confirmar se este é seu número de celular: (85)987805621? {Pausa resposta}. (Caso o número do telefone esteja incorreto ou não seja um número de celular, fazer a atualização do cadastro) Positivação  Opção 1 Positivação  Opção 2 Ótimo! Agora me confirme os 3 primeiros (ou os 3 últimos) números do seu CPF? {Pausa para a resposta do cliente} CPF: 107.890.223-20 Excelente! Por último me confirme o mês do seu aniversário ?{Pausa para a resposta do cliente} Data Nascimento: 23/04/1957 Ótimo! Agora me confirme sua data de nascimento (Mês/Ano) {Pausa para a resposta do cliente} Data Nascimento: 23/04/1957 Excelente! Por último me confirme o Nome completo da sua Mãe?(Acatar minimamente o nome e sobrenome, não sendo necessário nome completo){Pausa para a resposta do cliente}. Nome da Mãe: LUCIMAR FERREIRA LUCAS O Seguro Bmg MED INDIVIDUAL que você está contratando te dará cobertura em caso de Morte Acidental no valor de R$ 1.000,00, além disso você ainda terá vários outros benefícios que virão incluídos, como: Obs.: Obrigatório citar ao menos um dos benefícios. Consultas ilimitadas de telemedicina com Clínico Geral. Consultas presenciais e exames de baixo custo, pagos pelo segurado. Remédios genéricos com no mínimo 30% de desconto e de marca com mínimo 15%, em rede de farmácias credenciadas Sorteios no valor de R$ 5.000,00 (cinco mil reais) todo mês pela loteria federal Interação Livre Perguntar se o cliente já teve que pagar por consultas particulares. Perguntar se o cliente já teve gastos com compra de medicamento. Perguntar se o cliente já participou de sorteios ou o que faria se ganhasse em algum sorteio. Orientamos que o cliente fale algumas palavras, (evitar respostas sim ou não) Para usufruir de todas as coberturas e benefícios do seguro, pelo período de 12 meses, o Sr(a) pagará o valor de R$ 21,90, que poderá ser mensal (R$ 21,90 cobrado em cada mês) ou parcelado (12 parcelas de R$ 21,90) de acordo com sua escolha. Os benefícios estarão disponíveis em até 24h após aprovação do pagamento em seu cartão. A renovação do seguro será anual, sendo a primeira realizada de forma automática e as demais serão feitas através da corretora de seguros, mediante o seu consentimento. Caso tenha dúvidas, basta entrar em contato com a Central BMG no telefone 4002-7007 Sr(a) JOAO FERREIRA LUCAS , confirma a contratação do seguro BMG MED INDIVIDUAL nesta data 13/05/2025 no valor de R$ 21,90 por mês, por 12 meses de cobertura, que será lançado na fatura do seu cartão consignado BMG? {Pausa para a resposta do cliente} Informamos que o BMG MED INDIVIDUAL é uma parceria entre a Generali Brasil Seguros S.A e a BMG SEGURADORA, e as condições contratuais do seguro serão enviadas para o Sr(a) por SMS e as informações da corretagem estão disponíveis no site do Banco Bmg. Lembramos que o produto não é um seguro saúde, os serviços de assistência são complementares ao seguro de morte acidental. Agradecemos a confiança, bom dia/tarde/noite.
+        // )
+
+
+        $data['pageTitle'] = "BMG - Receptivo Seguros";
 
         $btnSalvar = $this->getpost('btnSalvar');
         $btnConsultar = $this->getpost('btnConsultar');
@@ -96,6 +114,7 @@ class Bmg extends BaseController
         $last_update = "";
         $cpfINSS = "";
         $cliente = null;
+        $bmgLiberado = null;
         
         $cpf = numberOnly($cpf);
         if ((empty($cpf)) or ($cpf == "0")) { $cpf = numberOnly($this->getpost('cpf'));}
@@ -154,24 +173,13 @@ class Bmg extends BaseController
         
         //CENÁRIO 02: BUSCAR CPF
         } else if (!empty($cpf)){
-            if ((strlen($cpf) != 11)){
+
+            if ((strlen($cpf)) == 10){
+                $cpf = "0" . $cpf;
+            } else if ((strlen($cpf) != 11)){
                 $returnData["mensagem"] = "O CPF deve ser preenchido.";
             } else {
-                //VERIFICA HISTÓRICO DE PROPOSTAS NO INTEGRAALL PARA ESSE CPF. 
-                //Para seguir, a ultima proposta deve estar cancelada ou não pode existir nenhuma
-                $cliente = $this->m_integraall->ultima_proposta($cpf);
-
-                //existe histórico de propostas
-                if ($cliente['existRecord']){
-                    $statusAdicional = strtoupper($cliente['firstRow']->statusAdicional);
-                    $nomeStatus = strtoupper($cliente['firstRow']->nomeStatus);
-                    $integraallIdHistorico = strtoupper($cliente['firstRow']->integraallId);
-                    
-                    //para seguir, a última proposta precisa pelo menos de um status cancelamento, ambos falsos = proposta ativa
-                    if ((strpos($statusAdicional,'CANCELA') === false) and (strpos($nomeStatus,'CANCELA') === false)) {
-                        $returnData["mensagem"] = "Existe uma proposta em aberto no Integraall [$integraallIdHistorico].<br>Para prosseguir cancele a proposta primeiro.";
-                    }
-                }
+                $bmgLiberado = $this->m_bmg->obterCartoesDisponiveis($cpf);
             }
 
         //CENÁRIO 03: EXIBIR PROPOSTA POR INTEGRAAL ID
@@ -225,6 +233,7 @@ class Bmg extends BaseController
         $data['journey'] = $this->m_insight->getJourney(celularToWaId($telefone));
 
         $data['cpf'] = $cpf;
+        $data['bmgLiberado'] = $bmgLiberado;
         $data['cpfINSS'] = $cpfINSS;
         $data['nomeCliente'] = $nomeCliente;
         $data['estadoCivil'] = $estadoCivil;
