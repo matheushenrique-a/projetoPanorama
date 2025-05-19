@@ -185,7 +185,7 @@ class M_bmg extends Model {
 
             // echo "<pre>";
             // print_r($response);
-            // echo "</pre>";
+            // echo "</pre>";exit;
 
         } catch (SoapFault $fault) {
             echo "Erro: {$fault->faultcode} - {$fault->faultstring}";
@@ -276,7 +276,7 @@ class M_bmg extends Model {
                 //$this->listaPlanosRating($response->cartaoClienteAtivoVendaSeguro[0]);
                 // echo "<pre>";
                 // print_r($response);
-                // echo "</pre>";	
+                // echo "</pre>";	exit;
             }
 
 
@@ -319,9 +319,9 @@ class M_bmg extends Model {
 
 
 
-            echo "<pre>";
-            print_r($response);
-            echo "</pre>";
+            // echo "<pre>";
+            // print_r($response);
+            // echo "</pre>";
 
         } catch (SoapFault $fault) {
             echo "Erro: {$fault->faultcode} - {$fault->faultstring}";

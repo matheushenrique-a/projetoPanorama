@@ -58,10 +58,10 @@
 					<!--begin::Content-->
 					<div class="d-flex flex-column flex-center pb-0 pb-lg-10 p-10 w-100">
 						<!--begin::Image-->
-						<img class="w-250px w-sm-450px mb-10 mb-lg-20 mt-20" src="<?php echo assetfolder ?>assets/media/auth/agency.png"/>
+						<img class="mw-300px w-sm-450px mb-10 mb-lg-20 mt-20" src="<?php echo assetfolder ?>assets/media/auth/agency2.png"/>
 						<!--end::Image-->
 						<!--begin::Title-->
-						<h1 class="text-gray-800 fs-2qx fw-bold text-center mb-7"><?php echo AppName;?></h1>
+						<h1 class="text-gray-800 fs-1qx fw-bold text-center mb-7">Quid | Corban Inteligente</h1>
 						<!--end::Title-->
 						<!--begin::Text-->
 						<div class="text-gray-600 fs-base text-center fw-semibold">Você mais produtivo com o Insight Suite. Antes de acessá-la você precisar estar autorizado pela nossa equipe administrativa. Qualquer dúvida entre em contato através de contato@pravoce.io</div>

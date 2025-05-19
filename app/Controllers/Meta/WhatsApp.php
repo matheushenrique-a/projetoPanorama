@@ -215,7 +215,7 @@ class WhatsApp extends BaseController
 
 
     //http://localhost/InsightSuite/public/whatsapp-webhook
-    // https://99fe-177-73-197-2.ngrok-free.app/InsightSuite/public/whatsapp-webhook
+    // https://2a1f-2804-1b3-6149-8caf-ac71-3c6e-350f-5bfb.ngrok-free.app/InsightSuite/public/whatsapp-webhook
     public function whatsapp_webhook(){
         //$result = $this->m_whatsapp->getWhatsAppMedia("1357103935532763", "image/jpeg");
         //http_response_code(200);

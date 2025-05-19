@@ -322,6 +322,177 @@
 											</div>
 											<!--end::Accordion-->
 
+											<!--begin::Accordion-->
+											<div class="accordion" id="kt_accordion_abordagem  ms-lg-7 ms-xl-10">
+												<div class="accordion-item">
+													<h2 class="accordion-header" id="kt_accordion_abordagem_header_1">
+														<button class="accordion-button fs-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#kt_accordion_abordagem_body_133" aria-expanded="true" aria-controls="kt_accordion_abordagem_body_1">
+														LIMITES E PLANOS
+														</button>
+													</h2>
+													<div id="kt_accordion_abordagem_body_133" class="accordion-collapse collapse shown" aria-labelledby="kt_accordion_abordagem_header_1" data-bs-parent="#kt_accordion_abordagem">
+														<div class="accordion-body">
+
+														<div style="font-size:18px; line-height:1.8; font-family:Arial, sans-serif;">
+
+															<p><strong>Bom dia <?php echo firstName($nomeCompletoUltima);?>, tudo bem?</strong></p>
+
+															<p><strong>Que bom!</strong> <?php echo firstName($nomeCompletoUltima);?>, meu nome é <strong><?php echo firstName($session->nickname);?></strong> e eu estou entrando em contato com o senhor hoje em nome da <span style="background-color:yellow;"><strong>Associação do Aposentado</strong></span> (ou assistência social ao aposentado) referente à <span style="background-color:yellow;"><strong>carteirinha do aposentado</strong></span>, que é de seu direito com alguns benefícios gratuitos. <strong>O senhor já foi informado?</strong></p>
+
+															<p><strong>Não?</strong> Vou te informar então, tá? <span style="background-color:yellow;"><strong>Recentemente no mês de Fevereiro</strong></span>, foram liberados mais de <strong>40 medicamentos gratuitos</strong> nas farmácias populares. Eu não sei se o senhor tem acompanhado no jornal, né?</p>
+
+															<p>Além desse benefício, foi liberado o <strong>médico gratuito através da telemedicina</strong>. E caso você precise realizar algum exame, você terá <strong>85% de desconto</strong> em clínicas. Mesma coisa com medicamentos, tá?</p>
+
+															<p>Se o senhor precisar comprar algum medicamento que não esteja na lista dos que são gratuitos, você consegue pegar ele com <strong>60% de desconto</strong>.</p>
+
+															<p>O senhor irá fazer o uso desses benefícios com a <strong>carteirinha do aposentado</strong>. <strong>Tem alguma dúvida?</strong></p>
+
+															<p>A carteirinha é disponibilizada <strong style="background-color:yellow;">gratuitamente</strong>, tá? Totalmente gratuita, na plataforma do governo. Eu vou te encaminhar a plataforma do governo no seu WhatsApp, nesse número que eu falo com você tem WhatsApp?</p>
+
+															<p>Certo, irei te enviar e te auxiliar na liberação da carteirinha de forma gratuita.</p>
+
+															<p><strong>Olha pra mim se a mensagem chegou</strong>, é só clicar em continuar pra gente seguir o atendimento por lá. O senhor consegue colocar a ligação no viva-voz e entrar no seu WhatsApp pra verificar se recebeu minha mensagem?</p>
+
+															<hr style="margin: 30px 0; border: 1px dashed gray;">
+
+															<p><strong style="background-color:yellow;">OBJEÇÕES:</strong></p>
+
+															<p><strong>“Não quero”</strong> – <?php echo firstName($nomeCompletoUltima);?>, é <strong style="background-color:yellow;">seu direito</strong> receber essa carteirinha gratuita e os benefícios do governo. Você <strong>trabalhou a vida inteira</strong> pra isso!</p>
+
+															<p><strong>“Já tenho carteirinha”</strong> – Não tem problema. Como o senhor recebe essa carteirinha de forma gratuita, além dos serviços que o senhor já tem, o senhor vai receber <strong>o dobro</strong>, como a <strong>assistência residencial</strong> que conta com eletricista, encanador…</p>
+
+															<p><strong>“Não faço nada por telefone”</strong> – É verdade José, hoje em dia tá tendo muita notícia de golpe, né? É por isso que o governo pede pra gente apenas <strong>auxiliar vocês a entrar na plataforma do gov</strong> pra fazer tudo com segurança por lá. Posso te chamar no WhatsApp pra gente finalizar?</p>
+
+															<p><strong>“Mas eu pago pra ter/receber a carteirinha”</strong> – <strong style="color:red;">Não!</strong> A carteirinha do aposentado é enviada de forma <strong>gratuita</strong> para o senhor, tanto no celular quanto por correios, caso você prefira.</p>
+
+															<p><strong>“Quais medicamentos são gratuitos?”</strong> – São vários medicamentos, seu <?php echo firstName($nomeCompletoUltima);?>, como <strong>Losartana, Dipirona, Paracetamol, Vitaminas</strong> e muitos outros.</p>
+
+															<p><strong>“Já fui informado!”</strong> – <strong>Então por que você não tá usando ainda?</strong></p>
+
+															<p><strong>“E depois vai cobrar alguma coisa?”</strong> – O senhor só paga por aquilo que usar. É uma <strong>coparticipação</strong>, e como eu disse, o senhor tem <strong>80% de desconto nas consultas</strong>, mas os <strong>medicamentos permanecem gratuitos</strong>.</p>
+
+															</div>
+
+														</div>
+													</div>
+												</div>
+											</div>
+											<!--end::Accordion-->
+
+											<!--begin::Accordion-->
+											<div class="accordion" id="kt_accordion_abordagem  ms-lg-7 ms-xl-10">
+												<div class="accordion-item">
+													<h2 class="accordion-header" id="kt_accordion_abordagem_header_1">
+														<button class="accordion-button fs-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#kt_accordion_abordagem_body_133" aria-expanded="true" aria-controls="kt_accordion_abordagem_body_1">
+														PROPOSTA MED
+														</button>
+													</h2>
+													<div id="kt_accordion_abordagem_body_133" class="accordion-collapse collapse shown" aria-labelledby="kt_accordion_abordagem_header_1" data-bs-parent="#kt_accordion_abordagem">
+														<div class="accordion-body">
+
+														<div style="font-size:18px; line-height:1.8; font-family:Arial, sans-serif;">
+
+															<p><strong>Bom dia <?php echo firstName($nomeCompletoUltima);?>, tudo bem?</strong></p>
+
+															<p><strong>Que bom!</strong> <?php echo firstName($nomeCompletoUltima);?>, meu nome é <strong><?php echo firstName($session->nickname);?></strong> e eu estou entrando em contato com o senhor hoje em nome da <span style="background-color:yellow;"><strong>Associação do Aposentado</strong></span> (ou assistência social ao aposentado) referente à <span style="background-color:yellow;"><strong>carteirinha do aposentado</strong></span>, que é de seu direito com alguns benefícios gratuitos. <strong>O senhor já foi informado?</strong></p>
+
+															<p><strong>Não?</strong> Vou te informar então, tá? <span style="background-color:yellow;"><strong>Recentemente no mês de Fevereiro</strong></span>, foram liberados mais de <strong>40 medicamentos gratuitos</strong> nas farmácias populares. Eu não sei se o senhor tem acompanhado no jornal, né?</p>
+
+															<p>Além desse benefício, foi liberado o <strong>médico gratuito através da telemedicina</strong>. E caso você precise realizar algum exame, você terá <strong>85% de desconto</strong> em clínicas. Mesma coisa com medicamentos, tá?</p>
+
+															<p>Se o senhor precisar comprar algum medicamento que não esteja na lista dos que são gratuitos, você consegue pegar ele com <strong>60% de desconto</strong>.</p>
+
+															<p>O senhor irá fazer o uso desses benefícios com a <strong>carteirinha do aposentado</strong>. <strong>Tem alguma dúvida?</strong></p>
+
+															<p>A carteirinha é disponibilizada <strong style="background-color:yellow;">gratuitamente</strong>, tá? Totalmente gratuita, na plataforma do governo. Eu vou te encaminhar a plataforma do governo no seu WhatsApp, nesse número que eu falo com você tem WhatsApp?</p>
+
+															<p>Certo, irei te enviar e te auxiliar na liberação da carteirinha de forma gratuita.</p>
+
+															<p><strong>Olha pra mim se a mensagem chegou</strong>, é só clicar em continuar pra gente seguir o atendimento por lá. O senhor consegue colocar a ligação no viva-voz e entrar no seu WhatsApp pra verificar se recebeu minha mensagem?</p>
+
+															<hr style="margin: 30px 0; border: 1px dashed gray;">
+
+															<p><strong style="background-color:yellow;">OBJEÇÕES:</strong></p>
+
+															<p><strong>“Não quero”</strong> – <?php echo firstName($nomeCompletoUltima);?>, é <strong style="background-color:yellow;">seu direito</strong> receber essa carteirinha gratuita e os benefícios do governo. Você <strong>trabalhou a vida inteira</strong> pra isso!</p>
+
+															<p><strong>“Já tenho carteirinha”</strong> – Não tem problema. Como o senhor recebe essa carteirinha de forma gratuita, além dos serviços que o senhor já tem, o senhor vai receber <strong>o dobro</strong>, como a <strong>assistência residencial</strong> que conta com eletricista, encanador…</p>
+
+															<p><strong>“Não faço nada por telefone”</strong> – É verdade José, hoje em dia tá tendo muita notícia de golpe, né? É por isso que o governo pede pra gente apenas <strong>auxiliar vocês a entrar na plataforma do gov</strong> pra fazer tudo com segurança por lá. Posso te chamar no WhatsApp pra gente finalizar?</p>
+
+															<p><strong>“Mas eu pago pra ter/receber a carteirinha”</strong> – <strong style="color:red;">Não!</strong> A carteirinha do aposentado é enviada de forma <strong>gratuita</strong> para o senhor, tanto no celular quanto por correios, caso você prefira.</p>
+
+															<p><strong>“Quais medicamentos são gratuitos?”</strong> – São vários medicamentos, seu <?php echo firstName($nomeCompletoUltima);?>, como <strong>Losartana, Dipirona, Paracetamol, Vitaminas</strong> e muitos outros.</p>
+
+															<p><strong>“Já fui informado!”</strong> – <strong>Então por que você não tá usando ainda?</strong></p>
+
+															<p><strong>“E depois vai cobrar alguma coisa?”</strong> – O senhor só paga por aquilo que usar. É uma <strong>coparticipação</strong>, e como eu disse, o senhor tem <strong>80% de desconto nas consultas</strong>, mas os <strong>medicamentos permanecem gratuitos</strong>.</p>
+
+															</div>
+
+														</div>
+													</div>
+												</div>
+											</div>
+											<!--end::Accordion-->
+
+											<!--begin::Accordion-->
+											<div class="accordion" id="kt_accordion_abordagem  ms-lg-7 ms-xl-10">
+												<div class="accordion-item">
+													<h2 class="accordion-header" id="kt_accordion_abordagem_header_1">
+														<button class="accordion-button fs-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#kt_accordion_abordagem_body_133" aria-expanded="true" aria-controls="kt_accordion_abordagem_body_1">
+														PROPOSTA VIDA
+														</button>
+													</h2>
+													<div id="kt_accordion_abordagem_body_133" class="accordion-collapse collapse shown" aria-labelledby="kt_accordion_abordagem_header_1" data-bs-parent="#kt_accordion_abordagem">
+														<div class="accordion-body">
+
+														<div style="font-size:18px; line-height:1.8; font-family:Arial, sans-serif;">
+
+															<p><strong>Bom dia <?php echo firstName($nomeCompletoUltima);?>, tudo bem?</strong></p>
+
+															<p><strong>Que bom!</strong> <?php echo firstName($nomeCompletoUltima);?>, meu nome é <strong><?php echo firstName($session->nickname);?></strong> e eu estou entrando em contato com o senhor hoje em nome da <span style="background-color:yellow;"><strong>Associação do Aposentado</strong></span> (ou assistência social ao aposentado) referente à <span style="background-color:yellow;"><strong>carteirinha do aposentado</strong></span>, que é de seu direito com alguns benefícios gratuitos. <strong>O senhor já foi informado?</strong></p>
+
+															<p><strong>Não?</strong> Vou te informar então, tá? <span style="background-color:yellow;"><strong>Recentemente no mês de Fevereiro</strong></span>, foram liberados mais de <strong>40 medicamentos gratuitos</strong> nas farmácias populares. Eu não sei se o senhor tem acompanhado no jornal, né?</p>
+
+															<p>Além desse benefício, foi liberado o <strong>médico gratuito através da telemedicina</strong>. E caso você precise realizar algum exame, você terá <strong>85% de desconto</strong> em clínicas. Mesma coisa com medicamentos, tá?</p>
+
+															<p>Se o senhor precisar comprar algum medicamento que não esteja na lista dos que são gratuitos, você consegue pegar ele com <strong>60% de desconto</strong>.</p>
+
+															<p>O senhor irá fazer o uso desses benefícios com a <strong>carteirinha do aposentado</strong>. <strong>Tem alguma dúvida?</strong></p>
+
+															<p>A carteirinha é disponibilizada <strong style="background-color:yellow;">gratuitamente</strong>, tá? Totalmente gratuita, na plataforma do governo. Eu vou te encaminhar a plataforma do governo no seu WhatsApp, nesse número que eu falo com você tem WhatsApp?</p>
+
+															<p>Certo, irei te enviar e te auxiliar na liberação da carteirinha de forma gratuita.</p>
+
+															<p><strong>Olha pra mim se a mensagem chegou</strong>, é só clicar em continuar pra gente seguir o atendimento por lá. O senhor consegue colocar a ligação no viva-voz e entrar no seu WhatsApp pra verificar se recebeu minha mensagem?</p>
+
+															<hr style="margin: 30px 0; border: 1px dashed gray;">
+
+															<p><strong style="background-color:yellow;">OBJEÇÕES:</strong></p>
+
+															<p><strong>“Não quero”</strong> – <?php echo firstName($nomeCompletoUltima);?>, é <strong style="background-color:yellow;">seu direito</strong> receber essa carteirinha gratuita e os benefícios do governo. Você <strong>trabalhou a vida inteira</strong> pra isso!</p>
+
+															<p><strong>“Já tenho carteirinha”</strong> – Não tem problema. Como o senhor recebe essa carteirinha de forma gratuita, além dos serviços que o senhor já tem, o senhor vai receber <strong>o dobro</strong>, como a <strong>assistência residencial</strong> que conta com eletricista, encanador…</p>
+
+															<p><strong>“Não faço nada por telefone”</strong> – É verdade José, hoje em dia tá tendo muita notícia de golpe, né? É por isso que o governo pede pra gente apenas <strong>auxiliar vocês a entrar na plataforma do gov</strong> pra fazer tudo com segurança por lá. Posso te chamar no WhatsApp pra gente finalizar?</p>
+
+															<p><strong>“Mas eu pago pra ter/receber a carteirinha”</strong> – <strong style="color:red;">Não!</strong> A carteirinha do aposentado é enviada de forma <strong>gratuita</strong> para o senhor, tanto no celular quanto por correios, caso você prefira.</p>
+
+															<p><strong>“Quais medicamentos são gratuitos?”</strong> – São vários medicamentos, seu <?php echo firstName($nomeCompletoUltima);?>, como <strong>Losartana, Dipirona, Paracetamol, Vitaminas</strong> e muitos outros.</p>
+
+															<p><strong>“Já fui informado!”</strong> – <strong>Então por que você não tá usando ainda?</strong></p>
+
+															<p><strong>“E depois vai cobrar alguma coisa?”</strong> – O senhor só paga por aquilo que usar. É uma <strong>coparticipação</strong>, e como eu disse, o senhor tem <strong>80% de desconto nas consultas</strong>, mas os <strong>medicamentos permanecem gratuitos</strong>.</p>
+
+															</div>
+
+														</div>
+													</div>
+												</div>
+											</div>
+											<!--end::Accordion-->
+
 											
 
 
