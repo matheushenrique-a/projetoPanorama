@@ -18,6 +18,7 @@ define ('API_Revendedor', 144); //quid
 define ('API_Produto', 6); //quid
 
 //SEGURO BMG
+define('BMG_WSDL', 'https://ws1.bmgconsig.com.br/webservices/ProdutoSeguroWebService?wsdl');
 define('BMG_SEGURO_LOGIN', 'robo.55009');
 define('BMG_SEGURO_SENHA', 'Quid@robo102030');
 define('BMG_SEGURO_LOGIN_CONSIG', 'DANTAS.PRAVOCE');

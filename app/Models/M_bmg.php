@@ -21,12 +21,10 @@ class M_bmg extends Model {
     }
 
     public function statusSeguro(){
-        $wsdl = 'https://ws1.bmgconsig.com.br/webservices/ProdutoSeguroWebService?wsdl';
-
         $adesao = "97446084"; //SEGURO MED - MARIA AUXILIADORA DO CARMO SILVA
 
         try {
-            $client = new \SoapClient($wsdl, ['trace' => 1, 'exceptions' => true]);
+            $client = new \SoapClient(BMG_WSDL, ['trace' => 1, 'exceptions' => true]);
 
             // Parâmetros exigidos pela operação
             $params = [
@@ -51,12 +49,10 @@ class M_bmg extends Model {
 
     //http://localhost/fintech/index.php/lab/validarElegibilidadeSeguros
     public function validarElegibilidadeSeguros(){
-        $wsdl = 'https://ws1.bmgconsig.com.br/webservices/ProdutoSeguroWebService?wsdl';
-
         $cpf = "05843943577";
 
         try {
-            $client = new \SoapClient($wsdl, ['trace' => 1, 'exceptions' => true]);
+            $client = new \SoapClient(BMG_WSDL, ['trace' => 1, 'exceptions' => true]);
 
             $params = [
                 'login'                => BMG_SEGURO_LOGIN,
@@ -87,12 +83,10 @@ class M_bmg extends Model {
     
     
     public function listarPlanos(){
-        $wsdl = 'https://ws1.bmgconsig.com.br/webservices/ProdutoSeguroWebService?wsdl';
-
         $cpf = "65849949615";
 
         try {
-            $client = new \SoapClient($wsdl, ['trace' => 1, 'exceptions' => true]);
+            $client = new \SoapClient(BMG_WSDL, ['trace' => 1, 'exceptions' => true]);
 
             $params = [
                 'login'        => BMG_SEGURO_LOGIN,
@@ -123,15 +117,13 @@ class M_bmg extends Model {
     }
 
     public function listaPlanosRating($codigoProdutoSeguro, $numeroInternoConta, $limiteCartao){
-        $wsdl = 'https://ws1.bmgconsig.com.br/webservices/ProdutoSeguroWebService?wsdl';
-
         // $cpf = "65849949615";
         // $cpf = "65849949615";
         // $cpf = "65849949615";
         $response = null;
 
         try {
-            $client = new \SoapClient($wsdl, ['trace' => 1, 'exceptions' => true]);
+            $client = new \SoapClient(BMG_WSDL, ['trace' => 1, 'exceptions' => true]);
 
             $params = [
                 'login'        => BMG_SEGURO_LOGIN,
@@ -195,15 +187,13 @@ class M_bmg extends Model {
     }
 
     public function obterCartoesDisponiveis($cpf){
-        $wsdl = 'https://ws1.bmgconsig.com.br/webservices/ProdutoSeguroWebService?wsdl';
-
         $returnData = [];
         $returnData["status"] = false;
         $returnData["mensagem"] = "";
         $returnData["cartoes"] = [];
 
         try {
-            $client = new \SoapClient($wsdl, ['trace' => 1, 'exceptions' => true]);
+            $client = new \SoapClient(BMG_WSDL, ['trace' => 1, 'exceptions' => true]);
 
             $params = [
                 'login'        => BMG_SEGURO_LOGIN,
@@ -291,11 +281,21 @@ class M_bmg extends Model {
     }
 
 
-    public function geraScriptVenda($cpf, $conta, $plano, $codigoTipoPagamento = 4){
-        $wsdl = 'https://ws1.bmgconsig.com.br/webservices/ProdutoSeguroWebService?wsdl';
-
+    public function geraScriptVenda($produto, $cpf, $conta, $plano, $codigoTipoPagamento){
+        $response = null;
         try {
-            $client = new \SoapClient($wsdl, ['trace' => 1, 'exceptions' => true]);
+            $client = new \SoapClient(BMG_WSDL, ['trace' => 1, 'exceptions' => true]);
+
+            $produto = strtoupper($produto);
+            if ($produto == "MED") {
+                $codigoSeguro = BMG_CODIGO_PRODUTO_MED;
+            } elseif ($produto == "VIDA") {
+                $codigoSeguro = BMG_CODIGO_PRODUTO_VIDA;
+            } elseif ($produto == "PRESTAMISTA") {
+                $codigoSeguro = BMG_CODIGO_PRODUTO_PRESTAMISTA;
+            } else {
+                $codigoSeguro = BMG_CODIGO_PRODUTO_PAP;
+            }
 
             $params = [
                 'login'        => BMG_SEGURO_LOGIN,
@@ -304,9 +304,9 @@ class M_bmg extends Model {
                 'senhaConsig'  => BMG_SEGURO_SENHA_CONSIG,
                 'codLoja'                           => BMG_ENTIDADE,             // Código da loja fornecido pelo BMG
                 'codigoPlano'                       => $plano,              // Código do plano de seguro desejado
-                'codigoSeguro'                      => BMG_CODIGO_PRODUTO_MED,               // Ex: Seguro Prestamista Consignado
+                'codigoSeguro'                      => $codigoSeguro,               // Ex: Seguro Prestamista Consignado
                 'codigoTipoFormaEnvio'             => 15,               // Ex: 15 = Digital
-                //'codigoTipoPagamento'              => $codigoTipoPagamento,                // Ex: 2 = Mensal  // 4= Parcelado
+                'codigoTipoPagamento'              => $codigoTipoPagamento,                // Ex: 2 = Mensal  // 4= Parcelado
                 'cpf'                               => $cpf,    // CPF do cliente
                  'formaPagamentoProdutoSeguro'=> 5,                // Ex: 5 = Folha de Pagamento
                 //'matricula'                         => '1655645452',      // Matrícula do cliente
@@ -326,6 +326,8 @@ class M_bmg extends Model {
         } catch (SoapFault $fault) {
             echo "Erro: {$fault->faultcode} - {$fault->faultstring}";
         }
+
+        return $response; 
     }
 
 }

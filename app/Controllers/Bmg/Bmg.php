@@ -45,6 +45,25 @@ class Bmg extends BaseController
         $this->m_bmg = new M_bmg();
     }
 
+    //http://localhost/InsightSuite/public/bmg-script-vendas/MED/62057677753/842216/110/2 //Nao Elegivel Outra Apolice
+    public function bmg_script_vendas($produto, $cpf, $conta, $plano, $codigoTipoPagamento){
+        $response = $this->m_bmg->geraScriptVenda($produto, $cpf, $conta, $plano, $codigoTipoPagamento);
+
+        if ($response->mensagemDeErro != "") {
+            $returnData["status"] = false;
+            $returnData["mensagem"] = "SCRIPT INDISPONÍVEL: <br>" . $response->mensagemDeErro;
+        } else {
+            $returnData["status"] = true;
+            $returnData["mensagem"] = "Script gerado com sucesso.";
+            $returnData["script"] = $response->script;
+        }
+
+        //echo '10:16:26 - <h3>Dump 57 </h3> <br><br>' . var_dump($returnData); exit;					//<-------DEBUG
+                
+        echo json_encode($returnData);
+        
+    }
+
     //http://localhost/InsightSuite/public/bmg_receptivo
     public function bmg_receptivo($cpf = null){
 
@@ -76,6 +95,7 @@ class Bmg extends BaseController
         $estadoCivil = strtoupper($this->getpost('estadoCivil'));
         $sexo = strtoupper($this->getpost('sexo'));
         $nomeMae = strtoupper($this->getpost('nomeMae'));
+        $nomePai = strtoupper($this->getpost('nomePai'));
         $email = strtoupper($this->getpost('email'));
         $telefone = numberOnly(strtoupper($this->getpost('telefone')));
         $telefoneWaId = celularToWaId($telefone);
@@ -115,6 +135,19 @@ class Bmg extends BaseController
         $cpfINSS = "";
         $cliente = null;
         $bmgLiberado = null;
+        $nomeCompleto = "";
+        $celular = "";
+        $celularWaId = "";
+
+        $cidadeNascimento = "";
+        $ufNascimento = "";
+        $paisNascimento = "";
+        $email = "";
+        $tipoDocumento = "";
+        $numeroDocumento = "";
+        $dataEmissao = "";
+        $orgaoEmissor = "";
+        $ufEmissor = "";
         
         $cpf = numberOnly($cpf);
         if ((empty($cpf)) or ($cpf == "0")) { $cpf = numberOnly($this->getpost('cpf'));}
@@ -174,63 +207,76 @@ class Bmg extends BaseController
         //CENÁRIO 02: BUSCAR CPF
         } else if (!empty($cpf)){
 
-            if ((strlen($cpf)) == 10){
-                $cpf = "0" . $cpf;
-            } else if ((strlen($cpf) != 11)){
+            if ((strlen($cpf)) <= 10){
+                $cpf = substr("0000000" . $cpf, -11);
+            }
+
+            if ((strlen($cpf) != 11)){
                 $returnData["mensagem"] = "O CPF deve ser preenchido.";
             } else {
                 $bmgLiberado = $this->m_bmg->obterCartoesDisponiveis($cpf);
             }
+        }
 
-        //CENÁRIO 03: EXIBIR PROPOSTA POR INTEGRAAL ID
-        } else if (!empty($integraallId)) {
-            $cliente = $this->m_integraall->proposta_integraall($integraallId, true);
 
-            if ($cliente['existRecord']){
-                $cpfINSS = $cliente['firstRow']->cpf;
-                $nomeCliente = $cliente['firstRow']->nomeCliente;
-                $estadoCivil = $cliente['firstRow']->estadoCivil;
-                $sexo = $cliente['firstRow']->sexo;
-                $nomeMae = $cliente['firstRow']->nomeMae;
-                $email = $cliente['firstRow']->emailPessoal;
-                $telefone = $cliente['firstRow']->telefonepessoal;
-                $logradouro = $cliente['firstRow']->logradouro;
-                $bairro = $cliente['firstRow']->bairro;
-                $cep = $cliente['firstRow']->cep;
-                $cidade = $cliente['firstRow']->cidade;
-                $uf = $cliente['firstRow']->uf;
-                $complemento = $cliente['firstRow']->complemento;
-                $endNumero = $cliente['firstRow']->endNumero;
-                $dataNascimento = dataUsPt($cliente['firstRow']->datanascimento);
-                $last_update = $cliente['firstRow']->last_update;
-                $matricula = $cliente['firstRow']->matricula;
-                $docIdentidade = $cliente['firstRow']->docIdentidade;
-
-                $statusId = $cliente['firstRow']->statusId;
-                $nomeStatus = $cliente['firstRow']->nomeStatus;
-
-                $statusAdicionalId = $cliente['firstRow']->statusAdicionalId;
-                $statusAdicional = $cliente['firstRow']->statusAdicional;
-
-                $integraallId = $cliente['firstRow']->integraallId;
-                $linkKompletoCliente = $cliente['firstRow']->linkKompletoCliente;
-                $assessor = $cliente['firstRow']->assessor;
-                $assessorId = $cliente['firstRow']->assessorId;
-                $aaspaCheck = $cliente['firstRow']->aaspaCheck;
-                $inssCheck = $cliente['firstRow']->inssCheck;
-                $tseCheck = $cliente['firstRow']->tseCheck;
-            } else {
-                $returnData["mensagem"] = "A proposta $integraallId não foi localizada no Insight";
-            }
+        if ($cpfINSS != $cpf){
+            $nomeCliente = "";
+            $estadoCivil = "";
+            $sexo = "";
+            $nomeMae = "";
+            $nomePai = "";
+            $email = "";
+            $telefone = "";
+            $telefoneWaId = "";
+            $logradouro = "";
+            $bairro = "";
+            $cep = "";
+            $cidade = "";
+            $uf = "";
+            $complemento = "";
+            $endNumero = "";
+            $dataNascimento = "";
+            $matricula = "";
+            $docIdentidade = "";
+            $docIdentidadeUf = "";
+            $docIdentidadeOrgEmissor = "";
+             $cidadeNascimento = "";
+            $ufNascimento = "";
+            $paisNascimento = "";
+            $email = "";
+            $tipoDocumento = "";
+            $numeroDocumento = "";
+            $dataEmissao = "";
+            $orgaoEmissor = "";
+            $ufEmissor = "";
         }
         
         //CENÁRIO 05: FETCH - BOTÃO ASSPA OU INSS CHECK CHAMADOS VIA PAGELOAD OU CLICK BOTÃO
             //Realizar check no calculadora ou INSS sem gravar draft de proposta
 
+        $ultimaLigacao = $this->m_argus->ultimaLigacao(['assessor' => $this->session->nickname]);
+        if ($ultimaLigacao['existRecord']){
+            $nomeCompleto = $ultimaLigacao['firstRow']->nome;
+            $celular = formatarTelefone($ultimaLigacao['firstRow']->celular);
+            $celularWaId = celularToWaId($ultimaLigacao['firstRow']->celular);
+        }
 
         $telefone = "31995781355";
         $data['chat'] = $this->m_insight->getChat(celularToWaId($telefone));
         $data['journey'] = $this->m_insight->getJourney(celularToWaId($telefone));
+
+        $data['nomeCompleto'] = $nomeCompleto;
+        $data['celular'] = $celular;
+        $data['celularWaId'] = $celularWaId;
+
+        $data['cidadeNascimento'] = $cidadeNascimento;
+        $data['ufNascimento'] = $ufNascimento;
+        $data['paisNascimento'] = $paisNascimento;
+        $data['tipoDocumento'] = $tipoDocumento;
+        $data['numeroDocumento'] = $numeroDocumento;
+        $data['dataEmissao'] = $dataEmissao;
+        $data['orgaoEmissor'] = $orgaoEmissor;
+        $data['ufEmissor'] = $ufEmissor;
 
         $data['cpf'] = $cpf;
         $data['bmgLiberado'] = $bmgLiberado;
@@ -239,6 +285,7 @@ class Bmg extends BaseController
         $data['estadoCivil'] = $estadoCivil;
         $data['sexo'] = $sexo;
         $data['nomeMae'] = $nomeMae;
+        $data['nomePai'] = $nomePai;
         $data['email'] = $email;
         $data['telefone'] = $telefone;
         $data['logradouro'] = $logradouro;

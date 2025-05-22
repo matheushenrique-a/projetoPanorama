@@ -67,6 +67,20 @@
 																	<div class="accordion-body">
 																		<div style="display: <?php echo (empty($integraallId)  ? 'block' : 'none');?>">
 																			<div class="input-group">
+																				<span class="ms-2 mt-2" id="lblInfo">Última Ligação ARGUS <span class="badge badge-light mb-1 ms-1">Não Perturbe</span></span>
+																			</div>
+																			<div class="input-group">
+																				<span class="input-group-text" style="width: 155px">Nome</span> 
+																				<input type="text" class="form-control fs-3 fw-bold" style="color:rgb(188, 188, 188)" placeholder="" name="nomeCompleto" id="nomeCompleto" readonly value="<?php echo $nomeCompleto;?>" /><span>&nbsp;&nbsp;<i class="fa-regular fa-copy pt-4 fs-3" style="color: #b3b1b1; cursor: pointer" onclick="navigator.clipboard.writeText(document.getElementById('nomeCompleto').value)" alt="Copiar CPF e abrir TSE"></i></span>
+																			</div>
+																			<div class="input-group">
+																				<span class="input-group-text" style="width: 155px">Telefone</span> 
+																				<input type="text" class="form-control fs-3 fw-bold" placeholder="" style="color:rgb(188, 188, 188)"  name="celular" id="celular" value="<?php echo $celular;?>" /><span>&nbsp;&nbsp;<i class="fa-regular fa-copy pt-4 fs-3" style="color: #b3b1b1; cursor: pointer" onclick="navigator.clipboard.writeText(document.getElementById('celular').value)" alt="Copiar CPF e abrir TSE"></i></span>
+																			</div>
+																			<div class="input-group">
+																				<span class="ms-2 mt-2" id="lblInfo">Dados Cliente:</span>
+																			</div>
+																			<div class="input-group">
 																				<span class="input-group-text" style="width: 155px">CPF</span> 
 																				<input type="text" class="form-control fs-3 fw-bold" placeholder="" name="cpf" id="cpf" value="<?php echo $cpf;?>" /><span>&nbsp;&nbsp;<i class="fa-regular fa-copy pt-4 fs-3" style="color: #b3b1b1; cursor: pointer" onclick="navigator.clipboard.writeText(document.getElementById('cpf').value)" alt="Copiar CPF e abrir TSE"></i></span>
 																			</div>
@@ -97,7 +111,7 @@
 																					<span class="fs-4">
 																						<?php 
 																				
-																							if ((isset($bmgLiberado['cartoes'])) && is_array($bmgLiberado['cartoes'])) {
+																							if ((isset($bmgLiberado['cartoes'][0])) && is_array($bmgLiberado['cartoes'])) {
 
 																								echo "<div class='fw-bold fs-2 mt-5'>";
 																								echo $bmgLiberado['cartoes'][0]['nomeCliente'] . "</div>";
@@ -120,9 +134,22 @@
 																										//MED
 																										if ((isset($cartao['planos']['med']->planos)) && (is_array($cartao['planos']['med']->planos) && count($cartao['planos']['med']->planos) > 0)) {
 																											echo '<div class="mt-2  mb-2 bg-light p-3" style="border-bottom: 1px solid #a1a5b7;"><span style="color: #008001" id=""><svg role="img" aria-hidden="true" width="25px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg></span>';
-																											echo '<span class="fs-4 ms-2 fw-bold">MED:</span></div>';
+																											echo '<span class="fs-4 ms-2 fw-bold">MED:</span> <span class="fs-4 ms-2 fw-bold" id="lblMed"><b> ⏱️ consultando</b></span></div>';
 																											foreach ($cartao['planos']['med']->planos as $plano) {
-																												$script = '<i class="fa-regular fa-file-lines pt-4 fs-3" style="color: #b3b1b1; cursor: pointer" onclick="getScript("' . $cpf . '")" alt="Gerar Script"></i>';
+																												$conta = $cartao['numeroInternoConta'];
+																												$codigoPlano = $plano->codigoPlano;
+
+																												if ((isset($plano->tipoPagamento)) and (strtoupper($plano->tipoPagamento) == "PARCELADO")) {
+																													$codigoTipoPagamento = 4;
+																												} else if ((isset($plano->tipoPagamento)) and (strtoupper($plano->tipoPagamento) == "MENSAL")) {
+																													$codigoTipoPagamento = 2;
+																												} else {
+																													$codigoTipoPagamento = 0;
+																												}
+																												//echo '09:56:37 - <h3>Dump 34 </h3> <br><br>' . var_dump($plano); exit;					//<-------DEBUG
+
+																												$script = '<i class="fa-regular fa-file-lines pt-4 fs-3" style="color: #b3b1b1; cursor: pointer" onclick="getScript(this, \'MED\', \'' . $cpf  . '\', \'' . $conta . '\',\'' . $codigoPlano . '\', \'' . $codigoTipoPagamento . '\')" alt="Gerar Script"></i>';
+																												
 																												echo "<div><span class='fw-bold'>{$plano->nomePlano}</span> - " . (strtoupper($plano->tipoPagamento) == "PARCELADO"  ? '<span class="badge badge-success">Parcelado</span>' : '<span class="badge badge-light-dark">Mensal</span>') . " - R$ "  . number_format($plano->valorPremio, 2, ',', '.') . " " . $script . "</div>";
 																												echo '<div class="mt-1 mb-1 p-1" style="border-bottom: 1px solid #ececec;"></div>';
 																											}
@@ -138,7 +165,13 @@
 																											echo '<div class="mt-2  mb-2 bg-light p-3" style="border-bottom: 1px solid #a1a5b7;"><span style="color: #008001" id=""><svg role="img" aria-hidden="true" width="25px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg></span>';
 																											echo '<span class="fs-4 ms-2 fw-bold">VIDA:</span></div>';					
 																											foreach ($cartao['planos']['vida']->planos as $plano) {
-																												echo "<div><span class='fw-bold'>{$plano->nomePlano}</span> - R$ " . number_format($plano->valorPremio, 2, ',', '.') . "</div>";
+																												$conta = $cartao['numeroInternoConta'];
+																												$codigoPlano = $plano->codigoPlano;
+																												$codigoTipoPagamento = 2;
+
+																												$script = '<i class="fa-regular fa-file-lines pt-4 fs-3" style="color: #b3b1b1; cursor: pointer" onclick="getScript(this, \'VIDA\', \'' . $cpf . '\', \'' . $conta . '\',\'' . $codigoPlano . '\', \'' . $codigoTipoPagamento . '\')" alt="Gerar Script"></i>';
+																												
+																												echo "<div><span class='fw-bold'>{$plano->nomePlano}</span> - R$ " . number_format($plano->valorPremio, 2, ',', '.') . " " . $script . "</div>";
 																												echo '<div class="mt-1 mb-1 p-1" style="border-bottom: 1px solid #ececec;"></div>';
 																											}
 																										} else {
@@ -159,18 +192,26 @@
 																				</div>
 																			</div>
 																		</div>
+																		
 																		<div style="display: <?php echo (!empty($integraallId)  ? 'block' : 'none');?>">
 																		</div>
-
+																		
 																		<div class="card-header p-0" id="headingOne4"><div class="card-title d" data-toggle="" data-target="#validaBancarios"><?php echo (empty($integraallId)  ? 'Cadastro' : 'Consulta');?> Proposta</div></div>
 																		<div class="input-group">
 																			<span class="input-group-text" style="width: 155px">CPF</span> 
-																			<input type="text" class="form-control fs-3 fw-bold" readonly placeholder="" name="cpfINSS" id="cpfINSS" value="<?php echo $cpfINSS;?>" /><span>&nbsp;&nbsp;<i class="fa-regular fa-copy pt-4 fs-3" style="color: #b3b1b1; cursor: pointer" onclick="navigator.clipboard.writeText(document.getElementById('cpfINSS').value)""></i></span>
+																			<input type="text" class="form-control fs-3 fw-bold" readonly placeholder="" name="cpfINSS" id="cpfINSS" value="<?php echo $cpf;?>" /><span>&nbsp;&nbsp;<i class="fa-regular fa-copy pt-4 fs-3" style="color: #b3b1b1; cursor: pointer" onclick="navigator.clipboard.writeText(document.getElementById('cpfINSS').value)""></i></span>
 																		</div>
 																		<div class="input-group">
-																			<span class="input-group-text" style="width: 155px">Matrícula/Nome</span>
-																			<input type="text" class="form-control" placeholder="" name="matricula" id="matricula" value="<?php echo $matricula;?>" style="width: 120px" />
+																			<span class="input-group-text" style="width: 155px">Cliente</span>
 																			<input type="text" class="form-control" placeholder="" name="nomeCliente" id="nomeCliente" value="<?php echo $nomeCliente;?>" style="width: 230px" />
+																		</div>
+																		<div class="input-group">
+																			<span class="input-group-text" style="width: 155px">Mãe</span>
+																			<input type="text" class="form-control" placeholder="" name="nomeMae" id="nomeMae" value="<?php echo $nomeMae;?>" style="width: 230px" />
+																		</div>
+																		<div class="input-group">
+																			<span class="input-group-text" style="width: 155px">Pai</span>
+																			<input type="text" class="form-control" placeholder="" name="nomePai" id="nomePai" value="<?php echo $nomePai;?>" style="width: 230px" />
 																		</div>
 																		<div class="input-group">
 																			<span class="input-group-text" style="width: 155px">Estado Civil</span>
@@ -200,19 +241,50 @@
 																		</div>
 																		<div class="input-group">
 																			<span class="input-group-text" style="width: 155px">Telefone</span>
-																			<input type="text" class="form-control" placeholder="" name="telefone" id="telefone" value="<?php echo $telefone;?>" style="width: 35px"/>
+																			<input type="text" class="form-control" placeholder="" name="telefone" id="telefone" value="<?php echo $celular;?>" style="width: 35px"/>
 																		</div>
 																		<div class="input-group">
 																			<span class="input-group-text" style="width: 155px">E-mail</span>
 																			<input type="text" class="form-control" placeholder="" name="email" id="email" value="<?php echo $email;?>" />
 																		</div>
 																		<div class="input-group">
-																			<span class="input-group-text" style="width: 155px">Mãe</span>
-																			<input type="text" class="form-control" placeholder="" name="nomeMae" id="nomeMae" value="<?php echo $nomeMae;?>"/>
-																		</div>
-																		<div class="input-group">
 																			<span class="input-group-text" style="width: 155px">CEP</span> 
 																			<input type="text" class="form-control fs-3 fw-bold" placeholder="" name="cep" id="cep" value="<?php echo $cep;?>" /><span>&nbsp;&nbsp;<i class="fa-solid fa-magnifying-glass pt-4 fs-3" style="color: #b3b1b1; cursor: pointer" onclick="buscarCep();"></i></span>
+																		</div>
+																		<div class="input-group">
+																			<span class="ms-2 mt-2 mb-2" id="lblNiver">Naturalidade/Nascimento:</span>
+																		</div>
+																		<div class="input-group">
+																			<span class="input-group-text" style="width: 155px">Cidade</span>
+																			<input type="text" class="form-control" placeholder="" name="cidadeNascimento" id="cidadeNascimento" style="width: 150px" value="<?php echo $cidadeNascimento;?>" />
+																			<span class="input-group-text" style="width: 55px">UF</span>
+																			<input type="text" class="form-control" placeholder="" name="ufNascimento" id="ufNascimento" value="<?php echo $ufNascimento;?>" style="width: 35px"/>
+																		</div>
+																		<div class="input-group">
+																			<span class="input-group-text" style="width: 155px">País</span>
+																			<input type="text" class="form-control" placeholder="" name="paisNascimento" id="paisNascimento" value="<?php echo $paisNascimento;?>"/>
+																		</div>
+																		<div class="input-group">
+																			<span class="input-group-text" style="width: 155px">Tipo Documento</span>
+																			<input type="text" class="form-control" placeholder="" name="tipoDocumento" id="tipoDocumento" value="<?php echo $tipoDocumento;?>"/>
+																		</div>
+
+																		<div class="input-group">
+																			<span class="input-group-text" style="width: 155px">Numero Doc.</span>
+																			<input type="text" class="form-control" placeholder="" name="numeroDocumento" id="numeroDocumento" style="width: 100px" value="<?php echo $numeroDocumento;?>" />
+																			<span class="input-group-text" style="width: 120px">Data Emissão</span>
+																			<input type="text" class="form-control" placeholder="" name="dataEmissao" id="dataEmissao" value="<?php echo $dataEmissao;?>" style="width: 70px"/>
+																		</div>
+
+																		<div class="input-group">
+																			<span class="input-group-text" style="width: 155px">Orgão</span>
+																			<input type="text" class="form-control" placeholder="" name="orgaoEmissor" id="orgaoEmissor" style="width: 100px" value="<?php echo $orgaoEmissor;?>" />
+																			<span class="input-group-text" style="width: 120px">UF Emissor</span>
+																			<input type="text" class="form-control" placeholder="" name="ufEmissor" id="ufEmissor" value="<?php echo $ufEmissor;?>" style="width: 70px"/>
+																		</div>
+
+																		<div class="input-group">
+																			<span class="ms-2 mt-2 mb-2" id="lblNiver">Endereço do Cliente:</span>
 																		</div>
 																		<div class="input-group">
 																			<span class="input-group-text" style="width: 155px">Logradouro</span>
@@ -235,6 +307,14 @@
 																			<span class="input-group-text" style="width: 55px">UF</span>
 																			<input type="text" class="form-control" placeholder="" name="uf" id="uf" value="<?php echo $uf;?>" style="width: 35px"/>
 																		</div>
+																		<div class="input-group">
+																			<span class="ms-2 mt-2 mb-2" id="lblNiver">Preenchimento Automático BMG:</span>
+																		</div>
+																		<div class="input-group">
+																			<span class="input-group-text" style="width: 155px">BMG Import:</span> 
+																			<textarea class="form-control fw-bold"name="bmgImport" rows="1" id="bmgImport" style="font-size: 6px"></textarea>&nbsp;&nbsp;<i class="fa-solid fa-cloud-arrow-up mt-1 pt-4 " style="color: #b3b1b1; cursor: pointer;" onclick="extrairDados();"></i></span>
+																		</div>
+
 																		<div class="input-group">
 																		</div>
 																		
@@ -269,52 +349,16 @@
 											<div class="accordion" id="kt_accordion_abordagem  ms-lg-7 ms-xl-10">
 												<div class="accordion-item">
 													<h2 class="accordion-header" id="kt_accordion_abordagem_header_1">
-														<button class="accordion-button fs-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#kt_accordion_abordagem_body_133" aria-expanded="true" aria-controls="kt_accordion_abordagem_body_1">
-														SCRIPT VENDAS
+														<button class="accordion-button fs-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#kt_script_med" aria-expanded="true" aria-controls="kt_accordion_abordagem_body_1">
+														SCRIPT VENDAS MED 
+														<span style="color:rgb(173, 179, 173)" class="ms-2" id="lblStatus-MED"><svg role="img" aria-hidden="true" width="20px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg></span>
 														</button>
 													</h2>
-													<div id="kt_accordion_abordagem_body_133" class="accordion-collapse collapse shown" aria-labelledby="kt_accordion_abordagem_header_1" data-bs-parent="#kt_accordion_abordagem">
+													<div id="kt_script_med" class="accordion-collapse collapse shown" aria-labelledby="kt_accordion_abordagem_header_1" data-bs-parent="#kt_accordion_abordagem">
 														<div class="accordion-body">
 
-														<div style="font-size:18px; line-height:1.8; font-family:Arial, sans-serif;">
-
-															<p><strong>Bom dia <?php echo firstName($nomeCompletoUltima);?>, tudo bem?</strong></p>
-
-															<p><strong>Que bom!</strong> <?php echo firstName($nomeCompletoUltima);?>, meu nome é <strong><?php echo firstName($session->nickname);?></strong> e eu estou entrando em contato com o senhor hoje em nome da <span style="background-color:yellow;"><strong>Associação do Aposentado</strong></span> (ou assistência social ao aposentado) referente à <span style="background-color:yellow;"><strong>carteirinha do aposentado</strong></span>, que é de seu direito com alguns benefícios gratuitos. <strong>O senhor já foi informado?</strong></p>
-
-															<p><strong>Não?</strong> Vou te informar então, tá? <span style="background-color:yellow;"><strong>Recentemente no mês de Fevereiro</strong></span>, foram liberados mais de <strong>40 medicamentos gratuitos</strong> nas farmácias populares. Eu não sei se o senhor tem acompanhado no jornal, né?</p>
-
-															<p>Além desse benefício, foi liberado o <strong>médico gratuito através da telemedicina</strong>. E caso você precise realizar algum exame, você terá <strong>85% de desconto</strong> em clínicas. Mesma coisa com medicamentos, tá?</p>
-
-															<p>Se o senhor precisar comprar algum medicamento que não esteja na lista dos que são gratuitos, você consegue pegar ele com <strong>60% de desconto</strong>.</p>
-
-															<p>O senhor irá fazer o uso desses benefícios com a <strong>carteirinha do aposentado</strong>. <strong>Tem alguma dúvida?</strong></p>
-
-															<p>A carteirinha é disponibilizada <strong style="background-color:yellow;">gratuitamente</strong>, tá? Totalmente gratuita, na plataforma do governo. Eu vou te encaminhar a plataforma do governo no seu WhatsApp, nesse número que eu falo com você tem WhatsApp?</p>
-
-															<p>Certo, irei te enviar e te auxiliar na liberação da carteirinha de forma gratuita.</p>
-
-															<p><strong>Olha pra mim se a mensagem chegou</strong>, é só clicar em continuar pra gente seguir o atendimento por lá. O senhor consegue colocar a ligação no viva-voz e entrar no seu WhatsApp pra verificar se recebeu minha mensagem?</p>
-
-															<hr style="margin: 30px 0; border: 1px dashed gray;">
-
-															<p><strong style="background-color:yellow;">OBJEÇÕES:</strong></p>
-
-															<p><strong>“Não quero”</strong> – <?php echo firstName($nomeCompletoUltima);?>, é <strong style="background-color:yellow;">seu direito</strong> receber essa carteirinha gratuita e os benefícios do governo. Você <strong>trabalhou a vida inteira</strong> pra isso!</p>
-
-															<p><strong>“Já tenho carteirinha”</strong> – Não tem problema. Como o senhor recebe essa carteirinha de forma gratuita, além dos serviços que o senhor já tem, o senhor vai receber <strong>o dobro</strong>, como a <strong>assistência residencial</strong> que conta com eletricista, encanador…</p>
-
-															<p><strong>“Não faço nada por telefone”</strong> – É verdade José, hoje em dia tá tendo muita notícia de golpe, né? É por isso que o governo pede pra gente apenas <strong>auxiliar vocês a entrar na plataforma do gov</strong> pra fazer tudo com segurança por lá. Posso te chamar no WhatsApp pra gente finalizar?</p>
-
-															<p><strong>“Mas eu pago pra ter/receber a carteirinha”</strong> – <strong style="color:red;">Não!</strong> A carteirinha do aposentado é enviada de forma <strong>gratuita</strong> para o senhor, tanto no celular quanto por correios, caso você prefira.</p>
-
-															<p><strong>“Quais medicamentos são gratuitos?”</strong> – São vários medicamentos, seu <?php echo firstName($nomeCompletoUltima);?>, como <strong>Losartana, Dipirona, Paracetamol, Vitaminas</strong> e muitos outros.</p>
-
-															<p><strong>“Já fui informado!”</strong> – <strong>Então por que você não tá usando ainda?</strong></p>
-
-															<p><strong>“E depois vai cobrar alguma coisa?”</strong> – O senhor só paga por aquilo que usar. É uma <strong>coparticipação</strong>, e como eu disse, o senhor tem <strong>80% de desconto nas consultas</strong>, mas os <strong>medicamentos permanecem gratuitos</strong>.</p>
-
-															</div>
+														<div style="font-size:18px; line-height:1.8; font-family:Arial, sans-serif;" id="scriptVendas-MED">
+															Nenhum Script carregado ainda.
 
 														</div>
 													</div>
@@ -326,166 +370,17 @@
 											<div class="accordion" id="kt_accordion_abordagem  ms-lg-7 ms-xl-10">
 												<div class="accordion-item">
 													<h2 class="accordion-header" id="kt_accordion_abordagem_header_1">
-														<button class="accordion-button fs-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#kt_accordion_abordagem_body_133" aria-expanded="true" aria-controls="kt_accordion_abordagem_body_1">
-														LIMITES E PLANOS
+														<button class="accordion-button fs-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#kt_script_vida" aria-expanded="true" aria-controls="kt_accordion_abordagem_body_1">
+														SCRIPT VENDAS VIDA
+														<span style="color:rgb(173, 179, 173)" class="ms-2" id="lblStatus-VIDA"><svg role="img" aria-hidden="true" width="20px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg></span>
+
 														</button>
 													</h2>
-													<div id="kt_accordion_abordagem_body_133" class="accordion-collapse collapse shown" aria-labelledby="kt_accordion_abordagem_header_1" data-bs-parent="#kt_accordion_abordagem">
+													<div id="kt_script_vida" class="accordion-collapse collapse shown" aria-labelledby="kt_accordion_abordagem_header_1" data-bs-parent="#kt_accordion_abordagem">
 														<div class="accordion-body">
 
-														<div style="font-size:18px; line-height:1.8; font-family:Arial, sans-serif;">
-
-															<p><strong>Bom dia <?php echo firstName($nomeCompletoUltima);?>, tudo bem?</strong></p>
-
-															<p><strong>Que bom!</strong> <?php echo firstName($nomeCompletoUltima);?>, meu nome é <strong><?php echo firstName($session->nickname);?></strong> e eu estou entrando em contato com o senhor hoje em nome da <span style="background-color:yellow;"><strong>Associação do Aposentado</strong></span> (ou assistência social ao aposentado) referente à <span style="background-color:yellow;"><strong>carteirinha do aposentado</strong></span>, que é de seu direito com alguns benefícios gratuitos. <strong>O senhor já foi informado?</strong></p>
-
-															<p><strong>Não?</strong> Vou te informar então, tá? <span style="background-color:yellow;"><strong>Recentemente no mês de Fevereiro</strong></span>, foram liberados mais de <strong>40 medicamentos gratuitos</strong> nas farmácias populares. Eu não sei se o senhor tem acompanhado no jornal, né?</p>
-
-															<p>Além desse benefício, foi liberado o <strong>médico gratuito através da telemedicina</strong>. E caso você precise realizar algum exame, você terá <strong>85% de desconto</strong> em clínicas. Mesma coisa com medicamentos, tá?</p>
-
-															<p>Se o senhor precisar comprar algum medicamento que não esteja na lista dos que são gratuitos, você consegue pegar ele com <strong>60% de desconto</strong>.</p>
-
-															<p>O senhor irá fazer o uso desses benefícios com a <strong>carteirinha do aposentado</strong>. <strong>Tem alguma dúvida?</strong></p>
-
-															<p>A carteirinha é disponibilizada <strong style="background-color:yellow;">gratuitamente</strong>, tá? Totalmente gratuita, na plataforma do governo. Eu vou te encaminhar a plataforma do governo no seu WhatsApp, nesse número que eu falo com você tem WhatsApp?</p>
-
-															<p>Certo, irei te enviar e te auxiliar na liberação da carteirinha de forma gratuita.</p>
-
-															<p><strong>Olha pra mim se a mensagem chegou</strong>, é só clicar em continuar pra gente seguir o atendimento por lá. O senhor consegue colocar a ligação no viva-voz e entrar no seu WhatsApp pra verificar se recebeu minha mensagem?</p>
-
-															<hr style="margin: 30px 0; border: 1px dashed gray;">
-
-															<p><strong style="background-color:yellow;">OBJEÇÕES:</strong></p>
-
-															<p><strong>“Não quero”</strong> – <?php echo firstName($nomeCompletoUltima);?>, é <strong style="background-color:yellow;">seu direito</strong> receber essa carteirinha gratuita e os benefícios do governo. Você <strong>trabalhou a vida inteira</strong> pra isso!</p>
-
-															<p><strong>“Já tenho carteirinha”</strong> – Não tem problema. Como o senhor recebe essa carteirinha de forma gratuita, além dos serviços que o senhor já tem, o senhor vai receber <strong>o dobro</strong>, como a <strong>assistência residencial</strong> que conta com eletricista, encanador…</p>
-
-															<p><strong>“Não faço nada por telefone”</strong> – É verdade José, hoje em dia tá tendo muita notícia de golpe, né? É por isso que o governo pede pra gente apenas <strong>auxiliar vocês a entrar na plataforma do gov</strong> pra fazer tudo com segurança por lá. Posso te chamar no WhatsApp pra gente finalizar?</p>
-
-															<p><strong>“Mas eu pago pra ter/receber a carteirinha”</strong> – <strong style="color:red;">Não!</strong> A carteirinha do aposentado é enviada de forma <strong>gratuita</strong> para o senhor, tanto no celular quanto por correios, caso você prefira.</p>
-
-															<p><strong>“Quais medicamentos são gratuitos?”</strong> – São vários medicamentos, seu <?php echo firstName($nomeCompletoUltima);?>, como <strong>Losartana, Dipirona, Paracetamol, Vitaminas</strong> e muitos outros.</p>
-
-															<p><strong>“Já fui informado!”</strong> – <strong>Então por que você não tá usando ainda?</strong></p>
-
-															<p><strong>“E depois vai cobrar alguma coisa?”</strong> – O senhor só paga por aquilo que usar. É uma <strong>coparticipação</strong>, e como eu disse, o senhor tem <strong>80% de desconto nas consultas</strong>, mas os <strong>medicamentos permanecem gratuitos</strong>.</p>
-
-															</div>
-
-														</div>
-													</div>
-												</div>
-											</div>
-											<!--end::Accordion-->
-
-											<!--begin::Accordion-->
-											<div class="accordion" id="kt_accordion_abordagem  ms-lg-7 ms-xl-10">
-												<div class="accordion-item">
-													<h2 class="accordion-header" id="kt_accordion_abordagem_header_1">
-														<button class="accordion-button fs-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#kt_accordion_abordagem_body_133" aria-expanded="true" aria-controls="kt_accordion_abordagem_body_1">
-														PROPOSTA MED
-														</button>
-													</h2>
-													<div id="kt_accordion_abordagem_body_133" class="accordion-collapse collapse shown" aria-labelledby="kt_accordion_abordagem_header_1" data-bs-parent="#kt_accordion_abordagem">
-														<div class="accordion-body">
-
-														<div style="font-size:18px; line-height:1.8; font-family:Arial, sans-serif;">
-
-															<p><strong>Bom dia <?php echo firstName($nomeCompletoUltima);?>, tudo bem?</strong></p>
-
-															<p><strong>Que bom!</strong> <?php echo firstName($nomeCompletoUltima);?>, meu nome é <strong><?php echo firstName($session->nickname);?></strong> e eu estou entrando em contato com o senhor hoje em nome da <span style="background-color:yellow;"><strong>Associação do Aposentado</strong></span> (ou assistência social ao aposentado) referente à <span style="background-color:yellow;"><strong>carteirinha do aposentado</strong></span>, que é de seu direito com alguns benefícios gratuitos. <strong>O senhor já foi informado?</strong></p>
-
-															<p><strong>Não?</strong> Vou te informar então, tá? <span style="background-color:yellow;"><strong>Recentemente no mês de Fevereiro</strong></span>, foram liberados mais de <strong>40 medicamentos gratuitos</strong> nas farmácias populares. Eu não sei se o senhor tem acompanhado no jornal, né?</p>
-
-															<p>Além desse benefício, foi liberado o <strong>médico gratuito através da telemedicina</strong>. E caso você precise realizar algum exame, você terá <strong>85% de desconto</strong> em clínicas. Mesma coisa com medicamentos, tá?</p>
-
-															<p>Se o senhor precisar comprar algum medicamento que não esteja na lista dos que são gratuitos, você consegue pegar ele com <strong>60% de desconto</strong>.</p>
-
-															<p>O senhor irá fazer o uso desses benefícios com a <strong>carteirinha do aposentado</strong>. <strong>Tem alguma dúvida?</strong></p>
-
-															<p>A carteirinha é disponibilizada <strong style="background-color:yellow;">gratuitamente</strong>, tá? Totalmente gratuita, na plataforma do governo. Eu vou te encaminhar a plataforma do governo no seu WhatsApp, nesse número que eu falo com você tem WhatsApp?</p>
-
-															<p>Certo, irei te enviar e te auxiliar na liberação da carteirinha de forma gratuita.</p>
-
-															<p><strong>Olha pra mim se a mensagem chegou</strong>, é só clicar em continuar pra gente seguir o atendimento por lá. O senhor consegue colocar a ligação no viva-voz e entrar no seu WhatsApp pra verificar se recebeu minha mensagem?</p>
-
-															<hr style="margin: 30px 0; border: 1px dashed gray;">
-
-															<p><strong style="background-color:yellow;">OBJEÇÕES:</strong></p>
-
-															<p><strong>“Não quero”</strong> – <?php echo firstName($nomeCompletoUltima);?>, é <strong style="background-color:yellow;">seu direito</strong> receber essa carteirinha gratuita e os benefícios do governo. Você <strong>trabalhou a vida inteira</strong> pra isso!</p>
-
-															<p><strong>“Já tenho carteirinha”</strong> – Não tem problema. Como o senhor recebe essa carteirinha de forma gratuita, além dos serviços que o senhor já tem, o senhor vai receber <strong>o dobro</strong>, como a <strong>assistência residencial</strong> que conta com eletricista, encanador…</p>
-
-															<p><strong>“Não faço nada por telefone”</strong> – É verdade José, hoje em dia tá tendo muita notícia de golpe, né? É por isso que o governo pede pra gente apenas <strong>auxiliar vocês a entrar na plataforma do gov</strong> pra fazer tudo com segurança por lá. Posso te chamar no WhatsApp pra gente finalizar?</p>
-
-															<p><strong>“Mas eu pago pra ter/receber a carteirinha”</strong> – <strong style="color:red;">Não!</strong> A carteirinha do aposentado é enviada de forma <strong>gratuita</strong> para o senhor, tanto no celular quanto por correios, caso você prefira.</p>
-
-															<p><strong>“Quais medicamentos são gratuitos?”</strong> – São vários medicamentos, seu <?php echo firstName($nomeCompletoUltima);?>, como <strong>Losartana, Dipirona, Paracetamol, Vitaminas</strong> e muitos outros.</p>
-
-															<p><strong>“Já fui informado!”</strong> – <strong>Então por que você não tá usando ainda?</strong></p>
-
-															<p><strong>“E depois vai cobrar alguma coisa?”</strong> – O senhor só paga por aquilo que usar. É uma <strong>coparticipação</strong>, e como eu disse, o senhor tem <strong>80% de desconto nas consultas</strong>, mas os <strong>medicamentos permanecem gratuitos</strong>.</p>
-
-															</div>
-
-														</div>
-													</div>
-												</div>
-											</div>
-											<!--end::Accordion-->
-
-											<!--begin::Accordion-->
-											<div class="accordion" id="kt_accordion_abordagem  ms-lg-7 ms-xl-10">
-												<div class="accordion-item">
-													<h2 class="accordion-header" id="kt_accordion_abordagem_header_1">
-														<button class="accordion-button fs-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#kt_accordion_abordagem_body_133" aria-expanded="true" aria-controls="kt_accordion_abordagem_body_1">
-														PROPOSTA VIDA
-														</button>
-													</h2>
-													<div id="kt_accordion_abordagem_body_133" class="accordion-collapse collapse shown" aria-labelledby="kt_accordion_abordagem_header_1" data-bs-parent="#kt_accordion_abordagem">
-														<div class="accordion-body">
-
-														<div style="font-size:18px; line-height:1.8; font-family:Arial, sans-serif;">
-
-															<p><strong>Bom dia <?php echo firstName($nomeCompletoUltima);?>, tudo bem?</strong></p>
-
-															<p><strong>Que bom!</strong> <?php echo firstName($nomeCompletoUltima);?>, meu nome é <strong><?php echo firstName($session->nickname);?></strong> e eu estou entrando em contato com o senhor hoje em nome da <span style="background-color:yellow;"><strong>Associação do Aposentado</strong></span> (ou assistência social ao aposentado) referente à <span style="background-color:yellow;"><strong>carteirinha do aposentado</strong></span>, que é de seu direito com alguns benefícios gratuitos. <strong>O senhor já foi informado?</strong></p>
-
-															<p><strong>Não?</strong> Vou te informar então, tá? <span style="background-color:yellow;"><strong>Recentemente no mês de Fevereiro</strong></span>, foram liberados mais de <strong>40 medicamentos gratuitos</strong> nas farmácias populares. Eu não sei se o senhor tem acompanhado no jornal, né?</p>
-
-															<p>Além desse benefício, foi liberado o <strong>médico gratuito através da telemedicina</strong>. E caso você precise realizar algum exame, você terá <strong>85% de desconto</strong> em clínicas. Mesma coisa com medicamentos, tá?</p>
-
-															<p>Se o senhor precisar comprar algum medicamento que não esteja na lista dos que são gratuitos, você consegue pegar ele com <strong>60% de desconto</strong>.</p>
-
-															<p>O senhor irá fazer o uso desses benefícios com a <strong>carteirinha do aposentado</strong>. <strong>Tem alguma dúvida?</strong></p>
-
-															<p>A carteirinha é disponibilizada <strong style="background-color:yellow;">gratuitamente</strong>, tá? Totalmente gratuita, na plataforma do governo. Eu vou te encaminhar a plataforma do governo no seu WhatsApp, nesse número que eu falo com você tem WhatsApp?</p>
-
-															<p>Certo, irei te enviar e te auxiliar na liberação da carteirinha de forma gratuita.</p>
-
-															<p><strong>Olha pra mim se a mensagem chegou</strong>, é só clicar em continuar pra gente seguir o atendimento por lá. O senhor consegue colocar a ligação no viva-voz e entrar no seu WhatsApp pra verificar se recebeu minha mensagem?</p>
-
-															<hr style="margin: 30px 0; border: 1px dashed gray;">
-
-															<p><strong style="background-color:yellow;">OBJEÇÕES:</strong></p>
-
-															<p><strong>“Não quero”</strong> – <?php echo firstName($nomeCompletoUltima);?>, é <strong style="background-color:yellow;">seu direito</strong> receber essa carteirinha gratuita e os benefícios do governo. Você <strong>trabalhou a vida inteira</strong> pra isso!</p>
-
-															<p><strong>“Já tenho carteirinha”</strong> – Não tem problema. Como o senhor recebe essa carteirinha de forma gratuita, além dos serviços que o senhor já tem, o senhor vai receber <strong>o dobro</strong>, como a <strong>assistência residencial</strong> que conta com eletricista, encanador…</p>
-
-															<p><strong>“Não faço nada por telefone”</strong> – É verdade José, hoje em dia tá tendo muita notícia de golpe, né? É por isso que o governo pede pra gente apenas <strong>auxiliar vocês a entrar na plataforma do gov</strong> pra fazer tudo com segurança por lá. Posso te chamar no WhatsApp pra gente finalizar?</p>
-
-															<p><strong>“Mas eu pago pra ter/receber a carteirinha”</strong> – <strong style="color:red;">Não!</strong> A carteirinha do aposentado é enviada de forma <strong>gratuita</strong> para o senhor, tanto no celular quanto por correios, caso você prefira.</p>
-
-															<p><strong>“Quais medicamentos são gratuitos?”</strong> – São vários medicamentos, seu <?php echo firstName($nomeCompletoUltima);?>, como <strong>Losartana, Dipirona, Paracetamol, Vitaminas</strong> e muitos outros.</p>
-
-															<p><strong>“Já fui informado!”</strong> – <strong>Então por que você não tá usando ainda?</strong></p>
-
-															<p><strong>“E depois vai cobrar alguma coisa?”</strong> – O senhor só paga por aquilo que usar. É uma <strong>coparticipação</strong>, e como eu disse, o senhor tem <strong>80% de desconto nas consultas</strong>, mas os <strong>medicamentos permanecem gratuitos</strong>.</p>
-
-															</div>
+														<div style="font-size:18px; line-height:1.8; font-family:Arial, sans-serif;" id="scriptVendas-VIDA">
+															Nenhum Script carregado ainda.
 
 														</div>
 													</div>
@@ -497,7 +392,7 @@
 
 
 											<!--begin::Accordion-->
-											<div class="accordion" id="kt_accordion_modelo  ms-lg-7 ms-xl-10">
+											<div class="accordion" id="kt_accordion_modelo  ms-lg-7 ms-xl-10" style="display: none;">
 												<div class="accordion-item">
 													<h2 class="accordion-header" id="kt_accordion_modelo_header_1">
 														<button class="accordion-button fs-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#kt_accordion_modelo_body_133" aria-expanded="true" aria-controls="kt_accordion_modelo_body_1">
@@ -587,6 +482,181 @@
 								//checkCpf();
 							}
 						});
+
+						function getScript(icon, produto, cpf, conta, plano, codigoTipoPagamento){
+
+							const lblStatus = document.getElementById("lblStatus-" + produto);
+							const lblMed = document.getElementById("lblMed"); let pontoMed = 0;lblMed.innerHTML = "<b> ⏱️ consultando</b>";
+							const intervalMed = setInterval(() => {pontoMed = (pontoMed + 1) % 4; lblMed.innerHTML = "<b> ⏱️ consultando" + ".".repeat(pontoMed) + "</b>";}, 500);
+
+							lblStatus.style.color = "#e9ba23";
+							icon.style.color = "#e9ba23";
+
+							fetch('<?php echo assetfolder;?>bmg-script-vendas/' + produto + '/' + cpf + '/' + conta + '/' + plano + '/' + codigoTipoPagamento, {method: "GET", cache: "no-cache"})
+							.then(response => {
+								if (!response.ok) {throw new Error('HTTP error! Status: ${response.status}');}
+								return response.json();
+							}) .then(data => {
+								//setTimeout(() => {clearInterval(intervalINSS);
+								//setTimeout(() => {clearInterval(intervalAaspa);lblTopAaspa.style.color = data.color;lblAaspa.innerHTML = data.status;}, 1);
+								
+								const scriptText = document.getElementById("scriptVendas-" + produto);
+								
+								if (data.hasOwnProperty('status')) {
+
+									if (data.status){
+										lblStatus.style.color = "#008001";
+										icon.style.color = "#008001";
+										scriptText.innerHTML = formatScript(produto, data.script);
+									} else {
+										lblStatus.style.color = "#f22e46";
+										icon.style.color = "#f22e46";
+										scriptText.innerHTML = "<b>NÃO FOI POSSÍVEL GERAR O SCRIPT</b><BR><BR>" + data.mensagem;
+									}
+
+									console.log(data.status, data.mensagem, data.script); 
+									
+								} else {
+									console.log("Erro ao buscar o script.");
+								}
+								//lblAaspaUpdate.style.display = "inline";
+							}) .catch(error => {
+								console.log('Fetch Error: ' + error.message);
+							});
+						}
+
+						function formatScript(produto, script){
+							var phone = script.match(/celular:\s*(\(?\d{2}\)?\d{8,9})\?/i);
+
+							if (phone) {
+								phone = phone[1].replace(/\?./g, "");								
+								//alert (phone);
+							}
+							
+							const nomeClienteScript = script.match(/Senhor\(a\)\s*(.*?),/);
+
+							if (nomeClienteScript) {
+								//console.log(nomeClienteScript[1]);
+								const nomeCliente = document.getElementById("nomeCliente"); nomeCliente.value = nomeClienteScript[1];
+							}
+
+							var mae = script.match(/Mãe:\s*(.*?)\s+O Seguro/i);
+							if (mae) {
+								//alert (mae[1]);
+								const nomeMae = document.getElementById("nomeMae"); nomeMae.value = mae[1];
+							}
+
+							var dataNascimentoCliente = script.match(/Data Nascimento:\s*(.{10})/);
+
+							if (dataNascimento) {
+								const dataNascimento = document.getElementById("dataNascimento"); dataNascimento.value = dataNascimentoCliente[1];
+								//alert(dataNascimento[1]);
+							}
+
+							script = script.replace(/{Pausa resposta}./g, "<b>{Pausa resposta} </b>");
+							script = script.replace(/Excelente./g, "<br><br>Excelente");
+							script = script.replace(/Ótimo./g, "<br>Ótimo");
+							script = script.replace(/\?./g, "?<br>");
+							script = script.replace(/{Pausa para a resposta do cliente}./g, "<b>{Pausa para a resposta do cliente} </b><br>");
+							script = script.replace(/\. /g, ".<br><br>");
+							script = script.replace(/Positivação  Opção 1/g, "<br><br><hr><b>POSITIVAÇÃO OPÇÃO 1</b>");
+
+							script = script.replace(/Positivação  Opção 2/g, "");
+							script = script.replace(/ O Seguro Bmg/g, "<hr><br>O Seguro Bmg");
+							script = script.replace(/ O Seguro BMG/g, "<hr><br>O Seguro BMG");
+							script = script.replace(/seguro.<br><br>Informo/g, "seguro. Informo");
+							script = script.replace(/\?<br><b>{Pausa/g, "? <b>{Pausa resposta}");
+							script = script.replace(/SCRIPT DE AUDITORIA/g, "<b>SCRIPT DE AUDITORIA");
+							script = script.replace(/Conforme estávamos/g, "</b>Conforme estávamos");
+							script = script.replace(/Obs.: Obrigatório citar ao menos um dos benefícios./g, "<br><br><b>Obs.: Obrigatório citar ao menos um dos benefícios.</b>");
+							script = script.replace(/Consultas ilimitadas./g, "- Consultas ilimitadas");
+							script = script.replace(/Geral.<br><br>Consultas/g, "<br>- Consultas");
+							script = script.replace(/segurado.<br><br>Remédios genéricos/g, "<br>- Remédios genéricos");
+							script = script.replace(/credenciadas Sorteios/g, "credenciadas<br>- Sorteios");
+							script = script.replace(/Interação Livre/g, "<br><br><hr><b>Interação Livre</b><br>-");
+							script = script.replace(/<br><br>Perguntar/g, "<br>- Perguntar");
+							script = script.replace(/Para usufruir/g, "<hr><br>Para usufruir");
+							script = script.replace(/7007/g, "7007<br><br>");
+							script = script.replace(/Informamos que o/g, "<br>Informamos que o");
+							script = script.replace(/consignado BMG\?<br>/g, "consignado BMG?");
+							script = script.replace(/Pausa para o cliente responder\)/g, "<b>Pausa para o cliente responder)</b><br>");
+							script = script.replace(/Remédio Grátis/g, "- Remédio Grátis");
+							script = script.replace(/pessoas\).<br><br>Sorteios/g, "pessoas).<br>- Sorteios");
+							script = script.replace(/<br><br><br>/g, "<br>");
+							
+							script = script.replace(/Ótimo Agora me confirme sua data de nascimento/g, "<br><hr><b>POSITIVAÇÃO OPÇÃO 2<br></b>Ótimo! Agora me confirme sua data de nascimento");
+							script = script.replace(/Conforme estávamos/g, "<br><br>Conforme estávamos");
+							script = script.replace(/nome é _________/g, "nome é <b>" + "<?php echo strtoupper($session->nickname);?></b>");
+							return script;
+						}
+
+						function extrairDados() {
+
+							bmgImport = document.getElementById("bmgImport");
+							texto = bmgImport.value;
+
+							const dados = {};
+
+							const extrair = (label, pattern) => {
+								const match = texto.match(pattern);
+								return match ? match[1].trim() : null;
+							};
+
+							dados["cep"] = extrair("CEP", /CEP:\s*([\d.-]+)/);
+							dados["logradouro"] = extrair("Logradouro", /Logradouro:\s*(.+)/);
+							dados["numero"] = extrair("Número", /Número - Complemento:\s*(\d+)/);
+							dados["complemento"] = extrair("Complemento", /Número - Complemento:\s*\d+\s*-\s*(.*?)(\n|$)/);
+							dados["bairro"] = extrair("Bairro", /Bairro:\s*(.+)/);
+							dados["cidade"] = extrair("Cidade", /Cidade:\s*(.+)/);
+							dados["uf"] = extrair("UF", /UF:\s*(\w{2})/);
+
+							dados["nome"] = extrair("Nome", /Nome:\s*(.+)/);
+							dados["cpf"] = extrair("CPF", /CPF:\s*([\d.-]+)/);
+							dados["sexo"] = extrair("Sexo", /Sexo:\s*(\w+)/);
+							dados["estadoCivil"] = extrair("Estado Civil", /Estado Civil:\s*(\w+)/);
+							dados["mae"] = extrair("Nome da Mãe", /Nome da Mãe:\s*(.+)/);
+							dados["pai"] = extrair("Nome do Pai", /Nome do Pai:\s*(.+)/);
+							dados["naturalidadeUF"] = extrair("Naturalidade UF", /Naturalidade \(UF\/Cidade\):\s*(\w{2})/);
+							dados["naturalidadeCidade"] = extrair("Naturalidade Cidade", /Naturalidade \(UF\/Cidade\):\s*\w{2}\s*(.+)/);
+							dados["nacionalidade"] = extrair("Nacionalidade", /Nacionalidade:\s*(.+)/);
+							dados["rg"] = extrair("Nro.Ident", /Nro\.Ident\.\s*-\s*Órg\.Emissor\s*-\s*UF:\s*([\d]+)/);
+							dados["orgaoEmissor"] = extrair("Órg.Emissor", /Nro\.Ident\.\s*-\s*Órg\.Emissor\s*-\s*UF:\s*\d+\s*-\s*(SSP|.*?)[\s-]/);
+							dados["ufRg"] = extrair("UF RG", /Nro\.Ident\.\s*-\s*Órg\.Emissor\s*-\s*UF:\s*\d+\s*-\s*.*?\s*-\s*(\w{2})/);
+							dados["dataEmissaoRg"] = extrair("Data Emissão", /Data de Emissão da Identidade:\s*([\d/]+)/);
+
+							console.log(dados);
+
+							preencherFormulario(dados);
+						}
+
+						function preencherFormulario(dados) {
+							const nomeCliente = document.getElementById("nomeCliente"); nomeCliente.value = dados.nome || "";
+							const estadoCivil = document.getElementById("estadoCivil"); estadoCivil.value = dados.estadoCivil || "";
+							document.getElementById("sexo").value = (dados.sexo === "Masculino") ? "1" : (dados.sexo === "Feminino") ? "2" : "3";
+							//document.getElementById("lblNiver").innerHTML = "Idade atual do cliente";
+
+							const nomeMae = document.getElementById("nomeMae"); nomeMae.value = dados.mae || "";
+							const nomePai = document.getElementById("nomePai"); nomePai.value = dados.pai || "";
+							const paisNascimento = document.getElementById("paisNascimento"); paisNascimento.value = dados.nacionalidade || "";
+							const cidadeNascimento = document.getElementById("cidadeNascimento"); cidadeNascimento.value = dados.naturalidadeCidade || "";
+							const ufNascimento = document.getElementById("ufNascimento"); ufNascimento.value = dados.naturalidadeUF || "";
+							const dataEmissao = document.getElementById("dataEmissao"); dataEmissao.value = dados.dataEmissaoRg || "";
+							const orgaoEmissor = document.getElementById("orgaoEmissor"); orgaoEmissor.value = dados.orgaoEmissor || "";
+							const ufEmissor = document.getElementById("ufEmissor"); ufEmissor.value = dados.ufEmissor || "";
+							const email = document.getElementById("email"); email.value = dados.email || "";
+							//const telefone = document.getElementById("telefone"); telefone.value = "";
+
+							const logradouro = document.getElementById("logradouro"); logradouro.value = dados.logradouro || "";
+							const bairro = document.getElementById("bairro"); bairro.value = dados.bairro || "";
+							const cep = document.getElementById("cep"); cep.value = dados.cep || "";
+							const cidade = document.getElementById("cidade"); cidade.value = dados.cidade || "";
+							const uf = document.getElementById("uf"); uf.value = dados.uf || "";
+							const complemento = document.getElementById("complemento"); complemento.value = dados.complemento || "";
+							const endNumero = document.getElementById("endNumero"); endNumero.value = dados.numero || "";
+							//const dataNascimento = document.getElementById("dataNascimento"); dataNascimento.value = ""; // Não foi extraído da string
+							//const matricula = document.getElementById("matricula"); matricula.value = ""; // Não foi extraído da string
+							const docIdentidade = document.getElementById("docIdentidade"); docIdentidade.value = dados.rg || "";
+						}
 
 						function checkCpf(){
 							<?php 
