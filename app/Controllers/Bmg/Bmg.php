@@ -90,6 +90,9 @@ class Bmg extends BaseController
         $data['pageTitle'] = "BMG - Receptivo Seguros";
 
         $btnSalvar = $this->getpost('btnSalvar');
+        $btmMEDBMG = $this->getpost('btmMEDBMG');
+        $btmMEDPAN = $this->getpost('btmMEDPAN');
+
         $btnConsultar = $this->getpost('btnConsultar');
         $nomeCliente = strtoupper($this->getpost('nomeCliente'));
         $estadoCivil = strtoupper($this->getpost('estadoCivil'));
@@ -104,9 +107,12 @@ class Bmg extends BaseController
         $cep = strtoupper($this->getpost('cep'));
         $cidade = strtoupper($this->getpost('cidade'));
         $uf = strtoupper($this->getpost('uf'));
+        $paisNascimento = strtoupper($this->getpost('paisNascimento'));
         $complemento = strtoupper($this->getpost('complemento'));
         $endNumero = strtoupper($this->getpost('endNumero'));
+        $cidadeNascimento = strtoupper($this->getpost('cidadeNascimento'));
         $dataNascimento = strtoupper($this->getpost('dataNascimento'));
+        $ufNascimento = strtoupper($this->getpost('ufNascimento'));
         $matricula = strtoupper($this->getpost('matricula'));
         $instituidorMatricula = strtoupper($this->getpost('instituidorMatricula'));
         $orgao = strtoupper($this->getpost('orgao'));
@@ -116,6 +122,12 @@ class Bmg extends BaseController
         $docIdentidadeOrgEmissor = strtoupper($this->getpost('docIdentidadeOrgEmissor'));
         $bloqueio = strtoupper($this->getpost('bloqueio'));
         $cpfINSS = strtoupper($this->getpost('cpfINSS'));
+        $dataEmissao = strtoupper($this->getpost('dataEmissao'));
+        $ufEmissor = strtoupper($this->getpost('ufEmissor'));
+        $cidadeNascimento = strtoupper($this->getpost('cidadeNascimento'));
+        $orgaoEmissor = strtoupper($this->getpost('orgaoEmissor'));
+        $tipoDocumento = strtoupper($this->getpost('tipoDocumento'));
+        $numeroDocumento = strtoupper($this->getpost('numeroDocumento'));
 
         $returnData["status"] = false;
 		$returnData["mensagem"] = "";
@@ -138,16 +150,17 @@ class Bmg extends BaseController
         $nomeCompleto = "";
         $celular = "";
         $celularWaId = "";
+        $celularWaId = "";
 
-        $cidadeNascimento = "";
-        $ufNascimento = "";
-        $paisNascimento = "";
-        $email = "";
-        $tipoDocumento = "";
-        $numeroDocumento = "";
-        $dataEmissao = "";
-        $orgaoEmissor = "";
-        $ufEmissor = "";
+        // $cidadeNascimento = "";
+        // $ufNascimento = "";
+        // $paisNascimento = "";
+        // $email = "";
+        // $tipoDocumento = "";
+        // $numeroDocumento = "";
+        // $dataEmissao = "";
+        // $orgaoEmissor = "";
+        // $ufEmissor = "";
         
         $cpf = numberOnly($cpf);
         if ((empty($cpf)) or ($cpf == "0")) { $cpf = numberOnly($this->getpost('cpf'));}
@@ -203,7 +216,71 @@ class Bmg extends BaseController
 
                 return redirect()->to('aaspa-receptivo/0/' . $lastIntegraallId);exit;
             }
-        
+        //GRAVAÇÃO PROOPSTA MED
+        } else if (!empty($btmMEDBMG)){
+            $proposta = explode('-', $btmMEDBMG);
+            $conta = $proposta[1];
+            $plano = $proposta[2];
+            $codigoTipoPagamento = $proposta[3];
+
+            $params = [
+                    'codigoPlano'  => $plano,
+                    'codigoSeguro' => BMG_CODIGO_PRODUTO_MED, 
+                    //'codigoTipoBeneficio' => 1, // Apenas se exigido por entidade
+                    'codigoformaPagamentoProdutoSeguro' => $codigoTipoPagamento, // Ex: 5 = Folha de Pagamento
+                    'cpfOperadorVendas' => '04035306606',
+                    //'matricula'   => '987654321',
+                    'renda'       => 2500.00,
+                    'numeroInternoConta' => $conta,
+                    'codigoTipoFormaEnvio' => 15, // 15 = Digital
+                    'codigoTipoBeneficio' => 41, // Aposentadoria por Idade
+                    'codigoformaPagamentoProdutoSeguro' => 4, // Cartao de Credito
+                    
+                    'cliente' => [
+                        'cidadeNascimento' => $cidadeNascimento,
+                        'cpf' => $cpf,
+                        'dataNascimento' => dataPtUsT($dataNascimento),
+                        'nome' => $nomeCliente,
+                        'nomeMae' => $nomeMae,
+                        'sexo' => $sexo,
+                        'ufNascimento' => $ufNascimento,
+                        'estadocivil' => $estadoCivil, // V = Viúvo
+                        'nacionalidade' => $paisNascimento,
+                        
+                        'pessoaPoliticamenteExposta' => false, // 15 = Digital
+                        'celular1' => [
+                            'ddd' => substr($telefone, 0, 2),
+                            'numero' => substr($telefone, 2, 10),
+                            'ramal' => ''
+                        ],
+
+                        'endereco' => [
+                            'bairro' => $bairro,
+                            'cep' => $cep,
+                            'cidade' => $cidade,
+                            'logradouro' => $logradouro,
+                            'uf' => $uf
+                        ],
+
+                        'identidade' => [
+                            'numero' => $docIdentidade,
+                            'emissor' => $orgaoEmissor,
+                            'uf' => $ufEmissor,
+                            'dataEmissao' => dataPtUsT($dataEmissao)
+                        ]
+                    ]
+                ];
+
+                //echo json_encode($params);exit;
+                $propostaGravada = $this->m_bmg->gravaPropostaSeguro($params);
+
+                if ($propostaGravada['status']) {
+                    $returnData["status"] = true;
+                } else {
+                    $returnData["status"] = false;
+                }
+
+                $returnData["mensagem"] = $propostaGravada['mensagem'];
         //CENÁRIO 02: BUSCAR CPF
         } else if (!empty($cpf)){
 
@@ -214,9 +291,12 @@ class Bmg extends BaseController
             if ((strlen($cpf) != 11)){
                 $returnData["mensagem"] = "O CPF deve ser preenchido.";
             } else {
-                $bmgLiberado = $this->m_bmg->obterCartoesDisponiveis($cpf);
+                $bmgLiberadoMED = $this->m_bmg->obterCartoesDisponiveis($cpf, BMG_CODIGO_PRODUTO_MED);
+                $bmgLiberadoVIDA = $this->m_bmg->obterCartoesDisponiveis($cpf, BMG_CODIGO_PRODUTO_VIDA);
             }
+
         }
+
 
 
         if ($cpfINSS != $cpf){
@@ -261,7 +341,7 @@ class Bmg extends BaseController
             $celularWaId = celularToWaId($ultimaLigacao['firstRow']->celular);
         }
 
-        $telefone = "31995781355";
+        //$telefone = "31995781355";
         $data['chat'] = $this->m_insight->getChat(celularToWaId($telefone));
         $data['journey'] = $this->m_insight->getJourney(celularToWaId($telefone));
 
@@ -279,7 +359,8 @@ class Bmg extends BaseController
         $data['ufEmissor'] = $ufEmissor;
 
         $data['cpf'] = $cpf;
-        $data['bmgLiberado'] = $bmgLiberado;
+        $data['bmgLiberadoMED'] = $bmgLiberadoMED;
+        $data['bmgLiberadoVIDA'] = $bmgLiberadoVIDA;
         $data['cpfINSS'] = $cpfINSS;
         $data['nomeCliente'] = $nomeCliente;
         $data['estadoCivil'] = $estadoCivil;

@@ -473,6 +473,11 @@
 		$date = str_replace('/', '-', $dateEntry);
 		return date('Y-m-d H:i:s', strtotime($date));
 	}
+
+	function dataPtUsT($dateEntry){
+		$date = str_replace('/', '-', $dateEntry);
+		return date('Y-m-d', strtotime($date)) . "T00:00:00";
+	}
 	
 	function dataUsPt($dateEntry, $barSeparator = false){
 		$date = str_replace('/', '-', $dateEntry ?? '');

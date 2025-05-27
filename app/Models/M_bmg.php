@@ -58,7 +58,7 @@ class M_bmg extends Model {
                 'login'                => BMG_SEGURO_LOGIN,
                 'senha'                => BMG_SEGURO_SENHA,
                 'codigoEntidade'       => 1581, // código da entidade fornecido pelo BMG
-                'codigoSeguro'         => 1007,   // por exemplo: SeguroPrestamistaConsignado
+                'codigoSeguro'         => BMG_CODIGO_PRODUTO_MED,   // por exemplo: SeguroPrestamistaConsignado
                 'cpfCliente'           => $cpf,
                 // 'dataNascimento'       => '1990-01-01T00:00:00', // formato ISO-8601
                 // 'prazoEmprestimo'      => 48,   // em meses
@@ -94,10 +94,10 @@ class M_bmg extends Model {
                 'loginConsig'  => BMG_SEGURO_LOGIN_CONSIG,
                 'senhaConsig'  => BMG_SEGURO_SENHA_CONSIG,
                 'codigoOrgao'          => '1581',         // Código do Órgão fornecido pelo BMG
-                'codigoProdutoSeguro'  => 1007,             // Ex: 35 = Seguro Prestamista Consignado
+                'codigoProdutoSeguro'  => BMG_CODIGO_PRODUTO_MED,             // Ex: 35 = Seguro Prestamista Consignado
                 'entidade'             => 1581,// Nome da entidade (ex: INSS, SIAPE, etc)
-                'matricula'            => '1655645452',   // Matrícula do cliente na entidade
-                'numeroInternoConta'   => 7543377,         // Número interno da conta (fornecido pelo BMG)
+                //'matricula'            => '1655645452',   // Matrícula do cliente na entidade
+                //'numeroInternoConta'   => 7543377,         // Número interno da conta (fornecido pelo BMG)
                 'renda'                => 2500.00,        // Renda do cliente
                 'sequencialOrgao'      => '001',          // Sequencial do órgão
                 'tipoPagamentoSeguro'  => 2               // 1=à vista, 2=mensal, etc
@@ -105,11 +105,9 @@ class M_bmg extends Model {
         
             $response = $client->__soapCall('listaPlanos', [$params]);
         
-
-
-            echo "<pre>";
-            print_r($response);
-            echo "</pre>";
+            // echo "<pre>";
+            // print_r($response);
+            // echo "</pre>";
 
         } catch (SoapFault $fault) {
             echo "Erro: {$fault->faultcode} - {$fault->faultstring}";
@@ -186,7 +184,7 @@ class M_bmg extends Model {
         return $response;
     }
 
-    public function obterCartoesDisponiveis($cpf){
+    public function obterCartoesDisponiveis($cpf, $produto = BMG_CODIGO_PRODUTO_MED){
         $returnData = [];
         $returnData["status"] = false;
         $returnData["mensagem"] = "";
@@ -200,16 +198,16 @@ class M_bmg extends Model {
                 'senha'        => BMG_SEGURO_SENHA,
                 'loginConsig'  => BMG_SEGURO_LOGIN_CONSIG,
                 'senhaConsig'  => BMG_SEGURO_SENHA_CONSIG,
-                'codigoSeguro' => 1007,              // Ex: 35 = Seguro Prestamista Consignado
+                'codigoSeguro' => $produto,              // Ex: 35 = Seguro Prestamista Consignado
                 'cpf'          => $cpf,   // CPF do cliente, apenas números
                 'tipoPagamento'=> 2,               // 1=à vista, 2=mensal, etc
             ];
         
             $response = $client->__soapCall('obterCartoesDisponiveis', [$params]);
         
-                // echo "<pre>";
-                // print_r($response);
-                // echo "</pre>";exit;
+            // echo "<pre>";
+            // print_r($response);
+            // echo "</pre>";exit;
 
             if (((isset($response->mensagemDeErro))) and ((!empty($response->mensagemDeErro)))){
                 $returnData["mensagem"] = "Cliente Inválido: <br>" . $response->mensagemDeErro;
@@ -328,6 +326,72 @@ class M_bmg extends Model {
         }
 
         return $response; 
+    }
+
+    public function gravaPropostaSeguro($params){
+        $response = null;
+        $returnData = [];
+        $returnData["status"] = false;
+        $returnData["mensagem"] = "";
+        $returnData["cartoes"] = [];
+
+        try {
+            $client = new \SoapClient(BMG_WSDL, ['trace' => 1, 'exceptions' => true]);
+
+            $paramsLogin = [
+                'login'        => BMG_SEGURO_LOGIN,
+                'senha'        => BMG_SEGURO_SENHA,
+                'loginConsig'  => BMG_SEGURO_LOGIN_CONSIG,
+                'senhaConsig'  => BMG_SEGURO_SENHA_CONSIG,
+                'codLoja' => BMG_LOJA_QUID,             // Código da loja fornecido pelo BMG
+            ];
+
+            //$response = $client->__soapCall('gravaPropostaSeguro', [$paramsLogin + $params]);
+
+            //DEBUG SUCESSO
+            $returnData["status"] = true;
+            $returnData["adesao"] = '12345';
+            $returnData["mensagem"] = "Proposta Gravada com Sucesso!<br>Número da Adesão: 12345";
+            return $returnData; exit;
+
+            if (((isset($response->mensagemDeErro))) and ((!empty($response->mensagemDeErro)))){
+                $returnData["mensagem"] = "Erro ao Gravar: <br>" . $response->mensagemDeErro;
+            } else {
+                if (isset($response->numero)) {
+                    $returnData["status"] = true;
+                    $returnData["adesao"] = $response->numero;
+                    $returnData["mensagem"] = "Proposta Gravada com Sucesso!<br>Número da Adesão: " . $response->numero;
+                } else {
+                    $returnData["mensagem"] = "Erro ao Recuperar Número da Adesão.";
+                }
+            }
+            
+            // echo "<pre>";
+            // print_r($response);
+            // echo "</pre>"; exit;
+            // (
+            //     [login] => 
+            //     [senha] => 
+            //     [excecaoDeRegraDeNegocio] => 1
+            //     [excecaoGenerica] => 
+            //     [executadoComSucessso] => 
+            //     [mensagemDeErro] => Cartão informado de numero interno 12807205 não é elegivel ao seguro codigo 54. Motivo: [5009] Cliente possui outra apólice vigente e condição de venda não permite múltiplas propostas. Verificação por CPF [65386922572]. Sequencial da condição venda: [65505207]..
+            //     [numero] => 
+            // )
+            // (
+            //     [login] => 
+            //     [senha] => 
+            //     [excecaoDeRegraDeNegocio] => 
+            //     [excecaoGenerica] => 
+            //     [executadoComSucessso] => 1
+            //     [mensagemDeErro] => 
+            //     [numero] => 97829252
+            // )
+        } catch (SoapFault $fault) {
+            $returnData["mensagem"] = "Erro: {$fault->faultcode} - {$fault->faultstring}";
+        }
+
+        return $returnData; 
     }
 
 }

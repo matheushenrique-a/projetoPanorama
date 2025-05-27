@@ -111,30 +111,42 @@
 																					<span class="fs-4">
 																						<?php 
 																				
-																							if ((isset($bmgLiberado['cartoes'][0])) && is_array($bmgLiberado['cartoes'])) {
+																							if ((isset($bmgLiberadoMED['cartoes'][0])) && is_array($bmgLiberadoMED['cartoes'])) {
 
 																								echo "<div class='fw-bold fs-2 mt-5'>";
-																								echo $bmgLiberado['cartoes'][0]['nomeCliente'] . "</div>";
-																								echo "<div class=''>Cidade: " . $bmgLiberado['cartoes'][0]['cidade'] . "</div>";
+																								echo $bmgLiberadoMED['cartoes'][0]['nomeCliente'] . "</div>";
+																								echo "<div class=''>Cidade: " . $bmgLiberadoMED['cartoes'][0]['cidade'] . "</div>";
 
-																								foreach ($bmgLiberado['cartoes'] as $cartao) {
+																								echo '<div class="mt-7 mb-2 bg-light p-3" style="border-bottom: 0px solid #a1a5b7;">';
+																								echo '<span class="fs-2 ms-2 fw-bold"><i class="fa-solid fa-user-nurse fs-1 me-2"></i>BMG MED</span></div>';
+																								echo "<div class='ms-10'>";
+
+																								foreach ($bmgLiberadoMED['cartoes'] as $cartao) {
 																									if (!$cartao['ehElegivel']) {
-																										echo "<div class='fw-semibold fs-2 mt-5'>";
-																										echo '<span style="color: #f22e46" class="me-2"><svg role="img" aria-hidden="true" width="25px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg></span>';
-																										echo $cartao['numeroCartao'] . "</div>";
-																										echo "<div class='fw-bold fs-4 mb-5'>";
-																										echo $cartao['motivoElegibilidade'] .  "</div>";
-																										echo '<div class="mt-2 mb-2 p-3" style="border-bottom: 1px solid #ececec;"></div>';
+																										echo '<div class="mt-2  mb-2 bg-light p-3" style="border-bottom: 1px solid #a1a5b7;"><span style="color: #f22e46" id=""><svg role="img" aria-hidden="true" width="25px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg></span>';
+																										echo '<span class="fs-4 ms-2 fw-bold">CARTÃO : ' . substr($cartao['numeroCartao'], -4, 4) . '</span></div>';
+																										echo "<div class='ms-0 mb-5'>";
+																										echo '<span class="fs-4 ms-2 fw-light mb-3">' . $cartao['motivoElegibilidade']  . '</span>';
+																										echo "</div>";
+
+																										// echo "<div class='fw-semibold fs-2 mt-5'>";
+																										// echo '<span style="color: #f22e46" class="me-2"><svg role="img" aria-hidden="true" width="25px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg></span>';
+																										// echo $cartao['numeroCartao'] . "</div>";
+																										// echo "<div class='fw-bold fs-4 mb-5'>";
+																										// echo $cartao['motivoElegibilidade'] .  "</div>";
+																										// echo '<div class="mt-2 mb-2 p-3" style="border-bottom: 1px solid #ececec;"></div>';
 																									} else {
-																										echo "<div class='fw-semibold fs-2 mt-5'>";
-																										echo '<span style="color: #008001" class="me-2"><svg role="img" aria-hidden="true" width="25px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg></span>';
-																										echo 'CARTÃO: ' . substr($cartao['numeroCartao'], -4, 4) . "</div>";
-																										echo "<div class='ms-10'>";
+																										echo '<div class="mt-2  mb-2 bg-light p-3" style="border-bottom: 1px solid #a1a5b7;"><span style="color: #008001" id=""><svg role="img" aria-hidden="true" width="25px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg></span>';
+																										echo '<span class="fs-4 ms-2 fw-bold">CARTÃO : ' . substr($cartao['numeroCartao'], -4, 4) . '</span></div>';
+																										//echo "<div class='fw-semibold fs-2 mt-5'>";
+																										//echo '<span style="color: #008001" class="me-2"><svg role="img" aria-hidden="true" width="25px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg></span>';
+																										//echo 'CARTÃO: ' . substr($cartao['numeroCartao'], -4, 4) . "</div>";
+																										echo "<div class='ms-0'>";
 
 																										//MED
 																										if ((isset($cartao['planos']['med']->planos)) && (is_array($cartao['planos']['med']->planos) && count($cartao['planos']['med']->planos) > 0)) {
-																											echo '<div class="mt-2  mb-2 bg-light p-3" style="border-bottom: 1px solid #a1a5b7;"><span style="color: #008001" id=""><svg role="img" aria-hidden="true" width="25px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg></span>';
-																											echo '<span class="fs-4 ms-2 fw-bold">MED:</span> <span class="fs-4 ms-2 fw-bold" id="lblMed"><b> ⏱️ consultando</b></span></div>';
+																											//echo '<div class="mt-2  mb-2 bg-light p-3" style="border-bottom: 1px solid #a1a5b7;"><span style="color: #008001" id=""><svg role="img" aria-hidden="true" width="25px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg></span>';
+																											//echo '<span class="fs-4 ms-2 fw-bold">MED:</span></div>';
 																											foreach ($cartao['planos']['med']->planos as $plano) {
 																												$conta = $cartao['numeroInternoConta'];
 																												$codigoPlano = $plano->codigoPlano;
@@ -148,9 +160,11 @@
 																												}
 																												//echo '09:56:37 - <h3>Dump 34 </h3> <br><br>' . var_dump($plano); exit;					//<-------DEBUG
 
-																												$script = '<i class="fa-regular fa-file-lines pt-4 fs-3" style="color: #b3b1b1; cursor: pointer" onclick="getScript(this, \'MED\', \'' . $cpf  . '\', \'' . $conta . '\',\'' . $codigoPlano . '\', \'' . $codigoTipoPagamento . '\')" alt="Gerar Script"></i>';
+																												$script = '<button type="submit" class="btn btn-info p-1 ms-2 pe-2" style="background-color:rgb(133, 0, 250)" name="btmMEDBMG" onclick="getScript(this, \'MED\', \'' . $cpf  . '\', \'' . $conta . '\',\'' . $codigoPlano . '\', \'' . $codigoTipoPagamento . '\'); return false;"  value="' . $cpf  . '-' . $conta . '-' . $codigoPlano . '-' . $codigoTipoPagamento . '"><i class="bi bi-file-earmark-text-fill"></i> Script</button>';
+																												$script .= '<button type="submit" class="btn btn-success p-1 ms-2" style="background-color:rgb(238, 238, 238)" name="btmMEDBMG" id="btnBMG' . $codigoPlano  . '" onclick="return false; gravarProposta(this, \'MED\', \'' . $cpf  . '\', \'' . $conta . '\',\'' . $codigoPlano . '\', \'' . $codigoTipoPagamento . '\'); return false;"  value="' . $cpf  . '-' . $conta . '-' . $codigoPlano . '-' . $codigoTipoPagamento . '"><i class="bi bi-send-x-fill"></i> BMG</button>';
+																												$script .= '<button type="submit" class="btn btn-info p-1 ms-2" style="background-color:rgb(238, 238, 238)" name="btmMEDPAN" id="btnPAN' . $codigoPlano  . '" onclick="return false;" value="' . $cpf  . '-' . $conta . '-' . $codigoPlano . '-' . $codigoTipoPagamento . '"><i class="bi bi-save2"></i> PAN.</button>';
 																												
-																												echo "<div><span class='fw-bold'>{$plano->nomePlano}</span> - " . (strtoupper($plano->tipoPagamento) == "PARCELADO"  ? '<span class="badge badge-success">Parcelado</span>' : '<span class="badge badge-light-dark">Mensal</span>') . " - R$ "  . number_format($plano->valorPremio, 2, ',', '.') . " " . $script . "</div>";
+																												echo "<div class='ms-1'><span class='fw-bold'>" . str_replace("BMG MED", "", $plano->nomePlano) . "</span> - " . (strtoupper($plano->tipoPagamento) == "PARCELADO"  ? '<span class="badge badge-success">Parcelado</span>' : '<span class="badge badge-light-dark">Mensal</span>') . " - R$ "  . number_format($plano->valorPremio, 2, ',', '.') . " " . $script . "</div>";
 																												echo '<div class="mt-1 mb-1 p-1" style="border-bottom: 1px solid #ececec;"></div>';
 																											}
 																										} else {
@@ -159,18 +173,57 @@
 																											echo '<div class="mt-2 mb-2 p-3" style="border-bottom: 1px solid #ececec;"></div>';
 
 																										}
+																										echo "</div>";
+																									}
+																								}
+																								echo "</div>";
+
+																							}
+
+
+																							if ((isset($bmgLiberadoVIDA['cartoes'][0])) && is_array($bmgLiberadoVIDA['cartoes'])) {
+
+																								//echo "<div class='fw-bold fs-2 mt-5'>";
+																								//echo $bmgLiberadoVIDA['cartoes'][0]['nomeCliente'] . "</div>";
+																								//echo "<div class=''>Cidade: " . $bmgLiberadoVIDA['cartoes'][0]['cidade'] . "</div>";
+
+																								echo '<div class="mt-7 mb-2 bg-light p-3" style="border-bottom: 0px solid #a1a5b7;">';
+																								echo '<span class="fs-2 ms-2 fw-bold"><i class="fa-solid fa-heart-pulse fs-1 me-2"></i>BMG VIDA</span></div>';
+																								echo "<div class='ms-10'>";
+
+																								foreach ($bmgLiberadoVIDA['cartoes'] as $cartao) {
+																									if (!$cartao['ehElegivel']) {
+																										echo "<div class='ms-0 mb-5'>";
+																										echo '<span class="fs-4 ms-2 fw-light mb-3">' . $cartao['motivoElegibilidade']  . '</span>';
+																										echo "</div>";
+																										// echo "<div class='fw-semibold fs-2 mt-5'>";
+																										// echo '<span style="color: #f22e46" class="me-2"><svg role="img" aria-hidden="true" width="25px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg></span>';
+																										// echo $cartao['numeroCartao'] . "</div>";
+																										// echo "<div class='fw-bold fs-4 mb-5'>";
+																										// echo $cartao['motivoElegibilidade'] .  "</div>";
+																										// echo '<div class="mt-2 mb-2 p-3" style="border-bottom: 1px solid #ececec;"></div>';
+																									} else {
+																										echo '<div class="mt-2  mb-2 bg-light p-3" style="border-bottom: 1px solid #a1a5b7;"><span style="color: #008001" id=""><svg role="img" aria-hidden="true" width="25px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg></span>';
+																										echo '<span class="fs-4 ms-2 fw-bold">CARTÃO : ' . substr($cartao['numeroCartao'], -4, 4) . '</span></div>';
+
+																										// echo "<div class='fw-semibold fs-2 mt-5'>";
+																										// echo '<span style="color: #008001" class="me-2"><svg role="img" aria-hidden="true" width="25px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg></span>';
+																										// echo 'CARTÃO: ' . substr($cartao['numeroCartao'], -4, 4) . "</div>";
+																										echo "<div class='ms-0'>";
 
 																										//VIDA
 																										if ((isset($cartao['planos']['vida']->planos)) && (is_array($cartao['planos']['vida']->planos) && count($cartao['planos']['vida']->planos) > 0)) {
-																											echo '<div class="mt-2  mb-2 bg-light p-3" style="border-bottom: 1px solid #a1a5b7;"><span style="color: #008001" id=""><svg role="img" aria-hidden="true" width="25px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg></span>';
-																											echo '<span class="fs-4 ms-2 fw-bold">VIDA:</span></div>';					
+																											// echo '<div class="mt-2  mb-2 bg-light p-3" style="border-bottom: 1px solid #a1a5b7;"><span style="color: #008001" id=""><svg role="img" aria-hidden="true" width="25px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg></span>';
+																											// echo '<span class="fs-4 ms-2 fw-bold">VIDA:</span></div>';					
 																											foreach ($cartao['planos']['vida']->planos as $plano) {
 																												$conta = $cartao['numeroInternoConta'];
 																												$codigoPlano = $plano->codigoPlano;
 																												$codigoTipoPagamento = 2;
 
-																												$script = '<i class="fa-regular fa-file-lines pt-4 fs-3" style="color: #b3b1b1; cursor: pointer" onclick="getScript(this, \'VIDA\', \'' . $cpf . '\', \'' . $conta . '\',\'' . $codigoPlano . '\', \'' . $codigoTipoPagamento . '\')" alt="Gerar Script"></i>';
-																												
+																												$script = '<button type="submit" class="btn btn-info p-1 ms-2 pe-2" style="background-color:rgb(133, 0, 250)" name="btmVIDABMG" onclick="getScript(this, \'VIDA\', \'' . $cpf  . '\', \'' . $conta . '\',\'' . $codigoPlano . '\', \'' . $codigoTipoPagamento . '\'); return false;"  value="' . $cpf  . '-' . $conta . '-' . $codigoPlano . '-' . $codigoTipoPagamento . '"><i class="bi bi-file-earmark-text-fill"></i> Script</button>';
+																												$script .= '<button type="submit" class="btn btn-success p-1 ms-2" style="background-color:rgb(238, 238, 238)" name="btmVIDABMG" id="btnBMG' . $codigoPlano  . '" onclick="return false; gravarProposta(this, \'VIDA\', \'' . $cpf  . '\', \'' . $conta . '\',\'' . $codigoPlano . '\', \'' . $codigoTipoPagamento . '\'); return false;"  value="' . $cpf  . '-' . $conta . '-' . $codigoPlano . '-' . $codigoTipoPagamento . '"><i class="bi bi-send-x-fill"></i> BMG</button>';
+																												$script .= '<button type="submit" class="btn btn-info p-1 ms-2" style="background-color:rgb(238, 238, 238)" name="btmVIDAPAN" id="btnPAN' . $codigoPlano  . '" onclick="return false;" value="' . $cpf  . '-' . $conta . '-' . $codigoPlano . '-' . $codigoTipoPagamento . '"><i class="bi bi-save2"></i> PAN.</button>';
+
 																												echo "<div><span class='fw-bold'>{$plano->nomePlano}</span> - R$ " . number_format($plano->valorPremio, 2, ',', '.') . " " . $script . "</div>";
 																												echo '<div class="mt-1 mb-1 p-1" style="border-bottom: 1px solid #ececec;"></div>';
 																											}
@@ -184,6 +237,7 @@
 																										echo "</div>";
 																									}
 																								}
+																								echo "</div>";
 
 																							}
 																						
@@ -216,12 +270,11 @@
 																		<div class="input-group">
 																			<span class="input-group-text" style="width: 155px">Estado Civil</span>
 																			<select class="form-control" id="estadoCivil" name="estadoCivil" autocomplete="off" style="width: 35px">
-																				<option value="1" <?php echo ($estadoCivil == "1"  ? 'selected' : '');?>>Solteiro</option>
-																				<option value="2" <?php echo ($estadoCivil == "2"  ? 'selected' : '');?>>Casado</option>
-																				<option value="3" <?php echo ($estadoCivil == "3"  ? 'selected' : '');?>>Viúvo</option>
-																				<option value="4" <?php echo ($estadoCivil == "4"  ? 'selected' : '');?>>Separado judicialmente</option>
-																				<option value="5" <?php echo ($estadoCivil == "5"  ? 'selected' : '');?>>União Estável</option>
-																				<option value="6" <?php echo ($estadoCivil == "6"  ? 'selected' : '');?>>Outros</option>
+																				<option value="S" <?php echo ($estadoCivil == "S" ? 'selected' : '');?>>Solteiro</option>
+																				<option value="C" <?php echo ($estadoCivil == "C" ? 'selected' : '');?>>Casado</option>
+																				<option value="V" <?php echo ($estadoCivil == "V" ? 'selected' : '');?>>Viúvo</option>
+																				<option value="D" <?php echo ($estadoCivil == "D" ? 'selected' : '');?>>Separado judicialmente</option>
+																				<option value="M" <?php echo ($estadoCivil == "M" ? 'selected' : '');?>>União Estável</option>
 																			</select>
 																			<span class="input-group-text" style="width: 100px">Sexo</span>
 																			<select class="form-control" id="sexo" name="sexo" autocomplete="off" style="width: 50px">
@@ -246,10 +299,6 @@
 																		<div class="input-group">
 																			<span class="input-group-text" style="width: 155px">E-mail</span>
 																			<input type="text" class="form-control" placeholder="" name="email" id="email" value="<?php echo $email;?>" />
-																		</div>
-																		<div class="input-group">
-																			<span class="input-group-text" style="width: 155px">CEP</span> 
-																			<input type="text" class="form-control fs-3 fw-bold" placeholder="" name="cep" id="cep" value="<?php echo $cep;?>" /><span>&nbsp;&nbsp;<i class="fa-solid fa-magnifying-glass pt-4 fs-3" style="color: #b3b1b1; cursor: pointer" onclick="buscarCep();"></i></span>
 																		</div>
 																		<div class="input-group">
 																			<span class="ms-2 mt-2 mb-2" id="lblNiver">Naturalidade/Nascimento:</span>
@@ -285,6 +334,10 @@
 
 																		<div class="input-group">
 																			<span class="ms-2 mt-2 mb-2" id="lblNiver">Endereço do Cliente:</span>
+																		</div>
+																		<div class="input-group">
+																			<span class="input-group-text" style="width: 155px">CEP</span> 
+																			<input type="text" class="form-control fs-3 fw-bold" placeholder="" name="cep" id="cep" value="<?php echo $cep;?>" /><span>&nbsp;&nbsp;<i class="fa-solid fa-magnifying-glass pt-4 fs-3" style="color: #b3b1b1; cursor: pointer" onclick="buscarCep();"></i></span>
 																		</div>
 																		<div class="input-group">
 																			<span class="input-group-text" style="width: 155px">Logradouro</span>
@@ -329,9 +382,6 @@
 																			</div>
 																		<?php }?>
 																		<?php if (empty($integraallId)) {?>
-																		<div class="d-flex align-items-center position-relative my-1 mt-5 mb-0">
-																			<button type="submit" class="btn btn-primary" name="btnSalvar" value="btnSalvar">Criar Proposta Integraall</button>										
-																		</div>
 																		<?php }?>
 																	</div>
 																</div>
@@ -485,6 +535,62 @@
 
 						function getScript(icon, produto, cpf, conta, plano, codigoTipoPagamento){
 
+
+							icon.innerHTML = "<i class='bi bi-file-earmark-text-fill'></i>Aguarde";
+							//icon.style.color = "#e9ba23";
+							//icon.style.backgroundColor = "#e9ba23";
+							//return false;
+							const lblStatus = document.getElementById("lblStatus-" + produto);
+							const btnBMG = document.getElementById("btnBMG" + plano);
+							const btnPAN = document.getElementById("btnPAN" + plano);
+							//const lblMed = document.getElementById("lblMed"); 
+							let pontoMed = 0;
+							const intervalMed = setInterval(() => {pontoMed = (pontoMed + 1) % 4; icon.innerHTML = "<i class='bi bi-file-earmark-text-fill'></i><b>Aguarde" + ".".repeat(pontoMed) + "</b>";}, 500);
+
+							lblStatus.style.color = "#e9ba23";
+							
+
+							fetch('<?php echo assetfolder;?>bmg-script-vendas/' + produto + '/' + cpf + '/' + conta + '/' + plano + '/' + codigoTipoPagamento, {method: "GET", cache: "no-cache"})
+							.then(response => {
+								if (!response.ok) {throw new Error('HTTP error! Status: ${response.status}');}
+								return response.json();
+							}) .then(data => {
+								//setTimeout(() => {clearInterval(intervalINSS);
+								setTimeout(() => {clearInterval(intervalMed);icon.innerHTML = "<i class='bi bi-file-earmark-text-fill'></i>Script";}, 1);
+								
+								const scriptText = document.getElementById("scriptVendas-" + produto);
+								
+								if (data.hasOwnProperty('status')) {
+
+									if (data.status){
+										lblStatus.style.color = "#008001";
+										//icon.style.color = "#008001";
+										//icon.style.backgroundColor = "#008001";
+										btnBMG.style.backgroundColor = "#fa6300";
+										btnPAN.style.backgroundColor = "#6da73f";
+										scriptText.innerHTML = formatScript(produto, data.script);
+									} else {
+										lblStatus.style.color = "#f22e46";
+										//icon.style.color = "#f22e46";
+										//icon.style.backgroundColor = "#f22e46";
+										btnBMG.style.backgroundColor = "#eeeeee";
+										btnPAN.style.backgroundColor = "#eeeeee";
+										scriptText.innerHTML = "<b>NÃO FOI POSSÍVEL GERAR O SCRIPT</b><BR><BR>" + data.mensagem;
+									}
+
+									console.log(data.status, data.mensagem, data.script); 
+									
+								} else {
+									console.log("Erro ao buscar o script.");
+								}
+								//lblAaspaUpdate.style.display = "inline";
+							}) .catch(error => {
+								console.log('Fetch Error: ' + error.message);
+							});
+							//return false;
+						}
+
+						function gravarProposta(icon, produto, cpf, conta, plano, codigoTipoPagamento){
 							const lblStatus = document.getElementById("lblStatus-" + produto);
 							const lblMed = document.getElementById("lblMed"); let pontoMed = 0;lblMed.innerHTML = "<b> ⏱️ consultando</b>";
 							const intervalMed = setInterval(() => {pontoMed = (pontoMed + 1) % 4; lblMed.innerHTML = "<b> ⏱️ consultando" + ".".repeat(pontoMed) + "</b>";}, 500);
@@ -619,43 +725,66 @@
 							dados["naturalidadeUF"] = extrair("Naturalidade UF", /Naturalidade \(UF\/Cidade\):\s*(\w{2})/);
 							dados["naturalidadeCidade"] = extrair("Naturalidade Cidade", /Naturalidade \(UF\/Cidade\):\s*\w{2}\s*(.+)/);
 							dados["nacionalidade"] = extrair("Nacionalidade", /Nacionalidade:\s*(.+)/);
+							dados["tipoDocumento"] = extrair("Tipo Documento Identificação", /Tipo Documento Identificação:\s*(.+)/);
 							dados["rg"] = extrair("Nro.Ident", /Nro\.Ident\.\s*-\s*Órg\.Emissor\s*-\s*UF:\s*([\d]+)/);
 							dados["orgaoEmissor"] = extrair("Órg.Emissor", /Nro\.Ident\.\s*-\s*Órg\.Emissor\s*-\s*UF:\s*\d+\s*-\s*(SSP|.*?)[\s-]/);
 							dados["ufRg"] = extrair("UF RG", /Nro\.Ident\.\s*-\s*Órg\.Emissor\s*-\s*UF:\s*\d+\s*-\s*.*?\s*-\s*(\w{2})/);
 							dados["dataEmissaoRg"] = extrair("Data Emissão", /Data de Emissão da Identidade:\s*([\d/]+)/);
+							dados["email"] = extrair("E-mail", /E-mail:\s*\n([^\s\n]+@[^\s\n]+)/);
 
 							console.log(dados);
 
 							preencherFormulario(dados);
 						}
 
+
 						function preencherFormulario(dados) {
 							const nomeCliente = document.getElementById("nomeCliente"); nomeCliente.value = dados.nome || "";
-							const estadoCivil = document.getElementById("estadoCivil"); estadoCivil.value = dados.estadoCivil || "";
+							const estadoCivil = document.getElementById("estadoCivil"); estadoCivil.value = obterCodigoEstadoCivil(dados.estadoCivil) || "";
 							document.getElementById("sexo").value = (dados.sexo === "Masculino") ? "1" : (dados.sexo === "Feminino") ? "2" : "3";
 							//document.getElementById("lblNiver").innerHTML = "Idade atual do cliente";
 
 							const nomeMae = document.getElementById("nomeMae"); nomeMae.value = dados.mae || "";
 							const nomePai = document.getElementById("nomePai"); nomePai.value = dados.pai || "";
 							const paisNascimento = document.getElementById("paisNascimento"); paisNascimento.value = dados.nacionalidade || "";
+
+							if (dados.tipoDocumento != 'Selecione'){
+								const tipoDocumento = document.getElementById("tipoDocumento"); tipoDocumento.value = dados.tipoDocumento || "";
+							}							
+
+							const numeroDocumento = document.getElementById("numeroDocumento"); numeroDocumento.value = dados.rg || "";
+
 							const cidadeNascimento = document.getElementById("cidadeNascimento"); cidadeNascimento.value = dados.naturalidadeCidade || "";
 							const ufNascimento = document.getElementById("ufNascimento"); ufNascimento.value = dados.naturalidadeUF || "";
 							const dataEmissao = document.getElementById("dataEmissao"); dataEmissao.value = dados.dataEmissaoRg || "";
 							const orgaoEmissor = document.getElementById("orgaoEmissor"); orgaoEmissor.value = dados.orgaoEmissor || "";
-							const ufEmissor = document.getElementById("ufEmissor"); ufEmissor.value = dados.ufEmissor || "";
+							const ufEmissor = document.getElementById("ufEmissor"); ufEmissor.value = dados.ufRg || "";
 							const email = document.getElementById("email"); email.value = dados.email || "";
 							//const telefone = document.getElementById("telefone"); telefone.value = "";
 
 							const logradouro = document.getElementById("logradouro"); logradouro.value = dados.logradouro || "";
+
 							const bairro = document.getElementById("bairro"); bairro.value = dados.bairro || "";
 							const cep = document.getElementById("cep"); cep.value = dados.cep || "";
 							const cidade = document.getElementById("cidade"); cidade.value = dados.cidade || "";
 							const uf = document.getElementById("uf"); uf.value = dados.uf || "";
-							const complemento = document.getElementById("complemento"); complemento.value = dados.complemento || "";
 							const endNumero = document.getElementById("endNumero"); endNumero.value = dados.numero || "";
-							//const dataNascimento = document.getElementById("dataNascimento"); dataNascimento.value = ""; // Não foi extraído da string
-							//const matricula = document.getElementById("matricula"); matricula.value = ""; // Não foi extraído da string
+							if (dados.complemento != 'Bairro:'){
+								const complemento = document.getElementById("complemento"); complemento.value = dados.complemento || "";
+							}							
 							const docIdentidade = document.getElementById("docIdentidade"); docIdentidade.value = dados.rg || "";
+						}
+
+						function obterCodigoEstadoCivil(descricao) {
+							const mapaEstadoCivil = {
+								'Solteiro': 'S',
+								'Casado': 'C',
+								'Viuvo': 'V',
+								'Separado judicialmente': 'D',
+								'Uniao Estável': 'M'
+							};
+
+							return mapaEstadoCivil[descricao] || '';
 						}
 
 						function checkCpf(){
