@@ -87,6 +87,15 @@
 																			<div class="input-group">
 																				<span class="ms-2 mt-2" id="lblInfo">Informe o CPF para consulta.</span>
 																			</div>
+																			<?php if ((!empty($returnData["mensagem"]))){
+																				$showMessage = 'block';
+																				$showColor = ($returnData["status"]  ? '#1ed420' : '#ff0000'); 
+																				} else {
+																					$showMessage = 'none';
+																			}?>
+																			<div class="input-group" id="showSuccessTop" style="display: <?php echo $showMessage;?>;">
+																				<span class="input-group-text text-start" style="width: 100%;"><?php echo $returnData["mensagem"];?></span>					</div>
+																				
 																			<?php if ((!$returnData["status"]) and (!empty($returnData["mensagem"]))){?>
 																				<div class="input-group">
 																					<span class="mt-2 ms-2" style="width: 100%; color: #ff0000;"><?php echo $returnData["mensagem"];?></span>
@@ -94,23 +103,19 @@
 																			<?php }?>
 																			<?php if (($returnData["status"]) and (!empty($returnData["mensagem"]))){?>
 																				<div class="input-group">
-																					<span class="input-group-text mt-2 ms-2" style="width: 100%; color:rgb(29, 212, 32);"><?php echo $returnData["mensagem"];?></span>
+																					<span class="input-group-text mt-2 ms-2" style="width: 100%; color:#008001;"><?php echo $returnData["mensagem"];?></span>
 																				</div>
 																			<?php }?>
 																			<div class="d-flex align-items-center position-relative my-1 mt-5 mb-0">
 																				<button type="submit" class="btn btn-primary" name="btnConsultar" value="btnConsultar" >Consultar</button>										
 																			</div>
 
-																			
-
-
-
-
 																			<div class="mt-10 mb-3">
 																				<div>
 																					<span class="fs-4">
 																						<?php 
 																				
+																							//******VIDA */
 																							if ((isset($bmgLiberadoMED['cartoes'][0])) && is_array($bmgLiberadoMED['cartoes'])) {
 
 																								echo "<div class='fw-bold fs-2 mt-5'>";
@@ -128,25 +133,13 @@
 																										echo "<div class='ms-0 mb-5'>";
 																										echo '<span class="fs-4 ms-2 fw-light mb-3">' . $cartao['motivoElegibilidade']  . '</span>';
 																										echo "</div>";
-
-																										// echo "<div class='fw-semibold fs-2 mt-5'>";
-																										// echo '<span style="color: #f22e46" class="me-2"><svg role="img" aria-hidden="true" width="25px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg></span>';
-																										// echo $cartao['numeroCartao'] . "</div>";
-																										// echo "<div class='fw-bold fs-4 mb-5'>";
-																										// echo $cartao['motivoElegibilidade'] .  "</div>";
-																										// echo '<div class="mt-2 mb-2 p-3" style="border-bottom: 1px solid #ececec;"></div>';
 																									} else {
 																										echo '<div class="mt-2  mb-2 bg-light p-3" style="border-bottom: 1px solid #a1a5b7;"><span style="color: #008001" id=""><svg role="img" aria-hidden="true" width="25px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg></span>';
 																										echo '<span class="fs-4 ms-2 fw-bold">CARTÃO : ' . substr($cartao['numeroCartao'], -4, 4) . '</span></div>';
-																										//echo "<div class='fw-semibold fs-2 mt-5'>";
-																										//echo '<span style="color: #008001" class="me-2"><svg role="img" aria-hidden="true" width="25px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg></span>';
-																										//echo 'CARTÃO: ' . substr($cartao['numeroCartao'], -4, 4) . "</div>";
 																										echo "<div class='ms-0'>";
 
 																										//MED
 																										if ((isset($cartao['planos']['med']->planos)) && (is_array($cartao['planos']['med']->planos) && count($cartao['planos']['med']->planos) > 0)) {
-																											//echo '<div class="mt-2  mb-2 bg-light p-3" style="border-bottom: 1px solid #a1a5b7;"><span style="color: #008001" id=""><svg role="img" aria-hidden="true" width="25px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg></span>';
-																											//echo '<span class="fs-4 ms-2 fw-bold">MED:</span></div>';
 																											foreach ($cartao['planos']['med']->planos as $plano) {
 																												$conta = $cartao['numeroInternoConta'];
 																												$codigoPlano = $plano->codigoPlano;
@@ -158,11 +151,9 @@
 																												} else {
 																													$codigoTipoPagamento = 0;
 																												}
-																												//echo '09:56:37 - <h3>Dump 34 </h3> <br><br>' . var_dump($plano); exit;					//<-------DEBUG
-
 																												$script = '<button type="submit" class="btn btn-info p-1 ms-2 pe-2" style="background-color:rgb(133, 0, 250)" name="btmMEDBMG" onclick="getScript(this, \'MED\', \'' . $cpf  . '\', \'' . $conta . '\',\'' . $codigoPlano . '\', \'' . $codigoTipoPagamento . '\'); return false;"  value="' . $cpf  . '-' . $conta . '-' . $codigoPlano . '-' . $codigoTipoPagamento . '"><i class="bi bi-file-earmark-text-fill"></i> Script</button>';
-																												$script .= '<button type="submit" class="btn btn-success p-1 ms-2" style="background-color:rgb(238, 238, 238)" name="btmMEDBMG" id="btnBMG' . $codigoPlano  . '" onclick="return false; gravarProposta(this, \'MED\', \'' . $cpf  . '\', \'' . $conta . '\',\'' . $codigoPlano . '\', \'' . $codigoTipoPagamento . '\'); return false;"  value="' . $cpf  . '-' . $conta . '-' . $codigoPlano . '-' . $codigoTipoPagamento . '"><i class="bi bi-send-x-fill"></i> BMG</button>';
-																												$script .= '<button type="submit" class="btn btn-info p-1 ms-2" style="background-color:rgb(238, 238, 238)" name="btmMEDPAN" id="btnPAN' . $codigoPlano  . '" onclick="return false;" value="' . $cpf  . '-' . $conta . '-' . $codigoPlano . '-' . $codigoTipoPagamento . '"><i class="bi bi-save2"></i> PAN.</button>';
+																												$script .= '<button type="submit" class="btn btn-success p-1 ms-2" style="background-color:rgb(238, 238, 238); display: none;" name="btmMEDBMG" id="btnBMG' . $conta . $codigoPlano  . '" onclick="gravarProposta(this, \'MED\', \'' . $cpf  . '\', \'' . $conta . '\',\'' . $codigoPlano . '\', \'' . $codigoTipoPagamento . '\'); return false;"  value="' . $cpf  . '-' . $conta . '-' . $codigoPlano . '-' . $codigoTipoPagamento . '"><i class="bi bi-send-x-fill"></i> BMG</button>';
+																												$script .= '<button type="submit" class="btn btn-info p-1 ms-2" style="background-color:rgb(238, 238, 238); display: none;" name="btmMEDPAN" id="btnPAN' .  $conta . $codigoPlano  . '" onclick="gravarPropostaPan(this, \'MED\', \'' . $cpf  . '\', \'' . $conta . '\',\'' . $codigoPlano . '\', \'' . $codigoTipoPagamento . '\'); return false;" value="' . $cpf  . '-' . $conta . '-' . $codigoPlano . '-' . $codigoTipoPagamento . '"><i class="bi bi-save2"></i> PAN.</button>';
 																												
 																												echo "<div class='ms-1'><span class='fw-bold'>" . str_replace("BMG MED", "", $plano->nomePlano) . "</span> - " . (strtoupper($plano->tipoPagamento) == "PARCELADO"  ? '<span class="badge badge-success">Parcelado</span>' : '<span class="badge badge-light-dark">Mensal</span>') . " - R$ "  . number_format($plano->valorPremio, 2, ',', '.') . " " . $script . "</div>";
 																												echo '<div class="mt-1 mb-1 p-1" style="border-bottom: 1px solid #ececec;"></div>';
@@ -181,12 +172,9 @@
 																							}
 
 
+
+																							//******VIDA */
 																							if ((isset($bmgLiberadoVIDA['cartoes'][0])) && is_array($bmgLiberadoVIDA['cartoes'])) {
-
-																								//echo "<div class='fw-bold fs-2 mt-5'>";
-																								//echo $bmgLiberadoVIDA['cartoes'][0]['nomeCliente'] . "</div>";
-																								//echo "<div class=''>Cidade: " . $bmgLiberadoVIDA['cartoes'][0]['cidade'] . "</div>";
-
 																								echo '<div class="mt-7 mb-2 bg-light p-3" style="border-bottom: 0px solid #a1a5b7;">';
 																								echo '<span class="fs-2 ms-2 fw-bold"><i class="fa-solid fa-heart-pulse fs-1 me-2"></i>BMG VIDA</span></div>';
 																								echo "<div class='ms-10'>";
@@ -196,33 +184,21 @@
 																										echo "<div class='ms-0 mb-5'>";
 																										echo '<span class="fs-4 ms-2 fw-light mb-3">' . $cartao['motivoElegibilidade']  . '</span>';
 																										echo "</div>";
-																										// echo "<div class='fw-semibold fs-2 mt-5'>";
-																										// echo '<span style="color: #f22e46" class="me-2"><svg role="img" aria-hidden="true" width="25px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg></span>';
-																										// echo $cartao['numeroCartao'] . "</div>";
-																										// echo "<div class='fw-bold fs-4 mb-5'>";
-																										// echo $cartao['motivoElegibilidade'] .  "</div>";
-																										// echo '<div class="mt-2 mb-2 p-3" style="border-bottom: 1px solid #ececec;"></div>';
 																									} else {
 																										echo '<div class="mt-2  mb-2 bg-light p-3" style="border-bottom: 1px solid #a1a5b7;"><span style="color: #008001" id=""><svg role="img" aria-hidden="true" width="25px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg></span>';
 																										echo '<span class="fs-4 ms-2 fw-bold">CARTÃO : ' . substr($cartao['numeroCartao'], -4, 4) . '</span></div>';
-
-																										// echo "<div class='fw-semibold fs-2 mt-5'>";
-																										// echo '<span style="color: #008001" class="me-2"><svg role="img" aria-hidden="true" width="25px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg></span>';
-																										// echo 'CARTÃO: ' . substr($cartao['numeroCartao'], -4, 4) . "</div>";
 																										echo "<div class='ms-0'>";
 
 																										//VIDA
 																										if ((isset($cartao['planos']['vida']->planos)) && (is_array($cartao['planos']['vida']->planos) && count($cartao['planos']['vida']->planos) > 0)) {
-																											// echo '<div class="mt-2  mb-2 bg-light p-3" style="border-bottom: 1px solid #a1a5b7;"><span style="color: #008001" id=""><svg role="img" aria-hidden="true" width="25px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg></span>';
-																											// echo '<span class="fs-4 ms-2 fw-bold">VIDA:</span></div>';					
 																											foreach ($cartao['planos']['vida']->planos as $plano) {
 																												$conta = $cartao['numeroInternoConta'];
 																												$codigoPlano = $plano->codigoPlano;
 																												$codigoTipoPagamento = 2;
 
 																												$script = '<button type="submit" class="btn btn-info p-1 ms-2 pe-2" style="background-color:rgb(133, 0, 250)" name="btmVIDABMG" onclick="getScript(this, \'VIDA\', \'' . $cpf  . '\', \'' . $conta . '\',\'' . $codigoPlano . '\', \'' . $codigoTipoPagamento . '\'); return false;"  value="' . $cpf  . '-' . $conta . '-' . $codigoPlano . '-' . $codigoTipoPagamento . '"><i class="bi bi-file-earmark-text-fill"></i> Script</button>';
-																												$script .= '<button type="submit" class="btn btn-success p-1 ms-2" style="background-color:rgb(238, 238, 238)" name="btmVIDABMG" id="btnBMG' . $codigoPlano  . '" onclick="return false; gravarProposta(this, \'VIDA\', \'' . $cpf  . '\', \'' . $conta . '\',\'' . $codigoPlano . '\', \'' . $codigoTipoPagamento . '\'); return false;"  value="' . $cpf  . '-' . $conta . '-' . $codigoPlano . '-' . $codigoTipoPagamento . '"><i class="bi bi-send-x-fill"></i> BMG</button>';
-																												$script .= '<button type="submit" class="btn btn-info p-1 ms-2" style="background-color:rgb(238, 238, 238)" name="btmVIDAPAN" id="btnPAN' . $codigoPlano  . '" onclick="return false;" value="' . $cpf  . '-' . $conta . '-' . $codigoPlano . '-' . $codigoTipoPagamento . '"><i class="bi bi-save2"></i> PAN.</button>';
+																												$script .= '<button type="submit" class="btn btn-success p-1 ms-2" style="background-color:rgb(238, 238, 238); display: none;" name="btmVIDABMG" id="btnBMG' .  $conta . $codigoPlano  . '" onclick="gravarProposta(this, \'VIDA\', \'' . $cpf  . '\', \'' . $conta . '\',\'' . $codigoPlano . '\', \'' . $codigoTipoPagamento . '\'); return false;"  value="' . $cpf  . '-' . $conta . '-' . $codigoPlano . '-' . $codigoTipoPagamento . '"><i class="bi bi-send-x-fill"></i> BMG</button>';
+																												$script .= '<button type="submit" class="btn btn-info p-1 ms-2" style="background-color:rgb(238, 238, 238); display: none;" name="btmVIDAPAN" id="btnPAN' .  $conta . $codigoPlano  . '" onclick="return false;" value="' . $cpf  . '-' . $conta . '-' . $codigoPlano . '-' . $codigoTipoPagamento . '"><i class="bi bi-save2"></i> PAN.</button>';
 
 																												echo "<div><span class='fw-bold'>{$plano->nomePlano}</span> - R$ " . number_format($plano->valorPremio, 2, ',', '.') . " " . $script . "</div>";
 																												echo '<div class="mt-1 mb-1 p-1" style="border-bottom: 1px solid #ececec;"></div>';
@@ -370,19 +346,18 @@
 
 																		<div class="input-group">
 																		</div>
+
+																		<?php if ((!empty($returnData["mensagem"]))){
+																			$showMessage = 'block';
+																			$showColor = ($returnData["status"]  ? '#1ed420' : '#ff0000'); 
+																		} else {
+																			$showMessage = 'none';
+																		}?>
+
+																		<div class="input-group" id="showSuccess" style="display: <?php echo $showMessage;?>;">
+																			<span class="input-group-text" style="width: 100%;"><?php echo $returnData["mensagem"];?></span>
+																		</div>
 																		
-																		<?php if ((!$returnData["status"]) and (!empty($returnData["mensagem"]))){?>
-																			<div class="input-group">
-																				<span class="mt-2" style="width: 100%; color: #ff0000;"><?php echo $returnData["mensagem"];?></span>
-																			</div>
-																		<?php }?>
-																		<?php if (($returnData["status"]) and (!empty($returnData["mensagem"]))){?>
-																			<div class="input-group">
-																				<span class="input-group-text" style="width: 100%; color:rgb(29, 212, 32);"><?php echo $returnData["mensagem"];?></span>
-																			</div>
-																		<?php }?>
-																		<?php if (empty($integraallId)) {?>
-																		<?php }?>
 																	</div>
 																</div>
 															</div>
@@ -437,6 +412,54 @@
 												</div>
 											</div>
 											<!--end::Accordion-->
+
+
+											<!--begin::Accordion-->
+											<div class="accordion" id="kt_accordion_abordagem  ms-lg-7 ms-xl-10">
+												<div class="accordion-item">
+													<h2 class="accordion-header" id="kt_accordion_abordagem_header_1">
+														<button class="accordion-button fs-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#kt_proposta_med" aria-expanded="true" aria-controls="kt_accordion_abordagem_body_1">
+														PROPOSTA BMG MED
+														<span style="color:rgb(173, 179, 173)" class="ms-2" id="lblStatusGravacao-BMG-MED"><svg role="img" aria-hidden="true" width="20px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg></span>
+
+														</button>
+													</h2>
+													<div id="kt_proposta_med" class="accordion-collapse collapse shown" aria-labelledby="kt_accordion_abordagem_header_1" data-bs-parent="#kt_accordion_abordagem">
+														<div class="accordion-body">
+
+														<div style="font-size:18px; line-height:1.8; font-family:Arial, sans-serif;" id="lblDetalhesGravacao-BMG-MED">
+															Nenhuma proposta MED gravada no BMG.
+
+														</div>
+													</div>
+												</div>
+											</div>
+											<!--end::Accordion-->
+
+											<!--begin::Accordion-->
+											<div class="accordion" id="kt_accordion_abordagem  ms-lg-7 ms-xl-10">
+												<div class="accordion-item">
+													<h2 class="accordion-header" id="kt_accordion_abordagem_header_1">
+														<button class="accordion-button fs-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#kt_proposta_pan_med" aria-expanded="true" aria-controls="kt_accordion_abordagem_body_1">
+														PROPOSTA PANORAMA MED
+														<span style="color:rgb(173, 179, 173)" class="ms-2" id="lblStatusGravacao-PAN-MED"><svg role="img" aria-hidden="true" width="20px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg></span>
+
+														</button>
+													</h2>
+													<div id="kt_proposta_pan_med" class="accordion-collapse collapse shown" aria-labelledby="kt_accordion_abordagem_header_1" data-bs-parent="#kt_accordion_abordagem">
+														<div class="accordion-body">
+
+														<div style="font-size:18px; line-height:1.8; font-family:Arial, sans-serif;" id="lblDetalhesGravacao-PAN-MED">
+															Nenhuma proposta MED gravada no BMG.
+
+														</div>
+													</div>
+												</div>
+											</div>
+											<!--end::Accordion-->
+
+											
+
 
 											
 
@@ -534,15 +557,13 @@
 						});
 
 						function getScript(icon, produto, cpf, conta, plano, codigoTipoPagamento){
-
-
 							icon.innerHTML = "<i class='bi bi-file-earmark-text-fill'></i>Aguarde";
 							//icon.style.color = "#e9ba23";
 							//icon.style.backgroundColor = "#e9ba23";
 							//return false;
 							const lblStatus = document.getElementById("lblStatus-" + produto);
-							const btnBMG = document.getElementById("btnBMG" + plano);
-							const btnPAN = document.getElementById("btnPAN" + plano);
+							const btnBMG = document.getElementById("btnBMG" + conta + plano);
+							const btnPAN = document.getElementById("btnPAN" + conta+ plano);
 							//const lblMed = document.getElementById("lblMed"); 
 							let pontoMed = 0;
 							const intervalMed = setInterval(() => {pontoMed = (pontoMed + 1) % 4; icon.innerHTML = "<i class='bi bi-file-earmark-text-fill'></i><b>Aguarde" + ".".repeat(pontoMed) + "</b>";}, 500);
@@ -564,14 +585,16 @@
 
 									if (data.status){
 										lblStatus.style.color = "#008001";
-										//icon.style.color = "#008001";
+										icon.style.backgroundColor = "#008001";
 										//icon.style.backgroundColor = "#008001";
 										btnBMG.style.backgroundColor = "#fa6300";
 										btnPAN.style.backgroundColor = "#6da73f";
+										btnPAN.style.display = "inline-block";
+										btnBMG.style.display = "inline-block";		
 										scriptText.innerHTML = formatScript(produto, data.script);
 									} else {
 										lblStatus.style.color = "#f22e46";
-										//icon.style.color = "#f22e46";
+										icon.style.backgroundColor = "#f22e46";
 										//icon.style.backgroundColor = "#f22e46";
 										btnBMG.style.backgroundColor = "#eeeeee";
 										btnPAN.style.backgroundColor = "#eeeeee";
@@ -591,44 +614,156 @@
 						}
 
 						function gravarProposta(icon, produto, cpf, conta, plano, codigoTipoPagamento){
-							const lblStatus = document.getElementById("lblStatus-" + produto);
-							const lblMed = document.getElementById("lblMed"); let pontoMed = 0;lblMed.innerHTML = "<b> ⏱️ consultando</b>";
-							const intervalMed = setInterval(() => {pontoMed = (pontoMed + 1) % 4; lblMed.innerHTML = "<b> ⏱️ consultando" + ".".repeat(pontoMed) + "</b>";}, 500);
+							const btnBMG = document.getElementById("btnBMG" + conta + plano);
+							btnBMG.innerHTML = "<i class='bi bi-send-x-fill'></i>Aguarde";
+							let pontoGrava = 0;
+							const intervalGrava = setInterval(() => {pontoGrava = (pontoGrava + 1) % 4; btnBMG.innerHTML = "<i class='bi bi-send-x-fill'></i><b>Aguarde" + ".".repeat(pontoGrava) + "</b>";}, 500);
+							const dados = extrairFormularioJson();
 
-							lblStatus.style.color = "#e9ba23";
-							icon.style.color = "#e9ba23";
-
-							fetch('<?php echo assetfolder;?>bmg-script-vendas/' + produto + '/' + cpf + '/' + conta + '/' + plano + '/' + codigoTipoPagamento, {method: "GET", cache: "no-cache"})
+							fetch('<?php echo assetfolder;?>bmg-gravar-proposta', 
+								{
+									method: "POST", 
+									cache: "no-cache",
+									headers: {
+										'Content-Type': 'application/json'
+									},
+									body: JSON.stringify({
+										produto: produto,
+										cpf: cpf,
+										conta: conta,
+										plano: plano,
+										codigoTipoPagamento: codigoTipoPagamento,
+										...dados
+									})
+								}
+							)
 							.then(response => {
 								if (!response.ok) {throw new Error('HTTP error! Status: ${response.status}');}
 								return response.json();
 							}) .then(data => {
-								//setTimeout(() => {clearInterval(intervalINSS);
-								//setTimeout(() => {clearInterval(intervalAaspa);lblTopAaspa.style.color = data.color;lblAaspa.innerHTML = data.status;}, 1);
+								setTimeout(() => {clearInterval(intervalGrava);btnBMG.innerHTML = "<i class='bi bi-send-x-fill'></i>BMG";}, 1);
 								
-								const scriptText = document.getElementById("scriptVendas-" + produto);
+								const showSuccessTop = document.getElementById("showSuccessTop");
+								const showSuccess = document.getElementById("showSuccess");
+								const lblGravaMed = document.getElementById("lblDetalhesGravacao-BMG-MED");
+								const lblStatusMed = document.getElementById("lblStatusGravacao-BMG-MED");
+
+								showSuccessTop.style.display = "block";
+								showSuccess.style.display = "block";
+								console.log(data.mensagem);
 								
 								if (data.hasOwnProperty('status')) {
-
 									if (data.status){
-										lblStatus.style.color = "#008001";
-										icon.style.color = "#008001";
-										scriptText.innerHTML = formatScript(produto, data.script);
+										showSuccessTop.innerHTML = "<span class='input-group-text text-start' style='width: 100%; color:#008001;'>" + data.mensagem + "</span>";
+										showSuccess.innerHTML = "<span class='input-group-text text-start' style='width: 100%; color:#008001;'>" + data.mensagem + "</span>";
+										lblGravaMed.innerHTML = "<span class='input-group-text text-start' style='width: 100%; color:#008001;'>" + data.mensagem + "</span>";
+										lblStatusMed.style.color = "#008001";
 									} else {
-										lblStatus.style.color = "#f22e46";
-										icon.style.color = "#f22e46";
-										scriptText.innerHTML = "<b>NÃO FOI POSSÍVEL GERAR O SCRIPT</b><BR><BR>" + data.mensagem;
+										showSuccessTop.innerHTML = "<span class='input-group-text text-start' style='width: 100%; color:rgb(235, 41, 41);'>" + data.mensagem + "</span>";
+										showSuccess.innerHTML = "<span class='input-group-text text-start' style='width: 100%; color:rgb(235, 41, 41);'>" + data.mensagem + "</span>";
+										lblGravaMed.innerHTML = "<span class='input-group-text text-start' style='width: 100%; color:rgb(235, 41, 41);'>" + data.mensagem + "</span>";
+										lblStatusMed.style.color = "#f22e46";
 									}
-
-									console.log(data.status, data.mensagem, data.script); 
-									
 								} else {
-									console.log("Erro ao buscar o script.");
+										showSuccessTop.innerHTML = "<span class='input-group-text text-start' style='width: 100%; color:rgb(235, 41, 41);'>Retorno Inválido da Gravação.</span>";
+										showSuccess.innerHTML = "<span class='input-group-text text-start' style='width: 100%; color:rgb(235, 41, 41);'>Retorno Inválido da Gravação.</span>";
 								}
 								//lblAaspaUpdate.style.display = "inline";
 							}) .catch(error => {
 								console.log('Fetch Error: ' + error.message);
 							});
+						}
+
+						function gravarPropostaPan(icon, produto, cpf, conta, plano, codigoTipoPagamento){
+							const btnPAN = document.getElementById("btnPAN" + conta + plano);
+							btnPAN.innerHTML = "<i class='bi bi-send-x-fill'></i>Aguarde";
+							let pontoGrava = 0;
+							const intervalGrava = setInterval(() => {pontoGrava = (pontoGrava + 1) % 4; btnPAN.innerHTML = "<i class='bi bi-send-x-fill'></i><b>Aguarde" + ".".repeat(pontoGrava) + "</b>";}, 500);
+							const dados = extrairFormularioJson();
+
+							fetch('<?php echo assetfolder;?>panorama-gravar-proposta', 
+								{
+									method: "POST", 
+									cache: "no-cache",
+									headers: {
+										'Content-Type': 'application/json'
+									},
+									body: JSON.stringify({
+										produto: produto,
+										cpf: cpf,
+										conta: conta,
+										plano: plano,
+										codigoTipoPagamento: codigoTipoPagamento,
+										...dados
+									})
+								}
+							)
+							.then(response => {
+								if (!response.ok) {throw new Error('HTTP error! Status: ${response.status}');}
+								return response.json();
+							}) .then(data => {
+								setTimeout(() => {clearInterval(intervalGrava);btnPAN.innerHTML = "<i class='bi bi-send-x-fill'></i>PAN.";}, 1);
+								
+								const showSuccessTop = document.getElementById("showSuccessTop");
+								const showSuccess = document.getElementById("showSuccess");
+								const lblGravaPan = document.getElementById("lblDetalhesGravacao-PAN-MED");
+								const lblStatusPan = document.getElementById("lblStatusGravacao-PAN-MED");
+
+								showSuccessTop.style.display = "block";
+								showSuccess.style.display = "block";
+								console.log(data.mensagem);
+								
+								if (data.hasOwnProperty('status')) {
+									if (data.status){
+										showSuccessTop.innerHTML = "<span class='input-group-text text-start' style='width: 100%; color:#008001;'>" + data.mensagem + "</span>";
+										showSuccess.innerHTML = "<span class='input-group-text text-start' style='width: 100%; color:#008001;'>" + data.mensagem + "</span>";
+										lblGravaPan.innerHTML = "<span class='input-group-text text-start' style='width: 100%; color:#008001;'>" + data.mensagem + "</span>";
+										lblStatusPan.style.color = "#008001";
+									} else {
+										showSuccessTop.innerHTML = "<span class='input-group-text text-start' style='width: 100%; color:rgb(235, 41, 41);'>" + data.mensagem + "</span>";
+										showSuccess.innerHTML = "<span class='input-group-text text-start' style='width: 100%; color:rgb(235, 41, 41);'>" + data.mensagem + "</span>";
+										lblGravaPan.innerHTML = "<span class='input-group-text text-start' style='width: 100%; color:rgb(235, 41, 41);'>" + data.mensagem + "</span>";
+										lblStatusPan.style.color = "#f22e46";
+									}
+								} else {
+										showSuccessTop.innerHTML = "<span class='input-group-text text-start' style='width: 100%; color:rgb(235, 41, 41);'>Retorno Inválido da Gravação.</span>";
+										showSuccess.innerHTML = "<span class='input-group-text text-start' style='width: 100%; color:rgb(235, 41, 41);'>Retorno Inválido da Gravação.</span>";
+								}
+								//lblAaspaUpdate.style.display = "inline";
+							}) .catch(error => {
+								console.log('Fetch Error: ' + error.message);
+							});
+						}
+
+						function extrairFormularioJson() {
+							const dados = {
+								nome: document.getElementById("nomeCliente")?.value || "",
+								estadoCivil: document.getElementById("estadoCivil")?.value || "",
+								sexo: document.getElementById("sexo")?.value || "",
+								mae: document.getElementById("nomeMae")?.value || "",
+								pai: document.getElementById("nomePai")?.value || "",
+								nacionalidade: document.getElementById("paisNascimento")?.value || "",
+								tipoDocumento: document.getElementById("tipoDocumento")?.value || "",
+								rg: document.getElementById("numeroDocumento")?.value || "",
+								cidadeNascimento: document.getElementById("cidadeNascimento")?.value || "",
+								dataNascimento: document.getElementById("dataNascimento")?.value || "",
+								ufNascimento: document.getElementById("ufNascimento")?.value || "",
+								dataEmissaoRg: document.getElementById("dataEmissao")?.value || "",
+								orgaoEmissor: document.getElementById("orgaoEmissor")?.value || "",
+								ufRg: document.getElementById("ufEmissor")?.value || "",
+								email: document.getElementById("email")?.value || "",
+								logradouro: document.getElementById("logradouro")?.value || "",
+								bairro: document.getElementById("bairro")?.value || "",
+								cep: document.getElementById("cep")?.value || "",
+								cidade: document.getElementById("cidade")?.value || "",
+								uf: document.getElementById("uf")?.value || "",
+								numero: document.getElementById("endNumero")?.value || "",
+								complemento: document.getElementById("complemento")?.value || "",
+								docIdentidade: document.getElementById("docIdentidade")?.value || "",
+								telefone: document.getElementById("celular")?.value || ""
+							};
+
+							return dados;
 						}
 
 						function formatScript(produto, script){
@@ -849,176 +984,6 @@
 								lblInfo.style.color = "red";
 								return false;
 							}
-						}
-
-						function checkAaspa(){
-							if (validaCPF() == false) return;
-
-							//alert (document.getElementById("cpf").value + " - " + document.getElementById("cpfINSS").value);
-							if (document.getElementById("cpf").value != document.getElementById("cpfINSS").value) {limparForm()} ;
-
-							//LABEL AASPA
-							const lblTopAaspa = document.getElementById("lblAaspaTop");lblTopAaspa.style.color = "#ddb100";
-							const lblAaspa = document.getElementById("lblAaspa"); let pontoAaspa = 0; lblAaspa.innerHTML = "<b> ⏱️ consultando</b>";
-							const intervalAaspa = setInterval(() => {pontoAaspa = (pontoAaspa + 1) % 4; lblAaspa.innerHTML = "<b> ⏱️ consultando" + ".".repeat(pontoAaspa) + "</b>";}, 500);
-							const lblAaspaUpdate = document.getElementById("lblAaspaUpdate");lblAaspaUpdate.style.display = "none";
-
-							const cpf = document.getElementById("cpf").value;
-
-							fetch('<?php echo assetfolder;?>calculadora-qualificacao/'+ cpf, {method: "GET", cache: "no-cache"})
-							.then(response => {
-								if (!response.ok) {throw new Error('HTTP error! Status: ${response.status}');}
-								return response.json();
-							}) .then(data => {
-								setTimeout(() => {clearInterval(intervalAaspa);lblTopAaspa.style.color = data.color;lblAaspa.innerHTML = data.status;}, 1);
-								if (data.hasOwnProperty('cpf')) { const cpfINSS = document.getElementById("cpfINSS"); cpfINSS.value = data.cpf; }
-								lblAaspaUpdate.style.display = "inline";
-							}) .catch(error => {
-								console.log('Fetch Error: ' + error.message);
-							});
-						}
-
-						function checkINSS(){
-							if (document.getElementById("cpf").value != document.getElementById("cpfINSS").value) {limparForm()} ;
-							if (validaCPF() == false) return;
-							//LABEL INSS
-							const lblTopINSS = document.getElementById("lblINSSTop");lblTopINSS.style.color = "#ddb100";
-							const lblINSS = document.getElementById("lblINSS"); let pontoINSS = 0;lblINSS.innerHTML = "<b> ⏱️ consultando</b>";
-							const intervalINSS = setInterval(() => {pontoINSS = (pontoINSS + 1) % 4; lblINSS.innerHTML = "<b> ⏱️ consultando" + ".".repeat(pontoINSS) + "</b>";}, 500);
-							const lblINSSUpdate = document.getElementById("lblINSSUpdate");lblINSSUpdate.style.display = "none";
-
-							const cpf = document.getElementById("cpf").value;
-
-							fetch('<?php echo assetfolder;?>integraall-validar-cpf/'+ cpf, {method: "GET", cache: "no-cache"})
-							.then(response => {
-								if (!response.ok) {throw new Error('HTTP error! Status: ${response.status}');}
-								return response.json();
-							}) .then(data => {
-								setTimeout(() => {clearInterval(intervalINSS);lblTopINSS.style.color = data.color;lblINSS.innerHTML = data.status;}, 1);
-								lblINSSUpdate.style.display = "inline";
-
-								if (data.hasOwnProperty('cpf')) { const cpfINSS = document.getElementById("cpfINSS"); cpfINSS.value = data.cpf; }
-								if (data.hasOwnProperty('nomeCliente')) { const nomeCliente = document.getElementById("nomeCliente"); nomeCliente.value = data.nomeCliente; }
-								//if (data.hasOwnProperty('cpf')) { const cpf = document.getElementById("cpf"); cpf.value = data.cpf; }
-								if (data.hasOwnProperty('estadoCivil')) { const estadoCivil = document.getElementById("estadoCivil"); estadoCivil.value = data.estadoCivil; }
-								if (data.hasOwnProperty('sexo')) { document.getElementById("sexo").value = data.sexo; }
-								if (data.hasOwnProperty('nomeMae')) { const nomeMae = document.getElementById("nomeMae"); nomeMae.value = data.nomeMae; }
-								if (data.hasOwnProperty('email')) { const email = document.getElementById("email"); email.value = data.email; }
-								if (data.hasOwnProperty('telefone')) { const telefone = document.getElementById("telefone"); telefone.value = data.telefone; }
-								if (data.hasOwnProperty('logradouro')) { const logradouro = document.getElementById("logradouro"); logradouro.value = data.logradouro; }
-								if (data.hasOwnProperty('bairro')) { const bairro = document.getElementById("bairro"); bairro.value = data.bairro; }
-								if (data.hasOwnProperty('cep')) { const cep = document.getElementById("cep"); cep.value = data.cep; }
-								if (data.hasOwnProperty('cidade')) { const cidade = document.getElementById("cidade"); cidade.value = data.cidade; }
-								if (data.hasOwnProperty('uf')) { const uf = document.getElementById("uf"); uf.value = data.uf; }
-								if (data.hasOwnProperty('complemento')) { const complemento = document.getElementById("complemento"); complemento.value = data.complemento; }
-								if (data.hasOwnProperty('endNumero')) { const endNumero = document.getElementById("endNumero"); endNumero.value = data.endNumero; }
-								if (data.hasOwnProperty('dataNascimento')) { const dataNascimento = document.getElementById("dataNascimento"); dataNascimento.value = data.dataNascimento; }
-								if (data.hasOwnProperty('meuAniversario')) { const lblNiver = document.getElementById("lblNiver"); lblNiver.innerHTML = data.meuAniversario;}
-								if (data.hasOwnProperty('matricula')) { const matricula = document.getElementById("matricula"); matricula.value = data.matricula; }
-								//if (data.hasOwnProperty('instituidorMatricula')) { const instituidorMatricula = document.getElementById("instituidorMatricula"); instituidorMatricula.value = data.instituidorMatricula; }
-								//if (data.hasOwnProperty('orgao')) { const orgao = document.getElementById("orgao"); orgao.value = data.orgao; }
-								//if (data.hasOwnProperty('codigoOrgao')) { const codigoOrgao = document.getElementById("codigoOrgao"); codigoOrgao.value = data.codigoOrgao; }
-								if (data.hasOwnProperty('docIdentidade')) { const docIdentidade = document.getElementById("docIdentidade"); docIdentidade.value = data.docIdentidade; }
-								//if (data.hasOwnProperty('docIdentidadeUf')) { const docIdentidadeUf = document.getElementById("docIdentidadeUf"); docIdentidadeUf.value = data.docIdentidadeUf; }
-								//if (data.hasOwnProperty('docIdentidadeOrgEmissor')) { const docIdentidadeOrgEmissor = document.getElementById("docIdentidadeOrgEmissor"); docIdentidadeOrgEmissor.value = data.docIdentidadeOrgEmissor; }
-								//if (data.hasOwnProperty('bloqueio')) { const bloqueio = document.getElementById("bloqueio"); bloqueio.value = data.bloqueio; }
-							}) .catch(error => {
-								console.log('Fetch Error: ' + error.message);
-							});
-						}
-
-
-						function checkTSE(){
-							if (validaCPF() == false) return;
-							const lblTopTSE = document.getElementById("lblTSETop");lblTopTSE.style.color = "#ddb100";
-							const lblTSEUpdate = document.getElementById("lblTSEUpdate");lblTSEUpdate.style.display = "none";
-							const lblTSESite = document.getElementById("lblTSESite");lblTSESite.style.display = "none";
-
-
-							const lblTSE = document.getElementById("lblTSE"); let pontoTSE = 0;lblTSE.innerHTML = "<b> ⏱️ consultando</b>";
-							const intervalTSE = setInterval(() => {pontoTSE = (pontoTSE + 1) % 4; lblTSE.innerHTML = "<b> ⏱️ consultando" + ".".repeat(pontoTSE) + "</b>";}, 500);
-
-							const cpf = document.getElementById("cpf").value;
-
-							fetch('<?php echo assetfolder;?>integraall-validar-tse/'+ cpf, {method: "GET", cache: "no-cache"})
-							.then(response => {
-								if (!response.ok) {throw new Error('HTTP error! Status: ${response.status}');}
-								return response.json();
-							}) .then(data => {
-								setTimeout(() => {clearInterval(intervalTSE);lblTopTSE.style.color = data.color;lblTSE.innerHTML = data.status;}, 1);
-								lblTSEUpdate.style.display = "inline";
-								lblTSESite.style.display = "inline";
-							}) .catch(error => {
-								console.log('Fetch Error: ' + error.message);
-							});
-							
-						}
-
-						function checkIntegraall(propostaIntegraall){
-							const lblTopIntegraall = document.getElementById("lblTopIntegraall");lblTopIntegraall.style.color = "#ddb100";
-							// const lblLastUpdate = document.getElementById("lblLastUpdate"); let pontoIntegraall = 0;lblLastUpdate.innerHTML = "<b> ⏱️ consultando</b>";
-							// const intervalIntegraall1 = setInterval(() => {pontoIntegraall = (pontoIntegraall + 1) % 4; lblLastUpdate.innerHTML = "<b> ⏱️ consultando" + ".".repeat(pontoIntegraall) + "</b>";}, 500);
-							
-							fetch('<?php echo assetfolder;?>integraall-buscar-propostas/' + propostaIntegraall, {method: "GET", cache: "no-cache"})
-							.then(response => {
-								if (!response.ok) {throw new Error('HTTP error! Status: ${response.status}');}
-								return response.json();
-							}) .then(data => {
-								//setTimeout(() => {clearInterval(intervalIntegraall1);}, 1);
-								if (data.hasOwnProperty('nomeStatus')) { 
-									const lblStatusIntegraall1 = document.getElementById("lblStatusIntegraall1"); 
-									lblStatusIntegraall1.classList.remove("badge-light-warning");
-									lblStatusIntegraall1.classList.remove("badge-light-danger");
-									lblStatusIntegraall1.classList.remove("badge-light-success");
-									lblStatusIntegraall1.classList.add("badge-light-" + data.nomeStatus[2]);
-									lblStatusIntegraall1.innerHTML = data.nomeStatus[1].toUpperCase();
-								}
-								if (data.hasOwnProperty('statusAdicional')) {
-									const lblStatusIntegraall2 = document.getElementById("lblStatusIntegraall2"); 
-									lblStatusIntegraall2.classList.remove("badge-light-warning");
-									lblStatusIntegraall2.classList.remove("badge-light-danger");
-									lblStatusIntegraall2.classList.remove("badge-light-success");
-									lblStatusIntegraall2.classList.add("badge-light-" + data.statusAdicional[2]);
-									lblStatusIntegraall2.innerHTML = data.statusAdicional[1].toUpperCase();					
-								}
-								if (data.hasOwnProperty('linkKompletoCliente')) { 
-									const lblStatusIntegraall3 = document.getElementById("lblStatusIntegraall3"); 
-									lblStatusIntegraall3.innerHTML = data.linkKompletoCliente;
-									const enviarWhatsApp = document.getElementById("enviarWhatsApp"); 
-									const enviarLinkKompleto = document.getElementById("enviarLinkKompleto"); 
-									const enviarLinkGoogle = document.getElementById("enviarLinkGoogle"); 
-									const enviarSMS = document.getElementById("enviarSMS"); 
-
-									if (data.linkKompletoCliente) {
-										enviarWhatsApp.classList.remove("btn-light-dark");
-										enviarLinkKompleto.classList.remove("btn-light-dark");
-										enviarLinkGoogle.classList.remove("btn-light-dark");
-										enviarSMS.classList.remove("btn-light-dark");
-
-										enviarWhatsApp.classList.add("btn-success");
-										enviarLinkKompleto.classList.add("btn-info");
-										enviarLinkGoogle.classList.add("btn-warning");
-										enviarSMS.classList.add("btn-primary");
-									} else {
-										enviarWhatsApp.classList.remove("btn-success");
-										enviarLinkKompleto.classList.remove("btn-info");
-										enviarLinkGoogle.classList.remove("btn-warning");
-										enviarSMS.classList.remove("btn-primary");
-
-										enviarWhatsApp.classList.add("light-dark");
-										enviarLinkKompleto.classList.add("light-dark");
-										enviarLinkGoogle.classList.add("light-dark");
-										enviarSMS.classList.add("light-dark");
-									}
-
-								}
-								//if (data.hasOwnProperty('last_update')) { lblLastUpdate.innerHTML = data.last_update; }
-								const lblTopIntegraall = document.getElementById("lblTopIntegraall");lblTopIntegraall.style.color = data.color;
-							
-							}) .catch(error => {
-								console.log('Fetch Error: ' + error.message);
-							});
-							
 						}
 
 						function buscarCep(){

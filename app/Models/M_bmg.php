@@ -351,7 +351,7 @@ class M_bmg extends Model {
             //DEBUG SUCESSO
             $returnData["status"] = true;
             $returnData["adesao"] = '12345';
-            $returnData["mensagem"] = "Proposta Gravada com Sucesso!<br>Número da Adesão: 12345";
+            $returnData["mensagem"] = "[EM CONSTRUÇÃO]<br>Proposta Gravada com Sucesso BMG!<br>Número da Adesão: 00000";
             return $returnData; exit;
 
             if (((isset($response->mensagemDeErro))) and ((!empty($response->mensagemDeErro)))){

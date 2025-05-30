@@ -45,6 +45,206 @@ class Bmg extends BaseController
         $this->m_bmg = new M_bmg();
     }
 
+
+
+
+    
+    //http://localhost/InsightSuite/public/bmg-gravar-proposta
+    //https://insightsuite.pravoce.io/bmg-gravar-proposta
+    
+    public function bmg_gravar_proposta(){
+        $request = file_get_contents('php://input');
+        $this->telegram->notifyTelegramGroup($request, telegramQuid);
+
+
+        //DEBUG ONLY
+        $request = '{"produto":"MED","cpf":"27265170300","conta":"21345340","plano":"110","codigoTipoPagamento":"2","nome":"NEIDE ROCHA DUARTE ","estadoCivil":"S","sexo":"1","mae":"SEBATIANA ROCHA DUARTE","pai":"","nacionalidade":"","tipoDocumento":"","rg":"","cidadeNascimento":"","dataNascimento":"27/06/1957","ufNascimento":"","dataEmissaoRg":"","orgaoEmissor":"","ufRg":"","email":"","logradouro":"","bairro":"","cep":"","cidade":"","uf":"","numero":"","complemento":"","docIdentidade":"","telefone":"(31)99578-1355"}';
+        $response = json_decode($request, true);
+        
+
+        
+
+
+        $returnData = [];
+
+        //DEBUG ONLY
+        // $response = [
+        //     'plano' => '123',
+        //     'codigoTipoPagamento' => '2',
+        //     'conta' => '456789',
+            
+        //     // Dados do cliente
+        //     'cidadeNascimento' => 'São Paulo',
+        //     'cpf' => '12345678900',
+        //     'dataNascimento' => '10/05/1980',
+        //     'nome' => 'João da Silva',
+        //     'mae' => 'Maria da Silva',
+        //     'sexo' => '1', // 1 = Masculino
+        //     'ufNascimento' => 'SP',
+        //     'estadoCivil' => 'C', // C = Casado
+        //     'nacionalidade' => 'Brasileira',
+        //     'telefone' => '11987654321',
+
+        //     // Endereço
+        //     'bairro' => 'Centro',
+        //     'cep' => '01001-000',
+        //     'cidade' => 'São Paulo',
+        //     'logradouro' => 'Rua Exemplo',
+        //     'uf' => 'SP',
+
+        //     // Identidade
+        //     'docIdentidade' => '12345678',
+        //     'orgaoEmissor' => 'SSP',
+        //     'ufRg' => 'SP',
+        //     'dataEmissaoRg' => '01/01/2015',
+
+        //     // Outros dados
+        //     'plano' => '110', // Exemplo de plano
+        //     'produto' => BMG_CODIGO_PRODUTO_MED, // Exemplo de produto
+        //     'codigoTipoPagamento' => '2', // Exemplo de código de tipo de pagamento
+        //     'conta' => '123456789', // Exemplo de conta
+
+        // ];
+
+        $params = [
+            'codigoPlano'  => $response['plano'],
+            'codigoSeguro' => BMG_CODIGO_PRODUTO_MED, 
+            //'codigoTipoBeneficio' => 1, // Apenas se exigido por entidade
+            //'matricula'   => '987654321',
+            'codigoformaPagamentoProdutoSeguro' => $response['codigoTipoPagamento'], // Ex: 5 = Folha de Pagamento
+            'cpfOperadorVendas' => '04035306606',
+            'renda'       => 2500.00,
+            'numeroInternoConta' => $response['conta'],
+            'codigoTipoFormaEnvio' => 0, // 15 = Digital // 0 - Balcao
+            'codigoTipoBeneficio' => 41, // Aposentadoria por Idade
+            'codigoformaPagamentoProdutoSeguro' => 4, // Cartao de Credito
+
+            'cliente' => [
+                'cidadeNascimento' => $response['cidadeNascimento'],
+                'cpf' => $response['cpf'],
+                'dataNascimento' => dataPtUsT($response['dataNascimento']),
+                'nome' => $response['nome'],
+                'nomeMae' => $response['mae'],
+                'sexo' => $response['sexo'],
+                'ufNascimento' => $response['ufNascimento'],
+                'estadocivil' => $response['estadoCivil'], // V = Viúvo
+                'nacionalidade' => $response['nacionalidade'],
+                
+                'pessoaPoliticamenteExposta' => false,
+                'celular1' => [
+                    'ddd' => substr($response['telefone'], 0, 2),
+                    'numero' => substr($response['telefone'], 2, 10),
+                    'ramal' => ''
+                ],
+
+                'endereco' => [
+                    'bairro' => $response['bairro'],
+                    'cep' => $response['cep'],
+                    'cidade' => $response['cidade'],
+                    'logradouro' => $response['logradouro'],
+                    'uf' => $response['uf']
+                ],
+
+                'identidade' => [
+                    'numero' => $response['docIdentidade'],
+                    'emissor' => $response['orgaoEmissor'],
+                    'uf' => $response['ufRg'],
+                    'dataEmissao' => dataPtUsT($response['dataEmissaoRg'])
+                ]
+            ]
+        ];
+
+        //echo json_encode($params);exit;
+        $propostaGravada = $this->m_bmg->gravaPropostaSeguro($params);
+
+        if ($propostaGravada['status']) {
+            $returnData["status"] = true;
+        } else {
+            $returnData["status"] = false;
+        }
+
+        $returnData["mensagem"] = $propostaGravada['mensagem'];
+
+        $response = $this->m_bmg->gravaPropostaSeguro($response['produto'], $response['cpf'], $response['conta'], $response['plano'], $response['codigoTipoPagamento']);
+                
+        echo json_encode($returnData);
+        
+    }
+
+    //http://localhost/InsightSuite/public/panorama-gravar-proposta
+    public function panorama_gravar_proposta(){
+
+         $returnData["status"] = true;
+        $returnData["adesao"] = '12345';
+        sleep(1);
+        $returnData["mensagem"] = "[EM CONSTRUÇÃO]<br>Proposta Gravada com Sucesso PANORAMA!<br>Número Contrato: 00000";
+        echo json_encode($returnData);
+        return $returnData; exit;
+
+        $data = [
+            'CONTRATO' => '123457',
+            'STATUS' => 'ADESÃO',
+            'NOME_CLIENTE' => 'IVANILDO GIMENES GOMES',
+            'ASSESSOR' => 'MATHEUS RYAN PIERRE DE LIMA',
+            'CPF' => '90216296072',
+            'ESTADO_CIVIL' => 'SOLTEIRO',
+            'SEXO' => 'MASCULINO',
+            'NOMEMAE' => 'LUCILA MERCEDES GOMES II',
+            'EMAIL' => 'nao_tem@teste.com',
+            'TELEFONE' => '11960799453',
+            'LOGRADOURO' => 'Rua Exemplo',
+            'BAIRRO' => 'Centro',
+            'CEP' => '01001-000',
+            'CIDADE' => 'São Paulo',
+            'UF' => 'SP',
+            'COMPLEMENTO' => 'Apto 12',
+            'ENDNUMERO' => '100',
+            'DATANASCIMENTO' => '12/02/1956',
+            'MATRICULA' => '10987654321',
+            'RG' => '1234567',
+            'TABELA' => 'SEGURO BMG MED',
+            'DATA_CADASTRO' => '05/05/2025',
+            'BANCO' => 'BMG',
+            'PRODUTO' => 'INSS',
+            'PRAZO' => '1',
+            'PARCELA' => '1',
+            'EMPRESTIMO' => '1',
+            'SEGURO' => '29,9'
+        ];
+
+        $ordem = [
+            'CONTRATO', 'STATUS', 'NOME_CLIENTE', 'ASSESSOR', 'CPF', 'ESTADO_CIVIL', 'SEXO',
+            'NOMEMAE', 'EMAIL', 'TELEFONE', 'LOGRADOURO', 'BAIRRO', 'CEP', 'CIDADE', 'UF',
+            'COMPLEMENTO', 'ENDNUMERO', 'DATANASCIMENTO', 'MATRICULA', 'RG', 'TABELA',
+            'DATA_CADASTRO', 'BANCO', 'PRODUTO', 'PRAZO', 'PARCELA', 'EMPRESTIMO', 'SEGURO'
+        ];
+
+        $valores = [];
+
+        foreach ($ordem as $campo) {
+            $valores[] = isset($data[$campo]) ? $data[$campo] : '';
+        }
+
+        $dadosString = implode(';', $valores);
+
+        // Monta a URL
+        $url = 'https://grupoquid.panoramaemprestimos.com.br/html.do?action=adicionarOperacao'
+            . '&token=44321'
+            . '&idImportacao=1331'
+            . '&dados=' . urlencode($dadosString);
+
+        //echo $url . "<br><br>";
+
+        // Faz o envio
+        $response = file_get_contents($url);
+
+        // Mostra a resposta
+        echo "<pre>";
+        echo "URL enviada:\n$url\n\n";
+        echo "Resposta:\n$response";
+        echo "</pre>";
+    }
+
     //http://localhost/InsightSuite/public/bmg-script-vendas/MED/62057677753/842216/110/2 //Nao Elegivel Outra Apolice
     public function bmg_script_vendas($produto, $cpf, $conta, $plano, $codigoTipoPagamento){
         $response = $this->m_bmg->geraScriptVenda($produto, $cpf, $conta, $plano, $codigoTipoPagamento);
@@ -146,7 +346,8 @@ class Bmg extends BaseController
         $last_update = "";
         $cpfINSS = "";
         $cliente = null;
-        $bmgLiberado = null;
+        $bmgLiberadoMED = null;
+        $bmgLiberadoVIDA = null;
         $nomeCompleto = "";
         $celular = "";
         $celularWaId = "";
