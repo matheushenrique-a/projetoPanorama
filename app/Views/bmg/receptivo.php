@@ -112,113 +112,7 @@
 
 																			<div class="mt-10 mb-3">
 																				<div>
-																					<span class="fs-4">
-																						<?php 
-																				
-																							//******VIDA */
-																							if ((isset($bmgLiberadoMED['cartoes'][0])) && is_array($bmgLiberadoMED['cartoes'])) {
-
-																								echo "<div class='fw-bold fs-2 mt-5'>";
-																								echo $bmgLiberadoMED['cartoes'][0]['nomeCliente'] . "</div>";
-																								echo "<div class=''>Cidade: " . $bmgLiberadoMED['cartoes'][0]['cidade'] . "</div>";
-
-																								echo '<div class="mt-7 mb-2 bg-light p-3" style="border-bottom: 0px solid #a1a5b7;">';
-																								echo '<span class="fs-2 ms-2 fw-bold"><i class="fa-solid fa-user-nurse fs-1 me-2"></i>BMG MED</span></div>';
-																								echo "<div class='ms-10'>";
-
-																								foreach ($bmgLiberadoMED['cartoes'] as $cartao) {
-																									if (!$cartao['ehElegivel']) {
-																										echo '<div class="mt-2  mb-2 bg-light p-3" style="border-bottom: 1px solid #a1a5b7;"><span style="color: #f22e46" id=""><svg role="img" aria-hidden="true" width="25px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg></span>';
-																										echo '<span class="fs-4 ms-2 fw-bold">CARTÃO : ' . substr($cartao['numeroCartao'], -4, 4) . '</span></div>';
-																										echo "<div class='ms-0 mb-5'>";
-																										echo '<span class="fs-4 ms-2 fw-light mb-3">' . $cartao['motivoElegibilidade']  . '</span>';
-																										echo "</div>";
-																									} else {
-																										echo '<div class="mt-2  mb-2 bg-light p-3" style="border-bottom: 1px solid #a1a5b7;"><span style="color: #008001" id=""><svg role="img" aria-hidden="true" width="25px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg></span>';
-																										echo '<span class="fs-4 ms-2 fw-bold">CARTÃO : ' . substr($cartao['numeroCartao'], -4, 4) . '</span></div>';
-																										echo "<div class='ms-0'>";
-
-																										//MED
-																										if ((isset($cartao['planos']['med']->planos)) && (is_array($cartao['planos']['med']->planos) && count($cartao['planos']['med']->planos) > 0)) {
-																											foreach ($cartao['planos']['med']->planos as $plano) {
-																												$conta = $cartao['numeroInternoConta'];
-																												$codigoPlano = $plano->codigoPlano;
-
-																												if ((isset($plano->tipoPagamento)) and (strtoupper($plano->tipoPagamento) == "PARCELADO")) {
-																													$codigoTipoPagamento = 4;
-																												} else if ((isset($plano->tipoPagamento)) and (strtoupper($plano->tipoPagamento) == "MENSAL")) {
-																													$codigoTipoPagamento = 2;
-																												} else {
-																													$codigoTipoPagamento = 0;
-																												}
-																												$script = '<button type="submit" class="btn btn-info p-1 ms-2 pe-2" style="background-color:rgb(133, 0, 250)" name="btmMEDBMG" onclick="getScript(this, \'MED\', \'' . $cpf  . '\', \'' . $conta . '\',\'' . $codigoPlano . '\', \'' . $codigoTipoPagamento . '\'); return false;"  value="' . $cpf  . '-' . $conta . '-' . $codigoPlano . '-' . $codigoTipoPagamento . '"><i class="bi bi-file-earmark-text-fill"></i> Script</button>';
-																												$script .= '<button type="submit" class="btn btn-success p-1 ms-2" style="background-color:rgb(238, 238, 238); display: none;" name="btmMEDBMG" id="btnBMG' . $conta . $codigoPlano  . '" onclick="gravarProposta(this, \'MED\', \'' . $cpf  . '\', \'' . $conta . '\',\'' . $codigoPlano . '\', \'' . $codigoTipoPagamento . '\'); return false;"  value="' . $cpf  . '-' . $conta . '-' . $codigoPlano . '-' . $codigoTipoPagamento . '"><i class="bi bi-send-x-fill"></i> BMG</button>';
-																												$script .= '<button type="submit" class="btn btn-info p-1 ms-2" style="background-color:rgb(238, 238, 238); display: none;" name="btmMEDPAN" id="btnPAN' .  $conta . $codigoPlano  . '" onclick="gravarPropostaPan(this, \'MED\', \'' . $cpf  . '\', \'' . $conta . '\',\'' . $codigoPlano . '\', \'' . $codigoTipoPagamento . '\'); return false;" value="' . $cpf  . '-' . $conta . '-' . $codigoPlano . '-' . $codigoTipoPagamento . '"><i class="bi bi-save2"></i> PAN.</button>';
-																												
-																												echo "<div class='ms-1'><span class='fw-bold'>" . str_replace("BMG MED", "", $plano->nomePlano) . "</span> - " . (strtoupper($plano->tipoPagamento) == "PARCELADO"  ? '<span class="badge badge-success">Parcelado</span>' : '<span class="badge badge-light-dark">Mensal</span>') . " - R$ "  . number_format($plano->valorPremio, 2, ',', '.') . " " . $script . "</div>";
-																												echo '<div class="mt-1 mb-1 p-1" style="border-bottom: 1px solid #ececec;"></div>';
-																											}
-																										} else {
-																											echo '<div class="mt-2  mb-2 bg-light p-3"><span style="color: #f22e46" id=""><svg role="img" aria-hidden="true" width="25px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg></span>';
-																											echo '<span class="fs-4 ms-2">MED Indisponível:</span></div>';
-																											echo '<div class="mt-2 mb-2 p-3" style="border-bottom: 1px solid #ececec;"></div>';
-
-																										}
-																										echo "</div>";
-																									}
-																								}
-																								echo "</div>";
-
-																							}
-
-
-
-																							//******VIDA */
-																							if ((isset($bmgLiberadoVIDA['cartoes'][0])) && is_array($bmgLiberadoVIDA['cartoes'])) {
-																								echo '<div class="mt-7 mb-2 bg-light p-3" style="border-bottom: 0px solid #a1a5b7;">';
-																								echo '<span class="fs-2 ms-2 fw-bold"><i class="fa-solid fa-heart-pulse fs-1 me-2"></i>BMG VIDA</span></div>';
-																								echo "<div class='ms-10'>";
-
-																								foreach ($bmgLiberadoVIDA['cartoes'] as $cartao) {
-																									if (!$cartao['ehElegivel']) {
-																										echo "<div class='ms-0 mb-5'>";
-																										echo '<span class="fs-4 ms-2 fw-light mb-3">' . $cartao['motivoElegibilidade']  . '</span>';
-																										echo "</div>";
-																									} else {
-																										echo '<div class="mt-2  mb-2 bg-light p-3" style="border-bottom: 1px solid #a1a5b7;"><span style="color: #008001" id=""><svg role="img" aria-hidden="true" width="25px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg></span>';
-																										echo '<span class="fs-4 ms-2 fw-bold">CARTÃO : ' . substr($cartao['numeroCartao'], -4, 4) . '</span></div>';
-																										echo "<div class='ms-0'>";
-
-																										//VIDA
-																										if ((isset($cartao['planos']['vida']->planos)) && (is_array($cartao['planos']['vida']->planos) && count($cartao['planos']['vida']->planos) > 0)) {
-																											foreach ($cartao['planos']['vida']->planos as $plano) {
-																												$conta = $cartao['numeroInternoConta'];
-																												$codigoPlano = $plano->codigoPlano;
-																												$codigoTipoPagamento = 2;
-
-																												$script = '<button type="submit" class="btn btn-info p-1 ms-2 pe-2" style="background-color:rgb(133, 0, 250)" name="btmVIDABMG" onclick="getScript(this, \'VIDA\', \'' . $cpf  . '\', \'' . $conta . '\',\'' . $codigoPlano . '\', \'' . $codigoTipoPagamento . '\'); return false;"  value="' . $cpf  . '-' . $conta . '-' . $codigoPlano . '-' . $codigoTipoPagamento . '"><i class="bi bi-file-earmark-text-fill"></i> Script</button>';
-																												$script .= '<button type="submit" class="btn btn-success p-1 ms-2" style="background-color:rgb(238, 238, 238); display: none;" name="btmVIDABMG" id="btnBMG' .  $conta . $codigoPlano  . '" onclick="gravarProposta(this, \'VIDA\', \'' . $cpf  . '\', \'' . $conta . '\',\'' . $codigoPlano . '\', \'' . $codigoTipoPagamento . '\'); return false;"  value="' . $cpf  . '-' . $conta . '-' . $codigoPlano . '-' . $codigoTipoPagamento . '"><i class="bi bi-send-x-fill"></i> BMG</button>';
-																												$script .= '<button type="submit" class="btn btn-info p-1 ms-2" style="background-color:rgb(238, 238, 238); display: none;" name="btmVIDAPAN" id="btnPAN' .  $conta . $codigoPlano  . '" onclick="return false;" value="' . $cpf  . '-' . $conta . '-' . $codigoPlano . '-' . $codigoTipoPagamento . '"><i class="bi bi-save2"></i> PAN.</button>';
-
-																												echo "<div><span class='fw-bold'>{$plano->nomePlano}</span> - R$ " . number_format($plano->valorPremio, 2, ',', '.') . " " . $script . "</div>";
-																												echo '<div class="mt-1 mb-1 p-1" style="border-bottom: 1px solid #ececec;"></div>';
-																											}
-																										} else {
-																											echo '<div class="mt-2  mb-2 bg-light p-3"><span style="color: #f22e46" id=""><svg role="img" aria-hidden="true" width="25px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg></span>';
-																											echo '<span class="fs-4 ms-2">VIDA Indisponível:</span></div>';
-																											echo '<div class="mt-2 mb-2 p-3" style="border-bottom: 1px solid #ececec;"></div>';
-
-																										}
-
-																										echo "</div>";
-																									}
-																								}
-																								echo "</div>";
-
-																							}
-																						
-																						?>
-																					</span>
+																					
 																				</div>
 																			</div>
 																		</div>
@@ -374,9 +268,142 @@
 											<div class="accordion" id="kt_accordion_abordagem  ms-lg-7 ms-xl-10">
 												<div class="accordion-item">
 													<h2 class="accordion-header" id="kt_accordion_abordagem_header_1">
+														<button class="accordion-button fs-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#kt_elegibilidade" aria-expanded="true" aria-controls="kt_accordion_abordagem_body_1">
+														ELEGIBILIDADE 
+														<span style="color:rgb(173, 179, 173)" class="ms-2" id="lblElegibilidade"><svg role="img" aria-hidden="true" width="20px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg></span>
+														</button>
+													</h2>
+													<div id="kt_elegibilidade" class="accordion-collapse  shown" aria-labelledby="kt_accordion_abordagem_header_1" data-bs-parent="#kt_accordion_abordagem">
+														<div class="accordion-body">
+
+														<div style="font-size:18px; line-height:1.8; font-family:Arial, sans-serif;" id="elegibilidade">
+															
+															<span class="fs-4">
+																<?php 
+														
+																	//******VIDA */
+																	if ((isset($bmgLiberadoMED['cartoes'][0])) && is_array($bmgLiberadoMED['cartoes'])) {
+
+																		echo "<div class='fw-bold fs-2 mt-2'>";
+																		echo $bmgLiberadoMED['cartoes'][0]['nomeCliente'] . "</div>";
+																		echo "<div class='mt-0'>Cidade: " . $bmgLiberadoMED['cartoes'][0]['cidade'] . "</div>";
+
+																		echo '<div class="mt-3 mb-2 bg-light p-3" style="border-bottom: 0px solid #a1a5b7;">';
+																		echo '<span class="fs-2 ms-2 fw-bold"><i class="fa-solid fa-user-nurse fs-1 me-2"></i>BMG MED</span></div>';
+																		echo "<div class='ms-5'>";
+
+																		foreach ($bmgLiberadoMED['cartoes'] as $cartao) {
+																			if (!$cartao['ehElegivel']) {
+																				echo '<div class="mt-2  mb-2 bg-light p-3" style="border-bottom: 1px solid #a1a5b7;"><span style="color: #f22e46" id=""><svg role="img" aria-hidden="true" width="25px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg></span>';
+																				echo '<span class="fs-4 ms-2 fw-bold">CARTÃO : ' . substr($cartao['numeroCartao'], -4, 4) . '</span></div>';
+																				echo "<div class='ms-0 mb-5'>";
+																				echo '<span class="fs-4 ms-2 fw-light mb-3">' . $cartao['motivoElegibilidade']  . '</span>';
+																				echo "</div>";
+																			} else {
+																				echo '<div class="mt-2  mb-2 bg-light p-3" style="border-bottom: 1px solid #a1a5b7;"><span style="color: #008001" id=""><svg role="img" aria-hidden="true" width="25px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg></span>';
+																				echo '<span class="fs-4 ms-2 fw-bold">CARTÃO : ' . substr($cartao['numeroCartao'], -4, 4) . '</span></div>';
+																				echo "<div class='ms-0'>";
+
+																				//MED
+																				if ((isset($cartao['planos']['med']->planos)) && (is_array($cartao['planos']['med']->planos) && count($cartao['planos']['med']->planos) > 0)) {
+																					foreach ($cartao['planos']['med']->planos as $plano) {
+																						$conta = $cartao['numeroInternoConta'];
+																						$codigoPlano = $plano->codigoPlano;
+
+																						if ((isset($plano->tipoPagamento)) and (strtoupper($plano->tipoPagamento) == "PARCELADO")) {
+																							$codigoTipoPagamento = 4;
+																						} else if ((isset($plano->tipoPagamento)) and (strtoupper($plano->tipoPagamento) == "MENSAL")) {
+																							$codigoTipoPagamento = 2;
+																						} else {
+																							$codigoTipoPagamento = 0;
+																						}
+																						$script = '<button type="submit" class="btn btn-info p-1 ms-2 pe-2" style="background-color:#42427d" name="btmMEDBMG" onclick="getScript(this, \'MED\', \'' . $cpf  . '\', \'' . $conta . '\',\'' . $codigoPlano . '\', \'' . $codigoTipoPagamento . '\'); return false;"  value="' . $cpf  . '-' . $conta . '-' . $codigoPlano . '-' . $codigoTipoPagamento . '"><i class="bi bi-file-earmark-text-fill"></i> Script</button>';
+																						$script .= '<button type="submit" class="btn btn-success p-1 ms-2" style="background-color:rgb(238, 238, 238); display: none;" name="btmMEDBMG" id="btnBMG' . $conta . $codigoPlano  . '" onclick="gravarProposta(this, \'MED\', \'' . $cpf  . '\', \'' . $conta . '\',\'' . $codigoPlano . '\', \'' . $codigoTipoPagamento . '\'); return false;"  value="' . $cpf  . '-' . $conta . '-' . $codigoPlano . '-' . $codigoTipoPagamento . '"><i class="bi bi-send-x-fill"></i> BMG</button>';
+																						$script .= '<button type="submit" class="btn btn-info p-1 ms-2" style="background-color:rgb(238, 238, 238); display: none;" name="btmMEDPAN" id="btnPAN' .  $conta . $codigoPlano  . '" onclick="gravarPropostaPan(this, \'MED\', \'' . $cpf  . '\', \'' . $conta . '\',\'' . $codigoPlano . '\', \'' . $codigoTipoPagamento . '\'); return false;" value="' . $cpf  . '-' . $conta . '-' . $codigoPlano . '-' . $codigoTipoPagamento . '"><i class="bi bi-save2"></i> PAN.</button>';
+																						
+																						echo "<div class='ms-1'><span class='fw-bold'>" . str_replace("BMG MED", "", $plano->nomePlano) . "</span> - " . (strtoupper($plano->tipoPagamento) == "PARCELADO"  ? '<span class="badge badge-success">Parcelado</span>' : '<span class="badge badge-light-dark">Mensal</span>') . " - R$ "  . number_format($plano->valorPremio, 2, ',', '.') . " " . $script . "</div>";
+																						echo '<div class="mt-1 mb-1 p-1" style="border-bottom: 1px solid #ececec;"></div>';
+																					}
+																				} else {
+																					echo '<div class="mt-2  mb-2 bg-light p-3"><span style="color: #f22e46" id=""><svg role="img" aria-hidden="true" width="25px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg></span>';
+																					echo '<span class="fs-4 ms-2">MED Indisponível:</span></div>';
+																					echo '<div class="mt-2 mb-2 p-3" style="border-bottom: 1px solid #ececec;"></div>';
+
+																				}
+																				echo "</div>";
+																			}
+																		}
+																		echo "</div>";
+
+																	}
+
+
+
+																	//******VIDA */
+																	if ((isset($bmgLiberadoVIDA['cartoes'][0])) && is_array($bmgLiberadoVIDA['cartoes'])) {
+																		echo '<div class="mt-7 mb-2 bg-light p-3" style="border-bottom: 0px solid #a1a5b7;">';
+																		echo '<span class="fs-2 ms-2 fw-bold"><i class="fa-solid fa-heart-pulse fs-1 me-2"></i>BMG VIDA</span></div>';
+																		echo "<div class='ms-10'>";
+
+																		foreach ($bmgLiberadoVIDA['cartoes'] as $cartao) {
+																			if (!$cartao['ehElegivel']) {
+																				echo "<div class='ms-0 mb-5'>";
+																				echo '<span class="fs-4 ms-2 fw-light mb-3">' . $cartao['motivoElegibilidade']  . '</span>';
+																				echo "</div>";
+																			} else {
+																				echo '<div class="mt-2  mb-2 bg-light p-3" style="border-bottom: 1px solid #a1a5b7;"><span style="color: #008001" id=""><svg role="img" aria-hidden="true" width="25px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg></span>';
+																				echo '<span class="fs-4 ms-2 fw-bold">CARTÃO : ' . substr($cartao['numeroCartao'], -4, 4) . '</span></div>';
+																				echo "<div class='ms-0'>";
+
+																				//VIDA
+																				if ((isset($cartao['planos']['vida']->planos)) && (is_array($cartao['planos']['vida']->planos) && count($cartao['planos']['vida']->planos) > 0)) {
+																					foreach ($cartao['planos']['vida']->planos as $plano) {
+																						$conta = $cartao['numeroInternoConta'];
+																						$codigoPlano = $plano->codigoPlano;
+																						$codigoTipoPagamento = 2;
+
+																						$script = '<button type="submit" class="btn btn-info p-1 ms-2 pe-2" style="background-color:#42427d" name="btmVIDABMG" onclick="getScript(this, \'VIDA\', \'' . $cpf  . '\', \'' . $conta . '\',\'' . $codigoPlano . '\', \'' . $codigoTipoPagamento . '\'); return false;"  value="' . $cpf  . '-' . $conta . '-' . $codigoPlano . '-' . $codigoTipoPagamento . '"><i class="bi bi-file-earmark-text-fill"></i> Script</button>';
+																						$script .= '<button type="submit" class="btn btn-success p-1 ms-2" style="background-color:rgb(238, 238, 238); display: none;" name="btmVIDABMG" id="btnBMG' .  $conta . $codigoPlano  . '" onclick="gravarProposta(this, \'VIDA\', \'' . $cpf  . '\', \'' . $conta . '\',\'' . $codigoPlano . '\', \'' . $codigoTipoPagamento . '\'); return false;"  value="' . $cpf  . '-' . $conta . '-' . $codigoPlano . '-' . $codigoTipoPagamento . '"><i class="bi bi-send-x-fill"></i> BMG</button>';
+																						$script .= '<button type="submit" class="btn btn-info p-1 ms-2" style="background-color:rgb(238, 238, 238); display: none;" name="btmVIDAPAN" id="btnPAN' .  $conta . $codigoPlano  . '" onclick="return false;" value="' . $cpf  . '-' . $conta . '-' . $codigoPlano . '-' . $codigoTipoPagamento . '"><i class="bi bi-save2"></i> PAN.</button>';
+
+																						echo "<div><span class='fw-bold'>{$plano->nomePlano}</span> - R$ " . number_format($plano->valorPremio, 2, ',', '.') . " " . $script . "</div>";
+																						echo '<div class="mt-1 mb-1 p-1" style="border-bottom: 1px solid #ececec;"></div>';
+																					}
+																				} else {
+																					echo '<div class="mt-2  mb-2 bg-light p-3"><span style="color: #f22e46" id=""><svg role="img" aria-hidden="true" width="25px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg></span>';
+																					echo '<span class="fs-4 ms-2">VIDA Indisponível:</span></div>';
+																					echo '<div class="mt-2 mb-2 p-3" style="border-bottom: 1px solid #ececec;"></div>';
+
+																				}
+
+																				echo "</div>";
+																			}
+																		}
+																		echo "</div>";
+
+																	} else {
+																		echo "Consulte um CPF para verificar a elegibilidade.";
+																	}
+																
+																?>
+															</span>						
+
+														</div>
+													</div>
+												</div>
+											</div>
+											<!--end::Accordion-->
+
+											<!--begin::Accordion-->
+											<div class="accordion" id="kt_accordion_abordagem  ms-lg-7 ms-xl-10">
+												<div class="accordion-item">
+													<h2 class="accordion-header" id="kt_accordion_abordagem_header_1">
 														<button class="accordion-button fs-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#kt_script_med" aria-expanded="true" aria-controls="kt_accordion_abordagem_body_1">
 														SCRIPT VENDAS MED 
 														<span style="color:rgb(173, 179, 173)" class="ms-2" id="lblStatus-MED"><svg role="img" aria-hidden="true" width="20px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg></span>
+														<i class="bi bi-arrows-fullscreen ms-2 fs-3" data-bs-toggle="modal" data-bs-target="#kt_modal_med"></i>
+														
+													
 														</button>
 													</h2>
 													<div id="kt_script_med" class="accordion-collapse collapse shown" aria-labelledby="kt_accordion_abordagem_header_1" data-bs-parent="#kt_accordion_abordagem">
@@ -396,9 +423,9 @@
 												<div class="accordion-item">
 													<h2 class="accordion-header" id="kt_accordion_abordagem_header_1">
 														<button class="accordion-button fs-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#kt_script_vida" aria-expanded="true" aria-controls="kt_accordion_abordagem_body_1">
-														SCRIPT VENDAS VIDA
-														<span style="color:rgb(173, 179, 173)" class="ms-2" id="lblStatus-VIDA"><svg role="img" aria-hidden="true" width="20px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg></span>
-
+															SCRIPT VENDAS VIDA
+															<span style="color:rgb(173, 179, 173)" class="ms-2" id="lblStatus-VIDA"><svg role="img" aria-hidden="true" width="20px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg></span>
+															<i class="bi bi-arrows-fullscreen ms-2 fs-3" data-bs-toggle="modal" data-bs-target="#kt_modal_vida"></i>
 														</button>
 													</h2>
 													<div id="kt_script_vida" class="accordion-collapse collapse shown" aria-labelledby="kt_accordion_abordagem_header_1" data-bs-parent="#kt_accordion_abordagem">
@@ -421,7 +448,9 @@
 														<button class="accordion-button fs-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#kt_proposta_med" aria-expanded="true" aria-controls="kt_accordion_abordagem_body_1">
 														PROPOSTA BMG MED
 														<span style="color:rgb(173, 179, 173)" class="ms-2" id="lblStatusGravacao-BMG-MED"><svg role="img" aria-hidden="true" width="20px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg></span>
-
+														<span id="">
+															<a type="submit" class="btn btn-success p-1 ms-2" style="background-color:rgb(238, 238, 238);" name="btnPropostaMed" id="btnPropostaMed" onclick=""  value=""><i class="bi bi-send-x-fill"></i> BMG</a>
+														</span>
 														</button>
 													</h2>
 													<div id="kt_proposta_med" class="accordion-collapse collapse shown" aria-labelledby="kt_accordion_abordagem_header_1" data-bs-parent="#kt_accordion_abordagem">
@@ -509,6 +538,236 @@
 												</div>
 											</div>
 										</div>
+
+										<div class="modal fade" tabindex="-1" id="kt_modal_med">
+											<div class="modal-dialog modal-dialog-scrollable" style="width: 100% !important; max-width: 1000px !important;">
+												<div class="modal-content">
+													<div class="modal-header">
+														<h5 class="modal-title">SCRIPT VENDAS</h5>
+
+														<!--begin::Close-->
+														<div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+															<i class="ki-duotone ki-cross fs-2x"><span class="path1"></span><span class="path2"></span></i>
+														</div>
+														<!--end::Close-->
+													</div>
+
+													<div class="modal-body">
+														<p class='fs-2 fw-bold'>SCRIPT DE AUDITORIA BMG MED PLUS</p>
+
+														<p class='fs-4'>
+															Conforme estávamos falando senhor(a) <span class='fw-bolder' id="CLIENTE_NOME">[CLIENTE_NOME]</span>, meu nome é <span class='fw-bolder' id="CLIENTE_ASSESSOR">[CLIENTE_ASSESSOR]</span>, sou correspondente bancário/a do banco BMG e vamos concluir sua adesão do seguro. Informo que a ligação está sendo gravada.
+															<br><br>
+															Por favor, poderia me confirmar se este é seu número de celular: <span class='fw-bolder' id="CLIENTE_TELEFONE">[CLIENTE_TELEFONE]</span>? <b>{Pausa resposta}</b>.
+															<br>(Caso o número do telefone esteja incorreto ou não seja um número de celular, fazer a atualização do cadastro)
+														</p>
+
+
+														<p class='fs-4'>
+															<table class="table" class='fs-4' style='border: 2px solid #ececec;'>
+																<thead>
+																	<tr>
+																		<th class='fw-bold fs-4 ps-3' style='border: 2px solid #ececec;'>POSITIVAÇÃO - OPÇÃO 1</th>
+																		<th class='fw-bold fs-4 ps-3' style='border: 2px solid #ececec;'>POSITIVAÇÃO - OPÇÃO 2</th>
+																	</tr>
+																</thead>
+																<tbody>
+																	<tr style='border: 2px solid #ececec;'>
+																		<td class='fs-4 ps-3' style='border: 2px solid #ececec;'>
+																			Ótimo! Agora me confirme os 3 primeiros (ou os 3 últimos) números do seu CPF? 
+																			<br><b>{Pausa para a resposta do cliente}</b><br><br>
+																			Excelente! Por último me confirme o mês do seu aniversário ?<b>{Pausa para a resposta do cliente}</b><br><br>
+																			Data Nascimento: <span class='fw-bolder' id="CLIENTE_DATANASCIMENTO">[CLIENTE_DATANASCIMENTO]</span>
+																		</td>
+																		<td class='fs-4 ps-3' style='border: 2px solid #ececec;'>
+																			Ótimo! Agora me confirme sua data de nascimento (Mês/Ano)<br>
+																			<b>{Pausa para a resposta do cliente}</b><br>
+																			Data Nascimento: <span class='fw-bolder' id="CLIENTE_DATANASCIMENTO">[CLIENTE_DATANASCIMENTO]</span><br><br>
+
+																			Excelente! Por último me confirme o Nome completo da sua Mãe?(Acatar minimamente o nome e sobrenome, não sendo necessário nome completo)
+																			<b>{Pausa para a resposta do cliente}.</b>
+																			<br>Nome da Mãe: <span class='fw-bolder' id="CLIENTE_MAE">[CLIENTE_MAE]</span>
+																		</td>
+																	</tr>
+																</tbody>
+															</table>
+														</p>
+
+
+														<p class='fs-4'>
+															O Seguro <span class='fw-bolder' id="NOME_PLANO">[NOME_PLANO]</span> que você está contratando te dará cobertura em caso de Morte Acidental no valor de R$ 1.000,00, além disso você ainda terá vários outros benefícios que virão incluídos, como:
+														</p>
+														<p class='fs-4 fw-bold'>
+															Obs.: Obrigatório citar ao menos um dos benefícios.
+														</p>
+														<p class='fs-4'>
+														◾️ Consultas ilimitadas de telemedicina com Clínico Geral<br>
+														◾️ Consultas presencias e exames de baixo custo, pagos pelo segurado<br>
+														◾️ Remédios genéricos com no mínimo 30% de desconto e de marca com mínimo 15%, em rede de farmácias credenciadas<br>
+														◾️ Sorteios no valor de <span class='fw-bolder' id="VALOR_SORTEIO">[VALOR_SORTEIO]</span> todo mês pela loteria federal<br>
+														<span id="INCLUI_CHECKUP">◾️ Check-up anual gratuito com direito à 1 consulta médica por ano + exames básicos</span>
+														</p>
+														
+														<p class='fs-4'>
+															<table class="table" class='fs-4' style='border: 2px solid #ececec;'>
+																<thead>
+																	<tr>
+																		<th class='fw-bold fs-4 ps-3' style='border: 2px solid #ececec;'>INTERAÇÃO LIVRE</th>
+																	</tr>
+																</thead>
+																<tbody>
+																	<tr style='border: 2px solid #ececec;'>
+																		<td class='fs-4 ps-3' style='border: 2px solid #ececec;'>
+																			1. Perguntar se o cliente já teve que pagar por consultas particulares.
+																			<br>2. Perguntar se o cliente já teve gastos com compra de medicamento.
+																			<br>3. Perguntar se o cliente já participou de sorteios ou o que faria se ganhasse em algum sorteio.
+																			<br><br>
+																			<b>Orientamos que o cliente fale algumas palavras, (evitar respostas sim ou não)</b>
+																		</td>
+																	</tr>
+																</tbody>
+															</table>
+														</p>
+														
+														<p class='fs-4'>
+															Orientamos que o cliente fale algumas palavras, (evitar respostas sim ou não)
+															Para usufruir de todas as coberturas e benefícios do seguro, pelo período de 12 meses, o Sr(a) pagará o valor de R$ <span class='fw-bolder' id="VALOR_PLANO">[VALOR_PLANO]</span>, que poderá ser mensal (R$ <span class='fw-bolder' id="VALOR_PLANO">[VALOR_PLANO]</span> cobrado em cada mês) ou parcelado (12 parcelas de R$ <span class='fw-bolder' id="VALOR_PLANO">[VALOR_PLANO]</span>) de acordo com sua escolha.
+															<br><br>
+															Os benefícios estarão disponíveis em até 24h após aprovação do pagamento em seu cartão. A renovação do seguro será anual, sendo a primeira realizada de forma automática e as demais serão feitas através da corretora de seguros, mediante o seu consentimento.
+															<br><br>
+															Caso tenha dúvidas, basta entrar em contato com a Central BMG no telefone 4002-7007
+															<br><br>
+															Sr(a) <span class='fw-bolder' id="NOME_CLIENTE">[NOME_CLIENTE]</span>, confirma a contratação do seguro <span class='fw-bolder' id="NOME_PLANO">[NOME_PLANO]</span> nesta data <span class='fw-bolder' id="DATA_CORRENTE">[DATA_CORRENTE]</span> no valor de R$ <span class='fw-bolder' id="VALOR_PLANO">[VALOR_PLANO]</span> por mês, por 12 meses de cobertura, que será lançado na fatura do seu cartão consignado BMG? {Pausa para a resposta do cliente}
+															<br><br>
+															Informamos que o <span class='fw-bolder' id="NOME_PLANO">[NOME_PLANO]</span> é uma parceria entre a Generali Brasil Seguros S.A e a BMG SEGURADORA, e as condições contratuais do seguro serão enviadas para o Sr(a) por SMS e as informações da corretagem estão disponíveis no site do Banco Bmg.
+															<br><br>
+															Lembramos que o produto não é um seguro saúde, os serviços de assistência são complementares ao seguro de morte acidental.
+															<br><br>
+															Agradecemos a confiança, bom dia/tarde/noite.
+														</p>
+													</div>
+
+													<div class="modal-footer">
+														<button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+														<button type="button" class="btn btn-primary">Save changes</button>
+													</div>
+												</div>
+											</div>
+										</div>
+
+
+
+										<div class="modal fade" tabindex="-1" id="kt_modal_vida">
+											<div class="modal-dialog modal-dialog-scrollable" style="width: 100% !important; max-width: 1000px !important;">
+												<div class="modal-content">
+													<div class="modal-header">
+														<h5 class="modal-title">SCRIPT VIDA</h5>
+
+														<!--begin::Close-->
+														<div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+															<i class="ki-duotone ki-cross fs-2x"><span class="path1"></span><span class="path2"></span></i>
+														</div>
+														<!--end::Close-->
+													</div>
+
+													<div class="modal-body">
+														<p class='fs-2 fw-bold'>SCRIPT CONFIRMAÇÃO - VIDA FAMILIAR</p>
+
+														<p class='fs-4'>
+															Conforme estávamos falando senhor(a) <span class='fw-bolder' id="CLIENTE_NOME">[CLIENTE_NOME]</span>, meu nome é <span class='fw-bolder' id="CLIENTE_ASSESSOR">[CLIENTE_ASSESSOR]</span>, sou correspondente bancário/a do banco BMG e vamos concluir sua adesão do seguro. Informo que a ligação está sendo gravada.
+															<br><br>
+															Por favor, poderia me confirmar se este é seu número de celular: <span class='fw-bolder' id="CLIENTE_TELEFONE">[CLIENTE_TELEFONE]</span>? <b>{Pausa resposta}</b>.
+															<br>(Caso o número do telefone esteja incorreto ou não seja um número de celular, fazer a atualização do cadastro)
+														</p>
+
+
+														<p class='fs-4'>
+															<table class="table" class='fs-4' style='border: 2px solid #ececec;'>
+																<thead>
+																	<tr>
+																		<th class='fw-bold fs-4 ps-3' style='border: 2px solid #ececec;'>POSITIVAÇÃO - OPÇÃO 1</th>
+																		<th class='fw-bold fs-4 ps-3' style='border: 2px solid #ececec;'>POSITIVAÇÃO - OPÇÃO 2</th>
+																	</tr>
+																</thead>
+																<tbody>
+																	<tr style='border: 2px solid #ececec;'>
+																		<td class='fs-4 ps-3' style='border: 2px solid #ececec;'>
+																			Ótimo! Agora me confirme os 3 primeiros (ou os 3 últimos) números do seu CPF? 
+																			<br><b>{Pausa para a resposta do cliente}</b><br><br>
+																			Excelente! Por último me confirme o mês do seu aniversário ?<b>{Pausa para a resposta do cliente}</b><br><br>
+																			Data Nascimento: <span class='fw-bolder' id="CLIENTE_DATANASCIMENTO">[CLIENTE_DATANASCIMENTO]</span>
+																		</td>
+																		<td class='fs-4 ps-3' style='border: 2px solid #ececec;'>
+																			Ótimo! Agora me confirme sua data de nascimento (Mês/Ano)<br>
+																			<b>{Pausa para a resposta do cliente}</b><br>
+																			Data Nascimento: <span class='fw-bolder' id="CLIENTE_DATANASCIMENTO">[CLIENTE_DATANASCIMENTO]</span><br><br>
+
+																			Excelente! Por último me confirme o Nome completo da sua Mãe?(Acatar minimamente o nome e sobrenome, não sendo necessário nome completo)
+																			<b>{Pausa para a resposta do cliente}.</b>
+																			<br>Nome da Mãe: <span class='fw-bolder' id="CLIENTE_MAE">[CLIENTE_MAE]</span>
+																		</td>
+																	</tr>
+																</tbody>
+															</table>
+														</p>
+
+
+														<p class='fs-4'>
+															O Seguro BMG Vida Familiar que você está contratando te dará cobertura em caso de Morte no valor de R$ 5.000,00, ou em caso de Invalidez Permanente Total Por Acidente ou Morte Acidental no valor de R$ 20.000,00, e o pagamento será feito para sua família. Além disso temos vários outros benefícios que vem incluído, como:
+														</p>
+														<p class='fs-4 fw-bold'>
+															Obs.: Obrigatório citar ao menos um dos benefícios.
+														</p>
+														<p class='fs-4'>
+															◾️ Remédio Grátis ilimitado para urgência e emergência, e com limite de R$100,00 para até 3 consultas eletivas.
+															<br>◾️ Remédio Grátis e Assistência Funeral extensível para familiares (cônjuge, companheiro (a) ou filhos, limitado a 3 pessoas).
+															<br>◾️ Sorteios no valor de R$ 15.000,00 (quinze mil reais) todo mês pela loteria federal.
+														</p>
+														
+														<p class='fs-4'>
+															<table class="table" class='fs-4' style='border: 2px solid #ececec;'>
+																<thead>
+																	<tr>
+																		<th class='fw-bold fs-4 ps-3' style='border: 2px solid #ececec;'>INTERAÇÃO LIVRE</th>
+																	</tr>
+																</thead>
+																<tbody>
+																	<tr style='border: 2px solid #ececec;'>
+																		<td class='fs-4 ps-3' style='border: 2px solid #ececec;'>
+																			1. Perguntar se o cliente já teve gastos com compra de medicamento depois de consultas eletivas ou após atendimento emergencial;
+																			<br>2. Perguntar se o cliente já teve algum seguro com benefícios para familiares.
+																			<br>3. Perguntar se o cliente já participou de sorteios ou o que faria se ganhasse em algum sorteio.
+																			<b>Orientamos que o cliente fale algumas palavras, (evitar respostas sim ou não)</b>
+																		</td>
+																	</tr>
+																</tbody>
+															</table>
+														</p>
+														
+														<p class='fs-4'>
+															Para usufruir de todas as coberturas e benefícios do seguro, pelo período de 12 meses, o Sr(a) pagará mensalmente o valor de (R$ 29,90 . Lembrando que, para manter sua proteção ativa, é necessário estar em dia com o pagamento de sua fatura.
+
+															<br><br>Os benefícios estarão disponíveis em até 24h após aprovação do pagamento em seu cartão. A renovação do seguro será anual, sendo a primeira realizada de forma automática e as demais serão feitas através da corretora de seguros, mediante o seu consentimento.
+
+															<br><br>Caso não queira renovar ou tenha dúvidas, basta entrar em contato com a Central BMG no telefone 4002-7007.
+
+															<br><br>Sr(a) MARIA DA CONCEICAO, confirma a contratação do seguro BMG Vida Familiar nesta data 05/06/2025 no valor de R$ 29,90 por mês, por 12 meses de cobertura, que será lançado na fatura do seu cartão consignado BMG? {Pausa para a resposta do cliente}
+
+															<br><br>Informamos que o BMG Vida Familiar é uma parceria entre a Generali Brasil Seguros S.A e a BMG SEGURADORA, e as condições contratuais do seguro serão enviadas para o Sr(a) por SMS e as informações da corretagem estão disponíveis no site do Banco BMG.
+
+															<br><br>Agradecemos a confiança, bom dia/tarde/noite.
+														</p>
+													</div>
+
+													<div class="modal-footer">
+														<button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+														<button type="button" class="btn btn-primary">Save changes</button>
+													</div>
+												</div>
+											</div>
+										</div>
+
+
 									</div>
 									
 								</div>
@@ -564,6 +823,7 @@
 							const lblStatus = document.getElementById("lblStatus-" + produto);
 							const btnBMG = document.getElementById("btnBMG" + conta + plano);
 							const btnPAN = document.getElementById("btnPAN" + conta+ plano);
+							var btnPropostaMed = document.getElementById("btnPropostaMed");
 							//const lblMed = document.getElementById("lblMed"); 
 							let pontoMed = 0;
 							const intervalMed = setInterval(() => {pontoMed = (pontoMed + 1) % 4; icon.innerHTML = "<i class='bi bi-file-earmark-text-fill'></i><b>Aguarde" + ".".repeat(pontoMed) + "</b>";}, 500);
@@ -586,11 +846,18 @@
 									if (data.status){
 										lblStatus.style.color = "#008001";
 										icon.style.backgroundColor = "#008001";
+										
 										//icon.style.backgroundColor = "#008001";
 										btnBMG.style.backgroundColor = "#fa6300";
+										btnPropostaMed.style.backgroundColor = "#fa6300";
 										btnPAN.style.backgroundColor = "#6da73f";
-										btnPAN.style.display = "inline-block";
-										btnBMG.style.display = "inline-block";		
+										//btnPAN.style.display = "inline-block";
+										btnBMG.style.display = "inline-block";
+										btnPropostaMed.setAttribute("onclick", btnBMG.getAttribute("onclick"));
+
+										btnBMG.style.display = "none";
+										//btnPropostaMed.style.display = "inline-block";
+										
 										scriptText.innerHTML = formatScript(produto, data.script);
 									} else {
 										lblStatus.style.color = "#f22e46";
@@ -642,6 +909,7 @@
 								return response.json();
 							}) .then(data => {
 								setTimeout(() => {clearInterval(intervalGrava);btnBMG.innerHTML = "<i class='bi bi-send-x-fill'></i>BMG";}, 1);
+								
 								
 								const showSuccessTop = document.getElementById("showSuccessTop");
 								const showSuccess = document.getElementById("showSuccess");
