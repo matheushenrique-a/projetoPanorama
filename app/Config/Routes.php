@@ -49,6 +49,9 @@ $routes->match(['get', 'post'], '/panorama-gravar-proposta', 'Bmg\Bmg::panorama_
 //AMBEC
 $routes->match(['get', 'post'], '/ambec-script', 'Ambec\Ambec::ambec_script');
 
+//META-IG
+$routes->match(['get', 'post'], '/instagram-webhook', 'Meta\Instagram::instagram_webhook');
+
 //META
 $routes->match(['get', 'post'], '/whatsapp-webhook', 'Meta\WhatsApp::whatsapp_webhook');
 $routes->match(['get', 'post'], '/whatsapp-listner/(:any)/(:any)/(:any)/(:any)', 'Meta\WhatsApp::whatsapp_listner/$1/$2/$3/$4');

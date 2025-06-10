@@ -215,7 +215,7 @@ class WhatsApp extends BaseController
 
 
     //http://localhost/InsightSuite/public/whatsapp-webhook
-    // https://2a1f-2804-1b3-6149-8caf-ac71-3c6e-350f-5bfb.ngrok-free.app/InsightSuite/public/whatsapp-webhook
+    //https://949c-2804-1b3-6149-85b2-101e-4ade-c16-4add.ngrok-free.app/InsightSuite/public/whatsapp-webhook
     public function whatsapp_webhook(){
         //$result = $this->m_whatsapp->getWhatsAppMedia("1357103935532763", "image/jpeg");
         //http_response_code(200);
@@ -239,6 +239,13 @@ class WhatsApp extends BaseController
         //$json = '{"object": "whatsapp_business_account", "entry": [{"id": "1403356640797060", "changes": [{"value": {"messaging_product": "whatsapp", "metadata": {"display_phone_number": "15556418758", "phone_number_id": "643196615539553"}, "contacts": [{"profile": {"name": "Dantas"}, "wa_id": "553195781355"}], "messages": [{"from": "553195781355", "id": "wamid.HBgMNTUzMTk1NzgxMzU1FQIAEhgWM0VCMDZBMkVCQTkxOTMzNkVBMjcwQgA=", "timestamp": "1743813734", "text": {"body": "ok"}, "type": "text"}], "statuses": [{"id": "wamid.HBgMNTUzMTk1NzgxMzU1FQIAERgSREU1RjI5RDIxMEExOTU4NjZBAA==", "status": "read", "timestamp": "1743813795", "recipient_id": "553195781355"}]}, "field": "messages"}]}]}';
         
         $data = json_decode($json, true);
+
+         //usado no registro do webhook apenas
+        if ($mode === 'subscribe' && $token === $WEBHOOK_VERIFY_TOKEN) {
+            $this->telegram->notifyTelegramGroup("✅✅✅ META Webhook Registered.", telegramQuid);
+            http_response_code(200); echo $challenge;
+            exit;
+        }
 
         //usado no registro do webhook apenas
         if ($mode === 'subscribe' && $token === $WEBHOOK_VERIFY_TOKEN) {
