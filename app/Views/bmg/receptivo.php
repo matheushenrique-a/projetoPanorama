@@ -164,7 +164,7 @@
 																		</div>
 																		<div class="input-group">
 																			<span class="input-group-text" style="width: 155px">Telefone</span>
-																			<input type="text" class="form-control" placeholder="" name="telefone" id="telefone" value="<?php echo $celular;?>" style="width: 35px"/>
+																			<input type="text" class="form-control" placeholder="" name="telefone" id="telefone" value="<?php echo $telefone;?>" style="width: 35px"/>
 																		</div>
 																		<div class="input-group">
 																			<span class="input-group-text" style="width: 155px">E-mail</span>
@@ -317,7 +317,7 @@
 																						} else {
 																							$codigoTipoPagamento = 0;
 																						}
-																						$script = '<button type="submit" class="btn btn-info p-1 ms-2 pe-2" style="background-color:#42427d" name="btmMEDBMG" onclick="getScript(this, \'MED\', \'' . $cpf  . '\', \'' . $conta . '\',\'' . $codigoPlano . '\', \'' . $codigoTipoPagamento . '\'); return false;"  value="' . $cpf  . '-' . $conta . '-' . $codigoPlano . '-' . $codigoTipoPagamento . '"><i class="bi bi-file-earmark-text-fill"></i> Script</button>';
+																						$script = '<button type="submit" class="btn btn-info p-1 ms-2 pe-2" style="background-color:#42427d" name="btmMEDBMG" onclick="getScript(this, \'MED\', \'' . $cpf  . '\', \'' . $conta . '\',\'' . $codigoPlano . '\', \'' . $codigoTipoPagamento . '\'); return false;"  value="' . $cpf  . '-' . $conta . '-' . $codigoPlano . '-' . $codigoTipoPagamento . '"><i class="bi bi-file-earmark-text-fill"></i> Script</button><i class="bi bi-arrows-fullscreen ms-2 fs-3" data-bs-toggle="modal" data-bs-target="#kt_modal_med" id="modalMed-' . $conta . '-' . $codigoPlano . '-' . $codigoTipoPagamento . '" onclick="applyScript(\'' . $conta . '\',\'' . $codigoPlano . '\', \'' . $codigoTipoPagamento . '\');" style="display: none; cursor: pointer;"></i>';
 																						$script .= '<button type="submit" class="btn btn-success p-1 ms-2" style="background-color:rgb(238, 238, 238); display: none;" name="btmMEDBMG" id="btnBMG' . $conta . $codigoPlano  . '" onclick="gravarProposta(this, \'MED\', \'' . $cpf  . '\', \'' . $conta . '\',\'' . $codigoPlano . '\', \'' . $codigoTipoPagamento . '\'); return false;"  value="' . $cpf  . '-' . $conta . '-' . $codigoPlano . '-' . $codigoTipoPagamento . '"><i class="bi bi-send-x-fill"></i> BMG</button>';
 																						$script .= '<button type="submit" class="btn btn-info p-1 ms-2" style="background-color:rgb(238, 238, 238); display: none;" name="btmMEDPAN" id="btnPAN' .  $conta . $codigoPlano  . '" onclick="gravarPropostaPan(this, \'MED\', \'' . $cpf  . '\', \'' . $conta . '\',\'' . $codigoPlano . '\', \'' . $codigoTipoPagamento . '\'); return false;" value="' . $cpf  . '-' . $conta . '-' . $codigoPlano . '-' . $codigoTipoPagamento . '"><i class="bi bi-save2"></i> PAN.</button>';
 																						
@@ -362,7 +362,7 @@
 																						$codigoPlano = $plano->codigoPlano;
 																						$codigoTipoPagamento = 2;
 
-																						$script = '<button type="submit" class="btn btn-info p-1 ms-2 pe-2" style="background-color:#42427d" name="btmVIDABMG" onclick="getScript(this, \'VIDA\', \'' . $cpf  . '\', \'' . $conta . '\',\'' . $codigoPlano . '\', \'' . $codigoTipoPagamento . '\'); return false;"  value="' . $cpf  . '-' . $conta . '-' . $codigoPlano . '-' . $codigoTipoPagamento . '"><i class="bi bi-file-earmark-text-fill"></i> Script</button>';
+																						$script = '<button type="submit" class="btn btn-info p-1 ms-2 pe-2" style="background-color:#42427d" name="btmVIDABMG" onclick="getScript(this, \'VIDA\', \'' . $cpf  . '\', \'' . $conta . '\',\'' . $codigoPlano . '\', \'' . $codigoTipoPagamento . '\'); return false;"  value="' . $cpf  . '-' . $conta . '-' . $codigoPlano . '-' . $codigoTipoPagamento . '"><i class="bi bi-file-earmark-text-fill"></i> Script</button><i class="bi bi-arrows-fullscreen ms-2 fs-3" data-bs-toggle="modal" data-bs-target="#kt_modal_vida" id="modalVida-' . $conta . '-' . $codigoPlano . '-' . $codigoTipoPagamento . '" onclick="applyScript(\'' . $conta . '\',\'' . $codigoPlano . '\', \'' . $codigoTipoPagamento . '\');" style="display: none; cursor: pointer;"></i>';
 																						$script .= '<button type="submit" class="btn btn-success p-1 ms-2" style="background-color:rgb(238, 238, 238); display: none;" name="btmVIDABMG" id="btnBMG' .  $conta . $codigoPlano  . '" onclick="gravarProposta(this, \'VIDA\', \'' . $cpf  . '\', \'' . $conta . '\',\'' . $codigoPlano . '\', \'' . $codigoTipoPagamento . '\'); return false;"  value="' . $cpf  . '-' . $conta . '-' . $codigoPlano . '-' . $codigoTipoPagamento . '"><i class="bi bi-send-x-fill"></i> BMG</button>';
 																						$script .= '<button type="submit" class="btn btn-info p-1 ms-2" style="background-color:rgb(238, 238, 238); display: none;" name="btmVIDAPAN" id="btnPAN' .  $conta . $codigoPlano  . '" onclick="return false;" value="' . $cpf  . '-' . $conta . '-' . $codigoPlano . '-' . $codigoTipoPagamento . '"><i class="bi bi-save2"></i> PAN.</button>';
 
@@ -394,51 +394,7 @@
 											</div>
 											<!--end::Accordion-->
 
-											<!--begin::Accordion-->
-											<div class="accordion" id="kt_accordion_abordagem  ms-lg-7 ms-xl-10">
-												<div class="accordion-item">
-													<h2 class="accordion-header" id="kt_accordion_abordagem_header_1">
-														<button class="accordion-button fs-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#kt_script_med" aria-expanded="true" aria-controls="kt_accordion_abordagem_body_1">
-														SCRIPT VENDAS MED 
-														<span style="color:rgb(173, 179, 173)" class="ms-2" id="lblStatus-MED"><svg role="img" aria-hidden="true" width="20px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg></span>
-														<i class="bi bi-arrows-fullscreen ms-2 fs-3" data-bs-toggle="modal" data-bs-target="#kt_modal_med"></i>
-														
-													
-														</button>
-													</h2>
-													<div id="kt_script_med" class="accordion-collapse collapse shown" aria-labelledby="kt_accordion_abordagem_header_1" data-bs-parent="#kt_accordion_abordagem">
-														<div class="accordion-body">
-
-														<div style="font-size:18px; line-height:1.8; font-family:Arial, sans-serif;" id="scriptVendas-MED">
-															Nenhum Script carregado ainda.
-
-														</div>
-													</div>
-												</div>
-											</div>
-											<!--end::Accordion-->
-
-											<!--begin::Accordion-->
-											<div class="accordion" id="kt_accordion_abordagem  ms-lg-7 ms-xl-10">
-												<div class="accordion-item">
-													<h2 class="accordion-header" id="kt_accordion_abordagem_header_1">
-														<button class="accordion-button fs-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#kt_script_vida" aria-expanded="true" aria-controls="kt_accordion_abordagem_body_1">
-															SCRIPT VENDAS VIDA
-															<span style="color:rgb(173, 179, 173)" class="ms-2" id="lblStatus-VIDA"><svg role="img" aria-hidden="true" width="20px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg></span>
-															<i class="bi bi-arrows-fullscreen ms-2 fs-3" data-bs-toggle="modal" data-bs-target="#kt_modal_vida"></i>
-														</button>
-													</h2>
-													<div id="kt_script_vida" class="accordion-collapse collapse shown" aria-labelledby="kt_accordion_abordagem_header_1" data-bs-parent="#kt_accordion_abordagem">
-														<div class="accordion-body">
-
-														<div style="font-size:18px; line-height:1.8; font-family:Arial, sans-serif;" id="scriptVendas-VIDA">
-															Nenhum Script carregado ainda.
-
-														</div>
-													</div>
-												</div>
-											</div>
-											<!--end::Accordion-->
+											
 
 
 											<!--begin::Accordion-->
@@ -446,11 +402,18 @@
 												<div class="accordion-item">
 													<h2 class="accordion-header" id="kt_accordion_abordagem_header_1">
 														<button class="accordion-button fs-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#kt_proposta_med" aria-expanded="true" aria-controls="kt_accordion_abordagem_body_1">
-														PROPOSTA BMG MED
+														PROPOSTA MED
 														<span style="color:rgb(173, 179, 173)" class="ms-2" id="lblStatusGravacao-BMG-MED"><svg role="img" aria-hidden="true" width="20px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg></span>
 														<span id="">
-															<a type="submit" class="btn btn-success p-1 ms-2" style="background-color:rgb(238, 238, 238);" name="btnPropostaMed" id="btnPropostaMed" onclick=""  value=""><i class="bi bi-send-x-fill"></i> BMG</a>
+															<a href="javascript: return false;" class="btn btn-success p-1 ms-2" style="background-color:rgb(238, 238, 238);" name="btnPropostaBMGMed" id="btnPropostaBMGMed" onclick="return false;"   value=""><i class="bi bi-send-x-fill"></i> BMG</a>
 														</span>
+														<span id="">
+															<a href="javascript: return false;" class="btn btn-info p-1 ms-2" style="background-color:rgb(238, 238, 238);" name="btnPropostaPANMed" id="btnPropostaPANMed" onclick="return false;" ><i class="bi bi-save2"></i> PAN.</a>
+														</span>
+														<div id="lblMedPlano" class="ms-3 badge badge-white text-dark fs-7" style="display: none">Individual</div>
+														<span id="lblMedPagamento" class="ms-1 badge badge-white text-dark fs-7" style="display: none">Mensal</span>
+														<span id="lblMedValor" class="ms-1 badge badge-white text-dark fs-7" style="display: none">R$ 21,90</span>
+
 														</button>
 													</h2>
 													<div id="kt_proposta_med" class="accordion-collapse collapse shown" aria-labelledby="kt_accordion_abordagem_header_1" data-bs-parent="#kt_accordion_abordagem">
@@ -458,7 +421,6 @@
 
 														<div style="font-size:18px; line-height:1.8; font-family:Arial, sans-serif;" id="lblDetalhesGravacao-BMG-MED">
 															Nenhuma proposta MED gravada no BMG.
-
 														</div>
 													</div>
 												</div>
@@ -469,13 +431,20 @@
 											<div class="accordion" id="kt_accordion_abordagem  ms-lg-7 ms-xl-10">
 												<div class="accordion-item">
 													<h2 class="accordion-header" id="kt_accordion_abordagem_header_1">
-														<button class="accordion-button fs-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#kt_proposta_pan_med" aria-expanded="true" aria-controls="kt_accordion_abordagem_body_1">
-														PROPOSTA PANORAMA MED
-														<span style="color:rgb(173, 179, 173)" class="ms-2" id="lblStatusGravacao-PAN-MED"><svg role="img" aria-hidden="true" width="20px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg></span>
-
+														<button class="accordion-button fs-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#kt_proposta_vida" aria-expanded="true" aria-controls="kt_accordion_abordagem_body_1">
+															PROPOSTA VIDA
+															<span style="color:rgb(173, 179, 173)" class="ms-2" id="lblStatusGravacao-PAN-MED"><svg role="img" aria-hidden="true" width="20px" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg></span>
+															<span id="">
+																<a href="javascript: return false;" class="btn btn-success p-1 ms-2" style="background-color:rgb(238, 238, 238);" name="btnPropostaBMGVida" id="btnPropostaBMGVida" onclick="return false;"  value=""><i class="bi bi-send-x-fill"></i> BMG</a>
+															</span>
+															<span id="">
+																<a href="javascript: return false;"  class="btn btn-info p-1 ms-2" style="background-color:rgb(238, 238, 238);" name="btnPropostaPANVida" id="btnPropostaPANVida" onclick="return false;" ><i class="bi bi-save2"></i> PAN.</a>
+															</span>
+															<div id="lblVidaPlano" class="ms-3 badge badge-white text-dark fs-7" style="display: none">Vida Familiar</div>
+															<span id="lblVidaValor" class="ms-1 badge badge-white text-dark fs-7" style="display: none">R$ 29,90</span>
 														</button>
 													</h2>
-													<div id="kt_proposta_pan_med" class="accordion-collapse collapse shown" aria-labelledby="kt_accordion_abordagem_header_1" data-bs-parent="#kt_accordion_abordagem">
+													<div id="kt_proposta_vida" class="accordion-collapse collapse shown" aria-labelledby="kt_accordion_abordagem_header_1" data-bs-parent="#kt_accordion_abordagem">
 														<div class="accordion-body">
 
 														<div style="font-size:18px; line-height:1.8; font-family:Arial, sans-serif;" id="lblDetalhesGravacao-PAN-MED">
@@ -543,22 +512,30 @@
 											<div class="modal-dialog modal-dialog-scrollable" style="width: 100% !important; max-width: 1000px !important;">
 												<div class="modal-content">
 													<div class="modal-header">
-														<h5 class="modal-title">SCRIPT VENDAS</h5>
+														<h5 class="modal-title">SCRIPT VENDAS - BMG MED</h5>
 
-														<!--begin::Close-->
-														<div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+														<!--begin::Fechar-->
+														<div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Fechar">
 															<i class="ki-duotone ki-cross fs-2x"><span class="path1"></span><span class="path2"></span></i>
 														</div>
-														<!--end::Close-->
+														<!--end::Fechar-->
+													</div>
+													<div class="modal-body" id="modalBodyMedError" style="display: none;">
+														<p class='fs-2 fw-bold'>
+															<svg role="img" aria-hidden="true" width="20px" style="color: #f22e46" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg>	
+															ATENÇÃO!
+														</p>
+
+														<p class='fs-4' id="lblErrorMedScrip"></p>
 													</div>
 
-													<div class="modal-body">
+													<div class="modal-body" id="modalBodyMedNormal">
 														<p class='fs-2 fw-bold'>SCRIPT DE AUDITORIA BMG MED PLUS</p>
 
 														<p class='fs-4'>
-															Conforme estávamos falando senhor(a) <span class='fw-bolder' id="CLIENTE_NOME">[CLIENTE_NOME]</span>, meu nome é <span class='fw-bolder' id="CLIENTE_ASSESSOR">[CLIENTE_ASSESSOR]</span>, sou correspondente bancário/a do banco BMG e vamos concluir sua adesão do seguro. Informo que a ligação está sendo gravada.
+															Conforme estávamos falando senhor(a) <span class='fw-bolder CLIENTE_NOME' id="">[CLIENTE_NOME]</span>, meu nome é <span class='fw-bolder CLIENTE_ASSESSOR' id=""><?php echo strtoupper($session->nickname);?></span>, sou correspondente bancário/a do banco BMG e vamos concluir sua adesão do seguro. Informo que a ligação está sendo gravada.
 															<br><br>
-															Por favor, poderia me confirmar se este é seu número de celular: <span class='fw-bolder' id="CLIENTE_TELEFONE">[CLIENTE_TELEFONE]</span>? <b>{Pausa resposta}</b>.
+															Por favor, poderia me confirmar se este é seu número de celular: <span class='fw-bolder CLIENTE_TELEFONE' id="">[CLIENTE_TELEFONE]</span>? <b>{Pausa resposta}</b>.
 															<br>(Caso o número do telefone esteja incorreto ou não seja um número de celular, fazer a atualização do cadastro)
 														</p>
 
@@ -577,16 +554,16 @@
 																			Ótimo! Agora me confirme os 3 primeiros (ou os 3 últimos) números do seu CPF? 
 																			<br><b>{Pausa para a resposta do cliente}</b><br><br>
 																			Excelente! Por último me confirme o mês do seu aniversário ?<b>{Pausa para a resposta do cliente}</b><br><br>
-																			Data Nascimento: <span class='fw-bolder' id="CLIENTE_DATANASCIMENTO">[CLIENTE_DATANASCIMENTO]</span>
+																			Data Nascimento: <span class='fw-bolder CLIENTE_DATANASCIMENTO' id="">[CLIENTE_DATANASCIMENTO]</span>
 																		</td>
 																		<td class='fs-4 ps-3' style='border: 2px solid #ececec;'>
 																			Ótimo! Agora me confirme sua data de nascimento (Mês/Ano)<br>
 																			<b>{Pausa para a resposta do cliente}</b><br>
-																			Data Nascimento: <span class='fw-bolder' id="CLIENTE_DATANASCIMENTO">[CLIENTE_DATANASCIMENTO]</span><br><br>
+																			Data Nascimento: <span class='fw-bolder CLIENTE_DATANASCIMENTO' id="">[CLIENTE_DATANASCIMENTO]</span><br><br>
 
 																			Excelente! Por último me confirme o Nome completo da sua Mãe?(Acatar minimamente o nome e sobrenome, não sendo necessário nome completo)
 																			<b>{Pausa para a resposta do cliente}.</b>
-																			<br>Nome da Mãe: <span class='fw-bolder' id="CLIENTE_MAE">[CLIENTE_MAE]</span>
+																			<br>Nome da Mãe: <span class='fw-bolder CLIENTE_MAE' id="">[CLIENTE_MAE]</span>
 																		</td>
 																	</tr>
 																</tbody>
@@ -595,7 +572,7 @@
 
 
 														<p class='fs-4'>
-															O Seguro <span class='fw-bolder' id="NOME_PLANO">[NOME_PLANO]</span> que você está contratando te dará cobertura em caso de Morte Acidental no valor de R$ 1.000,00, além disso você ainda terá vários outros benefícios que virão incluídos, como:
+															O Seguro <span class='fw-bolder NOME_PLANO' id="">[NOME_PLANO]</span> que você está contratando te dará cobertura em caso de Morte Acidental no valor de R$ 1.000,00, além disso você ainda terá vários outros benefícios que virão incluídos, como:
 														</p>
 														<p class='fs-4 fw-bold'>
 															Obs.: Obrigatório citar ao menos um dos benefícios.
@@ -604,7 +581,7 @@
 														◾️ Consultas ilimitadas de telemedicina com Clínico Geral<br>
 														◾️ Consultas presencias e exames de baixo custo, pagos pelo segurado<br>
 														◾️ Remédios genéricos com no mínimo 30% de desconto e de marca com mínimo 15%, em rede de farmácias credenciadas<br>
-														◾️ Sorteios no valor de <span class='fw-bolder' id="VALOR_SORTEIO">[VALOR_SORTEIO]</span> todo mês pela loteria federal<br>
+														◾️ Sorteios no valor de <span class='fw-bolder VALOR_SORTEIO' id="">[VALOR_SORTEIO]</span> todo mês pela loteria federal<br>
 														<span id="INCLUI_CHECKUP">◾️ Check-up anual gratuito com direito à 1 consulta médica por ano + exames básicos</span>
 														</p>
 														
@@ -631,15 +608,15 @@
 														
 														<p class='fs-4'>
 															Orientamos que o cliente fale algumas palavras, (evitar respostas sim ou não)
-															Para usufruir de todas as coberturas e benefícios do seguro, pelo período de 12 meses, o Sr(a) pagará o valor de R$ <span class='fw-bolder' id="VALOR_PLANO">[VALOR_PLANO]</span>, que poderá ser mensal (R$ <span class='fw-bolder' id="VALOR_PLANO">[VALOR_PLANO]</span> cobrado em cada mês) ou parcelado (12 parcelas de R$ <span class='fw-bolder' id="VALOR_PLANO">[VALOR_PLANO]</span>) de acordo com sua escolha.
+															Para usufruir de todas as coberturas e benefícios do seguro, pelo período de 12 meses, o Sr(a) pagará o valor de R$ <span class='fw-bolder VALOR_PLANO' id="">[VALOR_PLANO]</span>, que poderá ser mensal (R$ <span class='fw-bolder VALOR_PLANO' id="">[VALOR_PLANO]</span> cobrado em cada mês) ou parcelado (12 parcelas de R$ <span class='fw-bolder VALOR_PLANO' id="">[VALOR_PLANO]</span>) de acordo com sua escolha.
 															<br><br>
 															Os benefícios estarão disponíveis em até 24h após aprovação do pagamento em seu cartão. A renovação do seguro será anual, sendo a primeira realizada de forma automática e as demais serão feitas através da corretora de seguros, mediante o seu consentimento.
 															<br><br>
 															Caso tenha dúvidas, basta entrar em contato com a Central BMG no telefone 4002-7007
 															<br><br>
-															Sr(a) <span class='fw-bolder' id="NOME_CLIENTE">[NOME_CLIENTE]</span>, confirma a contratação do seguro <span class='fw-bolder' id="NOME_PLANO">[NOME_PLANO]</span> nesta data <span class='fw-bolder' id="DATA_CORRENTE">[DATA_CORRENTE]</span> no valor de R$ <span class='fw-bolder' id="VALOR_PLANO">[VALOR_PLANO]</span> por mês, por 12 meses de cobertura, que será lançado na fatura do seu cartão consignado BMG? {Pausa para a resposta do cliente}
+															Sr(a) <span class='fw-bolder CLIENTE_NOME' id="">[CLIENTE_NOME]</span>, confirma a contratação do seguro <span class='fw-bolder NOME_PLANO' id="">[NOME_PLANO]</span> nesta data <span class='fw-bolder DATA_CORRENTE' id="">[DATA_CORRENTE]</span> no valor de R$ <span class='fw-bolder VALOR_PLANO' id="">[VALOR_PLANO]</span> por mês, por 12 meses de cobertura, que será lançado na fatura do seu cartão consignado BMG? {Pausa para a resposta do cliente}
 															<br><br>
-															Informamos que o <span class='fw-bolder' id="NOME_PLANO">[NOME_PLANO]</span> é uma parceria entre a Generali Brasil Seguros S.A e a BMG SEGURADORA, e as condições contratuais do seguro serão enviadas para o Sr(a) por SMS e as informações da corretagem estão disponíveis no site do Banco Bmg.
+															Informamos que o <span class='fw-bolder NOME_PLANO' id="">[NOME_PLANO]</span> é uma parceria entre a Generali Brasil Seguros S.A e a BMG SEGURADORA, e as condições contratuais do seguro serão enviadas para o Sr(a) por SMS e as informações da corretagem estão disponíveis no site do Banco Bmg.
 															<br><br>
 															Lembramos que o produto não é um seguro saúde, os serviços de assistência são complementares ao seguro de morte acidental.
 															<br><br>
@@ -648,8 +625,7 @@
 													</div>
 
 													<div class="modal-footer">
-														<button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-														<button type="button" class="btn btn-primary">Save changes</button>
+														<button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fechar</button>
 													</div>
 												</div>
 											</div>
@@ -661,22 +637,31 @@
 											<div class="modal-dialog modal-dialog-scrollable" style="width: 100% !important; max-width: 1000px !important;">
 												<div class="modal-content">
 													<div class="modal-header">
-														<h5 class="modal-title">SCRIPT VIDA</h5>
+														<h5 class="modal-title">SCRIPT VENDAS - BMG VIDA</h5>
 
-														<!--begin::Close-->
-														<div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Close">
+														<!--begin::Fechar-->
+														<div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Fechar">
 															<i class="ki-duotone ki-cross fs-2x"><span class="path1"></span><span class="path2"></span></i>
 														</div>
-														<!--end::Close-->
+														<!--end::Fechar-->
 													</div>
 
-													<div class="modal-body">
-														<p class='fs-2 fw-bold'>SCRIPT CONFIRMAÇÃO - VIDA FAMILIAR</p>
+													<div class="modal-body" id="modalBodyVidaError" style="display: none;">
+														<p class='fs-2 fw-bold'>
+															<svg role="img" aria-hidden="true" width="20px" style="color: #f22e46" focusable="false" data-prefix="fas" data-icon="circle-check" class="svg-inline--fa fa-circle-check" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M0 256C0 114.6 114.6 0 256 0C397.4 0 512 114.6 512 256C512 397.4 397.4 512 256 512C114.6 512 0 397.4 0 256zM371.8 211.8C382.7 200.9 382.7 183.1 371.8 172.2C360.9 161.3 343.1 161.3 332.2 172.2L224 280.4L179.8 236.2C168.9 225.3 151.1 225.3 140.2 236.2C129.3 247.1 129.3 264.9 140.2 275.8L204.2 339.8C215.1 350.7 232.9 350.7 243.8 339.8L371.8 211.8z"></path></svg>	
+															ATENÇÃO!
+														</p>
 
+														<p class='fs-4' id="lblErrorVidaScrip"></p>
+													</div>
+													
+													<div class="modal-body" id="modalBodyVidaNormal">
+														<p class='fs-2 fw-bold'>SCRIPT CONFIRMAÇÃO - VIDA FAMILIAR</p>
+														
 														<p class='fs-4'>
-															Conforme estávamos falando senhor(a) <span class='fw-bolder' id="CLIENTE_NOME">[CLIENTE_NOME]</span>, meu nome é <span class='fw-bolder' id="CLIENTE_ASSESSOR">[CLIENTE_ASSESSOR]</span>, sou correspondente bancário/a do banco BMG e vamos concluir sua adesão do seguro. Informo que a ligação está sendo gravada.
+															Conforme estávamos falando senhor(a) <span class='fw-bolder CLIENTE_NOME' id="">[CLIENTE_NOME]</span>, meu nome é <span class='fw-bolder CLIENTE_ASSESSOR' id=""><?php echo strtoupper($session->nickname);?></span>, sou correspondente bancário/a do banco BMG e vamos concluir sua adesão do seguro. Informo que a ligação está sendo gravada.
 															<br><br>
-															Por favor, poderia me confirmar se este é seu número de celular: <span class='fw-bolder' id="CLIENTE_TELEFONE">[CLIENTE_TELEFONE]</span>? <b>{Pausa resposta}</b>.
+															Por favor, poderia me confirmar se este é seu número de celular: <span class='fw-bolder CLIENTE_TELEFONE' id="">[CLIENTE_TELEFONE]</span>? <b>{Pausa resposta}</b>.
 															<br>(Caso o número do telefone esteja incorreto ou não seja um número de celular, fazer a atualização do cadastro)
 														</p>
 
@@ -695,16 +680,16 @@
 																			Ótimo! Agora me confirme os 3 primeiros (ou os 3 últimos) números do seu CPF? 
 																			<br><b>{Pausa para a resposta do cliente}</b><br><br>
 																			Excelente! Por último me confirme o mês do seu aniversário ?<b>{Pausa para a resposta do cliente}</b><br><br>
-																			Data Nascimento: <span class='fw-bolder' id="CLIENTE_DATANASCIMENTO">[CLIENTE_DATANASCIMENTO]</span>
+																			Data Nascimento: <span class='fw-bolder CLIENTE_DATANASCIMENTO' id="">[CLIENTE_DATANASCIMENTO]</span>
 																		</td>
 																		<td class='fs-4 ps-3' style='border: 2px solid #ececec;'>
 																			Ótimo! Agora me confirme sua data de nascimento (Mês/Ano)<br>
 																			<b>{Pausa para a resposta do cliente}</b><br>
-																			Data Nascimento: <span class='fw-bolder' id="CLIENTE_DATANASCIMENTO">[CLIENTE_DATANASCIMENTO]</span><br><br>
+																			Data Nascimento: <span class='fw-bolder CLIENTE_DATANASCIMENTO' id="">[CLIENTE_DATANASCIMENTO]</span><br><br>
 
 																			Excelente! Por último me confirme o Nome completo da sua Mãe?(Acatar minimamente o nome e sobrenome, não sendo necessário nome completo)
 																			<b>{Pausa para a resposta do cliente}.</b>
-																			<br>Nome da Mãe: <span class='fw-bolder' id="CLIENTE_MAE">[CLIENTE_MAE]</span>
+																			<br>Nome da Mãe: <span class='fw-bolder CLIENTE_MAE' id="">[CLIENTE_MAE]</span>
 																		</td>
 																	</tr>
 																</tbody>
@@ -713,7 +698,7 @@
 
 
 														<p class='fs-4'>
-															O Seguro BMG Vida Familiar que você está contratando te dará cobertura em caso de Morte no valor de R$ 5.000,00, ou em caso de Invalidez Permanente Total Por Acidente ou Morte Acidental no valor de R$ 20.000,00, e o pagamento será feito para sua família. Além disso temos vários outros benefícios que vem incluído, como:
+															O Seguro <b>BMG VIDA FAMILIAR</b> que você está contratando te dará cobertura em caso de Morte no valor de R$ 5.000,00, ou em caso de Invalidez Permanente Total Por Acidente ou Morte Acidental no valor de R$ 20.000,00, e o pagamento será feito para sua família. Além disso temos vários outros benefícios que vem incluído, como:
 														</p>
 														<p class='fs-4 fw-bold'>
 															Obs.: Obrigatório citar ao menos um dos benefícios.
@@ -751,7 +736,7 @@
 
 															<br><br>Caso não queira renovar ou tenha dúvidas, basta entrar em contato com a Central BMG no telefone 4002-7007.
 
-															<br><br>Sr(a) MARIA DA CONCEICAO, confirma a contratação do seguro BMG Vida Familiar nesta data 05/06/2025 no valor de R$ 29,90 por mês, por 12 meses de cobertura, que será lançado na fatura do seu cartão consignado BMG? {Pausa para a resposta do cliente}
+															<br><br>Sr(a) <span class='fw-bolder CLIENTE_NOME' id="">[CLIENTE_NOME]</span>, confirma a contratação do seguro BMG Vida Familiar nesta data 05/06/2025 no valor de R$ 29,90 por mês, por 12 meses de cobertura, que será lançado na fatura do seu cartão consignado BMG? {Pausa para a resposta do cliente}
 
 															<br><br>Informamos que o BMG Vida Familiar é uma parceria entre a Generali Brasil Seguros S.A e a BMG SEGURADORA, e as condições contratuais do seguro serão enviadas para o Sr(a) por SMS e as informações da corretagem estão disponíveis no site do Banco BMG.
 
@@ -760,8 +745,7 @@
 													</div>
 
 													<div class="modal-footer">
-														<button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-														<button type="button" class="btn btn-primary">Save changes</button>
+														<button type="button" class="btn btn-primary" data-bs-dismiss="modal">Fechar</button>
 													</div>
 												</div>
 											</div>
@@ -816,19 +800,37 @@
 						});
 
 						function getScript(icon, produto, cpf, conta, plano, codigoTipoPagamento){
+							
 							icon.innerHTML = "<i class='bi bi-file-earmark-text-fill'></i>Aguarde";
 							//icon.style.color = "#e9ba23";
 							//icon.style.backgroundColor = "#e9ba23";
 							//return false;
-							const lblStatus = document.getElementById("lblStatus-" + produto);
+							//const lblStatus = document.getElementById("lblStatus-" + produto);
 							const btnBMG = document.getElementById("btnBMG" + conta + plano);
 							const btnPAN = document.getElementById("btnPAN" + conta+ plano);
-							var btnPropostaMed = document.getElementById("btnPropostaMed");
+
+							//botão BMG e PAN MED Lado Proposta
+							var btnPropostaBMGMed = document.getElementById("btnPropostaBMGMed");
+							var btnPropostaPANMed = document.getElementById("btnPropostaPANMed");
+
+							//botão BMG e PAN VIDA Lado Proposta
+							var btnPropostaBMGVida = document.getElementById("btnPropostaBMGVida");
+							var btnPropostaPANVida = document.getElementById("btnPropostaPANVida");
+
+							var btnPropostaVida = document.getElementById("btnPropostaVida");
+							
 							//const lblMed = document.getElementById("lblMed"); 
 							let pontoMed = 0;
 							const intervalMed = setInterval(() => {pontoMed = (pontoMed + 1) % 4; icon.innerHTML = "<i class='bi bi-file-earmark-text-fill'></i><b>Aguarde" + ".".repeat(pontoMed) + "</b>";}, 500);
+							//var scriptText = document.getElementById("scriptVendas-" + produto);
+							var lblErrorVidaScrip = document.getElementById("lblErrorVidaScrip");
+							var modalBodyVidaNormal = document.getElementById("modalBodyVidaNormal");
+							var modalBodyVidaError = document.getElementById("modalBodyVidaError");
+							var lblErrorMedScrip = document.getElementById("lblErrorMedScrip");
+							var modalBodyMedNormal = document.getElementById("modalBodyMedNormal");
+							var modalBodyMedError = document.getElementById("modalBodyMedError");
 
-							lblStatus.style.color = "#e9ba23";
+							//lblStatus.style.color = "#e9ba23";
 							
 
 							fetch('<?php echo assetfolder;?>bmg-script-vendas/' + produto + '/' + cpf + '/' + conta + '/' + plano + '/' + codigoTipoPagamento, {method: "GET", cache: "no-cache"})
@@ -839,33 +841,67 @@
 								//setTimeout(() => {clearInterval(intervalINSS);
 								setTimeout(() => {clearInterval(intervalMed);icon.innerHTML = "<i class='bi bi-file-earmark-text-fill'></i>Script";}, 1);
 								
-								const scriptText = document.getElementById("scriptVendas-" + produto);
 								
 								if (data.hasOwnProperty('status')) {
 
 									if (data.status){
-										lblStatus.style.color = "#008001";
+										//lblStatus.style.color = "#008001";
 										icon.style.backgroundColor = "#008001";
 										
 										//icon.style.backgroundColor = "#008001";
 										btnBMG.style.backgroundColor = "#fa6300";
-										btnPropostaMed.style.backgroundColor = "#fa6300";
 										btnPAN.style.backgroundColor = "#6da73f";
 										//btnPAN.style.display = "inline-block";
 										btnBMG.style.display = "inline-block";
-										btnPropostaMed.setAttribute("onclick", btnBMG.getAttribute("onclick"));
+
+										if (produto == "MED"){
+											modalBodyMedNormal.style.display = "inline-block";
+											modalBodyMedError.style.display = "none";
+
+											btnPropostaBMGMed.style.backgroundColor = "#fa6300";
+											btnPropostaBMGMed.setAttribute("onclick", btnBMG.getAttribute("onclick"));
+											btnPropostaPANMed.style.backgroundColor = "#6da73f";
+											btnPropostaPANMed.setAttribute("onclick", btnPAN.getAttribute("onclick"));
+										} else {
+											modalBodyVidaNormal.style.display = "inline-block";
+											modalBodyVidaError.style.display = "none";
+
+											btnPropostaBMGVida.style.backgroundColor = "#fa6300";
+											btnPropostaBMGVida.setAttribute("onclick", btnBMG.getAttribute("onclick"));
+											btnPropostaPANVida.style.backgroundColor = "#6da73f";
+											btnPropostaPANVida.setAttribute("onclick", btnPAN.getAttribute("onclick"));
+										}
 
 										btnBMG.style.display = "none";
 										//btnPropostaMed.style.display = "inline-block";
 										
-										scriptText.innerHTML = formatScript(produto, data.script);
+										formatScript(produto, data.script, conta, plano, codigoTipoPagamento);
+										//scriptText.innerHTML = formatScript(produto, data.script);
 									} else {
-										lblStatus.style.color = "#f22e46";
+										modalBodyVidaNormal.style.display = "none";
+										modalBodyVidaError.style.display = "inline-block";
+										modalBodyMedNormal.style.display = "none";
+										modalBodyMedError.style.display = "inline-block";
+
+										//lblStatus.style.color = "#f22e46";
 										icon.style.backgroundColor = "#f22e46";
 										//icon.style.backgroundColor = "#f22e46";
 										btnBMG.style.backgroundColor = "#eeeeee";
 										btnPAN.style.backgroundColor = "#eeeeee";
-										scriptText.innerHTML = "<b>NÃO FOI POSSÍVEL GERAR O SCRIPT</b><BR><BR>" + data.mensagem;
+										//scriptText.innerHTML = "<b>NÃO FOI POSSÍVEL GERAR O SCRIPT</b><BR><BR>" + data.mensagem;
+
+										if (produto == "MED"){
+											lblErrorMedScrip.innerHTML = "<b>NÃO FOI POSSÍVEL GERAR O SCRIPT</b><BR><BR>" + data.mensagem;
+										} else {
+											lblErrorVidaScrip.innerHTML = "<b>NÃO FOI POSSÍVEL GERAR O SCRIPT</b><BR><BR>" + data.mensagem;
+										}
+
+									}
+
+									if (produto == "MED"){
+										document.getElementById('modalMed-' + conta  + "-" + plano + "-" + codigoTipoPagamento).click();
+									} else {
+										document.getElementById('modalVida-' + conta  + "-" + plano + "-" + codigoTipoPagamento).click();
 									}
 
 									console.log(data.status, data.mensagem, data.script); 
@@ -1034,70 +1070,192 @@
 							return dados;
 						}
 
-						function formatScript(produto, script){
+
+						function applyScript(conta, plano, codigoTipoPagamento){
+							
+							
+							const nomeCliente = document.getElementById("nomeCliente"); 
+							const nomeClienteReplace = document.querySelectorAll(".CLIENTE_NOME");
+							nomeClienteReplace.forEach(field => {field.innerHTML = nomeCliente.value;});
+
+							const nomeMae = document.getElementById("nomeMae"); 
+							const nomeMaeReplace = document.querySelectorAll(".CLIENTE_MAE");
+							nomeMaeReplace.forEach(field => {field.innerHTML = nomeMae.value;});
+
+							const dataNascimento = document.getElementById("dataNascimento"); 
+							const dataNascimentoReplace = document.querySelectorAll(".CLIENTE_DATANASCIMENTO");
+							dataNascimentoReplace.forEach(field => {field.innerHTML = dataNascimento.value;});
+
+							const celular = document.getElementById("telefone"); 
+							const celularReplace = document.querySelectorAll(".CLIENTE_TELEFONE");
+							celularReplace.forEach(field => {field.innerHTML = celular.value;});
+
+							const dataCorrente = new Date().toLocaleDateString('pt-BR');				
+							const dataCorrenteReplace = document.querySelectorAll(".DATA_CORRENTE");
+							dataCorrenteReplace.forEach(field => {field.innerHTML = dataCorrente;});
+
+							var tipoPlano = "MED";
+							var planoName = "[PLANO_SEM_NOME]";
+							var planoNameShort = "";
+							var valorPlano = "[SEM_VALOR_PLANO]";
+							var valorSorteio = "[SEM_VALOR_SORTEIO]";
+							var tipoPagamentoName = "[SEM_TIPO_PAGAMENTO]";
+
+							//alert(plano + " - " + codigoTipoPagamento);
+
+							if (plano == 216){
+								planoName = "BMG VIDA FAMILIAR";
+								planoNameShort = "VIDA FAMILIAR";
+								valorPlano = "29,90";
+								tipoPlano = "VIDA";
+							} else if (plano == 110){
+								planoName = "BMG MED INDIVIDUAL";
+								planoNameShort = "INDIVIDUAL";
+								tipoPagamentoName = "MENSAL";
+								valorPlano = "21,90";
+								valorSorteio = "5.000,00";
+							} else if (plano == 111){
+								planoName = "BMG MED INDIVIDUAL";
+								planoNameShort = "INDIVIDUAL";
+								tipoPagamentoName = "PARCELADO";
+								valorPlano = "21,90";
+								valorSorteio = "5.000,00";
+							} else if (plano == 112){
+								planoName = "BMG MED PLUS";
+								planoNameShort = "PLUS";
+								tipoPagamentoName = "MENSAL";
+								valorPlano = "29,90";
+								valorSorteio = "10.000,00";
+							} else if (plano == 212){
+								planoName = "BMG MED PLUS";
+								planoNameShort = "PLUS";
+								tipoPagamentoName = "PARCELADO";
+								valorPlano = "29,90";
+								valorSorteio = "10.000,00";
+							}
+							
+							const nomePlanoReplace = document.querySelectorAll(".NOME_PLANO");
+							nomePlanoReplace.forEach(field => {field.innerHTML = planoName;});
+
+							const valorPlanoReplace = document.querySelectorAll(".VALOR_PLANO");
+							valorPlanoReplace.forEach(field => {field.innerHTML = valorPlano;});
+
+							const valorSorteioReplace = document.querySelectorAll(".VALOR_SORTEIO");
+							valorSorteioReplace.forEach(field => {field.innerHTML = valorSorteio;});
+
+							if (tipoPlano == "MED"){
+								document.getElementById('modalMed-' + conta  + "-" + plano + "-" + codigoTipoPagamento).style.display = "inline-block";
+								lblMedPlano = document.getElementById("lblMedPlano");
+								lblMedPagamento = document.getElementById("lblMedPagamento");
+								lblMedValor = document.getElementById("lblMedValor");
+
+								
+								lblMedPlano.style.display = "inline-block";
+								lblMedPagamento.style.display = "inline-block";
+								lblMedValor.style.display = "inline-block";	
+								
+								lblMedPlano.innerHTML = planoNameShort;
+								lblMedPagamento.innerHTML = tipoPagamentoName;
+								lblMedValor.innerHTML = "R$ " + valorPlano;
+
+							} else {
+								document.getElementById('modalVida-' + conta  + "-" + plano + "-" + codigoTipoPagamento).style.display = "inline-block";
+
+								lblVidaPlano = document.getElementById("lblVidaPlano");
+								lblVidaValor = document.getElementById("lblVidaValor");
+
+								lblVidaPlano.innerHTML = planoNameShort;
+								lblVidaValor.innerHTML = "R$ " + valorPlano;
+
+								lblVidaPlano.style.display = "inline-block";
+								lblVidaValor.style.display = "inline-block";
+							}
+
+
+
+						}
+
+						function formatScript(produto, script, conta, plano, codigoTipoPagamento){
 							var phone = script.match(/celular:\s*(\(?\d{2}\)?\d{8,9})\?/i);
 
 							if (phone) {
-								phone = phone[1].replace(/\?./g, "");								
+								phone = phone[1].replace(/\?./g, "");
+								const telefone = document.getElementById("telefone"); 
+
+								if (telefone.value.trim() === "") {
+									telefone.value = phone;
+								}
 								//alert (phone);
 							}
 							
 							const nomeClienteScript = script.match(/Senhor\(a\)\s*(.*?),/);
-
 							if (nomeClienteScript) {
-								//console.log(nomeClienteScript[1]);
-								const nomeCliente = document.getElementById("nomeCliente"); nomeCliente.value = nomeClienteScript[1];
+								const nomeCliente = document.getElementById("nomeCliente"); 
+								
+								if (nomeCliente.value.trim() === "") {
+									nomeCliente.value = nomeClienteScript[1];
+								}
 							}
 
 							var mae = script.match(/Mãe:\s*(.*?)\s+O Seguro/i);
 							if (mae) {
-								//alert (mae[1]);
-								const nomeMae = document.getElementById("nomeMae"); nomeMae.value = mae[1];
+								const nomeMae = document.getElementById("nomeMae"); 
+								if (nomeMae.value.trim() === "") {
+									nomeMae.value = mae[1];
+								}
 							}
 
 							var dataNascimentoCliente = script.match(/Data Nascimento:\s*(.{10})/);
 
-							if (dataNascimento) {
-								const dataNascimento = document.getElementById("dataNascimento"); dataNascimento.value = dataNascimentoCliente[1];
-								//alert(dataNascimento[1]);
+							const dataNascimento = document.getElementById("dataNascimento"); 
+							if (dataNascimento.value.trim() === "") {
+								dataNascimento.value = dataNascimentoCliente[1];
 							}
 
-							script = script.replace(/{Pausa resposta}./g, "<b>{Pausa resposta} </b>");
-							script = script.replace(/Excelente./g, "<br><br>Excelente");
-							script = script.replace(/Ótimo./g, "<br>Ótimo");
-							script = script.replace(/\?./g, "?<br>");
-							script = script.replace(/{Pausa para a resposta do cliente}./g, "<b>{Pausa para a resposta do cliente} </b><br>");
-							script = script.replace(/\. /g, ".<br><br>");
-							script = script.replace(/Positivação  Opção 1/g, "<br><br><hr><b>POSITIVAÇÃO OPÇÃO 1</b>");
+							// const telefone = document.getElementById("celular"); 
+							// telefone.value = phone;
 
-							script = script.replace(/Positivação  Opção 2/g, "");
-							script = script.replace(/ O Seguro Bmg/g, "<hr><br>O Seguro Bmg");
-							script = script.replace(/ O Seguro BMG/g, "<hr><br>O Seguro BMG");
-							script = script.replace(/seguro.<br><br>Informo/g, "seguro. Informo");
-							script = script.replace(/\?<br><b>{Pausa/g, "? <b>{Pausa resposta}");
-							script = script.replace(/SCRIPT DE AUDITORIA/g, "<b>SCRIPT DE AUDITORIA");
-							script = script.replace(/Conforme estávamos/g, "</b>Conforme estávamos");
-							script = script.replace(/Obs.: Obrigatório citar ao menos um dos benefícios./g, "<br><br><b>Obs.: Obrigatório citar ao menos um dos benefícios.</b>");
-							script = script.replace(/Consultas ilimitadas./g, "- Consultas ilimitadas");
-							script = script.replace(/Geral.<br><br>Consultas/g, "<br>- Consultas");
-							script = script.replace(/segurado.<br><br>Remédios genéricos/g, "<br>- Remédios genéricos");
-							script = script.replace(/credenciadas Sorteios/g, "credenciadas<br>- Sorteios");
-							script = script.replace(/Interação Livre/g, "<br><br><hr><b>Interação Livre</b><br>-");
-							script = script.replace(/<br><br>Perguntar/g, "<br>- Perguntar");
-							script = script.replace(/Para usufruir/g, "<hr><br>Para usufruir");
-							script = script.replace(/7007/g, "7007<br><br>");
-							script = script.replace(/Informamos que o/g, "<br>Informamos que o");
-							script = script.replace(/consignado BMG\?<br>/g, "consignado BMG?");
-							script = script.replace(/Pausa para o cliente responder\)/g, "<b>Pausa para o cliente responder)</b><br>");
-							script = script.replace(/Remédio Grátis/g, "- Remédio Grátis");
-							script = script.replace(/pessoas\).<br><br>Sorteios/g, "pessoas).<br>- Sorteios");
-							script = script.replace(/<br><br><br>/g, "<br>");
+							applyScript(conta, plano, codigoTipoPagamento);
+
+							// script = script.replace(/{Pausa resposta}./g, "<b>{Pausa resposta} </b>");
+							// script = script.replace(/Excelente./g, "<br><br>Excelente");
+							// script = script.replace(/Ótimo./g, "<br>Ótimo");
+							// script = script.replace(/\?./g, "?<br>");
+							// script = script.replace(/{Pausa para a resposta do cliente}./g, "<b>{Pausa para a resposta do cliente} </b><br>");
+							// script = script.replace(/\. /g, ".<br><br>");
+							// script = script.replace(/Positivação  Opção 1/g, "<br><br><hr><b>POSITIVAÇÃO OPÇÃO 1</b>");
+
+							// script = script.replace(/Positivação  Opção 2/g, "");
+							// script = script.replace(/ O Seguro Bmg/g, "<hr><br>O Seguro Bmg");
+							// script = script.replace(/ O Seguro BMG/g, "<hr><br>O Seguro BMG");
+							// script = script.replace(/seguro.<br><br>Informo/g, "seguro. Informo");
+							// script = script.replace(/\?<br><b>{Pausa/g, "? <b>{Pausa resposta}");
+							// script = script.replace(/SCRIPT DE AUDITORIA/g, "<b>SCRIPT DE AUDITORIA");
+							// script = script.replace(/Conforme estávamos/g, "</b>Conforme estávamos");
+							// script = script.replace(/Obs.: Obrigatório citar ao menos um dos benefícios./g, "<br><br><b>Obs.: Obrigatório citar ao menos um dos benefícios.</b>");
+							// script = script.replace(/Consultas ilimitadas./g, "- Consultas ilimitadas");
+							// script = script.replace(/Geral.<br><br>Consultas/g, "<br>- Consultas");
+							// script = script.replace(/segurado.<br><br>Remédios genéricos/g, "<br>- Remédios genéricos");
+							// script = script.replace(/credenciadas Sorteios/g, "credenciadas<br>- Sorteios");
+							// script = script.replace(/Interação Livre/g, "<br><br><hr><b>Interação Livre</b><br>-");
+							// script = script.replace(/<br><br>Perguntar/g, "<br>- Perguntar");
+							// script = script.replace(/Para usufruir/g, "<hr><br>Para usufruir");
+							// script = script.replace(/7007/g, "7007<br><br>");
+							// script = script.replace(/Informamos que o/g, "<br>Informamos que o");
+							// script = script.replace(/consignado BMG\?<br>/g, "consignado BMG?");
+							// script = script.replace(/Pausa para o cliente responder\)/g, "<b>Pausa para o cliente responder)</b><br>");
+							// script = script.replace(/Remédio Grátis/g, "- Remédio Grátis");
+							// script = script.replace(/pessoas\).<br><br>Sorteios/g, "pessoas).<br>- Sorteios");
+							// script = script.replace(/<br><br><br>/g, "<br>");
 							
-							script = script.replace(/Ótimo Agora me confirme sua data de nascimento/g, "<br><hr><b>POSITIVAÇÃO OPÇÃO 2<br></b>Ótimo! Agora me confirme sua data de nascimento");
-							script = script.replace(/Conforme estávamos/g, "<br><br>Conforme estávamos");
-							script = script.replace(/nome é _________/g, "nome é <b>" + "<?php echo strtoupper($session->nickname);?></b>");
+							// script = script.replace(/Ótimo Agora me confirme sua data de nascimento/g, "<br><hr><b>POSITIVAÇÃO OPÇÃO 2<br></b>Ótimo! Agora me confirme sua data de nascimento");
+							// script = script.replace(/Conforme estávamos/g, "<br><br>Conforme estávamos");
+							// script = script.replace(/nome é _________/g, "nome é <b>" + "<?php echo strtoupper($session->nickname);?></b>");
+
 							return script;
 						}
+
+						
 
 						function extrairDados() {
 
