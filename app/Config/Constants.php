@@ -22,9 +22,9 @@ define('BMG_WSDL', 'https://ws1.bmgconsig.com.br/webservices/ProdutoSeguroWebSer
 define('BMG_SEGURO_LOGIN', 'robo.55009');
 define('BMG_SEGURO_SENHA', 'Quid@robo102030');
 define('BMG_SEGURO_LOGIN_CONSIG', 'DANTAS.PRAVOCE');
-define('BMG_SEGURO_SENHA_CONSIG', 'B9abfT_6q@-C');
+define('BMG_SEGURO_SENHA_CONSIG', 'GtbP!8kgDuL@');
 define('BMG_ENTIDADE', '1581');
-define('BMG_LOJA_QUID', '54577'); //QUID
+define('BMG_LOJA_QUID', '54577'); //Unity
 define('BMG_CODIGO_PRODUTO_PAP', 1007);
 define('BMG_CODIGO_PRODUTO_MED', 54);
 define('BMG_CODIGO_PRODUTO_PRESTAMISTA', 5);

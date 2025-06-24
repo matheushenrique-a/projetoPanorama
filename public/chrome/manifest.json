@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "Dantas Ad Library Collector",
+  "version": "1.17",
+  "description": "Only for subscribers now. This extension allows you to save you favorite ads to your personal library.",
+  "permissions": [
+    "storage"
+  ],
+  "host_permissions": [
+    "http://insightsuite.pravoce.io/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "icons": {
+    "16": "icon.png",
+    "48": "icon.png",
+    "128": "icon.png"
+  }
+}

@@ -51,7 +51,6 @@ class Bmg extends BaseController
     
     //http://localhost/InsightSuite/public/bmg-gravar-proposta
     //https://insightsuite.pravoce.io/bmg-gravar-proposta
-    
     public function bmg_gravar_proposta(){
         $request = file_get_contents('php://input');
         $this->telegram->notifyTelegramGroup($request, telegramQuid);
@@ -169,43 +168,113 @@ class Bmg extends BaseController
     //http://localhost/InsightSuite/public/panorama-gravar-proposta
     public function panorama_gravar_proposta(){
 
-         $returnData["status"] = true;
-        $returnData["adesao"] = '12345';
-        sleep(1);
-        $returnData["mensagem"] = "[EM CONSTRUÇÃO]<br>Proposta Gravada com Sucesso PANORAMA!<br>Número Contrato: 00000";
-        echo json_encode($returnData);
-        return $returnData; exit;
+        $returnData["status"] = false;
+        $returnData["proposta"] = "";
+        $returnData["mensagem"] = "";
+
+        // sleep(1);
+        // $returnData["mensagem"] = "[EM CONSTRUÇÃO]<br>Proposta Gravada com Sucesso PANORAMA!<br>Número Contrato: 00000";
+        // echo json_encode($returnData);
+        // return $returnData; exit;
+        
+        $request = file_get_contents('php://input');
+
+        //$request = '{"produto":"MED","cpf":"90216296072","conta":"123444","plano":"110","codigoTipoPagamento":"2","nome":"MATHEUS ","estadoCivil":"S","sexo":"1","mae":"SEBATIANA ROCHA DUARTE","pai":"","nacionalidade":"","tipoDocumento":"","rg":"","cidadeNascimento":"","dataNascimento":"27/06/1957","ufNascimento":"","dataEmissaoRg":"","orgaoEmissor":"","ufRg":"","email":"","logradouro":"","bairro":"","cep":"","cidade":"","uf":"","numero":"","complemento":"","docIdentidade":"","telefone":"(31)99578-1355"}';
+        $response = json_decode($request, true);
+        // $cliData = json_encode($response['dados']);
+
+        //$this->telegram->notifyTelegramGroup("DADOS: " . $request, telegramQuid);
+        // exit;
+        
+        
+        // $data = [
+        //     'CONTRATO' => '123457',
+        //     'STATUS' => 'ADESÃO',
+        //     'NOME_CLIENTE' => 'IVANILDO GIMENES GOMES',
+        //     'ASSESSOR' => 'MATHEUS RYAN PIERRE DE LIMA',
+        //     'CPF' => '90216296072',
+        //     'ESTADO_CIVIL' => 'SOLTEIRO',
+        //     'SEXO' => 'MASCULINO',
+        //     'NOMEMAE' => 'LUCILA MERCEDES GOMES II',
+        //     'EMAIL' => 'nao_tem@teste.com',
+        //     'TELEFONE' => '11960799453',
+        //     'LOGRADOURO' => 'Rua Exemplo',
+        //     'BAIRRO' => 'Centro',
+        //     'CEP' => '01001-000',
+        //     'CIDADE' => 'São Paulo',
+        //     'UF' => 'SP',
+        //     'COMPLEMENTO' => 'Apto 12',
+        //     'ENDNUMERO' => '100',
+        //     'DATANASCIMENTO' => '12/02/1956',
+        //     'MATRICULA' => '10987654321',
+        //     'RG' => '1234567',
+        //     'TABELA' => 'SEGURO BMG MED',
+        //     'DATA_CADASTRO' => '05/05/2025',
+        //     'BANCO' => 'BMG',
+        //     'PRODUTO' => 'INSS',
+        //     'PRAZO' => '1',
+        //     'PARCELA' => '1',
+        //     'EMPRESTIMO' => '1',
+        //     'SEGURO' => '29,9'
+        // ];
+
+        $planoName = '';
+        $valorPlano = '';
+        $parcelas = "1";
+
+        if ($response['plano'] == 216){
+            $planoName = 'SEGURO BMG VIDA';
+            $valorPlano = "29,90";
+        } else if ($response['plano'] == 110){
+            $planoName = "SEGURO BMG MED";
+            $valorPlano = "21,90";
+        } else if ($response['plano'] == 111){
+            $planoName = "SEGURO BMG MED";
+            $valorPlano = "21,90";
+            $parcelas = "12";
+        } else if ($response['plano'] == 112){
+            $planoName = "SEGURO BMG MED";
+            $valorPlano = "29,90";
+        } else if ($response['plano'] == 212){
+            $planoName = "SEGURO BMG MED";
+            $valorPlano = "29,90";
+            $parcelas = "12";
+        }
 
         $data = [
-            'CONTRATO' => '123457',
+            'CONTRATO' => '0001',
             'STATUS' => 'ADESÃO',
-            'NOME_CLIENTE' => 'IVANILDO GIMENES GOMES',
-            'ASSESSOR' => 'MATHEUS RYAN PIERRE DE LIMA',
-            'CPF' => '90216296072',
-            'ESTADO_CIVIL' => 'SOLTEIRO',
-            'SEXO' => 'MASCULINO',
-            'NOMEMAE' => 'LUCILA MERCEDES GOMES II',
-            'EMAIL' => 'nao_tem@teste.com',
-            'TELEFONE' => '11960799453',
-            'LOGRADOURO' => 'Rua Exemplo',
-            'BAIRRO' => 'Centro',
-            'CEP' => '01001-000',
-            'CIDADE' => 'São Paulo',
-            'UF' => 'SP',
-            'COMPLEMENTO' => 'Apto 12',
-            'ENDNUMERO' => '100',
-            'DATANASCIMENTO' => '12/02/1956',
-            'MATRICULA' => '10987654321',
-            'RG' => '1234567',
-            'TABELA' => 'SEGURO BMG MED',
-            'DATA_CADASTRO' => '05/05/2025',
+            'NOME_CLIENTE' => $response['nome'],
+            'ASSESSOR' => $this->session->nickname,
+            'CPF' => "90216296072", //$response['cpf'],
+            'ESTADO_CIVIL' => $response['estadoCivil'],
+            'SEXO' => $response['sexo'],
+            'NOMEMAE' => $response['mae'],
+            'EMAIL' => $response['email'],
+            'TELEFONE' => $response['telefone'],
+            'LOGRADOURO' => $response['logradouro'],
+            'BAIRRO' => $response['bairro'],
+            'CEP' => $response['cep'],
+            'CIDADE' => $response['cidade'],
+            'UF' => $response['ufNascimento'],
+            'COMPLEMENTO' => $response['complemento'],
+            'ENDNUMERO' => $response['numero'],
+            'DATANASCIMENTO' => $response['dataNascimento'],
+            'MATRICULA' => $response['conta'],
+            'RG' => $response['rg'],
+            'TABELA' => $planoName,
+            'DATA_CADASTRO' => date('d/m/Y H:i:s'),
             'BANCO' => 'BMG',
             'PRODUTO' => 'INSS',
             'PRAZO' => '1',
-            'PARCELA' => '1',
+            'PARCELA' => $parcelas,
             'EMPRESTIMO' => '1',
-            'SEGURO' => '29,9'
+            'SEGURO' => $valorPlano
         ];
+
+
+        // $this->telegram->notifyTelegramGroup("DADOS: " . json_encode($data), telegramQuid);
+        // // exit;
 
         $ordem = [
             'CONTRATO', 'STATUS', 'NOME_CLIENTE', 'ASSESSOR', 'CPF', 'ESTADO_CIVIL', 'SEXO',
@@ -228,16 +297,47 @@ class Bmg extends BaseController
             . '&idImportacao=1331'
             . '&dados=' . urlencode($dadosString);
 
-        //echo $url . "<br><br>";
+        
+        //echo $url . "<br><br>";exit;
 
-        // Faz o envio
-        $response = file_get_contents($url);
 
-        // Mostra a resposta
-        echo "<pre>";
-        echo "URL enviada:\n$url\n\n";
-        echo "Resposta:\n$response";
-        echo "</pre>";
+        $output = "";
+        try {
+           $output = file_get_contents($url);
+        } catch (\Exception $e) {
+            $returnData["mensagem"] = "Erro ao gravar Panorama:<br>{$e->faultcode} - {$e->faultstring}";;
+        }
+
+        if (isset($output) && (is_numeric($output) && $output > 0)) {
+            $returnData["status"] = true;
+            $returnData["mensagem"] = "Proposta gravada com sucesso no Panorama.<br>Número proposta:<br><a href='https://grupoquid.panoramaemprestimos.com.br/emprestimoInterno.do?action=exibir&codigo="  . $output . "' target='_blank'>" . $output . "</a>";
+            $returnData["proposta"] = $output;
+
+            $dadosGravacao = [
+                'cpf' =>  $response['cpf'],
+                'assessor' =>  $this->session->nickname,
+                'dados' => $url,
+                'sistema' => "PANORAMA",
+                'produto' => $planoName . " | " . $valorPlano .  " | " . $parcelas,
+                'codigoProposta' => $output,
+                'retornoGravacao' => "Sucesso",
+            ];
+            $added = $this->dbMasterDefault->insert('proposta_bmg', $dadosGravacao);
+
+        } else {
+            $returnData["mensagem"] = "Erro ao gravar proposta no Panorama:<br>" . $output;
+            $dadosGravacao = [
+                'cpf' =>  $response['cpf'],
+                'assessor' =>  $this->session->nickname,
+                'dados' => $url,
+                'sistema' => "PANORAMA",
+                'produto' => $planoName . " | " . $valorPlano .  " | " . $parcelas,
+                'retornoGravacao' => $returnData["mensagem"],
+            ];
+            $added = $this->dbMasterDefault->insert('proposta_bmg', $dadosGravacao);
+        }
+
+        return json_encode($returnData);
     }
 
     //http://localhost/InsightSuite/public/bmg-script-vendas/MED/62057677753/842216/110/2 //Nao Elegivel Outra Apolice

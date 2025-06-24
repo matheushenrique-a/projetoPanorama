@@ -446,6 +446,61 @@ class Ads extends BaseController
         return $retorno;
     }
 
+    //http://localhost/InsightSuite/public/ads-savead
+    //https://insightsuite.pravoce.io/ads-savead
+    public function savead(){
+        header("Access-Control-Allow-Origin: *");
+        header("Access-Control-Allow-Methods: POST, OPTIONS");
+        header("Access-Control-Allow-Headers: Content-Type");
+
+        if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+            http_response_code(204); // No Content
+            exit;
+        }
+
+        $request = file_get_contents('php://input');
+        $response = json_decode($request, true);
+
+        $user = $response['user'] ?? 'NA';
+        $url = $response['url'] ?? 'NA';
+
+        $advertiser = $response['advertiser'] ?? '';
+        $adText = $response['adText'] ?? '';
+        $libraryId = $response['libraryId'] ?? '';
+        $dateInfo = $response['dateInfo'] ?? '';
+        $thumbnail = $response['thumbnail'] ?? '';
+
+        $this->telegram->notifyTelegramGroup("SAVEAD:\n\nUSER:\n$user\n\nURL:\n$url\n\nANUNCIANTE:\n$advertiser\n\nTEXTO:\n$adText\n\nLIBID:\n$libraryId\n\nDATE:\n$dateInfo\n\nIMG:\n$thumbnail", telegramQuid);
+
+        $returnData["status"] = true;
+        $returnData["mensagem"] = "OK";                
+        echo json_encode($returnData);
+    }
+
+    //http://localhost/InsightSuite/public/ads-validatetoken
+    //https://insightsuite.pravoce.io/ads-validatetoken
+    public function validatetoken() {
+        header("Access-Control-Allow-Origin: *");
+        header("Access-Control-Allow-Methods: POST, OPTIONS");
+        header("Access-Control-Allow-Headers: Content-Type");
+
+        if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+            http_response_code(204);
+            exit;
+        }
+
+        $request = file_get_contents('php://input');
+        $data = json_decode($request, true);
+        $token = $data['token'] ?? '';
+
+        // Exemplo simples: token = "abc123"
+        $valid = ($token === '123456');
+
+        $this->telegram->notifyTelegramGroup("TOKEN CHECK:\n$token\n$valid\n\n" . $request, telegramQuid);
+
+        echo json_encode(['valid' => $valid]);
+    }
+
 
     //salva ads por palavra chave para identifiar paginas com grande volumes de ads.
     //http://localhost/InsightSuite/public/ads-load

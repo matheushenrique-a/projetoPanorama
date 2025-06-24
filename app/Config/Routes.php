@@ -39,6 +39,9 @@ $routes->setAutoRoute(true);
 $routes->get('/', 'Home::index');
 
 
+//Bradesco
+$routes->match(['get', 'post'], '/bradesco-teste', 'Bradesco\Bradesco::teste');
+
 //BMG
 $routes->match(['get', 'post'], '/bmg-receptivo/(:any)', 'Bmg\Bmg::bmg_receptivo/$1');
 $routes->match(['get', 'post'], '/bmg-script-vendas/(:any)/(:any)/(:any)/(:any)/(:any)', 'Bmg\Bmg::bmg_script_vendas/$1/$2/$3/$4/$5');
@@ -144,12 +147,17 @@ $routes->match(['get', 'post'], '/vanguard-decode', 'DataLake\DataLake::vanguard
 $routes->match(['get', 'post'], '/datalake-carregar-inss', 'DataLake\DataLake::load_INSS_Batch');
 $routes->match(['get', 'post'], '/sign-in', 'Seguranca\Login::autenticar');
 
+
 //ADS
 $routes->match(['get', 'post'], '/ad-miner', 'Ads\Ads::listarAds');
 $routes->match(['get', 'post'], '/ad-miner/(:any)', 'Ads\Ads::listarAds/$1');
 $routes->match(['get', 'post'], '/ads-like', 'Ads\Ads::adsLike');
 $routes->match(['get', 'post'], '/ads-nicho', 'Ads\Ads::adsNicho');
 $routes->match(['get', 'post'], '/ads-load', 'Ads\Ads::loadMiner');
+//CHROME
+$routes->match(['get', 'post'], '/ads-savead', 'Ads\Ads::savead');
+$routes->match(['get', 'post'], '/ads-validatetoken', 'Ads\Ads::validatetoken');
+
 
 //META
 $routes->match(['get', 'post'], '/ad-manager', 'Meta\Meta::manager');
