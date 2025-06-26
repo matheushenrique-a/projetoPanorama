@@ -231,9 +231,9 @@ class Meta extends BaseController
 
                     <br><br>\n\nJustifque e explique sua decisão citando os indicadores usados e seus respectivos valores considerados.
 
-                    <br><br>\n\nAo final liste apenas o resultado em formato CSV abaixo sem nenhuma outra informação:
+                    <br><br>\n\nComo resposta, o único dado que deve retornar é a análise pura em CSV, sem nenhum outra expilcação antes ou depois, seguindo o formato de CSV abaixo sempre com cabeçalho primeiro e depois o resultado da analise obedecendo o CSV solicitado abaixo:
                     <br>\nId; Nome; Orçamento Usado;CTR; CPM; Vendas; Receita; Initiated Checkouts; Status; Justificativa\n
-                    <br><br>\nAgora faça a análise das campanhas abaixo:\n";
+                    <br><br>\nAgora faça a análise das seguintes campanhas abaixo retorando o CSV puro:\n";
                     $basePrompt .= $IAPrompt;
                     //$basePrompt .= "\n\n Por fim, com base na análise de todas as campanhas identifique padrões de comportamento geral dos números e liste recomendações gerais para melhoria da performance das campanhas.";
                     //echo $basePrompt;exit;
@@ -286,7 +286,7 @@ class Meta extends BaseController
     public function getCpgs($params){
         $headers = $this->getHeader();
 		$url = META_GRAPH_API . ($params);
-		///echo $url;exit;
+		//echo $url;exit;
         //$url = urlencode($url);
 		//echo $url;exit;
         $result =  $this->http_request('GET', $url, $headers);

@@ -131,7 +131,7 @@
 																		</div>
 																		<div class="input-group">
 																			<span class="input-group-text" style="width: 155px">Mãe</span>
-																			<input type="text" class="form-control" placeholder="" name="nomeMae" id="nomeMae" value="<?php echo $nomeMae;?>" style="width: 230px" />
+																			<input type="text" class="form-control" placeholder="" name="nomeMae" id="nomeMae" value="<?php echo $item;?>" style="width: 230px" />
 																		</div>
 																		<div class="input-group">
 																			<span class="input-group-text" style="width: 155px">Pai</span>
