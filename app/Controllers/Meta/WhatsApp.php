@@ -667,6 +667,8 @@ class WhatsApp extends BaseController
 
     }
 
+
+
     public function whatsapp_listar_templates(){
         $buscarProp = $this->getpost('buscarProp');
         $fases = $this->listarCategoriaTemplates();
@@ -691,6 +693,8 @@ class WhatsApp extends BaseController
         $whereNotIn = [];
         $whereIn = [];
         
+
+
         if (!empty($content)) $likeCheck['content'] = $content;
         if (!empty($display_name)) $whereCheck['display_name'] = $display_name;
         if (!empty($whatsAppApproved)) $whereCheck['whatsAppApproved'] = $whatsAppApproved;
