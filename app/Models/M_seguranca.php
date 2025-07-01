@@ -67,7 +67,8 @@ class M_seguranca extends Model {
         return $this->dbMasterDefault->select('user_account', $filters);
     }
 
+    public function cadastrarUsuario($dados){
+        return $this->dbMasterDefault->insert('user_account',$dados);
+    }
 }
-
-
 ?>

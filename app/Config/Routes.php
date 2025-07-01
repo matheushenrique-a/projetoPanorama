@@ -146,7 +146,8 @@ $routes->match(['get', 'post'], '/datalake-buscar', 'DataLake\DataLake::buscarCl
 $routes->match(['get', 'post'], '/vanguard-decode', 'DataLake\DataLake::vanguardDecode');
 $routes->match(['get', 'post'], '/datalake-carregar-inss', 'DataLake\DataLake::load_INSS_Batch');
 $routes->match(['get', 'post'], '/sign-in', 'Seguranca\Login::autenticar');
-
+$routes->match(['get', 'post'], '/painel', 'Seguranca\Painel::listar_usuarios');
+$routes->match(['get', 'post'], '/painel/(:any)/(:any)', 'Seguranca\Painel::criar_usuarios/$1/$2');
 
 //ADS
 $routes->match(['get', 'post'], '/ad-miner', 'Ads\Ads::listarAds');

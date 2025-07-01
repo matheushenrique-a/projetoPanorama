@@ -664,7 +664,6 @@ class WhatsApp extends BaseController
                 echo dataUsPtHours($row->last_updated, true) . " - " . $row->id . " - " . $row->ProfileName . ": " . $row->Body . "<br>";
             }
         }
-
     }
 
     public function whatsapp_listar_templates(){
@@ -715,7 +714,7 @@ class WhatsApp extends BaseController
         return $this->loadpage('whatsapp/whatsapp-listar-templates', $dados);
     }
 
-    public function whatsapp_criar_templates($template_id = 0, $action){
+    public function whatsapp_criar_templates($template_id, $action){
         $dados['pageTitle'] = "WhatsApp - Criar/Editar Template";
         
         $btnSalvar = $this->getpost('btnSalvar');
@@ -783,6 +782,5 @@ class WhatsApp extends BaseController
         $builder->select('display_name');
 		//echo $builder->getCompiledSelect();exit;
 		return $this->dbMaster->resultfy($builder->get());
-    }
-        
+    }  
 }
