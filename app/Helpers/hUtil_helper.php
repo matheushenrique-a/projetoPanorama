@@ -667,6 +667,9 @@
 
 
     function SimpleRound($n){
+		if (!is_float($n)) {
+			return $n;
+		}
 		try {
 			return number_format($n, 2, ',', '.');
 		} catch (\Exception $e) {

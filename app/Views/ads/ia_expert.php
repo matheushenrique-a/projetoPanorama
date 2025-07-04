@@ -93,9 +93,19 @@
 												<tbody class="text-gray-600 fw-semibold">
 													<?php 
 														if($iaExpert['existResposta']){
+															//echo $iaExpert['conteudo'];
 															$linhas = explode("\n", $iaExpert['conteudo']);
+															// echo "<br>TOTAL LINHAS: " . count($linhas) . "<br>"; //DEBUG
+
+															//pula a primeira linha do array, que é o cabeçalho e vai até o final
 															for ($i = 1; $i <= count($linhas) - 1; $i++) {
+																//echo "<br><br>LINHAS $i:<br>" . $linhas[$i] . "<br><br>"; //DEBUGexiexit;
 																$data = explode(";", $linhas[$i]);
+
+																if ((count($data) < 10) || (!is_numeric($data[0]))) {
+																	//echo "<br>ERRO: A linha $i não possui o número correto de colunas. Esperado 10, encontrado " . count($data) . ".<br>"; //DEBUG
+																	continue; // pula a linha se não tiver o número correto de colunas
+																}
 																
 																$id = $data[0];
 																$titulo = $data[1];
