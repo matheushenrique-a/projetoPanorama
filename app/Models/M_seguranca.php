@@ -1,19 +1,23 @@
-<?php 
+<?php
+
 namespace App\Models;
+
 use CodeIgniter\Model;
 use App\Libraries\dbMaster;
 
-class M_seguranca extends Model {
+class M_seguranca extends Model
+{
     protected $dbMasterDefault;
     protected $my_session;
 
     public function __construct()
-        {
-			$this->dbMasterDefault = new dbMaster();
-            $this->my_session = session();
-        }
+    {
+        $this->dbMasterDefault = new dbMaster();
+        $this->my_session = session();
+    }
 
-    function auth($email, $password = ''){        
+    function auth($email, $password = '')
+    {
         $email = trim($email);
         $password = trim($password);
 
@@ -22,10 +26,26 @@ class M_seguranca extends Model {
         } else {
             $whereCheck = array('email' => $email, 'password' => $password);
         }
- 
+
         $login = $this->dbMasterDefault->select('user_account', $whereCheck);
-        
+
         if ($login['existRecord']) {
+            $user_empresa = $login['firstRow']->empresa;
+
+            if (is_string($user_empresa) && str_starts_with($user_empresa, '[')) {
+                $user_empresa = json_decode($user_empresa, true);
+            }
+
+            if (is_array($user_empresa)) {
+                if (!in_array(strtoupper(EMPRESA), array_map('strtoupper', $user_empresa))) {
+                    return;
+                }
+            } else {
+                if (strtoupper($user_empresa) != strtoupper(EMPRESA)) {
+                    return;
+                }
+            }
+
             $this->my_session->set('userId', $login['firstRow']->userId);
             $this->my_session->set('nickname', $login['firstRow']->nickname);
             $this->my_session->set('email', $login['firstRow']->email);
@@ -36,39 +56,57 @@ class M_seguranca extends Model {
             $this->my_session->set('perfil', $login['firstRow']->perfil_acesso);
             $this->my_session->set('observacao', $login['firstRow']->observacao);
             $this->my_session->set('parameters', json_decode($login['firstRow']->parameters ?? "", true));
-            
+
             helper('cookie');
-            set_cookie('insight', $login['firstRow']->email, time()+60*60*24*7); //30 days 
+            set_cookie('insight', $login['firstRow']->email, time() + 60 * 60 * 24 * 7); //30 days 
             return true;
         } else {
             return false;
         }
     }
 
-    public function DisplayMenu($modulo){
-       $perfil = json_decode($this->my_session->perfil, true);
+    // echo '14:59:41 - <h3>Dump 36 </h3> <br><br>' . var_dump($this->my_session->perfil); exit;					//<-------DEBUG
+    public function DisplayMenu($modulos)
+    {
+        $perfil = json_decode($this->my_session->perfil, true);
 
-      // echo '14:59:41 - <h3>Dump 36 </h3> <br><br>' . var_dump($this->my_session->perfil); exit;					//<-------DEBUG
-       
-       echo (!in_array($modulo, $perfil)  ? 'display: none; visibility: hidden;' : 'display: block; visibility: visible;');
+        if (!is_array($modulos)) {
+            $modulos = [$modulos];
+        }
+
+        $temPermissao = false;
+
+        foreach ($modulos as $modulo) {
+            if (in_array($modulo, $perfil)) {
+                $temPermissao = true;
+                break; 
+            }
+        }
+
+        echo ($temPermissao
+            ? 'display: block; visibility: visible;'
+            : 'display: none; visibility: hidden;');
     }
 
-    public function buscarUsuarios($search){
+
+    public function buscarUsuarios($search)
+    {
         if ($search == "WORK") {
             $sql = "SELECT * from user_account where status='ATIVO' order by nickname LIMIT 30;";
         } else {
-            $sql = "SELECT * from user_account where status='ATIVO' AND nickname like '%$search%' order by nickname LIMIT 30;";    
+            $sql = "SELECT * from user_account where status='ATIVO' AND nickname like '%$search%' order by nickname LIMIT 30;";
         }
 
         return $this->dbMasterDefault->runQuery($sql);
     }
 
-    public function buscarUsuario($filters){
+    public function buscarUsuario($filters)
+    {
         return $this->dbMasterDefault->select('user_account', $filters);
     }
 
-    public function cadastrarUsuario($dados){
-        return $this->dbMasterDefault->insert('user_account',$dados);
+    public function cadastrarUsuario($dados)
+    {
+        return $this->dbMasterDefault->insert('user_account', $dados);
     }
 }
-?>

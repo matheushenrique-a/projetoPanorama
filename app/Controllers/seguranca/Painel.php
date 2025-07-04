@@ -27,6 +27,8 @@ class Painel extends BaseController
         $whereCheck = [];
         $likeCheck = [];
 
+        $whereCheck['empresa'] = EMPRESA;
+
         if (!empty($role)) $whereCheck['role'] = $role;
         if (!empty($nickname)) $likeCheck['nickname'] = $nickname;
 
@@ -54,7 +56,7 @@ class Painel extends BaseController
             $nome = $this->getpost('nickname');
             $email = $this->getpost('email');
             $senha = $this->getpost('password');
-            $empresa = "QUID";
+            $empresa = strtoupper(EMPRESA);
             $equipe = null;
             $cargo = $this->getpost('role');
 
@@ -63,7 +65,7 @@ class Painel extends BaseController
 
             if ($cargo == "SUPERVISOR") {
                 $supervisor = 1;
-                array_push($permissions, "ADMIN","BMG");
+                array_push($permissions, "SUPERVISOR","BMG");
             } else {
                 $supervisor = 164815;
                 array_push($permissions, "BMG");

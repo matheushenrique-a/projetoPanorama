@@ -9,6 +9,11 @@
 define('IsProduction', false);
 define('AppName', "Insight Suite");
 
+// EMPRESAS
+define('EMPRESA', 'quid');
+// define('EMPRESA', 'pravoce');
+// define('EMPRESA', 'theone');
+
 define ('shortURL', 'https://pravc.io/');
 
 define ('API_Integraall', 'https://api.integraall.com/api/');

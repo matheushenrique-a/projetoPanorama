@@ -26,7 +26,7 @@ class Login extends BaseController
             $dados['error'] = 'Usuário e senha inválidos.';
             return $this->loadSinglePage('seguranca/login', $dados);
         }
-            
+    
     }
 
 }

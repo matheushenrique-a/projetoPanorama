@@ -140,7 +140,7 @@
 					                                        <td><?= esc($row->email) ?></td>
 					                                        <td><?= esc($row->role) ?></td>
 					                                        <td><?= esc($row->report_to) ?></td>
-					                                        <td><a href="<?php echo assetfolder; ?>painel/<?php echo $row->userId; ?>/edit"><i class="text-light bi bi-pencil-square"></i></a></td>
+					                                        <td><a href="<?php echo assetfolder; ?>painel/<?php echo $row->userId; ?>/edit"><i class="text-muted bi bi-pencil-square"></i></a></td>
 					                                        <td><a href="<?php echo assetfolder; ?>painel/<?php echo $row->userId; ?>/remove"><i class="text-danger bi bi-trash"></i></a></td>
 					                                    </tr>
 					                                <?php
