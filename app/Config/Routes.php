@@ -72,6 +72,9 @@ $routes->match(['get', 'post'], '/whatsapp-criar-templates/(:any)/(:any)', 'Meta
 //INSIGHT
 $routes->match(['get', 'post'], '/insight-listar-notificacoes', 'Insight\Insight::insight_listar_notificacoes');
 
+//THEONE
+$routes->match(['get','post'], '/extrairdados', 'Theone\ExtrairDados::extrair');
+
 //AASPA
 $routes->match(['get', 'post'], '/comecar/(:any)', 'Frontline\Frontline::comecar/$1');
 $routes->match(['get', 'post'], '/aaspa-zapsms', 'Aaspa\Aaspa::zapsms');

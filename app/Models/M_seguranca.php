@@ -79,7 +79,7 @@ class M_seguranca extends Model
         foreach ($modulos as $modulo) {
             if (in_array($modulo, $perfil)) {
                 $temPermissao = true;
-                break; 
+                break;
             }
         }
 
@@ -87,6 +87,26 @@ class M_seguranca extends Model
             ? 'display: block; visibility: visible;'
             : 'display: none; visibility: hidden;');
     }
+
+    public function HasPermission($modulos, $empresa)
+    {
+        $perfil = json_decode($this->my_session->perfil, true);
+
+        if (!is_array($modulos)) {
+            $modulos = [$modulos];
+        }
+
+        if ($empresa === EMPRESA || $empresa === 'all') {
+            foreach ($modulos as $modulo) {
+                if (in_array($modulo, $perfil)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
 
 
     public function buscarUsuarios($search)
