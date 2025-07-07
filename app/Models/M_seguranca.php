@@ -96,7 +96,11 @@ class M_seguranca extends Model
             $modulos = [$modulos];
         }
 
-        if ($empresa === EMPRESA || $empresa === 'all') {
+        if (!is_array($empresa)) {
+            $empresa = [$empresa];
+        }
+
+        if (in_array(EMPRESA, $empresa) || in_array('all', $empresa)) {
             foreach ($modulos as $modulo) {
                 if (in_array($modulo, $perfil)) {
                     return true;

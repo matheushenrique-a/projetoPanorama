@@ -4371,10 +4371,11 @@ License: For each use you must have a valid license purchased only from above li
 								</div>
 								<!--end:Menu item-->
 								<!--begin:Menu item-->
+								<?php if($my_security->HasPermission("BMG", ['quid','pravoce'])) :?>
 								<div class="menu-item pt-5">
 									<!--begin:Menu content-->
 									<div class="menu-content">
-										<span class="menu-heading fw-bold text-uppercase fs-7">QUID</span>
+										<span class="menu-heading fw-bold text-uppercase fs-7">LINKS ÚTEIS</span>
 									</div>
 									<!--end:Menu content-->
 								</div>
@@ -4424,6 +4425,7 @@ License: For each use you must have a valid license purchased only from above li
 								</div>
 								<!--end:Menu item-->
 								<!--begin:Menu item-->
+								
 								<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
 									<!--begin:Menu link-->
 									<span class="menu-link">
@@ -4651,13 +4653,16 @@ License: For each use you must have a valid license purchased only from above li
 									</div>
 									<!--end:Menu sub-->
 								</div>
+								<?php endif; ?>
 								<!--end:Menu item-->
 
 								<!--begin:Menu item-->
 								<div class="menu-item pt-5">
 									<!--begin:Menu content-->
 									<div class="menu-content">
-										<span class="menu-heading fw-bold text-uppercase fs-7">PRA VOCE</span>
+										<?= EMPRESA == 'quid' ? '<span class="menu-heading fw-bold text-uppercase fs-7">QUID</span>' : ''?>
+										<?= EMPRESA == 'theone' ? '<span class="menu-heading fw-bold text-uppercase fs-7">THE ONE</span>' : ''?>
+										<?= EMPRESA == 'pravoce' ? '<span class="menu-heading fw-bold text-uppercase fs-7">PRA VOCE</span>' : ''?>
 									</div>
 									<!--end:Menu content-->
 								</div>
