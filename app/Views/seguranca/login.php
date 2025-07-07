@@ -61,7 +61,9 @@
 						<img class="mw-300px w-sm-450px mb-10 mb-lg-20 mt-20" src="<?php echo assetfolder ?>assets/empresas/<?php echo EMPRESA?>/logos/home-logo.png"/>
 						<!--end::Image-->
 						<!--begin::Title-->
-						<h1 class="text-gray-800 fs-1qx fw-bold text-center mb-7"><?php echo ucfirst(EMPRESA)?> | Corban Inteligente</h1>
+						<?= EMPRESA == 'quid' ? '<h1 class="text-gray-800 fs-1qx fw-bold text-center mb-7">Quid | Corban Inteligente</h1>' : '' ?>
+						<?= EMPRESA == 'theone' ? '<h1 class="text-gray-800 fs-1qx fw-bold text-center mb-7">The One | Operações</h1>' : '' ?>
+						<?= EMPRESA == 'pravoce' ? '<h1 class="text-gray-800 fs-1qx fw-bold text-center mb-7">Pra Você | Sistema Financeiro</h1>' : '' ?>
 						<!--end::Title-->
 						<!--begin::Text-->
 						<div class="text-gray-600 fs-base text-center fw-semibold">Você mais produtivo com o Insight Suite. Antes de acessá-la você precisar estar autorizado pela nossa equipe administrativa. Qualquer dúvida entre em contato através de contato@pravoce.io</div>
