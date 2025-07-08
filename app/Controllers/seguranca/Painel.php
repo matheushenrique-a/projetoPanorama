@@ -59,6 +59,13 @@ class Painel extends BaseController
             $empresa = strtoupper(EMPRESA);
             $equipe = null;
             $cargo = $this->getpost('role');
+            $supervisor = $this->getpost('report_to');
+
+            $findSupervisorId = $this->dbMaster->select('user_account', ['nickname' => $supervisor]);
+
+            $supervisorDados = $findSupervisorId['firstRow'];
+
+            $supervisorId = $supervisorDados->userId ?? 164815; 
 
             // configurar permissões
             $permissions = [];
@@ -109,7 +116,7 @@ class Painel extends BaseController
                 'empresa' => $empresa,
                 'equipe' => $equipe,
                 'role' => $cargo,
-                'report_to' => $supervisor,
+                'report_to' => $supervisorId,
                 'perfil_acesso' => json_encode($permissions),
                 'parameters' => $parameters,
                 'status' => $status

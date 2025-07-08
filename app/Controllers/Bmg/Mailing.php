@@ -1,17 +1,17 @@
 <?php
 
-namespace App\Controllers\Seguranca;
+namespace App\Controllers\Bmg;
 
 use App\Controllers\BaseController;
 use App\Libraries\dbMaster;
 use Config\Services;
 
-class Mainling extends BaseController
+class Mailing extends BaseController
 {
     public function index()
     {
         $dados['pageTitle'] = 'Mainling';
 
-        return $this->loadpage('seguranca/mainling', $dados);
+        return $this->loadpage('bmg/mailing', $dados);
     }
 }
