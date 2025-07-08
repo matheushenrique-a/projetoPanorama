@@ -111,8 +111,6 @@ class M_seguranca extends Model
         return false;
     }
 
-
-
     public function buscarUsuarios($search)
     {
         if ($search == "WORK") {
