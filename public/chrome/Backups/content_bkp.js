@@ -2,7 +2,27 @@
   if (!location.hostname.includes('facebook.com')) return;
 
   function getTokenAndProceed(callback) {
-    callback('openaccess');
+    chrome.storage.local.get(['userToken'], (result) => {
+      if (result.userToken) {
+        callback(result.userToken);
+      } else {
+        const input = prompt('Acesso Restrito - Digite Token do Assinante:');
+        if (!input) return;
+
+        chrome.runtime.sendMessage({
+          action: "validateToken",
+          payload: { token: input }
+        }, (response) => {
+          if (response?.valid) {
+            chrome.storage.local.set({ userToken: input }, () => {
+              callback(input);
+            });
+          } else {
+            alert("Token inválido - Acesso Restrito Nesse Momento.");
+          }
+        });
+      }
+    });
   }
 
   function addDownloadButtonBelowVideo(video, index) {
@@ -12,14 +32,13 @@
     if (!videoSrc) return;
 
     const openButton = document.createElement('a');
-    openButton.textContent = 'Download';
+    openButton.textContent = 'Save Ad';
     openButton.href = videoSrc;
     openButton.target = '_blank';
     openButton.style.display = 'inline-block';
     openButton.style.marginTop = '8px';
-    openButton.style.marginBottom = '8px';
     openButton.style.padding = '10px 16px';
-    openButton.style.backgroundColor = '#e44743';
+    openButton.style.backgroundColor = '#007bff';
     openButton.style.color = '#fff';
     openButton.style.borderRadius = '4px';
     openButton.style.textDecoration = 'none';
@@ -70,14 +89,14 @@
           }
         }, (response) => {
           if (response?.success) {
-            openButton.textContent = 'Download';
+            openButton.textContent = 'Saved OK!';
           } else {
             alert('Erro ao salvar Ads.');
           }
         });
       });
 
-      //e.preventDefault();
+      e.preventDefault();
     });
 
     const wrapper = document.createElement('div');
@@ -85,7 +104,7 @@
     wrapper.style.marginTop = '8px';
     wrapper.appendChild(openButton);
 
-    video.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.insertAdjacentElement('afterend', wrapper);
+    video.insertAdjacentElement('afterend', wrapper);
     video.dataset.buttonAdded = 'true';
   }
 

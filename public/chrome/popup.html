@@ -1,19 +1,123 @@
 <!DOCTYPE html>
-<html>
-<head>
-  <title>Hello</title>
-  <style>
-    body {
-      width: 200px;
-      height: 100px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: Arial, sans-serif;
-    }
-  </style>
-</head>
-<body>
-  <h1>Hello World!</h1>
-</body>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Dantas Ad Library</title>
+    <style>
+      :root {
+        --primary: #9049c9;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 16px;
+        width: 320px; /* comfortable size for pop-up */
+      }
+
+      h1 {
+        font-size: 18px;
+        margin: 0 0 12px;
+        color: var(--primary);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      h2 {
+        font-size: 15px;
+        margin: 20px 0 8px;
+      }
+
+      p, li {
+        font-size: 13px;
+        line-height: 1.4;
+      }
+
+      ol {
+        padding-left: 18px;
+        margin: 0;
+      }
+
+      a.btn {
+        display: block;
+        text-align: center;
+        background: var(--primary);
+        color: #fff;
+        padding: 10px 0;
+        border-radius: 4px;
+        font-weight: 700;
+        text-decoration: none;
+        margin-bottom: 8px;
+        transition: opacity 0.2s;
+      }
+
+      a.btn:hover {
+        opacity: 0.85;
+      }
+
+      footer {
+        margin-top: 24px;
+        font-size: 11px;
+        text-align: center;
+        color: #888;
+      }
+
+      html, body {
+        overflow-y: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>
+      <img src="icon.png" width="24" height="24" alt="Icon" /> Dantas Ad Library
+    </h1>
+
+    <section>
+      <p>
+        Download video ads from the <strong>Ad Library</strong> with just one click.
+      </p>
+    </section>
+
+    <section>
+      <h2>Instructions:</h2>
+      <ol>
+        <li>Go to the <a href="https://www.facebook.com/ads/library" target="_blank">Ad Library</a>.</li>
+        <li>
+          Click the red "Download" button that only appears below video ads.
+        </li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>Important (Read):</h2>
+      <section>
+        <p>
+          Due to the Library’s behavior, two situations may occur when downloading videos:
+        </p>
+      </section>
+
+      <ol>
+        <li><b>NEW WINDOW:</b> Some videos will open in a new window. In these cases, just hover over the video and click the [...] menu -> Download.</li>
+        <li><b>DIRECT DOWNLOAD:</b> Some videos will start downloading automatically. However, the library doesn’t add the .mp4 extension. In those cases, just rename the file by adding .mp4 at the end and it will open normally.</li>
+      </ol>
+    </section>
+
+    <section>
+      <h2>Instagram:</h2>
+      <a
+        class="btn"
+        href="https://instagram.com/dantasfernando"
+        target="_blank"
+        rel="noopener noreferrer"
+        >@dantasfernando</a
+      >
+    </section>
+
+    <footer>Version 1.20 • © 2025 Dantas Digital</footer>
+  </body>
 </html>

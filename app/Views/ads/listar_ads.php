@@ -117,6 +117,23 @@
 												<div class="card-title">
 													<div class="d-flex align-items-center position-relative my-1 mx-3">
 														<div class="mb-0">
+															<label for="" class="form-label text-gray-800 mb-0">Ad Group:</label>
+															<div class="d-flex align-items-center position-relative my-1">
+																<select class="form-select form-control-solid" aria-label="" name="adgroup">
+																<?php
+																	echo '<option value="" ' .  ($adgroup == "" ? 'selected' : '') . '>TODOS</option>';
+																	foreach ($adgroupList['result']->getResult() as $row) {
+																		echo '<option value="' . $row->group . '" ' .  (strtoupper($adgroup) == $row->group ? 'selected' : '') . '>' . $row->group . '</option>';
+																	}
+																?>
+																</select>													
+															</div>	
+														</div>													
+													</div>
+												</div>
+												<div class="card-title">
+													<div class="d-flex align-items-center position-relative my-1 mx-3">
+														<div class="mb-0">
 															<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Ad Status:</label>
 															<div class="d-flex align-items-center position-relative my-1">
 																<select class="form-select form-control-solid" aria-label="" name="status">
@@ -428,11 +445,12 @@
 															$pageIdShort = $pageId . (isset($row->total)  ? ' [' . $row->total . ']' : '');
 															$keywordUp = strtoupper($keyword);
 															$lastUpdate = $row->last_update;
+															$group = $row->group;
 															
 															echo <<<HTML
 															<tr onclick="lineClean();this.style.borderTop='2px';this.style.borderBottom='2px';this.style.borderStyle='dotted';this.style.borderColor='#2b9ef7';" style="background-color: {$color};">
 																<td class="ps-2">#{$linhe}. {$dataFormatada}</td>
-																<td class="px-1" onclick="copyText('{$pageId}'); return false;">{$pageIdShort}</td>
+																<td class="px-1" onclick="copyText('{$pageId}'); return false;">{$group} | {$pageIdShort}</td>
 																<td class="px-1" colspan="3">
 																	<a href="#" onclick="registerAction(this, 'dislike', '{$keywordUp}', '{$pageId}', '{$pageId}', '{$urlPage}', '{$lastUpdate}'); return false;" class="text-gray-800 text-hover-primary mb-1">
 																		<i class="las la-thumbs-down fs-2x"></i>
