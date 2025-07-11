@@ -11,11 +11,11 @@
                         <li class="breadcrumb-item">
                             <span class="bullet bg-gray-800 w-5px h-2px"></span>
                         </li>
-                        <li class="breadcrumb-item text-muted">Bradesco</li>
+                        <li class="breadcrumb-item text-muted">BMG</li>
                         <li class="breadcrumb-item">
                             <span class="bullet bg-gray-800 w-5px h-2px"></span>
                         </li>
-                        <li class="breadcrumb-item text-muted">Vida
+                        <li class="breadcrumb-item text-muted">Saque Complementar
                     </ul>
                 </div>
             </div>
@@ -27,18 +27,29 @@
             <div id="kt_app_content_container" class="app-container container-xxl">
                 <div class="row g-5 g-xl-8">
                     <div class="col-xl-6">
-                        <form id="frmDataLake" class="form" action="<?php echo assetfolder; ?>bradesco-receptivo/0" method="POST">
+                        <form id="frmDataLake" class="form" action="<?php echo assetfolder; ?>bmg-saque/0" method="POST">
                             <div class="flex-lg-row-fluid">
                                 <div class="card" id="kt_chat_messenger">
                                     <div class="accordion" id="kt_accordion_1  ms-lg-7 ms-xl-10">
                                         <div class="accordion-item">
                                             <h2 class="accordion-header" id="kt_accordion_1_header_1">
-                                                <button class="accordion-button fs-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#kt_accordion_1_body_133" aria-expanded="true" aria-controls="kt_accordion_1_body_1">BRADESCO VIDA</button>
+                                                <button class="accordion-button fs-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#kt_accordion_1_body_133" aria-expanded="true" aria-controls="kt_accordion_1_body_1">SAQUE COMPLEMENTAR</button>
                                             </h2>
                                             <div id="kt_accordion_1_body_133" class="accordion-collapse collapse show" aria-labelledby="kt_accordion_1_header_1" data-bs-parent="#kt_accordion_1">
                                                 <div id="kt_accordion_1_body_133" class="accordion-collapse collapse show" aria-labelledby="kt_accordion_1_header_1" data-bs-parent="#kt_accordion_1">
                                                     <div class="accordion-body">
                                                         <div>
+                                                            <div class="input-group">
+                                                                <span class="ms-2 mt-2" id="lblInfo">Última Ligação ARGUS</span>
+                                                            </div>
+                                                            <div class="input-group">
+                                                                <span class="input-group-text" style="width: 155px">Nome</span>
+                                                                <input type="text" class="form-control fs-3 fw-bold" style="color:rgb(188, 188, 188)" placeholder="" name="nomeCompleto" id="nomeCompleto" readonly />
+                                                            </div>
+                                                            <div class="input-group">
+                                                                <span class="input-group-text" style="width: 155px">Telefone</span>
+                                                                <input type="text" class="form-control fs-3 fw-bold" placeholder="" style="color:rgb(188, 188, 188)" name="celular" id="celular" />
+                                                            </div>
                                                             <div class="input-group">
                                                                 <span class="input-group-text" style="width: 155px">CPF</span>
                                                                 <input type="text" class="form-control fs-3 fw-bold" placeholder="" name="cpf" id="cpf" />
@@ -53,22 +64,8 @@
                                                                 <span class="ms-2 mt-4" id="lblInfo">Dados Cliente:</span>
                                                             </div>
                                                             <div class="input-group">
-                                                                <span class="input-group-text" style="width: 155px">Nome</span>
-                                                                <input type="text" class="form-control fs-3 fw-bold" style="color:rgb(188, 188, 188)" placeholder="" name="nomeCompleto" id="nomeCompleto" />
-                                                            </div>
-                                                            <div class="input-group">
-                                                                <span class="input-group-text" style="width: 155px">Telefone</span>
-                                                                <input type="text" class="form-control fs-3 fw-bold" placeholder="" style="color:rgb(188, 188, 188)" name="celular" id="celular" />
-                                                            </div>
-                                                            <div class="input-group">
-                                                                <span class="input-group-text" style="width: 155px">E-mail</span>
-                                                                <input type="text" class="form-control fs-3 fw-bold" placeholder="" style="color:rgb(188, 188, 188)" name="email" id="email" />
-                                                            </div>
-                                                            <div class="input-group">
-                                                                <span class="input-group-text" style="width: 155px">Data de nascimento</span>
-                                                                <input type="text" class="form-control fs-3 fw-bold" placeholder="" name="dataNascimento" id="dataNascimento" />
-                                                                <span class="input-group-text" style="width: 65px">Sexo</span>
-                                                                <input type="text" class="form-control fs-3 fw-bold" placeholder="" name="sexo" id="sexo" />
+                                                                <span class="input-group-text" style="width: 155px">UF da Conta</span>
+                                                                <input type="text" class="form-control fs-3 fw-bold" placeholder="" name="ufconta" id="ufconta" />
                                                             </div>
                                                             <div class="input-group">
                                                                 <span class="ms-2 mt-2 mb-2" id="lblNiver">Endereço do Cliente:</span>
@@ -99,23 +96,15 @@
                                                                 <input type="text" class="form-control fs-3 fw-bold" placeholder="" name="uf" id="uf" style="width: 35px" />
                                                             </div>
                                                             <div class="input-group">
-                                                                <span class="ms-2 mt-2 mb-2" id="lblNiver">Informações pessoais:</span>
+                                                                <span class="ms-2 mt-2 mb-2" id="lblNiver">Telefones de Contato:</span>
                                                             </div>
                                                             <div class="input-group">
-                                                                <span class="input-group-text" style="width: 155px">Ocupação</span>
-                                                                <input type="text" class="form-control fs-3 fw-bold" placeholder="" name="ocupacao" id="ocupacao" style="width: 35px" />
+                                                                <span class="input-group-text" style="width: 155px">Telefone</span>
+                                                                <input type="text" class="form-control fs-3 fw-bold" placeholder="" name="telefone" id="telefone" style="width: 35px" />
                                                             </div>
                                                             <div class="input-group">
-                                                                <span class="input-group-text" style="width: 155px">Renda</span>
-                                                                <input type="text" class="form-control fs-3 fw-bold" placeholder="" name="renda" id="renda" />
-                                                                <span class="input-group-text" style="width: 155px">Estado Civil</span>
-                                                                <input type="text" class="form-control fs-3 fw-bold" placeholder="" name="estadoCivil" id="estadoCivil" />
-                                                            </div>
-                                                            <div class="input-group">
-                                                                <span class="input-group-text" style="width: 155px">Peso</span>
-                                                                <input type="text" class="form-control fs-3 fw-bold" placeholder="" name="peso" id="peso" />
-                                                                <span class="input-group-text" style="width: 155px">Altura</span>
-                                                                <input type="text" class="form-control fs-3 fw-bold" placeholder="" name="altura" id="altura" />
+                                                                <span class="input-group-text" style="width: 155px">Celular</span>
+                                                                <input type="text" class="form-control fs-3 fw-bold" placeholder="" name="celular" id="celular" />
                                                             </div>
                                                             <div class="input-group">
                                                                 <span class="ms-2 mt-2 mb-2" id="lblNiver">Informações de conta:</span>
@@ -133,11 +122,33 @@
                                                                 <input type="text" class="form-control fs-3 fw-bold" placeholder="" name="digito" id="digito" />
                                                             </div>
                                                             <div class="input-group">
-                                                                <span class="ms-2 mt-2 mb-2" id="lblNiver">Informações de serviços e coberturas:</span>
+                                                                <span class="ms-2 mt-2 mb-2" id="lblNiver">Informações do Saque:</span>
                                                             </div>
                                                             <div class="input-group">
-                                                                <span class="input-group-text" style="width: 155px">++ Adicionar ++</span>
-                                                            
+                                                                <span class="input-group-text" style="width: 155px">Valor do Saque</span>
+                                                                <input type="text" class="form-control fs-3 fw-bold" name="valorSaque" id="valorSaque" style="width: 35px" />
+                                                            </div>
+                                                            <div class="input-group">
+                                                                <span class="input-group-text" style="width: 155px">Tipo de Pagamento</span>
+                                                                <select class="form-control fs-4 fw-bold" id="tipoPagamento" name="tipoPagamento" autocomplete="off" style="width: 35px">
+                                                                    <option value="1">Mensal</option>
+                                                                    <option value="2">Parcelado</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="input-group">
+                                                                <span class="input-group-text" style="width: 155px">Forma de Crédito</span>
+                                                                <select class="form-control fs-4 fw-bold" id="formaCredito" name="formaCredito" autocomplete="off" style="width: 35px">
+                                                                    <option value="1">Vale Postal</option>
+                                                                    <option value="2">Ordem de Pagamento</option>
+                                                                    <option value="3">Transferência Bancária</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="input-group">
+                                                                <span class="input-group-text" style="width: 155px">Forma de Envio</span>
+                                                                <select class="form-control fs-4 fw-bold" id="formaEnvio" name="formaEnvio" autocomplete="off" style="width: 35px">
+                                                                    <option value="1">Digital Token</option>
+                                                                    <option value="2">Digital</option>
+                                                                </select>
                                                             </div>
                                                         </div>
                                                     </div>

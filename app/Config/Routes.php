@@ -44,10 +44,11 @@ $routes->match(['get', 'post'], '/painel', 'Seguranca\Painel::listar_usuarios');
 $routes->match(['get', 'post'], '/painel/(:any)/(:any)', 'Seguranca\Painel::criar_usuarios/$1/$2');
 
 //Bradesco
-$routes->match(['get', 'post'], '/bradesco-teste', 'Bradesco\Bradesco::teste');
+$routes->match(['get', 'post'], '/bradesco-receptivo/(:any)', 'Bradesco\Bradesco::index');
 
 //BMG
 $routes->match(['get', 'post'], '/bmg-receptivo/(:any)', 'Bmg\Bmg::bmg_receptivo/$1');
+$routes->match(['get', 'post'], '/bmg-saque/(:any)', 'Bmg\Bmg::bmg_saque/$1');
 $routes->match(['get', 'post'], '/bmg-script-vendas/(:any)/(:any)/(:any)/(:any)/(:any)', 'Bmg\Bmg::bmg_script_vendas/$1/$2/$3/$4/$5');
 $routes->match(['get', 'post'], '/bmg-gravar-proposta', 'Bmg\Bmg::bmg_gravar_proposta');
 $routes->match(['get', 'post'], '/panorama-gravar-proposta', 'Bmg\Bmg::panorama_gravar_proposta');
