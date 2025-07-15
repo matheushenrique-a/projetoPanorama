@@ -743,16 +743,8 @@ class Bmg extends BaseController
         $cpf = $this->getpost('cpf') ?? '';
         $ufconta = $this->getpost('ufconta') ?? '';
 
-        $cep = $this->getpost('cep') ?? '';
-        $logradouro = $this->getpost('logradouro') ?? '';
-        $complemento = $this->getpost('complemento') ?? '';
-        $bairro = $this->getpost('bairro') ?? '';
-        $cidade = $this->getpost('cidade') ?? '';
-        $endNumero = $this->getpost('endNumero') ?? '';
-        $uf = $this->getpost('uf') ?? '';
-
+        $ddd = $this->getpost('ddd') ?? '';
         $telefone = $this->getpost('telefone') ?? '';
-        $celular = $this->getpost('celular') ?? '';
 
         $idBanco = $this->getpost('idBanco') ?? '';
         $agencia = $this->getpost('agencia') ?? '';
@@ -760,37 +752,69 @@ class Bmg extends BaseController
         $digito = $this->getpost('digito') ?? '';
 
         $valorSaque = $this->getpost('valorSaque') ?? '';
-        $tipoPagamento = $this->getpost('tipoPagamento') ?? '';
-        $formaCredito = $this->getpost('formaCredito') ?? '';
-        $formaEnvio = $this->getpost('formaEnvio') ?? '';
 
-        if (!empty($this->getpost('btnSaque'))) {
+        $matricula = $this->getpost('matricula') ?? '';
+        $numeroContaInterna = $this->getpost('contaInterna') ?? '';
 
+        if ($this->getpost('btnSaque') === 'salvar') {
             $dataSaque = [
                 "cpf" => $cpf,
                 "ufconta" => $ufconta,
-                "cep" => $cep,
-                "logradouro" => $logradouro,
-                "complemento" => $complemento,
-                "bairro" => $bairro,
-                "cidade" => $cidade,
-                "endNumero" => $endNumero,
-                "uf" => $uf,
-                "telefone" => $telefone,
-                "celular" => $celular,
-                "idBanco" => $idBanco,
-                "agencia" => $agencia,
-                "conta" => $conta,
-                "digito" => $digito,
-                "valorSaque" => str_replace(',', '.', str_replace('.', '', $valorSaque)),
-                "tipoPagamento" => (int)$tipoPagamento, // 1 - Mensal, 2 - Parcelado
-                "formaCredito" => (int)$formaCredito, // 1 - Vale Postal, 2 - Ordem de Pagamento, 3 - Transferência Bancária 
-                "formaEnvio" => (int)$formaEnvio, // 1 - Digital Token, 2 - Digital
+                'celular1' => [
+                    'ddd' => $ddd,
+                    'numero' => $telefone,
+                ],
+                "Agencia" => ["numero" => $agencia],
+                "Banco" => ["numero" => $idBanco],
+                "conta" => [
+                    "numero" => $conta,
+                    "digitoVerificador" => $digito,
+                ],
+                "valorSaque" => $valorSaque,
+                'numeroContaInterna' => $numeroContaInterna,
+                'matricula' => $matricula,
             ];
 
-            return redirect()->to('/bmg-saque/0/)');
+            $returnData = $this->m_bmg->gravarPropostaSaque($dataSaque);
+
+            if (isset($returnData['erro']) && $returnData['erro']) {
+                return redirect()->to(base_url('bmg-saque/0'))->with('erro', $returnData['mensagem']);
+            }
+
+            return redirect()->to(base_url('bmg-saque/0'))->with('sucesso', 'Proposta enviada com sucesso!');
         }
+
+        if ($this->getpost('consultaCpf') === 'consultaCpf') {
+            $cpf = $this->getpost('cpf') ?? '';
+
+            return $this->bmg_limite_saque($cpf);
+        }
+
         return $this->loadpage('bmg/saque', $data);
+    }
+
+    public function bmg_limite_saque($cpf)
+    {
+
+        $cpf = $this->getpost('cpf') ?? '';
+        $matricula = $this->getpost('matricula') ?? '';
+        $contaInterna = $this->getpost('contaInterna') ?? '';
+
+        $params = [
+            'cpf' => $cpf,
+            'matricula' => $matricula,
+            'contaInterna' => $contaInterna
+        ];
+
+        $returnData = $this->m_bmg->obterLimiteSaque($params);
+
+        $dados['cardData'] = $returnData;
+
+        if (isset($returnData->erro) && $returnData->erro) {
+            return redirect()->to(base_url('bmg-saque/0'))->with('erro', $returnData['mensagem']);
+        } else {
+            return redirect()->to(base_url('bmg-saque/0'))->with('cardData', $returnData)->with('cpfDigitado', $cpf);
+        }
     }
 
     //http://localhost/InsightSuite/public/sign-in

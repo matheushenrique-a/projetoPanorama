@@ -71,32 +71,26 @@ class Painel extends BaseController
             $permissions = [];
 
             // configurar lógica de supervisor
-            if (EMPRESA == 'bmg') {
+            if (EMPRESA == 'quid') {
                 if ($cargo == "SUPERVISOR") {
-                    $supervisor = 1;
-                    array_push($permissions, "SUPERVISOR", "BMG");
+                    array_push($permissions, "SUPERVISOR", "QUID", "BMG");
                 } else {
-                    $supervisor = 164815;
-                    array_push($permissions, "BMG");
+                    array_push($permissions, "QUID", "BMG" );
                 }
             }
 
             if(EMPRESA == 'theone') {
                 if ($cargo == "SUPERVISOR") {
-                    $supervisor = 1;
                     array_push($permissions, "SUPERVISOR", "THEONE");
                 } else {
-                    $supervisor = 164815;
                     array_push($permissions, "THEONE");
                 }
             }
 
             if (EMPRESA == 'pravoce'){
                 if ($cargo == "SUPERVISOR") {
-                    $supervisor = 1;
                     array_push($permissions, "SUPERVISOR", "PRAVOCE");
                 } else {
-                    $supervisor = 164815;
                     array_push($permissions, "PRAVOCE");
                 }
             }
