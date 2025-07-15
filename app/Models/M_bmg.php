@@ -430,11 +430,11 @@ class M_bmg extends Model
             ];
 
             $params = array_merge($fixParams, $params);
-
-            $response = $client->__soapCall('gravarPropostaSaqueComplementar', [$params]);
             
+            // return redirect()->to(base_url('bmg-saque/0'))->with('erro', [$params]);
+            $response = $client->__soapCall('gravarPropostaSaqueComplementar', [$params]);
+
             // $response = $client->__soapCall('geraScript', [$params]);
-            // return redirect()->to(base_url('bmg-saque/0'))->with('erro', $response);
 
             return $response;
 
@@ -513,7 +513,7 @@ class M_bmg extends Model
 
             return [
                 'erro' => true,
-                'mensagem' => "{$fault->faultcode} - {$fault->faultstring}"
+                'mensagem' => "{$fault->faultstring}"
             ];
         }
     }

@@ -1,23 +1,16 @@
-<?php $cardData = session('cardData'); ?>
+<?php
+
+use function PHPUnit\Framework\assertIsObject;
+
+$cardData = session('cardData'); ?>
 <?php $cpf = session('cpfDigitado'); ?>
 
 <?php $erro = session()->getFlashdata('erro'); ?>
 
-<?php if ($erro = session()->getFlashdata('erro')): ?>
-    <div class="alert alert-danger">
-        <pre><?= print_r($erro, true) ?></pre>
-    </div>
-<?php endif; ?>
 
 <?php if ($valores = session()->getFlashdata('valores')): ?>
     <div class="alert alert-success">
         <pre><?= print_r($valores, true) ?></pre>
-    </div>
-<?php endif; ?>
-
-<?php if (session()->getFlashdata('sucesso')): ?>
-    <div class="alert alert-success">
-        <?= esc(session()->getFlashdata('sucesso')) ?>
     </div>
 <?php endif; ?>
 
@@ -50,6 +43,16 @@
         <div id="kt_app_content" class="app-content flex-column-fluid">
             <div id="kt_app_content_container" class="app-container container-xxl">
                 <div class="row g-5 g-xl-8">
+                    <?php if ($erro = session()->getFlashdata('erro')): ?>
+                        <div class="alert alert-danger">
+                            <pre><?= print_r($erro, true) ?></pre>
+                        </div>
+                    <?php endif; ?>
+                    <?php if (session()->getFlashdata('sucesso')): ?>
+                        <div class="alert alert-success">
+                            <?= esc(session()->getFlashdata('sucesso')) ?>
+                        </div>
+                    <?php endif; ?>
                     <div class="col-xl-6">
                         <form id="frmDataLake" class="form" action="<?php echo assetfolder; ?>bmg-saque/0" method="POST">
                             <div class="flex-lg-row-fluid">
@@ -78,10 +81,9 @@
                                                             <div class="d-flex align-items-center position-relative my-1 mt-5 mb-0">
                                                                 <button type="submit" class="btn btn-primary" name="consultaCpf" value="consultaCpf">Consultar</button>
                                                             </div>
-
-                                                            <?php if (!empty($cardData->cartoes->cartoesRetorno[0]->matricula)): ?>
+                                                            <?php if (!empty($cardData->cartoes->cartoesRetorno[0]->matricula) && $cardData->limite->mensagemDeErro == ""): ?>
                                                                 <div class="input-group">
-                                                                    <span class="ms-2 mt-4" id="lblInfo">Dados Cliente:</span>
+                                                                    <h3 class="ms-2 mt-8" id="lblInfo">Dados Cliente:</h3>
                                                                 </div>
                                                                 <div class="input-group">
                                                                     <span class="input-group-text" style="width: 55px">DDD</span>
@@ -94,7 +96,7 @@
                                                                     <input maxlength="2" type="text" class="form-control fs-3 fw-bold" placeholder="" name="ufconta" id="ufconta" />
                                                                 </div>
                                                                 <div class="input-group">
-                                                                    <span class="ms-2 mt-2 mb-2" id="lblNiver">Informações de conta:</span>
+                                                                    <h3 class="ms-2 mt-6 mb-2" id="lblNiver">Informações de pagamento:</h3>
                                                                 </div>
                                                                 <div class="input-group">
                                                                     <span class="input-group-text" style="width: 155px">Banco</span>
@@ -108,16 +110,14 @@
                                                                     <span class="input-group-text">Digito</span>
                                                                     <input type="text" class="form-control fs-3 fw-bold" placeholder="" name="digito" id="digito" />
                                                                 </div>
-                                                                <div class="input-group">
-                                                                    <span class="ms-2 mt-2 mb-2" id="lblNiver">Informações do Saque:</span>
+                                                                <div class="input-group mt-8" style="width: 260px;">
+                                                                    <span class="input-group-text" style="width: 130px">Valor do Saque</span>
+                                                                    <input type="text" class="form-control fs-3 fw-bold" name="valorSaque" id="valorSaque" />
                                                                 </div>
-                                                                <div class="input-group">
-                                                                    <span class="input-group-text" style="width: 155px">Valor do Saque</span>
-                                                                    <input type="text" class="form-control fs-3 fw-bold" name="valorSaque" id="valorSaque" style="width: 35px" />
+                                                                <div class="d-flex align-items-center position-relative mt-6 mb-0">
+                                                                    <button type="submit" class="btn btn-success" name="btnSaque" value="salvar">Enviar Proposta</button>
                                                                 </div>
-                                                                <div class="d-flex align-items-center position-relative my-1 mt-5 mb-0">
-                                                                    <button type="submit" class="btn btn-primary" name="btnSaque" value="salvar">Gravar Proposta</button>
-                                                                </div>
+
                                                             <?php endif; ?>
                                                         </div>
                                                     </div>
@@ -137,18 +137,38 @@
                             <h2 class="accordion-header" id="kt_accordion_abordagem_header_1">
                                 <button class="accordion-button fs-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#kt_elegibilidade" aria-expanded="true" aria-controls="kt_accordion_abordagem_body_1">
                                     DISPONIBILIDADE DE SAQUE
-
                                 </button>
                             </h2>
                             <div id="kt_elegibilidade" class="accordion-collapse  shown" aria-labelledby="kt_accordion_abordagem_header_1" data-bs-parent="#kt_accordion_abordagem">
-                                <div class="accordion-body">
-                                    <h4>Consulte um CPF para verificar disponibilidade de saque.</h4>
-                                </div>
+                                <?php if (isset($cardData) && !is_object($cardData)): ?>
+                                    <div class="p-2">
+                                        <div class="alert alert-danger fw-semibold d-flex flex-column align-items-center">
+                                            <p class="fw-bold fs-3">Saque indisponível para <?= esc($cpf) ?? "cliente informado" ?>.</p>
+                                            <p><?= esc($cardData['mensagem']); ?></p>
+                                        </div>
+                                    </div>
+                                <?php elseif (isset($cardData) && is_object($cardData) && $cardData->limite->valorSaqueMinimo > 99): ?>
+                                    <div class="p-2">
+                                        <div class="alert alert-success fw-semibold d-flex flex-column align-items-center">
+                                            <p class="fw-bold fs-3">Saque disponível para <?= esc($cpf) ?? "cliente informado" ?>.</p>
+                                        </div>
+                                    </div>
+                                <?php elseif (isset($cardData) && is_object($cardData) && $cardData->limite->mensagemDeErro !== ""): ?>
+                                    <div class="p-2">
+                                        <div class="alert alert-danger fw-semibold d-flex flex-column align-items-center">
+                                            <p class="fw-bold fs-3">Saque indisponível para <?= esc($cpf) ?? "cliente informado" ?>.</p>
+                                            <p><?= esc($cardData->limite->mensagemDeErro); ?></p>
+                                        </div>
+                                    </div>
+                                <?php else: ?>
+                                    <div class="accordion-body">
+                                        <h4>Consulte um CPF para verificar disponibilidade de saque.</h4>
+                                    </div>
+                                <?php endif; ?>
                             </div>
                             <h2 class="accordion-header" id="kt_accordion_abordagem_header_1">
                                 <button class="accordion-button fs-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#kt_elegibilidade" aria-expanded="true" aria-controls="kt_accordion_abordagem_body_1">
                                     VALORES:
-
                                 </button>
                             </h2>
                             <div id="kt_elegibilidade" class="accordion-collapse  shown" aria-labelledby="kt_accordion_abordagem_header_1" data-bs-parent="#kt_accordion_abordagem">
@@ -193,6 +213,7 @@
     </div>
 </div>
 <script>
+    const form = document.getElementById('frmDataLake');
     const cpfInput = document.getElementById('cpf');
     const ufInput = document.getElementById('ufconta');
     const valorSaqueInput = document.getElementById('valorSaque');
@@ -213,6 +234,16 @@
         }
 
         cpfInput.value = value;
+    });
+
+    form.addEventListener('submit', function(e) {
+        const cpf = cpfInput.value.trim();
+
+        if (cpf.length !== 14) {
+            e.preventDefault();
+            alert('O CPF deve estar completo (000.000.000-00).');
+            cpfInput.focus();
+        }
     });
 
     ufInput.addEventListener('input', () => {
