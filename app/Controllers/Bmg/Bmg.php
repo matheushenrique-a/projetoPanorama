@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controllers\Bmg;
+
 use App\Controllers\BaseController;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
@@ -27,7 +28,8 @@ class Bmg extends BaseController
     protected $m_insight;
     protected $m_bmg;
 
-    public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger) {
+    public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
+    {
         parent::initController($request, $response, $logger);
         $this->checkSession();
 
@@ -48,10 +50,11 @@ class Bmg extends BaseController
 
 
 
-    
+
     //http://localhost/InsightSuite/public/bmg-gravar-proposta
     //https://insightsuite.pravoce.io/bmg-gravar-proposta
-    public function bmg_gravar_proposta(){
+    public function bmg_gravar_proposta()
+    {
         $request = file_get_contents('php://input');
         $this->telegram->notifyTelegramGroup($request, telegramQuid);
 
@@ -66,7 +69,7 @@ class Bmg extends BaseController
         //     'plano' => '123',
         //     'codigoTipoPagamento' => '2',
         //     'conta' => '456789',
-            
+
         //     // Dados do cliente
         //     'cidadeNascimento' => 'São Paulo',
         //     'cpf' => '12345678900',
@@ -102,7 +105,7 @@ class Bmg extends BaseController
 
         $params = [
             'codigoPlano'  => $response['plano'],
-            'codigoSeguro' => BMG_CODIGO_PRODUTO_MED, 
+            'codigoSeguro' => BMG_CODIGO_PRODUTO_MED,
             //'codigoTipoBeneficio' => 1, // Apenas se exigido por entidade
             //'matricula'   => '987654321',
             'codigoformaPagamentoProdutoSeguro' => $response['codigoTipoPagamento'], // Ex: 5 = Folha de Pagamento
@@ -123,7 +126,7 @@ class Bmg extends BaseController
                 'ufNascimento' => $response['ufNascimento'],
                 'estadocivil' => $response['estadoCivil'], // V = Viúvo
                 'nacionalidade' => $response['nacionalidade'],
-                
+
                 'pessoaPoliticamenteExposta' => false,
                 'celular1' => [
                     'ddd' => substr($response['telefone'], 0, 2),
@@ -160,13 +163,13 @@ class Bmg extends BaseController
         $returnData["mensagem"] = $propostaGravada['mensagem'];
 
         $response = $this->m_bmg->gravaPropostaSeguro($response['produto'], $response['cpf'], $response['conta'], $response['plano'], $response['codigoTipoPagamento']);
-                
+
         echo json_encode($returnData);
-        
     }
 
     //http://localhost/InsightSuite/public/panorama-gravar-proposta
-    public function panorama_gravar_proposta(){
+    public function panorama_gravar_proposta()
+    {
 
         $returnData["status"] = false;
         $returnData["proposta"] = "";
@@ -176,7 +179,7 @@ class Bmg extends BaseController
         // $returnData["mensagem"] = "[EM CONSTRUÇÃO]<br>Proposta Gravada com Sucesso PANORAMA!<br>Número Contrato: 00000";
         // echo json_encode($returnData);
         // return $returnData; exit;
-        
+
         $request = file_get_contents('php://input');
 
         //$request = '{"produto":"MED","cpf":"90216296072","conta":"123444","plano":"110","codigoTipoPagamento":"2","nome":"MATHEUS ","estadoCivil":"S","sexo":"1","mae":"SEBATIANA ROCHA DUARTE","pai":"","nacionalidade":"","tipoDocumento":"","rg":"","cidadeNascimento":"","dataNascimento":"27/06/1957","ufNascimento":"","dataEmissaoRg":"","orgaoEmissor":"","ufRg":"","email":"","logradouro":"","bairro":"","cep":"","cidade":"","uf":"","numero":"","complemento":"","docIdentidade":"","telefone":"(31)99578-1355"}';
@@ -185,8 +188,8 @@ class Bmg extends BaseController
 
         //$this->telegram->notifyTelegramGroup("DADOS: " . $request, telegramQuid);
         // exit;
-        
-        
+
+
         // $data = [
         //     'CONTRATO' => '123457',
         //     'STATUS' => 'ADESÃO',
@@ -222,20 +225,20 @@ class Bmg extends BaseController
         $valorPlano = '';
         $parcelas = "1";
 
-        if ($response['plano'] == 216){
+        if ($response['plano'] == 216) {
             $planoName = 'SEGURO BMG VIDA';
             $valorPlano = "29,90";
-        } else if ($response['plano'] == 110){
+        } else if ($response['plano'] == 110) {
             $planoName = "SEGURO BMG MED";
             $valorPlano = "21,90";
-        } else if ($response['plano'] == 111){
+        } else if ($response['plano'] == 111) {
             $planoName = "SEGURO BMG MED";
             $valorPlano = "21,90";
             $parcelas = "12";
-        } else if ($response['plano'] == 112){
+        } else if ($response['plano'] == 112) {
             $planoName = "SEGURO BMG MED";
             $valorPlano = "29,90";
-        } else if ($response['plano'] == 212){
+        } else if ($response['plano'] == 212) {
             $planoName = "SEGURO BMG MED";
             $valorPlano = "29,90";
             $parcelas = "12";
@@ -277,10 +280,34 @@ class Bmg extends BaseController
         // // exit;
 
         $ordem = [
-            'CONTRATO', 'STATUS', 'NOME_CLIENTE', 'ASSESSOR', 'CPF', 'ESTADO_CIVIL', 'SEXO',
-            'NOMEMAE', 'EMAIL', 'TELEFONE', 'LOGRADOURO', 'BAIRRO', 'CEP', 'CIDADE', 'UF',
-            'COMPLEMENTO', 'ENDNUMERO', 'DATANASCIMENTO', 'MATRICULA', 'RG', 'TABELA',
-            'DATA_CADASTRO', 'BANCO', 'PRODUTO', 'PRAZO', 'PARCELA', 'EMPRESTIMO', 'SEGURO'
+            'CONTRATO',
+            'STATUS',
+            'NOME_CLIENTE',
+            'ASSESSOR',
+            'CPF',
+            'ESTADO_CIVIL',
+            'SEXO',
+            'NOMEMAE',
+            'EMAIL',
+            'TELEFONE',
+            'LOGRADOURO',
+            'BAIRRO',
+            'CEP',
+            'CIDADE',
+            'UF',
+            'COMPLEMENTO',
+            'ENDNUMERO',
+            'DATANASCIMENTO',
+            'MATRICULA',
+            'RG',
+            'TABELA',
+            'DATA_CADASTRO',
+            'BANCO',
+            'PRODUTO',
+            'PRAZO',
+            'PARCELA',
+            'EMPRESTIMO',
+            'SEGURO'
         ];
 
         $valores = [];
@@ -297,13 +324,13 @@ class Bmg extends BaseController
             . '&idImportacao=1331'
             . '&dados=' . urlencode($dadosString);
 
-        
+
         //echo $url . "<br><br>";exit;
 
 
         $output = "";
         try {
-           $output = file_get_contents($url);
+            $output = file_get_contents($url);
         } catch (\Exception $e) {
             $returnData["mensagem"] = "Erro ao gravar Panorama:<br>{$e->faultcode} - {$e->faultstring}";;
         }
@@ -323,7 +350,6 @@ class Bmg extends BaseController
                 'retornoGravacao' => "Sucesso",
             ];
             $added = $this->dbMasterDefault->insert('proposta_bmg', $dadosGravacao);
-
         } else {
             $returnData["mensagem"] = "Erro ao gravar proposta no Panorama:<br>" . $output;
             $dadosGravacao = [
@@ -341,7 +367,8 @@ class Bmg extends BaseController
     }
 
     //http://localhost/InsightSuite/public/bmg-script-vendas/MED/62057677753/842216/110/2 //Nao Elegivel Outra Apolice
-    public function bmg_script_vendas($produto, $cpf, $conta, $plano, $codigoTipoPagamento){
+    public function bmg_script_vendas($produto, $cpf, $conta, $plano, $codigoTipoPagamento)
+    {
         $response = $this->m_bmg->geraScriptVenda($produto, $cpf, $conta, $plano, $codigoTipoPagamento);
 
         if ($response->mensagemDeErro != "") {
@@ -354,13 +381,13 @@ class Bmg extends BaseController
         }
 
         //echo '10:16:26 - <h3>Dump 57 </h3> <br><br>' . var_dump($returnData); exit;					//<-------DEBUG
-                
+
         echo json_encode($returnData);
-        
     }
 
     //http://localhost/InsightSuite/public/bmg_receptivo
-    public function bmg_receptivo($cpf = null){
+    public function bmg_receptivo($cpf = null)
+    {
 
 
         // $cpf = '10789022320';
@@ -425,7 +452,7 @@ class Bmg extends BaseController
         $numeroDocumento = strtoupper($this->getpost('numeroDocumento'));
 
         $returnData["status"] = false;
-		$returnData["mensagem"] = "";
+        $returnData["mensagem"] = "";
         $nomeCompletoUltima = "";
         $celularUltima = "";
         $nomeStatus = "";
@@ -457,13 +484,15 @@ class Bmg extends BaseController
         // $dataEmissao = "";
         // $orgaoEmissor = "";
         // $ufEmissor = "";
-        
-        $cpf = numberOnly($cpf);
-        if ((empty($cpf)) or ($cpf == "0")) { $cpf = numberOnly($this->getpost('cpf'));}
 
-        
+        $cpf = numberOnly($cpf);
+        if ((empty($cpf)) or ($cpf == "0")) {
+            $cpf = numberOnly($this->getpost('cpf'));
+        }
+
+
         //CENÁRIO 01: SALVAR PROPOSTA
-        if (!empty($btnSalvar)){
+        if (!empty($btnSalvar)) {
             $dataProposta = [
                 "nomeCliente" => $nomeCliente,
                 "cpf" => $cpf,
@@ -497,7 +526,7 @@ class Bmg extends BaseController
             //Grava proposta no Insight se gravada com sucesso no Integrall
             if ($returnData['status']) {
                 $propostaInsight = $dataProposta + $dataPropostaInsight + $returnData['integraall'];
-                
+
                 //Integraall está retornando o código do Kompleto e não do Integraall. Como alternativa busca todas as propostas do CPF e pega a última ate a API ser melhorada.
                 $lastIntegraallId = $this->m_integraall->buscaUltimaProposta(['TermoDaBusca' => $cpf]);
                 if ($lastIntegraallId != 0) {
@@ -505,97 +534,97 @@ class Bmg extends BaseController
                 }
 
                 $propostaAdded = $this->m_integraall->criar_proposta_insight($dataProposta + $dataPropostaInsight + $returnData['integraall']);
-                
+
                 $integraallId = $returnData['integraall']['integraallId'];
                 $nomeStatus = $returnData['integraall']['nomeStatus'];
                 $statusId = $returnData['integraall']['statusId'];
 
-                return redirect()->to('aaspa-receptivo/0/' . $lastIntegraallId);exit;
+                return redirect()->to('aaspa-receptivo/0/' . $lastIntegraallId);
+                exit;
             }
-        //GRAVAÇÃO PROOPSTA MED
-        } else if (!empty($btmMEDBMG)){
+            //GRAVAÇÃO PROOPSTA MED
+        } else if (!empty($btmMEDBMG)) {
             $proposta = explode('-', $btmMEDBMG);
             $conta = $proposta[1];
             $plano = $proposta[2];
             $codigoTipoPagamento = $proposta[3];
 
             $params = [
-                    'codigoPlano'  => $plano,
-                    'codigoSeguro' => BMG_CODIGO_PRODUTO_MED, 
-                    //'codigoTipoBeneficio' => 1, // Apenas se exigido por entidade
-                    'codigoformaPagamentoProdutoSeguro' => $codigoTipoPagamento, // Ex: 5 = Folha de Pagamento
-                    'cpfOperadorVendas' => '04035306606',
-                    //'matricula'   => '987654321',
-                    'renda'       => 2500.00,
-                    'numeroInternoConta' => $conta,
-                    'codigoTipoFormaEnvio' => 15, // 15 = Digital
-                    'codigoTipoBeneficio' => 41, // Aposentadoria por Idade
-                    'codigoformaPagamentoProdutoSeguro' => 4, // Cartao de Credito
-                    
-                    'cliente' => [
-                        'cidadeNascimento' => $cidadeNascimento,
-                        'cpf' => $cpf,
-                        'dataNascimento' => dataPtUsT($dataNascimento),
-                        'nome' => $nomeCliente,
-                        'nomeMae' => $nomeMae,
-                        'sexo' => $sexo,
-                        'ufNascimento' => $ufNascimento,
-                        'estadocivil' => $estadoCivil, // V = Viúvo
-                        'nacionalidade' => $paisNascimento,
-                        
-                        'pessoaPoliticamenteExposta' => false, // 15 = Digital
-                        'celular1' => [
-                            'ddd' => substr($telefone, 0, 2),
-                            'numero' => substr($telefone, 2, 10),
-                            'ramal' => ''
-                        ],
+                'codigoPlano'  => $plano,
+                'codigoSeguro' => BMG_CODIGO_PRODUTO_MED,
+                //'codigoTipoBeneficio' => 1, // Apenas se exigido por entidade
+                'codigoformaPagamentoProdutoSeguro' => $codigoTipoPagamento, // Ex: 5 = Folha de Pagamento
+                'cpfOperadorVendas' => '04035306606',
+                //'matricula'   => '987654321',
+                'renda'       => 2500.00,
+                'numeroInternoConta' => $conta,
+                'codigoTipoFormaEnvio' => 15, // 15 = Digital
+                'codigoTipoBeneficio' => 41, // Aposentadoria por Idade
+                'codigoformaPagamentoProdutoSeguro' => 4, // Cartao de Credito
 
-                        'endereco' => [
-                            'bairro' => $bairro,
-                            'cep' => $cep,
-                            'cidade' => $cidade,
-                            'logradouro' => $logradouro,
-                            'uf' => $uf
-                        ],
+                'cliente' => [
+                    'cidadeNascimento' => $cidadeNascimento,
+                    'cpf' => $cpf,
+                    'dataNascimento' => dataPtUsT($dataNascimento),
+                    'nome' => $nomeCliente,
+                    'nomeMae' => $nomeMae,
+                    'sexo' => $sexo,
+                    'ufNascimento' => $ufNascimento,
+                    'estadocivil' => $estadoCivil, // V = Viúvo
+                    'nacionalidade' => $paisNascimento,
 
-                        'identidade' => [
-                            'numero' => $docIdentidade,
-                            'emissor' => $orgaoEmissor,
-                            'uf' => $ufEmissor,
-                            'dataEmissao' => dataPtUsT($dataEmissao)
-                        ]
+                    'pessoaPoliticamenteExposta' => false, // 15 = Digital
+                    'celular1' => [
+                        'ddd' => substr($telefone, 0, 2),
+                        'numero' => substr($telefone, 2, 10),
+                        'ramal' => ''
+                    ],
+
+                    'endereco' => [
+                        'bairro' => $bairro,
+                        'cep' => $cep,
+                        'cidade' => $cidade,
+                        'logradouro' => $logradouro,
+                        'uf' => $uf
+                    ],
+
+                    'identidade' => [
+                        'numero' => $docIdentidade,
+                        'emissor' => $orgaoEmissor,
+                        'uf' => $ufEmissor,
+                        'dataEmissao' => dataPtUsT($dataEmissao)
                     ]
-                ];
+                ]
+            ];
 
-                //echo json_encode($params);exit;
-                $propostaGravada = $this->m_bmg->gravaPropostaSeguro($params);
+            //echo json_encode($params);exit;
+            $propostaGravada = $this->m_bmg->gravaPropostaSeguro($params);
 
-                if ($propostaGravada['status']) {
-                    $returnData["status"] = true;
-                } else {
-                    $returnData["status"] = false;
-                }
+            if ($propostaGravada['status']) {
+                $returnData["status"] = true;
+            } else {
+                $returnData["status"] = false;
+            }
 
-                $returnData["mensagem"] = $propostaGravada['mensagem'];
-        //CENÁRIO 02: BUSCAR CPF
-        } else if (!empty($cpf)){
+            $returnData["mensagem"] = $propostaGravada['mensagem'];
+            //CENÁRIO 02: BUSCAR CPF
+        } else if (!empty($cpf)) {
 
-            if ((strlen($cpf)) <= 10){
+            if ((strlen($cpf)) <= 10) {
                 $cpf = substr("0000000" . $cpf, -11);
             }
 
-            if ((strlen($cpf) != 11)){
+            if ((strlen($cpf) != 11)) {
                 $returnData["mensagem"] = "O CPF deve ser preenchido.";
             } else {
                 $bmgLiberadoMED = $this->m_bmg->obterCartoesDisponiveis($cpf, BMG_CODIGO_PRODUTO_MED);
                 $bmgLiberadoVIDA = $this->m_bmg->obterCartoesDisponiveis($cpf, BMG_CODIGO_PRODUTO_VIDA);
             }
-
         }
 
 
 
-        if ($cpfINSS != $cpf){
+        if ($cpfINSS != $cpf) {
             $nomeCliente = "";
             $estadoCivil = "";
             $sexo = "";
@@ -616,7 +645,7 @@ class Bmg extends BaseController
             $docIdentidade = "";
             $docIdentidadeUf = "";
             $docIdentidadeOrgEmissor = "";
-             $cidadeNascimento = "";
+            $cidadeNascimento = "";
             $ufNascimento = "";
             $paisNascimento = "";
             $email = "";
@@ -626,12 +655,12 @@ class Bmg extends BaseController
             $orgaoEmissor = "";
             $ufEmissor = "";
         }
-        
+
         //CENÁRIO 05: FETCH - BOTÃO ASSPA OU INSS CHECK CHAMADOS VIA PAGELOAD OU CLICK BOTÃO
-            //Realizar check no calculadora ou INSS sem gravar draft de proposta
+        //Realizar check no calculadora ou INSS sem gravar draft de proposta
 
         $ultimaLigacao = $this->m_argus->ultimaLigacao(['assessor' => $this->session->nickname]);
-        if ($ultimaLigacao['existRecord']){
+        if ($ultimaLigacao['existRecord']) {
             $nomeCompleto = $ultimaLigacao['firstRow']->nome;
             $celular = formatarTelefone($ultimaLigacao['firstRow']->celular);
             $celularWaId = celularToWaId($ultimaLigacao['firstRow']->celular);
@@ -684,12 +713,12 @@ class Bmg extends BaseController
         $data['session'] = $this->session;
 
         $data['integraallId'] = null;
-        
+
         $data['statusId'] = $statusId;
         $data['nomeStatus'] = $nomeStatus;
         $data['statusAdicionalId'] = $statusAdicionalId;
         $data['statusAdicional'] = $statusAdicional;
-        
+
         $data['linkKompletoCliente'] = $linkKompletoCliente;
 
         $data['assessor'] = $assessor;
@@ -707,11 +736,92 @@ class Bmg extends BaseController
         return $this->loadpage('bmg/receptivo', $data);
     }
 
+    public function bmg_saque($cpf = null)
+    {
+        $data['pageTitle'] = "BMG Saque";
+
+        $cpf = $this->getpost('cpf') ?? '';
+        $ufconta = $this->getpost('ufconta') ?? '';
+
+        $ddd = $this->getpost('ddd') ?? '';
+        $telefone = $this->getpost('telefone') ?? '';
+
+        $idBanco = $this->getpost('idBanco') ?? '';
+        $agencia = $this->getpost('agencia') ?? '';
+        $conta = $this->getpost('conta') ?? '';
+        $digito = $this->getpost('digito') ?? '';
+
+        $valorSaque = $this->getpost('valorSaque') ?? '';
+
+        $matricula = $this->getpost('matricula') ?? '';
+        $numeroContaInterna = $this->getpost('contaInterna') ?? '';
+
+        if ($this->getpost('btnSaque') === 'salvar') {
+            $dataSaque = [
+                "cpf" => $cpf,
+                "ufconta" => $ufconta,
+                'celular1' => [
+                    'ddd' => $ddd,
+                    'numero' => $telefone,
+                ],
+                "Agencia" => ["numero" => $agencia],
+                "Banco" => ["numero" => $idBanco],
+                "conta" => [
+                    "numero" => $conta,
+                    "digitoVerificador" => $digito,
+                ],
+                "valorSaque" => $valorSaque,
+                'numeroContaInterna' => $numeroContaInterna,
+                'matricula' => $matricula,
+            ];
+
+            $returnData = $this->m_bmg->gravarPropostaSaque($dataSaque);
+
+            if (isset($returnData['erro']) && $returnData['erro']) {
+                return redirect()->to(base_url('bmg-saque/0'))->with('erro', $returnData['mensagem']);
+            }
+
+            return redirect()->to(base_url('bmg-saque/0'))->with('sucesso', 'Proposta enviada com sucesso!');
+        }
+
+        if ($this->getpost('consultaCpf') === 'consultaCpf') {
+            $cpf = $this->getpost('cpf') ?? '';
+
+            return $this->bmg_limite_saque($cpf);
+        }
+
+        return $this->loadpage('bmg/saque', $data);
+    }
+
+    public function bmg_limite_saque($cpf)
+    {
+        $cpf = $this->getpost('cpf') ?? '';
+        $matricula = $this->getpost('matricula') ?? '';
+        $contaInterna = $this->getpost('contaInterna') ?? '';
+
+        $params = [
+            'cpf' => $cpf,
+            'matricula' => $matricula,
+            'contaInterna' => $contaInterna
+        ];
+
+        $returnData = $this->m_bmg->obterLimiteSaque($params);
+
+        $dados['cardData'] = $returnData;
+
+        if (isset($returnData->erro) && $returnData->erro) {
+            return redirect()->to(base_url('bmg-saque/0'))->with('erro', $returnData['mensagem']);
+        } else {
+            return redirect()->to(base_url('bmg-saque/0'))->with('cardData', $returnData)->with('cpfDigitado', $cpf);
+        }
+    }
+
     //http://localhost/InsightSuite/public/sign-in
-    public function listarPropostas(){
+    public function listarPropostas()
+    {
         $buscarProp = $this->getpost('buscarProp');
 
-        if (!empty($buscarProp)){
+        if (!empty($buscarProp)) {
             helper('cookie');
             $cpf = $this->getpost('txtCPF', false);
             $integraallId = $this->getpost('integraallId', false);
@@ -722,8 +832,8 @@ class Bmg extends BaseController
             $statusPropostaFiltro = $this->getpost('statusPropostaFiltro', false);
             $paginas = $this->getpost('paginas', false);
             $operadorFiltro = $this->getpost('operadorFiltro', false);
-            $flag = $this->getpost('flag',false);
-               
+            $flag = $this->getpost('flag', false);
+
             Services::response()->setCookie('cpf', $cpf);
             Services::response()->setCookie('integraallId', $integraallId);
             Services::response()->setCookie('celular', $celular);
@@ -744,16 +854,16 @@ class Bmg extends BaseController
             $statusPropostaFiltro = $this->getpost('statusPropostaFiltro', true);
             $paginas = $this->getpost('paginas', true);
             $operadorFiltro = $this->getpost('operadorFiltro', true);
-            $flag = $this->getpost('flag',true);
+            $flag = $this->getpost('flag', true);
         }
 
         $flag = (empty($flag) ? 'ACAO' : $flag);
-        
+
         $whereCheck = [];
         $likeCheck = [];
         $whereNotIn = [];
         $whereIn = [];
-        
+
         if (!empty($cpf)) $likeCheck['cpf'] = $cpf;
         //if (!empty($paginas)) $whereCheck['paginas'] = $paginas;
         if (!empty($integraallId)) $likeCheck['integraallId'] = $integraallId;
@@ -779,12 +889,12 @@ class Bmg extends BaseController
         //         $whereIn = array("whereIn" => array('statusProposta', $fasesAdd)); 
         //     }
         // }
-        
+
         //foreach($fasesAdd as $item){echo "'" . $item . "', ";}exit;
 
         $likeCheck = array("likeCheck" => $likeCheck);
 
-        $paginas = (empty($paginas)  ? 10 : $paginas); 
+        $paginas = (empty($paginas)  ? 10 : $paginas);
         $this->dbMasterDefault->setLimit($paginas);
         $this->dbMasterDefault->setOrderBy(array('id_proposta', 'DESC'));
         $propostas = $this->dbMasterDefault->select('aaspa_propostas', $whereCheck, $whereNotIn + $likeCheck + $whereIn);
@@ -807,7 +917,8 @@ class Bmg extends BaseController
         return $this->loadpage('aaspa/listar_propostas', $dados);
     }
 
-    public function indicadores(){
+    public function indicadores()
+    {
         $indicadores = [];
         $indicadores['propostas_hoje'] = $this->dbMaster->runQuery("select count(*) total from aaspa_propostas where DATE(data_criacao) = CURDATE() AND vendedorUsuarioId = " . $this->session->parameters["integraallId"] . ";")['firstRow']->total;
         $indicadores['propostas_ontem'] = $this->dbMaster->runQuery("select count(*) total from aaspa_propostas where DATE(data_criacao) = DATE_SUB(CURDATE(), INTERVAL 1 DAY)  AND vendedorUsuarioId = " . $this->session->parameters["integraallId"] . ";")['firstRow']->total;
@@ -817,5 +928,4 @@ class Bmg extends BaseController
 
         return $indicadores;
     }
-    
 }

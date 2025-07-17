@@ -9,7 +9,7 @@
 					                <!--begin::Page title-->
 					                <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
 					                    <!--begin::Title-->
-					                    <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">Painel de Usuários</h1>
+					                    <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">Andamento de Apólices</h1>
 					                    <!--end::Title-->
 					                    <!--begin::Breadcrumb-->
 					                    <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
@@ -24,7 +24,7 @@
 					                        </li>
 					                        <!--end::Item-->
 					                        <!--begin::Item-->
-					                        <li class="breadcrumb-item text-muted">Painel</li>
+					                        <li class="breadcrumb-item text-muted">Extrair Apólices</li>
 					                        <!--end::Item-->
 					                        <!--begin::Item-->
 					                        <li class="breadcrumb-item">
@@ -32,7 +32,7 @@
 					                        </li>
 					                        <!--end::Item-->
 					                        <!--begin::Item-->
-					                        <li class="breadcrumb-item text-muted">Usuários</li>
+					                        <li class="breadcrumb-item text-muted">Informações</li>
 					                        <!--end::Item-->
 					                    </ul>
 					                    <!--end::Breadcrumb-->
@@ -58,7 +58,7 @@
 					                                <div class="d-flex align-items-center position-relative my-1 mx-3">
 					                                    <div class="mb-3">
 					                                        <label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Busca:</label>
-					                                        <input type="text" class="form-control" placeholder="Usuário" name="content" value="" />
+					                                        <input type="text" class="form-control" placeholder="Apólice" name="content" value="" />
 					                                    </div>
 					                                </div>
 					                            </div>
@@ -66,12 +66,15 @@
 					                            <div class="card-title">
 					                                <div class="d-flex align-items-center position-relative my-1">
 					                                    <div class="mb-3  mx-3">
-					                                        <label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Cargo:</label>
+					                                        <label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Seguradora:</label>
 					                                        <div class="d-flex align-items-center position-relative my-1">
 					                                            <select class="form-select form-control-solid" aria-label="" name="role">
-					                                                <option value="">TODOS</option>
-					                                                <option value="OPERADOR" <?= ($role ?? '') === 'OPERADOR' ? 'selected' : '' ?>>Operador</option>
-					                                                <option value="SUPERVISOR" <?= ($role ?? '') === 'SUPERVISOR' ? 'selected' : '' ?>>Supervisor</option>
+					                                                <option value=""></option>
+                                                                    <option value="EZZE">Ezze</option>
+                                                                    <option value="YELUM">Yelum</option>
+                                                                    <option value="PORTO">Porto</option>
+                                                                    <option value="SURA">Sura</option>
+                                                                    <option value="HDI">HDI</option>
 					                                            </select>
 					                                        </div>
 					                                    </div>
@@ -81,9 +84,9 @@
 					                            <div class="card-title">
 					                                <div class="d-flex align-items-center position-relative my-1">
 					                                    <div class="mb-0 mx-3">
-					                                        <div class="d-flex align-items-center position-relative my-1 mt-0 mb-0">
-					                                            <button type="submit" class="btn btn-primary mt-4" name="buscarProp" value="buscarProp">Buscar Usuário</button>
-					                                            <a href="<?php echo assetfolder; ?>painel/0/add" class="btn btn-primary mt-4 ms-3">+</a>
+					                                        <div class="d-flex align-items-center gap-4 position-relative my-1 mt-0 mb-0">
+					                                            <button type="submit" class="btn btn-primary mt-4" name="buscarProp" value="buscarProp">Buscar Apólices</button>
+					                                            <button type="submit" class="btn btn-secondary mt-4" name="buscarProp" value="buscarProp">Atualizar Apólices</button>
 					                                        </div>
 					                                    </div>
 					                                </div>
@@ -118,12 +121,11 @@
 					                            <thead>
 					                                <!--begin::Table row-->
 					                                <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
-					                                    <th class="min-w-25px">ID</th>
-					                                    <th data-sortable="false" class="min-w-25px">Nome</th>
-					                                    <th data-sortable="false" class="min-w-25px">E-mail</th>
-					                                    <th data-sortable="false" class="min-w-25px">Cargo</th>
-					                                    <th data-sortable="false" class="min-w-25px">Supervisor</th>
-					                                    <th data-sortable="false" class="min-w-25px"></th>
+					                                    <th data-sortable="false" class="min-w-25px">SEGURADO</th>
+					                                    <th data-sortable="false" class="min-w-25px">APÓLICE</th>
+					                                    <th data-sortable="false" class="min-w-25px">TIPO</th>
+					                                    <th data-sortable="false" class="min-w-25px">STATUS</th>
+					                                    <th data-sortable="false" class="min-w-25px">VIGÊNCIA</th>
 					                                    <th data-sortable="false" class="min-w-25px"></th>
 					                                </tr>
 					                                <!--end::Table row-->
@@ -131,21 +133,6 @@
 					                            <!--end::Table head-->
 					                            <!--begin::Table body-->
 					                            <tbody class="text-gray-600 fw-semibold">
-					                                <?php
-                                                    foreach ($usuarios as $row) {
-                                                    ?>
-					                                    <tr>
-					                                        <td><?= esc($row->userId) ?></td>
-					                                        <td><?= esc($row->nickname) ?></td>
-					                                        <td><?= esc($row->email) ?></td>
-					                                        <td><?= esc($row->role) ?></td>
-					                                        <td><?= esc($row->report_to) ?></td>
-					                                        <td><a href="<?php echo assetfolder; ?>painel/<?php echo $row->userId; ?>/edit"><i class="text-muted bi bi-pencil-square"></i></a></td>
-					                                        <td><a href="<?php echo assetfolder; ?>painel/<?php echo $row->userId; ?>/remove"><i class="text-danger bi bi-trash"></i></a></td>
-					                                    </tr>
-					                                <?php
-                                                    } //End:Foreach
-                                                    ?>
 					                            </tbody>
 					                            <!--end::Table body-->
 					                        </table>

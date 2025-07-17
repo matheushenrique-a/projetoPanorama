@@ -9,6 +9,11 @@
 define('IsProduction', false);
 define('AppName', "Insight Suite");
 
+// EMPRESAS
+define('EMPRESA', 'quid');
+// define('EMPRESA', 'pravoce');
+// define('EMPRESA', 'theone');
+
 define ('shortURL', 'https://pravc.io/');
 
 define ('API_Integraall', 'https://api.integraall.com/api/');
@@ -19,12 +24,17 @@ define ('API_Produto', 6); //quid
 
 //SEGURO BMG
 define('BMG_WSDL', 'https://ws1.bmgconsig.com.br/webservices/ProdutoSeguroWebService?wsdl');
+define('BMG_SAQUE_WSDL', 'https://ws1.bmgconsig.com.br/webservices/SaqueComplementar?wsdl');
+define('BMG_SAQUE_CALCULO_WSDL', 'https://ws1.bmgconsig.com.br/webservices/SimulacaoPrestacao?wsdl');
 define('BMG_SEGURO_LOGIN', 'robo.55009');
 define('BMG_SEGURO_SENHA', 'Quid@robo102030');
-define('BMG_SEGURO_LOGIN_CONSIG', 'DANTAS.PRAVOCE');
-define('BMG_SEGURO_SENHA_CONSIG', 'GtbP!8kgDuL@');
+define('BMG_SEGURO_LOGIN_CONSIG', 'coord2632.smile2'); 
+// define('BMG_SEGURO_LOGIN_CONSIG', 'DANTAS.PRAVOCE'); 
+define('BMG_SEGURO_SENHA_CONSIG', 'quid@102030');
+// define('BMG_SEGURO_SENHA_CONSIG', 'GtbP!8kgDuL@');
 define('BMG_ENTIDADE', '1581');
 define('BMG_LOJA_QUID', '54577'); //Unity
+define('BMG_LOJA_SMILE', '55009'); //Smile
 define('BMG_CODIGO_PRODUTO_PAP', 1007);
 define('BMG_CODIGO_PRODUTO_MED', 54);
 define('BMG_CODIGO_PRODUTO_PRESTAMISTA', 5);

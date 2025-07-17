@@ -38,15 +38,21 @@ $routes->setAutoRoute(true);
 // route since we don't have to scan directories.
 $routes->get('/', 'Home::index');
 
+//SEGURANCA
+$routes->match(['get', 'post'], '/sign-in', 'Seguranca\Login::autenticar');
+$routes->match(['get', 'post'], '/painel', 'Seguranca\Painel::listar_usuarios');
+$routes->match(['get', 'post'], '/painel/(:any)/(:any)', 'Seguranca\Painel::criar_usuarios/$1/$2');
 
 //Bradesco
-$routes->match(['get', 'post'], '/bradesco-teste', 'Bradesco\Bradesco::teste');
+$routes->match(['get', 'post'], '/bradesco-receptivo/(:any)', 'Bradesco\Bradesco::index');
 
 //BMG
 $routes->match(['get', 'post'], '/bmg-receptivo/(:any)', 'Bmg\Bmg::bmg_receptivo/$1');
+$routes->match(['get', 'post'], '/bmg-saque/(:any)', 'Bmg\Bmg::bmg_saque/$1');
 $routes->match(['get', 'post'], '/bmg-script-vendas/(:any)/(:any)/(:any)/(:any)/(:any)', 'Bmg\Bmg::bmg_script_vendas/$1/$2/$3/$4/$5');
 $routes->match(['get', 'post'], '/bmg-gravar-proposta', 'Bmg\Bmg::bmg_gravar_proposta');
 $routes->match(['get', 'post'], '/panorama-gravar-proposta', 'Bmg\Bmg::panorama_gravar_proposta');
+$routes->match(['get', 'post'], '/mailing', 'Bmg\Mailing::index');
 
 
 //AMBEC
@@ -71,6 +77,9 @@ $routes->match(['get', 'post'], '/whatsapp-criar-templates/(:any)/(:any)', 'Meta
 
 //INSIGHT
 $routes->match(['get', 'post'], '/insight-listar-notificacoes', 'Insight\Insight::insight_listar_notificacoes');
+
+//THEONE
+$routes->match(['get','post'], '/extrairdados', 'Theone\ExtrairDados::extrair');
 
 //AASPA
 $routes->match(['get', 'post'], '/comecar/(:any)', 'Frontline\Frontline::comecar/$1');
@@ -145,9 +154,6 @@ $routes->match(['get', 'post'], '/carregar-proposta-bmg', 'Consorcio\Consorcio::
 $routes->match(['get', 'post'], '/datalake-buscar', 'DataLake\DataLake::buscarCliente');
 $routes->match(['get', 'post'], '/vanguard-decode', 'DataLake\DataLake::vanguardDecode');
 $routes->match(['get', 'post'], '/datalake-carregar-inss', 'DataLake\DataLake::load_INSS_Batch');
-$routes->match(['get', 'post'], '/sign-in', 'Seguranca\Login::autenticar');
-$routes->match(['get', 'post'], '/painel', 'Seguranca\Painel::listar_usuarios');
-$routes->match(['get', 'post'], '/painel/(:any)/(:any)', 'Seguranca\Painel::criar_usuarios/$1/$2');
 
 //ADS
 $routes->match(['get', 'post'], '/ad-miner', 'Ads\Ads::listarAds');

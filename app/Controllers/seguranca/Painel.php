@@ -27,6 +27,8 @@ class Painel extends BaseController
         $whereCheck = [];
         $likeCheck = [];
 
+        $whereCheck['empresa'] = EMPRESA;
+
         if (!empty($role)) $whereCheck['role'] = $role;
         if (!empty($nickname)) $likeCheck['nickname'] = $nickname;
 
@@ -40,7 +42,7 @@ class Painel extends BaseController
 
         $dados = [
             'pageTitle' => 'Painel de Usuários',
-            'usuarios' => $usuarios['result']->getResult(), 
+            'usuarios' => $usuarios['result']->getResult(),
             'nickname' => $nickname,
             'role' => $role,
         ];
@@ -54,19 +56,43 @@ class Painel extends BaseController
             $nome = $this->getpost('nickname');
             $email = $this->getpost('email');
             $senha = $this->getpost('password');
-            $empresa = "QUID";
+            $empresa = strtoupper(EMPRESA);
             $equipe = null;
             $cargo = $this->getpost('role');
+            $supervisor = $this->getpost('report_to');
+
+            $findSupervisorId = $this->dbMaster->select('user_account', ['nickname' => $supervisor]);
+
+            $supervisorDados = $findSupervisorId['firstRow'];
+
+            $supervisorId = $supervisorDados->userId ?? 164815; 
 
             // configurar permissões
             $permissions = [];
 
-            if ($cargo == "SUPERVISOR") {
-                $supervisor = 1;
-                array_push($permissions, "ADMIN","BMG");
-            } else {
-                $supervisor = 164815;
-                array_push($permissions, "BMG");
+            // configurar lógica de supervisor
+            if (EMPRESA == 'quid') {
+                if ($cargo == "SUPERVISOR") {
+                    array_push($permissions, "SUPERVISOR", "QUID", "BMG");
+                } else {
+                    array_push($permissions, "QUID", "BMG" );
+                }
+            }
+
+            if(EMPRESA == 'theone') {
+                if ($cargo == "SUPERVISOR") {
+                    array_push($permissions, "SUPERVISOR", "THEONE");
+                } else {
+                    array_push($permissions, "THEONE");
+                }
+            }
+
+            if (EMPRESA == 'pravoce'){
+                if ($cargo == "SUPERVISOR") {
+                    array_push($permissions, "SUPERVISOR", "PRAVOCE");
+                } else {
+                    array_push($permissions, "PRAVOCE");
+                }
             }
 
             // configurar parametros
@@ -84,7 +110,7 @@ class Painel extends BaseController
                 'empresa' => $empresa,
                 'equipe' => $equipe,
                 'role' => $cargo,
-                'report_to' => $supervisor,
+                'report_to' => $supervisorId,
                 'perfil_acesso' => json_encode($permissions),
                 'parameters' => $parameters,
                 'status' => $status
@@ -96,7 +122,7 @@ class Painel extends BaseController
                 $this->dbMaster->insert('user_account', $dados);
             }
 
-            return redirect()->to('seguranca/painel');
+            return redirect()->to(urlInstitucional . '/painel');
         }
 
         $dados['pageTitle'] = "Cadastro";
@@ -129,15 +155,17 @@ class Painel extends BaseController
 
         if ($action == "remove") {
             $this->dbMaster->delete('user_account', ['userId' => $userId]);
-            return redirect()->to('seguranca/painel');
+            return redirect()->to(urlInstitucional . '/painel');
         }
 
         $whereCheck['role'] = 'SUPERVISOR';
+        $whereCheck['empresa'] = EMPRESA;
 
         $res = $this->dbMaster->select('user_account', $whereCheck);
         $dados['supervisorlist'] = $res['result']->getResultArray();
 
         $whereCheckGerente['role'] = 'GERENTE';
+        $whereCheckGerente['empresa'] = EMPRESA;
 
         $resger = $this->dbMaster->select('user_account', $whereCheckGerente);
         $dados['gerentelist'] = $resger['result']->getResultArray();

@@ -1,26 +1,31 @@
-<?php 
+<?php
+
 namespace App\Models;
 
+use SoapFault;
 use CodeIgniter\Model;
 use App\Libraries\dbMaster;
 use App\Models\M_telegram;
 use App\Models\M_http;
 use Symfony\Component\Panther\Client;
 
-class M_bmg extends Model {
+class M_bmg extends Model
+{
     protected $dbMasterDefault;
     protected $session;
     protected $telegram;
     protected $m_http;
 
-    public function __construct(){
-		$this->dbMasterDefault = new dbMaster();
+    public function __construct()
+    {
+        $this->dbMasterDefault = new dbMaster();
         $this->session = session();
         $this->telegram =  new M_telegram();
         $this->m_http =  new M_http();
     }
 
-    public function statusSeguro(){
+    public function statusSeguro()
+    {
         $adesao = "97446084"; //SEGURO MED - MARIA AUXILIADORA DO CARMO SILVA
 
         try {
@@ -41,14 +46,14 @@ class M_bmg extends Model {
             echo "<pre>";
             print_r($response);
             echo "</pre>";
-
         } catch (SoapFault $fault) {
             echo "Erro: {$fault->faultcode} - {$fault->faultstring}";
         }
     }
 
     //http://localhost/fintech/index.php/lab/validarElegibilidadeSeguros
-    public function validarElegibilidadeSeguros(){
+    public function validarElegibilidadeSeguros()
+    {
         $cpf = "05843943577";
 
         try {
@@ -74,15 +79,15 @@ class M_bmg extends Model {
             echo "<pre>";
             print_r($response);
             echo "</pre>";
-
         } catch (SoapFault $fault) {
             echo "Erro: {$fault->faultcode} - {$fault->faultstring}";
         }
     }
 
-    
-    
-    public function listarPlanos(){
+
+
+    public function listarPlanos()
+    {
         $cpf = "65849949615";
 
         try {
@@ -95,16 +100,16 @@ class M_bmg extends Model {
                 'senhaConsig'  => BMG_SEGURO_SENHA_CONSIG,
                 'codigoOrgao'          => '1581',         // Código do Órgão fornecido pelo BMG
                 'codigoProdutoSeguro'  => BMG_CODIGO_PRODUTO_MED,             // Ex: 35 = Seguro Prestamista Consignado
-                'entidade'             => 1581,// Nome da entidade (ex: INSS, SIAPE, etc)
+                'entidade'             => 1581, // Nome da entidade (ex: INSS, SIAPE, etc)
                 //'matricula'            => '1655645452',   // Matrícula do cliente na entidade
                 //'numeroInternoConta'   => 7543377,         // Número interno da conta (fornecido pelo BMG)
                 'renda'                => 2500.00,        // Renda do cliente
                 'sequencialOrgao'      => '001',          // Sequencial do órgão
                 'tipoPagamentoSeguro'  => 2               // 1=à vista, 2=mensal, etc
             ];
-        
+
             $response = $client->__soapCall('listaPlanos', [$params]);
-        
+
             // echo "<pre>";
             // print_r($response);
             // echo "</pre>";
@@ -114,7 +119,8 @@ class M_bmg extends Model {
         }
     }
 
-    public function listaPlanosRating($codigoProdutoSeguro, $numeroInternoConta, $limiteCartao){
+    public function listaPlanosRating($codigoProdutoSeguro, $numeroInternoConta, $limiteCartao)
+    {
         // $cpf = "65849949615";
         // $cpf = "65849949615";
         // $cpf = "65849949615";
@@ -137,11 +143,11 @@ class M_bmg extends Model {
                 'sequencialOrgao'       => '001',
                 'tipoPagamentoSeguro'   => 2 // 1 = à vista, 2 = mensal, etc.
             ];
-            
-        
+
+
             $response = $client->__soapCall('listaPlanosRating', [$params]);
 
-            
+
             //exit;
             // echo "===== PLANOS COM COBERTURAS =====<br>";
 
@@ -169,8 +175,8 @@ class M_bmg extends Model {
             // } else {
             //     echo "Nenhum plano retornado.<br>";
             // }
-        
-        
+
+
 
 
             // echo "<pre>";
@@ -184,7 +190,8 @@ class M_bmg extends Model {
         return $response;
     }
 
-    public function obterCartoesDisponiveis($cpf, $produto = BMG_CODIGO_PRODUTO_MED){
+    public function obterCartoesDisponiveis($cpf, $produto = BMG_CODIGO_PRODUTO_MED)
+    {
         $returnData = [];
         $returnData["status"] = false;
         $returnData["mensagem"] = "";
@@ -200,19 +207,19 @@ class M_bmg extends Model {
                 'senhaConsig'  => BMG_SEGURO_SENHA_CONSIG,
                 'codigoSeguro' => $produto,              // Ex: 35 = Seguro Prestamista Consignado
                 'cpf'          => $cpf,   // CPF do cliente, apenas números
-                'tipoPagamento'=> 2,               // 1=à vista, 2=mensal, etc
+                'tipoPagamento' => 2,               // 1=à vista, 2=mensal, etc
             ];
-        
+
             $response = $client->__soapCall('obterCartoesDisponiveis', [$params]);
-        
+
             // echo "<pre>";
             // print_r($response);
             // echo "</pre>";exit;
 
-            if (((isset($response->mensagemDeErro))) and ((!empty($response->mensagemDeErro)))){
+            if (((isset($response->mensagemDeErro))) and ((!empty($response->mensagemDeErro)))) {
                 $returnData["mensagem"] = "Cliente Inválido: <br>" . $response->mensagemDeErro;
             } else {
-                
+
                 if (isset($response->cartaoClienteAtivoVendaSeguro) && is_array($response->cartaoClienteAtivoVendaSeguro)) {
                     $returnData["status"] = true;
                     foreach ($response->cartaoClienteAtivoVendaSeguro as $cartao) {
@@ -245,10 +252,10 @@ class M_bmg extends Model {
                         // echo "Número Conta Interna: <a href=" . assetfolder . 'index.php/lab/listaPlanosRating/' . $cartao->numeroInternoConta . '/' . $cartao->limiteCartao . ">"  . $cartao->numeroInternoConta  . "</a><br>";
                         // echo "<b><br>MED: </b><br><br>";
                         // $this->listaPlanosRating(BMG_CODIGO_PRODUTO_MED, $cartao->numeroInternoConta, $cartao->limiteCartao);
-                        
+
                         // echo "<b><br>PAPCARD: </b><br><br>";
                         // $this->listaPlanosRating(BMG_CODIGO_PRODUTO_PAP, $cartao->numeroInternoConta, $cartao->limiteCartao);
-                        
+
                         // echo "<b><br>PRESTAMISTA: </b><br><br>";
                         // $this->listaPlanosRating(BMG_CODIGO_PRODUTO_PRESTAMISTA, $cartao->numeroInternoConta, $cartao->limiteCartao);
 
@@ -260,14 +267,12 @@ class M_bmg extends Model {
                     $returnData["mensagem"] = "Nenhum cartão disponível ou retorno inesperado.<br>";
                 }
                 //echo $response->cartaoClienteAtivoVendaSeguro[0]->numeroInternoConta;exit;
-                
+
                 //$this->listaPlanosRating($response->cartaoClienteAtivoVendaSeguro[0]);
                 // echo "<pre>";
                 // print_r($response);
                 // echo "</pre>";	exit;
             }
-
-
         } catch (SoapFault $fault) {
             $returnData["mensagem"] = "Erro: {$fault->faultcode} - {$fault->faultstring}";
             //echo "Erro: {$fault->faultcode} - {$fault->faultstring}";
@@ -279,7 +284,8 @@ class M_bmg extends Model {
     }
 
 
-    public function geraScriptVenda($produto, $cpf, $conta, $plano, $codigoTipoPagamento){
+    public function geraScriptVenda($produto, $cpf, $conta, $plano, $codigoTipoPagamento)
+    {
         $response = null;
         try {
             $client = new \SoapClient(BMG_WSDL, ['trace' => 1, 'exceptions' => true]);
@@ -306,7 +312,7 @@ class M_bmg extends Model {
                 'codigoTipoFormaEnvio'             => 15,               // Ex: 15 = Digital
                 'codigoTipoPagamento'              => $codigoTipoPagamento,                // Ex: 2 = Mensal  // 4= Parcelado
                 'cpf'                               => $cpf,    // CPF do cliente
-                 'formaPagamentoProdutoSeguro'=> 5,                // Ex: 5 = Folha de Pagamento
+                'formaPagamentoProdutoSeguro' => 5,                // Ex: 5 = Folha de Pagamento
                 //'matricula'                         => '1655645452',      // Matrícula do cliente
                 'numeroInternoConta'               => $conta,           // Obtido de obterCartoesDisponiveis
                 'renda'                             => 2500.00,          // Renda do cliente
@@ -325,10 +331,11 @@ class M_bmg extends Model {
             echo "Erro: {$fault->faultcode} - {$fault->faultstring}";
         }
 
-        return $response; 
+        return $response;
     }
 
-    public function gravaPropostaSeguro($params){
+    public function gravaPropostaSeguro($params)
+    {
         $response = null;
         $returnData = [];
         $returnData["status"] = false;
@@ -352,9 +359,10 @@ class M_bmg extends Model {
             $returnData["status"] = true;
             $returnData["adesao"] = '12345';
             $returnData["mensagem"] = "[EM CONSTRUÇÃO]<br>Proposta Gravada com Sucesso BMG!<br>Número da Adesão: 00000";
-            return $returnData; exit;
+            return $returnData;
+            exit;
 
-            if (((isset($response->mensagemDeErro))) and ((!empty($response->mensagemDeErro)))){
+            if (((isset($response->mensagemDeErro))) and ((!empty($response->mensagemDeErro)))) {
                 $returnData["mensagem"] = "Erro ao Gravar: <br>" . $response->mensagemDeErro;
             } else {
                 if (isset($response->numero)) {
@@ -365,7 +373,7 @@ class M_bmg extends Model {
                     $returnData["mensagem"] = "Erro ao Recuperar Número da Adesão.";
                 }
             }
-            
+
             // echo "<pre>";
             // print_r($response);
             // echo "</pre>"; exit;
@@ -391,10 +399,122 @@ class M_bmg extends Model {
             $returnData["mensagem"] = "Erro: {$fault->faultcode} - {$fault->faultstring}";
         }
 
-        return $returnData; 
+        return $returnData;
     }
 
+    public function gravarPropostaSaque($params)
+    {
+        try {
+            $client = new \SoapClient(BMG_SAQUE_WSDL, ['trace' => 1, 'exceptions' => true]);
+
+            $valorSaque = $params['valorSaque'];
+
+            $retornoValorParcela = $this->obterValorParcela($valorSaque);
+
+            $fixParams = [
+                'login'        => BMG_SEGURO_LOGIN,
+                'senha'        => BMG_SEGURO_SENHA,
+                'loginConsig'  => BMG_SEGURO_LOGIN_CONSIG,
+                'senhaConsig'  => BMG_SEGURO_SENHA_CONSIG,
+                'codigoEntidade'   => "1581-",
+                'codigoLoja' => BMG_LOJA_SMILE,
+                'finalidadeCredito' => 1, // CONTA CORRENTE
+                'formaCredito' => 2, // TRANSFERÊNCIA BANCÁRIA
+                'codigoFormaEnvioTermo' => 15, // DIGITAL
+                'tipoSaque' => 1, // 1 - SAQUE AUTORIZADO
+                'bancoOrdemPagamento' => 0,
+                'cpfImpedidoComissionar' => false,
+
+                // 'numeroParcelas' => $retornoValorParcela[0]->numeroParcelas,
+                // 'valorParcela' => $retornoValorParcela[0]->valorParcela,
+            ];
+
+            $params = array_merge($fixParams, $params);
+            
+            // return redirect()->to(base_url('bmg-saque/0'))->with('erro', [$params]);
+            $response = $client->__soapCall('gravarPropostaSaqueComplementar', [$params]);
+
+            // $response = $client->__soapCall('geraScript', [$params]);
+
+            return $response;
+
+        } catch (SoapFault $fault) {
+            echo "Erro: {$fault->faultstring}";
+
+            return [
+                'erro' => true,
+                'mensagem' => "{$fault->faultstring}"
+            ];
+        }
+
+    }
+
+    public function obterValorParcela($valorSaque)
+    {
+        try {
+            $client = new \SoapClient(BMG_SAQUE_WSDL, ['trace' => 1, 'exceptions' => true]);
+
+            $params = [
+                'login'        => BMG_SEGURO_LOGIN,
+                'senha'        => BMG_SEGURO_SENHA,
+                'codigoEntidade'   => "1581-",
+            ];
+
+            $params['valorSaque'] = $valorSaque;
+
+            $response = $client->__soapCall('buscarSimulacao', [$params]);
+
+            return $response;
+        } catch (SoapFault $fault) {
+            echo "Erro: {$fault->faultcode} - {$fault->faultstring}";
+
+            return [
+                'erro' => true,
+                'mensagem' => "{$fault->faultcode} - {$fault->faultstring}"
+            ];
+        }
+    }
+
+    public function obterLimiteSaque($params)
+    {
+        try {
+            $client = new \SoapClient(BMG_SAQUE_WSDL, ['trace' => 1, 'exceptions' => true]);
+
+            $fixParams = [
+                'login'        => BMG_SEGURO_LOGIN,
+                'senha'        => BMG_SEGURO_SENHA,
+                'codigoEntidade'   => "1581-",
+            ];
+
+            $params = array_merge($fixParams, $params);
+
+            $responseCards = $client->__soapCall('buscarCartoesDisponiveis', [$params]);
+
+            if (isset($responseCards->cartoesRetorno) && is_array($responseCards->cartoesRetorno) && count($responseCards->cartoesRetorno) > 0) {
+                $params['numeroContaInterna'] = $responseCards->cartoesRetorno[0]->numeroContaInterna;
+                $params['matricula'] = $responseCards->cartoesRetorno[0]->matricula;
+                $params['tipoSaque'] = 1;
+                $params['cpfImpedidoComissionar'] = false;
+                $responseLimit = $client->__soapCall('buscarLimiteSaque', [$params]);
+            } else {
+                return [
+                    'erro' => true,
+                    'mensagem' => 'Nenhum cartão disponível ou retorno inesperado.'
+                ];
+            }
+
+            $response = new \stdClass();
+            $response->cartoes = $responseCards;
+            $response->limite = $responseLimit;
+
+            return $response;
+        } catch (SoapFault $fault) {
+            echo "Erro: {$fault->faultcode} - {$fault->faultstring}";
+
+            return [
+                'erro' => true,
+                'mensagem' => "{$fault->faultstring}"
+            ];
+        }
+    }
 }
-
-
-?>
