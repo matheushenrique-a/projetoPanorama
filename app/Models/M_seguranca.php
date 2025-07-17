@@ -32,7 +32,7 @@ class M_seguranca extends Model
         if ($login['existRecord']) {
             $user_empresa = $login['firstRow']->empresa;
 
-            if (is_string($user_empresa) && str_starts_with($user_empresa, '[')) {
+            if (is_string($user_empresa) && strpos($user_empresa, '[') === 0) {
                 $user_empresa = json_decode($user_empresa, true);
             }
 

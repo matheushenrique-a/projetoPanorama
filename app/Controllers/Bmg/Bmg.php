@@ -795,7 +795,6 @@ class Bmg extends BaseController
 
     public function bmg_limite_saque($cpf)
     {
-
         $cpf = $this->getpost('cpf') ?? '';
         $matricula = $this->getpost('matricula') ?? '';
         $contaInterna = $this->getpost('contaInterna') ?? '';
