@@ -157,6 +157,7 @@ class Ads extends BaseController
         $groups = $this->getpost('groups');
         $statusView = $this->getpost('statusView');
         $paginas = $this->getpost('paginas');
+        $adgroup = $this->getpost('adgroup');
 
         $adList = null;
         $adListResult = null;
@@ -164,7 +165,7 @@ class Ads extends BaseController
         
         //lista todos os ads mas agrupados por páginas para saber quais páginas tem mais ads
         if (!empty($groups)){
-            $sql = 'select p.pageId, count(*) total, max(p.ad_snapshot_url) urlAd, max(p.last_update) last_update, s.action 
+            $sql = 'select p.pageId, count(*) total, max(p.ad_snapshot_url) urlAd, max(p.last_update) last_update, s.action, p.group 
                     from ads_pages p left join ads_saved s on p.pageId = s.pageId and s.userId = ' . $this->session->userId;
             
             if ($statusView == "view") {
@@ -180,9 +181,17 @@ class Ads extends BaseController
             } else if ($statusView == "star") {
                 $sql .= ' where action = "star" ';
             }
-            
-            $sql .= ' group by pageId order by total desc limit ' . $paginas . ';';
-            //echo $sql;exit;
+
+             if (!empty($adgroup)) {
+                if (strpos($sql, 'where') !== false) {
+                    $sql .= ' and p.group = "' . $adgroup . '" ';
+                } else {
+                    $sql .= ' where p.group = "' . $adgroup . '" ';
+                }
+            }
+
+            $sql .= ' group by pageId, p.group order by total desc limit ' . $paginas . ';';
+            ///echo $sql;exit;
             $adList = $this->dbMaster->runQuery($sql);
 
             $keyword = $this->getpost('keyword', true);
@@ -363,6 +372,9 @@ class Ads extends BaseController
             $paginas = $this->getpost('paginas',true);
         }
 
+        $sqlQuery = 'select distinct a.group from ads_pages a order by a.group;';
+		$adgroupList = $this->dbMaster->runQuery($sqlQuery);
+
         $dados['pageTitle'] = "Ads - Listar Ads";
         $dados['statusView'] = $statusView;
         $dados['keyword'] = $keyword;
@@ -383,6 +395,8 @@ class Ads extends BaseController
         $dados['favoritos'] = $favoritos;
         $dados['pages'] = $pages;
         $dados['groups'] = $groups;
+        $dados['adgroup'] = $adgroup;
+        $dados['adgroupList'] = $adgroupList;
 
         return $this->loadpage('ads/listar_ads', $dados);
     }
@@ -470,7 +484,20 @@ class Ads extends BaseController
         $dateInfo = $response['dateInfo'] ?? '';
         $thumbnail = $response['thumbnail'] ?? '';
 
-        $this->telegram->notifyTelegramGroup("SAVEAD:\n\nUSER:\n$user\n\nURL:\n$url\n\nANUNCIANTE:\n$advertiser\n\nTEXTO:\n$adText\n\nLIBID:\n$libraryId\n\nDATE:\n$dateInfo\n\nIMG:\n$thumbnail", telegramQuid);
+        $adData = [
+            'user' => $user,
+            'url' => $url,
+            'advertiser' => $advertiser,
+            'adText' => $adText,
+            'libraryId' => $libraryId,
+            'dateInfo' => $dateInfo,
+            'thumbnail' => $thumbnail
+        ];
+
+        $added = $this->dbMasterDefault->insert('ads_extension', $adData);
+
+        //$this->telegram->notifyTelegramGroup("SAVEAD:\n\nUSER:\n$user\n\nURL:\n$url\n\nANUNCIANTE:\n$advertiser\n\nTEXTO:\n$adText\n\nLIBID:\n$libraryId\n\nDATE:\n$dateInfo\n\nIMG:\n$thumbnail", telegramPraVoceDigital);
+        $this->telegram->notifyTelegramGroup("🕵🏻‍♀️🕵🏻‍♀️🕵🏻‍♀️ " . strtoupper($advertiser) . " [$libraryId]\n" . $url, telegramPraVoceDigital);
 
         $returnData["status"] = true;
         $returnData["mensagem"] = "OK";                
@@ -507,13 +534,18 @@ class Ads extends BaseController
     //https://insightsuite.pravoce.io/ads-load
     public function loadMiner(){
 
-        $group = "WL";
-        //$group = "COPY2";
+        $group = "";
         $limit = 1000;
         $ad_delivery_date_max = date('Y-m-d', strtotime('-5 days')); //anuncios antes dessa data
         $ad_delivery_date_min = date('Y-m-d', strtotime('-5 days')); //anuncios depois dessa data
 
         $keywords = [
+            [urlencode("Mounjaro"), "WL", 'US'],
+            [urlencode("zepbound"), "WL", 'US'],
+            [urlencode("quiz.cakto"), "CAKTO-US", 'US'],
+            [urlencode("inlead"), "INLEAD-US", 'US'],
+            [urlencode("quiz.cakto"), "CAKTO-BR", 'BR'],
+            [urlencode("inlead"), "INLEAD-BR", 'BR'],
             // urlencode("weight"),
             // urlencode("loss"),
             // urlencode("burnning"),
@@ -539,8 +571,6 @@ class Ads extends BaseController
             // urlencode("liraglutide"),
             // urlencode("saxenda"),
             // urlencode("wegovy"),
-            urlencode("Mounjaro"),
-            urlencode("zepbound"),
             // urlencode("tirzepatide"),
             // urlencode("GLP-1"),
             // urlencode("GLP1"),
@@ -577,7 +607,10 @@ class Ads extends BaseController
         $totalAdd = 0;
 
         foreach ($keywords as $keyword) {
-            $url = '&search_terms=' . $keyword . '&search_type=KEYWORD_UNORDERED&ad_type=ALL&ad_reached_countries=US&ad_active_status=ACTIVE&media_type=VIDEO&publisher_platforms=INSTAGRAM&ad_delivery_date_min=' . $ad_delivery_date_min  . '&limit=' . $limit;
+            $keywordClean = $keyword[0];
+            $group = $keyword[1];
+            $country = $keyword[2];
+            $url = '&search_terms=' . $keywordClean . '&search_type=KEYWORD_UNORDERED&ad_type=ALL&ad_reached_countries=' . $country . '&ad_active_status=ACTIVE&media_type=VIDEO&publisher_platforms=INSTAGRAM&ad_delivery_date_min=' . $ad_delivery_date_min  . '&limit=' . $limit;
             $adList = $this->getAds($url);
 
             if ((!is_null($adList)) and ($adList['sucesso'])){
@@ -597,7 +630,7 @@ class Ads extends BaseController
                                 'ad_snapshot_url' => $adListResult['data'][$key]['ad_snapshot_url'],
                                 'ad_delivery_start_time' => $adListResult['data'][$key]['ad_delivery_start_time'],
                                 'id_ad' => $id_ad,
-                                'keyword' => $keyword,
+                                'keyword' => $keywordClean,
                                 'group' => $group,
                             ];
 
