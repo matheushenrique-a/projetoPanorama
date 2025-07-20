@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "Dantas Ad Library Downloader",
-  "version": "1.21",
+  "name": "[DEEV] Dantas Ad Library Downloader",
+  "version": "1.23",
   "description": "This extension allows you to download videos from the Ad Library.",
   "action": {
     "default_popup": "popup.html",

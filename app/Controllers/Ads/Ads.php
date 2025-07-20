@@ -473,7 +473,14 @@ class Ads extends BaseController
         }
 
         $request = file_get_contents('php://input');
+
+        //$this->telegram->notifyTelegramGroup("🕵🏻‍♀️🕵🏻‍♀️🕵🏻‍♀️ $request", telegramPraVoceDigital);
+
+
+        //$request = '{"user":"openaccess","url":"https://scontent.fplu6-1.fna.fbcdn.net/o1/v/t2/f2/m69/AQMDHTddLUw8Yvv49fYKfaU4Pr2BShhcY0OpLpfruh912C54tdYOjdxXAIgcNuJsNBN2bNR2kLCAyxVAoXYiOmid.mp4?strext=1&_nc_cat=105&_nc_oc=AdmyEPVtRJ6p8Lqtl4k1Cv9gz3oRn4jW90teh67pXUHSdY4a0UD9dQYomd5w0VdLwjrt5cerEiJQts3nOCJd4NmI&_nc_sid=8bf8fe&_nc_ht=scontent.fplu6-1.fna.fbcdn.net&_nc_ohc=h0ZrqFsf2JEQ7kNvwH5qv7A&efg=eyJ2ZW5jb2RlX3RhZyI6Inhwdl9wcm9ncmVzc2l2ZS5WSV9VU0VDQVNFX1BST0RVQ1RfVFlQRS4uQzMuMzYwLnByb2dyZXNzaXZlX2gyNjQtYmFzaWMtZ2VuMl8zNjBwIiwieHB2X2Fzc2V0X2lkIjoyMzkxOTYyMzQ3NDM4Nzk2MywidmlfdXNlY2FzZV9pZCI6MTAwOTksImR1cmF0aW9uX3MiOjg4LCJ1cmxnZW5fc291cmNlIjoid3d3In0%3D&ccb=17-1&_nc_zt=28&_nc_eui2=AeFMO5Bddis4OxTkNcNrxMXt-5Hx8FuaAob7kfHwW5oChsptU_iSdLmKamqiFeG5bsiaSctQl9uvy--9Qfkw_Ntk&oh=00_AfRikEzfdLzq3uXq3DVy35-PFPCdlGmI1fKmHDKGmbeNtQ&oe=6880D1E9","advertiser":"chefandersonsousa","adText":"🔥 Esse é o tartar que parou a internet… e agora você vai ver quem tá por trás dele.\n\nHoje eu te mostro a receita completa na mão, no olho, do meu jeito.\nNada de truque. Só carne de verdade, tempero de respeito e aquela entrega de alma que a cozinha pede.\n\n📍Direto da Maloca da Tuttapanna, com o chef na linha de frente.\nAssiste até o fim… e me diz se você teria coragem de encarar esse sabor!\n\n👇 Marca quem merece provar esse tartar!\n#TartarÉNaMaloca #ChefAndersonSousa #ComidaComPersonalidade #GastronomiaDeVerdade","libraryId":["1688742229194582"],"dateInfo":"Started running on Jul 18, 2025 · Total active time 4 hrs","thumbnail":"https://scontent.fplu6-1.fna.fbcdn.net/v/t39.35426-6/519535017_762319832881042_3346301328037777203_n.jpg?stp=dst-jpg_s60x60_tt6&_nc_cat=100&ccb=1-7&_nc_sid=c53f8f&_nc_eui2=AeGOvXqgrGIpGHElFvIyNf6xqjHlyDriD5SqMeXIOuIPlIYGPXIjEJqZzPTIBvSXpd52gNVjuWfK1neP_WI0EtoA&_nc_ohc=rwyW5xhMkm8Q7kNvwEVzP6a&_nc_oc=AdmHMQE_bE_ljwcOLb-XE6-207BTlimTUcAatd8wkikoJobuUCXRo5fovbBrcoIxR0cAaLmXbXq5lu5raUKfiuaF&_nc_zt=14&_nc_ht=scontent.fplu6-1.fna&_nc_gid=Vd1_dA-TuvJ46jjorGNZCg&oh=00_AfSjNfj4Z1bET84Bm8CYqNqMSN4ldcP_pRLwk3M3mnJJ8g&oe=6880BFFE"}';
         $response = json_decode($request, true);
+
+
 
         $user = $response['user'] ?? 'NA';
         $url = $response['url'] ?? 'NA';
@@ -496,6 +503,13 @@ class Ads extends BaseController
 
         $added = $this->dbMasterDefault->insert('ads_extension', $adData);
 
+        $newAd = $this->dbMasterDefault->select('ads_extension', ['id_ads' => $added["insert_id"]]);
+
+        $returnData["guid"] = "";
+        if ($newAd['existRecord']){
+            $returnData["guid"] = $newAd['firstRow']->guid;
+        }
+        
         //$this->telegram->notifyTelegramGroup("SAVEAD:\n\nUSER:\n$user\n\nURL:\n$url\n\nANUNCIANTE:\n$advertiser\n\nTEXTO:\n$adText\n\nLIBID:\n$libraryId\n\nDATE:\n$dateInfo\n\nIMG:\n$thumbnail", telegramPraVoceDigital);
         $this->telegram->notifyTelegramGroup("🕵🏻‍♀️🕵🏻‍♀️🕵🏻‍♀️ " . strtoupper($advertiser) . " [$libraryId]\n" . $url, telegramPraVoceDigital);
 
@@ -529,10 +543,92 @@ class Ads extends BaseController
     }
 
 
+
+
+
+    function fetchAds($url, &$allAds){
+        do {
+            $response = $this->getAds2($url);
+            $data = json_decode($response['retorno'], true);
+
+            if (!empty($data['data'])) {
+                $allAds = array_merge($allAds, $data['data']);
+                //echo '16:06:57 - <h3>Dump 56 </h3> <br><br>' . var_dump($allAds); exit;					//<-------DEBUG
+            }
+
+            
+
+            //echo $data['paging']['next'] ?? null;exit;
+            $url = $data['paging']['next'] ?? null;
+
+        } while ($url);
+    }
+
+    public function getAds2($url){
+        $headers = $this->getHeader();
+		//$url = META_GRAPH_API . "ads_archive?access_token=". META_TOKEN . ($params);
+		//echo $url;exit;
+        //$url = urlencode($url);
+		//echo $url;exit;
+        $result =  $this->http_request('GET', $url, $headers);
+        //echo '18:18:12 - <h3>Dump 26 </h3> <br><br>' . var_dump($result); exit;					//<-------DEBUG
+		return $result;
+	}
+
     //salva ads por palavra chave para identifiar paginas com grande volumes de ads.
     //http://localhost/InsightSuite/public/ads-load
     //https://insightsuite.pravoce.io/ads-load
     public function loadMiner(){
+        $accessToken = META_TOKEN;
+        $keywordClean = "slim"; //palavra chave para busca
+        $country = 'us'; //país para busca
+        $group = $keywordClean; //grupo para busca
+        $language = 'en'; //idioma para busca
+        $limit = 1000;
+        $searchUrl = 'https://graph.facebook.com/v23.0/ads_archive?search_terms=' . $keywordClean . '&ad_type=ALL&languages=' . $language . '&ad_active_status=ACTIVE&ad_reached_countries=' . $country . '&access_token=' . $accessToken . '&ad_delivery_date_min=2025-07-19&media_type=VIDEO&limit=' . $limit . '&ad_delivery_date_max=2025-07-19&unmask_removed_content=true';
+        $allAds = [];
+        $this->fetchAds($searchUrl, $allAds);
+
+        $i= 0;
+        $totalAdd = 0;
+
+        foreach ($allAds as $ad) {
+            $i++;
+            // echo "Page ID: " . $ad['page_id'] . "<br>";
+            // echo "Ad Snapshot URL: " . $ad['ad_snapshot_url'] . "<br>";
+            // echo "Ad Delivery Start Time: " . $ad['ad_delivery_start_time'] . "<br>";
+            // echo "Ad ID: " . $ad['id'] . "<br>";
+            // echo "-----------------------------" . "<br>";
+            echo "$i: Page/Ad ID: " . $ad['page_id'] . "/" . $ad['id'] . "<br>";
+
+            $id_ad = $ad['id'];
+            $pageId = $ad['page_id'];
+            
+            $adItem = $this->dbMaster->select('ads_pages', ['id_ad' => $id_ad]);
+            $isBlocked = $this->dbMaster->select('ads_saved', ['pageId' => $pageId, 'action' => 'dislike'])['existRecord'];
+
+            //se o ad não existe na tabela ads_pages e não está bloqueado, insere o ad
+            if ((!$adItem['existRecord']) and (!$isBlocked)) {
+                $data = [
+                    'pageId' => $pageId,
+                    'ad_snapshot_url' => $ad['ad_snapshot_url'],
+                    'ad_delivery_start_time' => $ad['ad_delivery_start_time'],
+                    'id_ad' => $id_ad,
+                    'keyword' => $keywordClean,
+                    'group' => $group,
+                ];
+
+                $added = $this->dbMaster->insert('ads_pages',$data);
+                $totalAdd++;
+            }
+        }
+
+        // Exemplo de exibição
+        echo "<br><br>Total de anúncios coletados: " . count($allAds) . "<Br>";
+        echo "<br>Adicionados: " . ($totalAdd) . "<Br>";
+        // print_r($allAds);
+        
+        exit;
 
         $group = "";
         $limit = 1000;
