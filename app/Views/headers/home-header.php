@@ -4099,7 +4099,9 @@ License: For each use you must have a valid license purchased only from above li
 									<!--begin::Menu item-->
 									<div class="menu-item px-3">
 										<div class="d-flex px-3 justify-content-center">
-											<h4>QUID</h4>
+											<?= EMPRESA == 'quid' ? '<h4>QUID</h4>' : '' ?>
+											<?= EMPRESA == 'theone' ? '<h4>THE ONE</h4>' : '' ?>
+											<?= EMPRESA == 'pravoce' ? '<h4>PRA VOCÊ</h4>' : '' ?>
 										</div>
 										<div class="separator my-2"></div>
 										<div class="menu-content d-flex align-items-center px-3">
@@ -4398,7 +4400,7 @@ License: For each use you must have a valid license purchased only from above li
 								</div>
 								<!--end:Menu item-->
 								<!--begin:Menu item-->
-								<?php if ($my_security->HasPermission("BMG", ['quid', 'pravoce'])) : ?>
+								<?php if ($my_security->checkPermission("BMG")) : ?>
 									<div class="menu-item pt-5">
 										<!--begin:Menu content-->
 										<div class="menu-content">
@@ -5064,7 +5066,7 @@ License: For each use you must have a valid license purchased only from above li
 								</div>
 								<!--end:AASPA BRASIL Menu item-->
 								<!--begin:BMG item-->
-								<?php if ($my_security->HasPermission(["BMG", "ADMIN", "SUPERVISOR"], "quid")): ?>
+								<?php if ($my_security->checkPermission("BMG")): ?>
 									<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
 										<!--begin:Menu link-->
 										<span class="menu-link">
@@ -5105,7 +5107,7 @@ License: For each use you must have a valid license purchased only from above li
 												</a>
 												<!--end:Menu link-->
 											</div>
-											<?php if ($my_security->HasPermission(["ADMIN"], "quid")): ?>
+											<?php if ($my_security->checkPermission("ADMIN")): ?>
 												<div class="menu-item">
 													<!--begin:Menu link-->
 													<a class="menu-link" href="<?php echo assetfolder; ?>mailing">
@@ -5121,7 +5123,7 @@ License: For each use you must have a valid license purchased only from above li
 									</div>
 								<?php endif; ?>
 
-								<?php if ($my_security->HasPermission(["BMG", "ADMIN", "SUPERVISOR"], "quid")): ?>
+								<?php if ($my_security->checkPermission("BRADESCO")): ?>
 									<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
 										<!--begin:Menu link-->
 										<span class="menu-link">
@@ -5156,7 +5158,7 @@ License: For each use you must have a valid license purchased only from above li
 									</div>
 								<?php endif; ?>
 
-								<?php if ($my_security->HasPermission(["ADMIN", "SUPERVISOR"], "theone")): ?>
+								<?php if ($my_security->checkPermission("ADMIN")): ?>
 									<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
 										<!--begin:Menu link-->
 										<span class="menu-link">
@@ -5193,7 +5195,7 @@ License: For each use you must have a valid license purchased only from above li
 									</div>
 								<?php endif; ?>
 
-								<?php if ($my_security->HasPermission(["ADMIN", "SUPERVISOR"], "all")): ?>
+								<?php if ($my_security->checkPermission("SUPERVISOR")): ?>
 									<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
 										<!--begin:Menu link-->
 										<span class="menu-link">
@@ -5342,61 +5344,63 @@ License: For each use you must have a valid license purchased only from above li
 								</div>
 								<!--end:CONSORCIO BRASIL Menu item-->
 								<!--begin:CONSORCIO BRASILMenu item-->
-								<div data-kt-menu-trigger="click" class="menu-item menu-accordion" style="<?php $my_security->DisplayMenu("ADMIN"); ?>">
-									<!--begin:Menu link-->
-									<span class="menu-link">
-										<span class="menu-icon">
-											<!--begin::Svg Icon | path: icons/duotune/communication/com013.svg-->
-											<span class="svg-icon svg-icon-2">
-												<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-													<path d="M6.28548 15.0861C7.34369 13.1814 9.35142 12 11.5304 12H12.4696C14.6486 12 16.6563 13.1814 17.7145 15.0861L19.3493 18.0287C20.0899 19.3618 19.1259 21 17.601 21H6.39903C4.87406 21 3.91012 19.3618 4.65071 18.0287L6.28548 15.0861Z" fill="currentColor" />
-													<rect opacity="0.3" x="8" y="3" width="8" height="8" rx="4" fill="currentColor" />
-												</svg>
+								<?php if ($my_security->checkPermission("ADMIN")): ?>
+									<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
+										<!--begin:Menu link-->
+										<span class="menu-link">
+											<span class="menu-icon">
+												<!--begin::Svg Icon | path: icons/duotune/communication/com013.svg-->
+												<span class="svg-icon svg-icon-2">
+													<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+														<path d="M6.28548 15.0861C7.34369 13.1814 9.35142 12 11.5304 12H12.4696C14.6486 12 16.6563 13.1814 17.7145 15.0861L19.3493 18.0287C20.0899 19.3618 19.1259 21 17.601 21H6.39903C4.87406 21 3.91012 19.3618 4.65071 18.0287L6.28548 15.0861Z" fill="currentColor" />
+														<rect opacity="0.3" x="8" y="3" width="8" height="8" rx="4" fill="currentColor" />
+													</svg>
+												</span>
+												<!--end::Svg Icon-->
 											</span>
-											<!--end::Svg Icon-->
+											<span class="menu-title">ADIMIN</span>
+											<span class="menu-arrow"></span>
 										</span>
-										<span class="menu-title">ADIMIN</span>
-										<span class="menu-arrow"></span>
-									</span>
-									<!--end:Menu link-->
-									<!--begin:Menu sub-->
-									<div class="menu-sub menu-sub-accordion">
-										<!--begin:Menu item-->
-										<div class="menu-item">
-											<!--begin:Menu link-->
-											<a class="menu-link" href="<?php echo assetfolder; ?>metricas-semanais" target="_blank">
-												<span class="menu-bullet">
-													<span class="bullet bullet-dot"></span>
-												</span>
-												<span class="menu-title">Semanais FGTS</span>
-											</a>
-											<!--end:Menu link-->
+										<!--end:Menu link-->
+										<!--begin:Menu sub-->
+										<div class="menu-sub menu-sub-accordion">
+											<!--begin:Menu item-->
+											<div class="menu-item">
+												<!--begin:Menu link-->
+												<a class="menu-link" href="<?php echo assetfolder; ?>metricas-semanais" target="_blank">
+													<span class="menu-bullet">
+														<span class="bullet bullet-dot"></span>
+													</span>
+													<span class="menu-title">Semanais FGTS</span>
+												</a>
+												<!--end:Menu link-->
+											</div>
+											<!--begin:Menu item-->
+											<div class="menu-item">
+												<!--begin:Menu link-->
+												<a class="menu-link" href="<?php echo assetfolder; ?>ad-miner" target="">
+													<span class="menu-bullet">
+														<span class="bullet bullet-dot"></span>
+													</span>
+													<span class="menu-title">Ad Miner</span>
+												</a>
+												<!--end:Menu link-->
+											</div>
+											<!--begin:Menu item-->
+											<div class="menu-item">
+												<!--begin:Menu link-->
+												<a class="menu-link" href="<?php echo assetfolder; ?>ad-manager" target="">
+													<span class="menu-bullet">
+														<span class="bullet bullet-dot"></span>
+													</span>
+													<span class="menu-title">Ad Manager</span>
+												</a>
+												<!--end:Menu link-->
+											</div>
 										</div>
-										<!--begin:Menu item-->
-										<div class="menu-item">
-											<!--begin:Menu link-->
-											<a class="menu-link" href="<?php echo assetfolder; ?>ad-miner" target="">
-												<span class="menu-bullet">
-													<span class="bullet bullet-dot"></span>
-												</span>
-												<span class="menu-title">Ad Miner</span>
-											</a>
-											<!--end:Menu link-->
-										</div>
-										<!--begin:Menu item-->
-										<div class="menu-item">
-											<!--begin:Menu link-->
-											<a class="menu-link" href="<?php echo assetfolder; ?>ad-manager" target="">
-												<span class="menu-bullet">
-													<span class="bullet bullet-dot"></span>
-												</span>
-												<span class="menu-title">Ad Manager</span>
-											</a>
-											<!--end:Menu link-->
-										</div>
+										<!--end:Menu sub-->
 									</div>
-									<!--end:Menu sub-->
-								</div>
+								<?php endif; ?>
 								<!--end:CONSORCIO BRASIL Menu item-->
 								<!--begin:Menu item-->
 								<div data-kt-menu-trigger="click" class="menu-item menu-accordion" style="<?php $my_security->DisplayMenu("INSS"); ?>">
@@ -5507,7 +5511,7 @@ License: For each use you must have a valid license purchased only from above li
 					</div>
 					<!--end::sidebar menu-->
 					<!--begin::Footer-->
-					<?php if ($my_security->HasPermission(["ADMIN"], ["quid", "pravoce", "theone"])): ?>
+					<?php if ($my_security->checkPermission("ADMIN")): ?>
 						<div class="app-sidebar-footer flex-column-auto pt-2 pb-6 px-6" id="kt_app_sidebar_footer">
 							<a href="https://preview.keenthemes.com/html/metronic/docs" class="btn btn-flex flex-center btn-custom btn-primary overflow-hidden text-nowrap px-0 h-40px w-100" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss-="click" title="200+ in-house components and 3rd-party plugins">
 								<span class="btn-label">Docs & Components</span>

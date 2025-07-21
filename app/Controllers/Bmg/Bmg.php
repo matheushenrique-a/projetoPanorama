@@ -167,7 +167,6 @@ class Bmg extends BaseController
         echo json_encode($returnData);
     }
 
-    //http://localhost/InsightSuite/public/panorama-gravar-proposta
     public function panorama_gravar_proposta()
     {
 
@@ -736,6 +735,104 @@ class Bmg extends BaseController
         return $this->loadpage('bmg/receptivo', $data);
     }
 
+    public function panorama_gravar_proposta_saque($params)
+    {
+        $returnData = [
+            "status" => false,
+            "proposta" => "",
+            "mensagem" => ""
+        ];
+
+        $planoName = 'SAQUE ELETRONICO';
+        $valorPlano = $params['valorSaque'] ?? '';
+        $parcelas = $params['valorParcela'] ?? '';
+        $prazo = $params['quantidadeParcelas'] ?? "96";
+        $cpf = $params['cpf'] ?? '';
+        $adesao = $params['adesao'] ?? '';
+        $matricula = $params['matricula'] ?? '';
+        $especie = $params['especie'] ?? '';
+        $nomeCliente = $params['nomeCliente'];
+        $dataNascimento = $params['dataNascimento'] ?? '';
+
+        $ddd = $params['celular1']['ddd'];
+        $numero = $params['celular1']['numero'];
+
+        $numeroFormat = $ddd . $numero;
+
+        $data = [
+            'CONTRATO' => $adesao,
+            'STATUS' => 'ADESÃO',
+            'NOME_CLIENTE' => $nomeCliente,
+            'ASSESSOR' => $this->session->nickname,
+            'CPF' => $cpf,
+            'TELEFONE' => formatarTelefone($numeroFormat),
+            'DATANASCIMENTO' => $dataNascimento,
+            'MATRICULA' => $matricula,
+            'ESPECIE' => $especie,
+            'TABELA' => $planoName,
+            'DATA_CADASTRO' => date('d/m/Y H:i:s'),
+            'BANCO' => 'BMG',
+            'PRODUTO' => 'INSS',
+            'PRAZO' => $prazo,
+            'PARCELA' => $parcelas,
+            'EMPRESTIMO' => $valorPlano,
+            'SEGURO' => '1'
+        ];
+
+        $ordem = [
+            'CONTRATO',
+            'STATUS',
+            'NOME_CLIENTE',
+            'ASSESSOR',
+            'CPF',
+            'TELEFONE',
+            'DATANASCIMENTO',
+            'MATRICULA',
+            'ESPECIE',
+            'TABELA',
+            'DATA_CADASTRO',
+            'BANCO',
+            'PRODUTO',
+            'PRAZO',
+            'PARCELA',
+            'EMPRESTIMO',
+            'SEGURO'
+        ];
+
+        $valores = [];
+
+        foreach ($ordem as $campo) {
+            $valores[] = isset($data[$campo]) ? $data[$campo] : '';
+        }
+
+        $dadosString = implode(';', $valores);
+
+        $url = 'https://grupoquid.panoramaemprestimos.com.br/html.do?action=adicionarOperacao'
+            . '&token=44321'
+            . '&idImportacao=1466'
+            . '&dados=' . urlencode($dadosString);
+
+
+        $output = "";
+
+        try {
+            $output = file_get_contents($url);
+        } catch (\Exception $e) {
+            $returnData["mensagem"] = "Erro ao gravar proposta no Panorama:<br>" . $output . "<br>URL:<br>" . $url . "<br>DadosString:<br>" . $dadosString;
+        }
+
+        if (isset($output) && (is_numeric($output) && $output > 0)) {
+            $returnData["status"] = true;
+            $returnData["mensagem"] = "Proposta gravada com sucesso no Panorama:";
+            $returnData["proposta"] = $output;
+        } else {
+            $returnData["mensagem"] = "Erro ao gravar proposta no Panorama:<br>" . $output . "<br>URL:<br>" . $url . "<br>DadosString:<br>" . $dadosString;
+        }
+
+        return $returnData;
+    }
+
+
     public function bmg_saque($cpf = null)
     {
         $data['pageTitle'] = "BMG Saque";
@@ -743,8 +840,20 @@ class Bmg extends BaseController
         $cpf = $this->getpost('cpf') ?? '';
         $ufconta = $this->getpost('ufconta') ?? '';
 
-        $ddd = $this->getpost('ddd') ?? '';
-        $telefone = $this->getpost('telefone') ?? '';
+        $telefone = $this->m_argus->ultimaLigacao(['assessor' => $this->session->nickname]);
+        $nomeCliente = $telefone['firstRow']->nome ?? "";
+
+        if ($telefone['existRecord']) {
+            $ddd = substr($telefone['firstRow']->celular, 2, 2);
+            $telefone = substr($telefone['firstRow']->celular, 4, 9);
+        } else {
+            $ddd = $this->getpost('ddd') ?? '';
+            $telefone = $this->getpost('telefone') ?? '';
+        }
+
+        $data['ddd'] = $ddd;
+        $data['telefone'] = $telefone;
+        $data['nomeCliente'] = $nomeCliente;
 
         $idBanco = $this->getpost('idBanco') ?? '';
         $agencia = $this->getpost('agencia') ?? '';
@@ -757,6 +866,9 @@ class Bmg extends BaseController
         $numeroContaInterna = $this->getpost('contaInterna') ?? '';
 
         if ($this->getpost('btnSaque') === 'salvar') {
+            $numeroParcelas = $this->getpost('parcelas') ?? '';
+            $valorParcela = $this->getpost('valorParcela') ?? '';
+
             $dataSaque = [
                 "cpf" => $cpf,
                 "ufconta" => $ufconta,
@@ -773,15 +885,52 @@ class Bmg extends BaseController
                 "valorSaque" => $valorSaque,
                 'numeroContaInterna' => $numeroContaInterna,
                 'matricula' => $matricula,
+                'valorParcela' => $valorParcela,
+                'numeroParcelas' => $numeroParcelas,
             ];
 
-            $returnData = $this->m_bmg->gravarPropostaSaque($dataSaque);
+            $dataPanorama = [
+                "cpf" => $cpf,
+                'celular1' => [
+                    'ddd' => $ddd,
+                    'numero' => $telefone,
+                ],
+                "valorSaque" => $valorSaque,
+                'matricula' => $matricula,
+                'valorParcela' => $valorParcela,
+                'quantidadeParcelas' => $numeroParcelas,
+                'nomeCliente' => $this->getpost('nomeCliente'),
+                'especie' => $this->getpost('especie'),
+                'adesao' => "9090909", // preencher do bmg
+                'dataNascimento' => $this->getpost('dataNascimento'),
+            ];
 
-            if (isset($returnData['erro']) && $returnData['erro']) {
-                return redirect()->to(base_url('bmg-saque/0'))->with('erro', $returnData['mensagem']);
+            //SÓ FALTA O BMG RESOLVER!!!!!!
+
+            // $returnData = $this->m_bmg->gravarPropostaSaque($dataSaque);
+            
+            // if (isset($returnData['erro']) && $returnData['erro']) {
+                //     return redirect()->to(base_url('bmg-saque/0'))->with('erro', $returnData['mensagem']);
+                // } else {
+                    
+                $propostaPanorama = $this->panorama_gravar_proposta_saque($dataPanorama);
+            // }
+
+            return redirect()->to(base_url('bmg-saque/0'))->with('sucesso', $propostaPanorama['mensagem'] . " " . $propostaPanorama['proposta']);
+        }
+
+        if ($this->getPost('btnSaque') === 'consultar') {
+            $valorSaque = $this->getPost('valorSaque') ?? '';
+
+            $obtemValorParcela = $this->m_bmg->obterValorParcela($valorSaque);
+            $valorParcela = $obtemValorParcela[0]->valorParcela;
+
+            if ($this->request->isAJAX()) {
+                return $this->response->setJSON([
+                    'status' => 'ok',
+                    'valorParcela' => $valorParcela
+                ]);
             }
-
-            return redirect()->to(base_url('bmg-saque/0'))->with('sucesso', 'Proposta enviada com sucesso!');
         }
 
         if ($this->getpost('consultaCpf') === 'consultaCpf') {
@@ -807,12 +956,19 @@ class Bmg extends BaseController
 
         $returnData = $this->m_bmg->obterLimiteSaque($params);
 
+        $valorMaximo = $returnData->limite->valorSaqueMaximo;
+
+        $obtemValorParcela = $this->m_bmg->obterValorParcela($valorMaximo);
+
+        $valorParcela = $obtemValorParcela[0]->valorParcela;
+
+        $dados['valorParcela'] = $valorParcela;
         $dados['cardData'] = $returnData;
 
         if (isset($returnData->erro) && $returnData->erro) {
             return redirect()->to(base_url('bmg-saque/0'))->with('erro', $returnData['mensagem']);
         } else {
-            return redirect()->to(base_url('bmg-saque/0'))->with('cardData', $returnData)->with('cpfDigitado', $cpf);
+            return redirect()->to(base_url('bmg-saque/0'))->with('cardData', $returnData)->with('cpfDigitado', $cpf)->with('valorParcela', $valorParcela);
         }
     }
 
