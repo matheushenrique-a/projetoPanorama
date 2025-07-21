@@ -412,11 +412,11 @@ class M_bmg extends Model
                 'senha'        => BMG_SEGURO_SENHA,
                 'loginConsig'  => BMG_SEGURO_LOGIN_CONSIG,
                 'senhaConsig'  => BMG_SEGURO_SENHA_CONSIG,
-                'codigoEntidade'   => "1581-",
-                'codigoLoja' => BMG_LOJA_SMILE,
+                'codigoEntidade'   => 1581,
+                'codigoLoja' => (int) BMG_LOJA_SMILE,
                 'finalidadeCredito' => 1, // CONTA CORRENTE
                 'formaCredito' => 2, // TRANSFERÊNCIA BANCÁRIA
-                'codigoFormaEnvioTermo' => 15, // DIGITAL
+                'codigoFormaEnvioTermo' => "15", // DIGITAL
                 'tipoSaque' => 2, // 1 - SAQUE AUTORIZADO
                 'bancoOrdemPagamento' => 0,
                 'cpfImpedidoComissionar' => false,
@@ -432,7 +432,7 @@ class M_bmg extends Model
 
             return [
                 'erro' => true,
-                'mensagem' => "{$fault->faultstring}"
+                'mensagem' => "{$fault}"
             ];
         }
     }

@@ -823,7 +823,7 @@ class Bmg extends BaseController
 
         if (isset($output) && (is_numeric($output) && $output > 0)) {
             $returnData["status"] = true;
-            $returnData["mensagem"] = "Proposta gravada com sucesso no Panorama:";
+            $returnData["mensagem"] = "Proposta gravada com sucesso no BMG e Panorama:";
             $returnData["proposta"] = $output;
         } else {
             $returnData["mensagem"] = "Erro ao gravar proposta no Panorama:<br>" . $output . "<br>URL:<br>" . $url . "<br>DadosString:<br>" . $dadosString;
@@ -862,32 +862,36 @@ class Bmg extends BaseController
         $valorSaque = $this->getpost('valorSaque') ?? '';
 
         $matricula = $this->getpost('matricula') ?? '';
-        $numeroContaInterna = $this->getpost('contaInterna') ?? '';
+        $numeroContaInterna = (int) $this->getpost('contaInterna') ?? '';
 
         if ($this->getpost('btnSaque') === 'salvar') {
-            $numeroParcelas = $this->getpost('parcelas') ?? '';
-            $valorParcela = $this->getpost('valorParcela') ?? '';
+            $numeroParcelas = (int) $this->getpost('parcelas') ?? '';
+            $valorParcela = (float) $this->getpost('valorParcela') ?? '';
 
             $dataSaque = [
                 "cpf" => $cpf,
-                "ufconta" => $ufconta,
+                // "ufconta" => $ufconta,
                 'celular1' => [
                     'ddd' => $ddd,
                     'numero' => $telefone,
                 ],
-                "Agencia" => ["numero" => $agencia],
-                "Banco" => ["numero" => $idBanco],
+                "agencia" => ["numero" => $agencia],
+                "banco" => ["numero" => (int) $idBanco],
                 "conta" => [
                     "numero" => $conta,
                     "digitoVerificador" => $digito,
                 ],
-                "valorSaque" => $valorSaque,
+                "valorSaque" => (float) $valorSaque,
                 'numeroContaInterna' => $numeroContaInterna,
                 'matricula' => $matricula,
                 'valorParcela' => $valorParcela,
                 'numeroParcelas' => $numeroParcelas,
+                // 'email' => "maria.silva@gmail.com"
             ];
 
+            
+            $returnData = $this->m_bmg->gravarPropostaSaque($dataSaque);
+            
             $dataPanorama = [
                 "cpf" => $cpf,
                 'celular1' => [
@@ -900,13 +904,9 @@ class Bmg extends BaseController
                 'quantidadeParcelas' => $numeroParcelas,
                 'nomeCliente' => $this->getpost('nomeCliente'),
                 'especie' => $this->getpost('especie'),
-                'adesao' => "9090909", // preencher do bmg
+                'adesao' => $returnData,
                 'dataNascimento' => $this->getpost('dataNascimento'),
             ];
-
-            //SÓ FALTA O BMG RESOLVER!!!!!!
-
-            $returnData = $this->m_bmg->gravarPropostaSaque($dataSaque);
 
             if (isset($returnData['erro']) && $returnData['erro']) {
                 return redirect()->to(base_url('bmg-saque/0'))->with('erro', $returnData['mensagem']);
@@ -915,7 +915,7 @@ class Bmg extends BaseController
                 $propostaPanorama = $this->panorama_gravar_proposta_saque($dataPanorama);
             }
 
-            return redirect()->to(base_url('bmg-saque/0'))->with('sucesso', $propostaPanorama['mensagem'] . " " . $propostaPanorama['proposta']);
+            return redirect()->to(base_url('bmg-saque/0'))->with('sucesso', $propostaPanorama['mensagem'] . " " . $returnData);
         }
 
         if ($this->getPost('btnSaque') === 'consultar') {
