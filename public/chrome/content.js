@@ -13,7 +13,8 @@
 
     const openButton = document.createElement('a');
     openButton.textContent = 'Download';
-    openButton.href = videoSrc;
+    openButton.href = "http://localhost/VSLs/ad-library/inspect-video/"
+    //openButton.href = videoSrc;
     openButton.target = '_blank';
     openButton.style.display = 'inline-block';
     openButton.style.marginTop = '8px';
@@ -35,6 +36,10 @@
       //   return;
       // }
 
+      openButton.style.backgroundColor = '#e9ac12ff';
+      openButton.textContent = 'Wait...';
+      e.preventDefault();
+
       getTokenAndProceed((userToken) => {
         // Sobe até o ancestral direto que tem múltiplos dados
         let container = video.closest('div.card-shadow');
@@ -48,15 +53,77 @@
           console.warn('⚠️ Contêiner de anúncio não encontrado para este vídeo:', video);
         }
 
-        const advertiser = container?.querySelector('a[target="_blank"] span')?.textContent?.trim() || '';
-        const adText = container?.querySelector('._4ik4._4ik5 > div[style*="white-space"]')?.innerText?.trim() || '';
-        const libraryId = Array.from(container?.querySelectorAll('span') || [])
-          .find(el => el.textContent?.includes('Library ID:'))?.textContent?.trim() || '';
-        const dateInfo = Array.from(container?.querySelectorAll('span') || [])
-          .find(el => el.textContent?.includes('Started running on'))?.textContent?.trim() || '';
-        //const thumbnail = container?.querySelector('img[src*="scontent"][alt=""]')?.src || '';
-        const thumbnail = container.querySelector('img[src*="scontent"]')?.src || '';
+        // Seleciona o elemento <video>
+        //const videoElement = document.querySelector('video.x1lliihq.x5yr21d.xh8yej3');
 
+        let target = video;
+
+        //LID ID        
+        for (let i = 0; i <= 10; i++) {target = target.parentElement;} // Sobe 11 níveis
+        for (let i = 0; i <= 2; i++) {target = target.previousElementSibling;} // Sobe mais 3 elementos irmãos anteriores
+
+        target = target.children[0]; 
+        target = target.children[0]; 
+        
+        //lib
+        let targetLib = target.children[1];
+        targetLib = targetLib.children[0]; 
+        targetLib = targetLib.children[0]; 
+        targetLib = targetLib.children[0]; 
+        const libraryId = targetLib.innerText.match(/\d+/g)?.join('') || '';
+        //alert(libraryId);
+
+        //DATA INFO
+        let targetDate = target.children[2];
+        targetDate = targetDate.children[0]; 
+        const dateInfo = targetDate.innerText;
+        //alert(dateInfo);
+
+        //AD TEXT
+        target = video;
+        let adText = '';
+
+        for (let i = 0; i <= 6; i++) {target = target.parentElement;} // Sobe 7 níveis
+        target = target.previousElementSibling;
+        
+        if (target?.children[0]) {
+          target = target?.children[0];
+          target = target.children[0]; 
+          target = target.children[0]; 
+          target = target.children[0]; 
+          target = target.children[0]; 
+          adText = target.innerText?.trim() || '';
+        }
+
+        //ADVERTISE
+        target = video;
+        for (let i = 0; i <= 7; i++) {target = target.parentElement;} // Sobe 7 níveis
+        target = target.previousElementSibling;
+        target = target.children[0]; //img
+
+        //as vezes a imagem é filha direta, as vezes é neta.
+        let thumbnail = null;
+
+        if (target.children[0].src) {
+           target = target.children[0];
+           thumbnail = target.src || '';
+        } else {
+           target = target.children[0];
+           thumbnail = target.children[0].src || '';
+        }
+        
+        alert(thumbnail);
+
+         target = target.nextElementSibling;
+
+            target = target.children[0];
+            target = target.children[0];
+            target = target.children[0];
+            target = target.children[0];
+
+        const advertiser = target.innerText?.trim() || '';
+        alert(advertiser);
+       
         chrome.runtime.sendMessage({
           action: "saveAd",
           payload: {
@@ -70,9 +137,16 @@
           }
         }, (response) => {
           if (response?.success) {
-            openButton.textContent = 'Download';
+            //alert('id:' + response.guid);
+            //openButton.href = "http://localhost/VSLs/ad-library/inspect-video/" + response.guid;
+            //openButton.click();
+            openButton.style.backgroundColor = '#1da913ff';
+            openButton.textContent = 'Done';
+
+            window.open("http://localhost/VSLs/ad-library/inspect-video/" + response.guid, '_blank'); // abre em nova aba
           } else {
-            alert('Erro ao salvar Ads.');
+            openButton.textContent = 'Error';
+            //alert('Erro ao salvar Ads.');
           }
         });
       });

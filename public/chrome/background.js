@@ -2,8 +2,8 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === "saveAd") {
     const { user, url, advertiser, adText, libraryId, dateInfo, thumbnail } = message.payload;
 
-    //fetch("http://localhost/InsightSuite/public/ads-savead", {
-    fetch("https://insightsuite.pravoce.io/ads-savead", {
+    fetch("http://localhost/InsightSuite/public/ads-savead", {
+   // fetch("https://insightsuite.pravoce.io/ads-savead", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -20,10 +20,15 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     })
       .then(response => response.json())
       .then(data => {
-        sendResponse({ success: true });
-      })
+        if (data?.guid) {
+          sendResponse({ success: true, guid: data.guid });
+        } else {
+          console.warn("GUID não retornado na resposta.");
+          sendResponse({ success: false });
+        }
+      })      
       .catch(error => {
-        console.error("Erro ao salvar ad:", error);
+        console.warn("Erro ao salvar ad:", error);
         sendResponse({ success: false });
       });
 
