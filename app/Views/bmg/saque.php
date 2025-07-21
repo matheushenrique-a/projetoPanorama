@@ -287,10 +287,15 @@
 
     const extratorDados = document.getElementById('extratorDados')
 
-    extratorDados.addEventListener('click', (e) => {
-        e.preventDefault()
-        extrairDados()
-    })
+    const matriculaInput = document.getElementById('matricula') // não utilizado
+    const contaInternaInput = document.getElementById('contaInterna') // não utilizado
+
+    if (extratorDados) {
+        extratorDados.addEventListener('click', (e) => {
+            e.preventDefault()
+            extrairDados()
+        })
+    }
 
     cpfInput.addEventListener('input', () => {
         let value = cpfInput.value.replace(/\D/g, '');
@@ -298,6 +303,10 @@
         if (value.length > 6) value = value.replace(/^(\d{3})\.(\d{3})(\d)/, '$1.$2.$3');
         if (value.length > 9) value = value.replace(/^(\d{3})\.(\d{3})\.(\d{3})(\d)/, '$1.$2.$3-$4');
         cpfInput.value = value;
+
+        if (dataNascimentoInput) {
+            location.reload();
+        }
     });
 
     if (dataNascimentoInput) {
@@ -324,13 +333,13 @@
             cpfInput.focus();
         }
 
-        if (telefone.length !== 9) {
+        if (telefone.value.length < 9) {
             e.preventDefault();
             alert('O telefone deve estar completo.');
             telefone.focus();
         }
 
-        if (ufInput == "") {
+        if (ufInput.value == "") {
             e.preventDefault();
             alert('Preencher UF da conta.')
         }

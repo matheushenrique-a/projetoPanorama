@@ -832,7 +832,6 @@ class Bmg extends BaseController
         return $returnData;
     }
 
-
     public function bmg_saque($cpf = null)
     {
         $data['pageTitle'] = "BMG Saque";
@@ -907,14 +906,14 @@ class Bmg extends BaseController
 
             //SÓ FALTA O BMG RESOLVER!!!!!!
 
-            // $returnData = $this->m_bmg->gravarPropostaSaque($dataSaque);
-            
-            // if (isset($returnData['erro']) && $returnData['erro']) {
-                //     return redirect()->to(base_url('bmg-saque/0'))->with('erro', $returnData['mensagem']);
-                // } else {
-                    
+            $returnData = $this->m_bmg->gravarPropostaSaque($dataSaque);
+
+            if (isset($returnData['erro']) && $returnData['erro']) {
+                return redirect()->to(base_url('bmg-saque/0'))->with('erro', $returnData['mensagem']);
+            } else {
+
                 $propostaPanorama = $this->panorama_gravar_proposta_saque($dataPanorama);
-            // }
+            }
 
             return redirect()->to(base_url('bmg-saque/0'))->with('sucesso', $propostaPanorama['mensagem'] . " " . $propostaPanorama['proposta']);
         }
@@ -956,17 +955,21 @@ class Bmg extends BaseController
 
         $returnData = $this->m_bmg->obterLimiteSaque($params);
 
-        $valorMaximo = $returnData->limite->valorSaqueMaximo;
+        if (isset($returnData->limite->valorSaqueMaximo)) {
+            $valorMaximo = $returnData->limite->valorSaqueMaximo;
 
-        $obtemValorParcela = $this->m_bmg->obterValorParcela($valorMaximo);
+            $obtemValorParcela = $this->m_bmg->obterValorParcela($valorMaximo);
 
-        $valorParcela = $obtemValorParcela[0]->valorParcela;
+            $valorParcela = $obtemValorParcela[0]->valorParcela;
+            $dados['valorParcela'] = $valorParcela;
+        }
 
-        $dados['valorParcela'] = $valorParcela;
         $dados['cardData'] = $returnData;
 
         if (isset($returnData->erro) && $returnData->erro) {
             return redirect()->to(base_url('bmg-saque/0'))->with('erro', $returnData['mensagem']);
+        } else if (!isset($returnData->limite->valorSaqueMaximo)) {
+            return redirect()->to(base_url('bmg-saque/0'))->with('cardData', $returnData)->with('cpfDigitado', $cpf);
         } else {
             return redirect()->to(base_url('bmg-saque/0'))->with('cardData', $returnData)->with('cpfDigitado', $cpf)->with('valorParcela', $valorParcela);
         }
