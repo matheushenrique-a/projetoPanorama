@@ -1,9 +1,6 @@
-<?php
-
-use function PHPUnit\Framework\assertIsObject;
-
-$cardData = session('cardData'); ?>
+<?php $cardData = session('cardData'); ?>
 <?php $cpf = session('cpfDigitado'); ?>
+<?php $valorParcela = session('valorParcela'); ?>
 
 <?php $erro = session()->getFlashdata('erro'); ?>
 
@@ -49,7 +46,7 @@ $cardData = session('cardData'); ?>
                         </div>
                     <?php endif; ?>
                     <?php if (session()->getFlashdata('sucesso')): ?>
-                        <div class="alert alert-success">
+                        <div class="alert alert-success fs-5">
                             <?= esc(session()->getFlashdata('sucesso')) ?>
                         </div>
                     <?php endif; ?>
@@ -81,43 +78,99 @@ $cardData = session('cardData'); ?>
                                                             <div class="d-flex align-items-center position-relative my-1 mt-5 mb-0">
                                                                 <button type="submit" class="btn btn-primary" name="consultaCpf" value="consultaCpf">Consultar</button>
                                                             </div>
+
                                                             <?php if (!empty($cardData->cartoes->cartoesRetorno[0]->matricula) && $cardData->limite->mensagemDeErro == ""): ?>
                                                                 <div class="input-group">
                                                                     <h3 class="ms-2 mt-8" id="lblInfo">Dados Cliente:</h3>
                                                                 </div>
                                                                 <div class="input-group">
+                                                                    <span class="input-group-text" style="width: 160px">Nome do Cliente</span>
+                                                                    <input type="text" class="form-control fs-3 fw-bold" value="<?= esc($nomeCliente) ?>" name="nomeCliente" id="nomeCliente" required />
+                                                                </div>
+                                                                <div class="input-group" style="width: 300px;">
+                                                                    <span class="input-group-text" style="width: 160px">Data de Nascimento</span>
+                                                                    <input maxlength="10" type="text" class="form-control fs-3 fw-bold" placeholder="00/00/0000" name="dataNascimento" id="dataNascimento" required />
+                                                                </div>
+                                                                <div class="input-group mt-6">
                                                                     <span class="input-group-text" style="width: 55px">DDD</span>
-                                                                    <input type="text" class="form-control fs-3 fw-bold" placeholder="" style="color:rgb(188, 188, 188)" name="ddd" id="ddd" />
+                                                                    <input type="text" maxlength="2" class="form-control fs-3 fw-bold" value="<?= esc($ddd) ?>" style="color:rgb(188, 188, 188)" name="ddd" id="ddd" required />
                                                                     <span class="input-group-text" style="width: 100px">Número</span>
-                                                                    <input type="text" class="form-control fs-3 fw-bold" placeholder="" style="color:rgb(188, 188, 188); width: 250px" name="telefone" id="telefone" />
+                                                                    <input type="text" class="form-control fs-3 fw-bold" value="<?= esc($telefone) ?>" style="color:rgb(188, 188, 188); width: 250px" name="telefone" id="telefone" required />
                                                                 </div>
                                                                 <div class="input-group">
-                                                                    <span class="input-group-text" style="width: 155px">UF da Conta</span>
-                                                                    <input maxlength="2" type="text" class="form-control fs-3 fw-bold" placeholder="" name="ufconta" id="ufconta" />
+                                                                    <span class="input-group-text" style="width: 135px">UF da Conta</span>
+                                                                    <!-- <input maxlength="2" type="text" class="form-control fs-3 fw-bold" name="ufconta" id="ufconta" required /> -->
+                                                                    <select class="form-select" id="ufconta" name="ufconta">
+                                                                        <option value=""></option>
+                                                                        <option value="AC">AC</option>
+                                                                        <option value="AL">AL</option>
+                                                                        <option value="AP">AP</option>
+                                                                        <option value="AM">AM</option>
+                                                                        <option value="BA">BA</option>
+                                                                        <option value="CE">CE</option>
+                                                                        <option value="DF">DF</option>
+                                                                        <option value="ES">ES</option>
+                                                                        <option value="GO">GO</option>
+                                                                        <option value="MA">MA</option>
+                                                                        <option value="MT">MT</option>
+                                                                        <option value="MS">MS</option>
+                                                                        <option value="MG">MG</option>
+                                                                        <option value="PA">PA</option>
+                                                                        <option value="PB">PB</option>
+                                                                        <option value="PR">PR</option>
+                                                                        <option value="PE">PE</option>
+                                                                        <option value="PI">PI</option>
+                                                                        <option value="RJ">RJ</option>
+                                                                        <option value="RN">RN</option>
+                                                                        <option value="RS">RS</option>
+                                                                        <option value="RO">RO</option>
+                                                                        <option value="RR">RR</option>
+                                                                        <option value="SC">SC</option>
+                                                                        <option value="SP">SP</option>
+                                                                        <option value="SE">SE</option>
+                                                                        <option value="TO">TO</option>
+                                                                    </select>
+                                                                    <span class="input-group-text" style="width: 155px">Espécie Benefício</span>
+                                                                    <input maxlength="2" type="text" class="form-control fs-3 fw-bold" name="especieBeneficio" id="especieBeneficio" required />
                                                                 </div>
                                                                 <div class="input-group">
                                                                     <h3 class="ms-2 mt-6 mb-2" id="lblNiver">Informações de pagamento:</h3>
                                                                 </div>
                                                                 <div class="input-group">
                                                                     <span class="input-group-text" style="width: 155px">Banco</span>
-                                                                    <input type="text" class="form-control fs-3 fw-bold" placeholder="" name="idBanco" id="idBanco" style="width: 35px" />
+                                                                    <input type="text" class="form-control fs-3 fw-bold" placeholder="" name="idBanco" id="idBanco" style="width: 35px" required />
                                                                     <span class="input-group-text" style="width: 155px">Agência</span>
-                                                                    <input type="text" class="form-control fs-3 fw-bold" placeholder="" name="agencia" id="agencia" style="width: 35px" />
+                                                                    <input type="text" class="form-control fs-3 fw-bold" placeholder="" name="agencia" id="agencia" style="width: 35px" required />
                                                                 </div>
                                                                 <div class="input-group">
                                                                     <span class="input-group-text">Conta</span>
-                                                                    <input type="text" class="form-control w-25 fs-3 fw-bold" placeholder="" name="conta" id="conta" />
+                                                                    <input type="text" class="form-control w-25 fs-3 fw-bold" placeholder="" name="conta" id="conta" required />
                                                                     <span class="input-group-text">Digito</span>
-                                                                    <input type="text" class="form-control fs-3 fw-bold" placeholder="" name="digito" id="digito" />
+                                                                    <input type="text" class="form-control fs-3 fw-bold" placeholder="" name="digito" id="digito" required />
                                                                 </div>
-                                                                <div class="input-group mt-8" style="width: 260px;">
+                                                                <div class="input-group mt-8" style="width: 400px;">
                                                                     <span class="input-group-text" style="width: 130px">Valor do Saque</span>
-                                                                    <input type="text" class="form-control fs-3 fw-bold" name="valorSaque" id="valorSaque" />
+                                                                    <input type="text" value="<?= esc($cardData->limite->valorSaqueMaximo ?? '') ?>" class="form-control fs-3 fw-bold" name="valorSaque" id="valorSaque" style="width: 100px" required />
+                                                                    <button type="submit" name="btnSaque" id="btnCalculo" value="calcular" class="btn btn-info">Calcular</button>
+                                                                    <div class="position-relative">
+                                                                        <div id="loading" class="spinner-border" style="position: absolute; top: 13px; left: 20px; display: none" role="status">
+                                                                            <span class="visually-hidden">Loading...</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="input-group" style="width: 400px;">
+                                                                    <span class="input-group-text">Parcela</span>
+                                                                    <input type="text" class="form-control fs-3 fw-bold" value="<?= esc($valorParcela) ?>" name="valorParcela" id="valorParcela" readonly required />
+                                                                    <span class="input-group-text">Quantidade</span>
+                                                                    <input type="text" class="form-control fs-3 fw-bold" value="96" name="parcelas" id="parcelas" readonly />
+                                                                </div>
+                                                                <div class="input-group mt-6 d-flex">
+                                                                    <textarea class="form-control fs-8" id="entrada" placeholder="Cole aqui o Ctrl+A da página"></textarea>
+                                                                    <button class="btn btn-info" id="extratorDados">Extrair Dados</button>
                                                                 </div>
                                                                 <div class="d-flex align-items-center position-relative mt-6 mb-0">
-                                                                    <button type="submit" class="btn btn-success" name="btnSaque" value="salvar">Enviar Proposta</button>
+                                                                    <button type="submit" class="btn btn-success" name="btnSaque" id="btnSalvarProposta" value="salvar">Enviar Proposta</button>
                                                                 </div>
-
                                                             <?php endif; ?>
                                                         </div>
                                                     </div>
@@ -217,54 +270,156 @@ $cardData = session('cardData'); ?>
     const cpfInput = document.getElementById('cpf');
     const ufInput = document.getElementById('ufconta');
     const valorSaqueInput = document.getElementById('valorSaque');
+    const btnCalculo = document.getElementById('btnCalculo');
+    const loading = document.getElementById('loading');
+    const btnSalvarProposta = document.getElementById('btnSalvarProposta');
+    const nomeClienteInput = document.getElementById('nomeCliente');
+    const telefone = document.getElementById('telefone')
+
+    const bancoInput = document.getElementById('idBanco')
+    const agenciaInput = document.getElementById('agencia')
+    const contaInput = document.getElementById('conta')
+    const digitoInput = document.getElementById('digito')
+    const especieInput = document.getElementById('especieBeneficio')
+
+    const dataNascimentoInput = document.getElementById('dataNascimento');
+    const especieBeneficioInput = document.getElementById('especieBeneficio');
+
+    const extratorDados = document.getElementById('extratorDados')
+
+    const matriculaInput = document.getElementById('matricula') // não utilizado
+    const contaInternaInput = document.getElementById('contaInterna') // não utilizado
+
+    if (extratorDados) {
+        extratorDados.addEventListener('click', (e) => {
+            e.preventDefault()
+            extrairDados()
+        })
+    }
 
     cpfInput.addEventListener('input', () => {
-        let value = cpfInput.value;
-
-        value = value.replace(/\D/g, '');
-
-        if (value.length > 3) {
-            value = value.replace(/^(\d{3})(\d)/, '$1.$2');
-        }
-        if (value.length > 6) {
-            value = value.replace(/^(\d{3})\.(\d{3})(\d)/, '$1.$2.$3');
-        }
-        if (value.length > 9) {
-            value = value.replace(/^(\d{3})\.(\d{3})\.(\d{3})(\d)/, '$1.$2.$3-$4');
-        }
-
+        let value = cpfInput.value.replace(/\D/g, '');
+        if (value.length > 3) value = value.replace(/^(\d{3})(\d)/, '$1.$2');
+        if (value.length > 6) value = value.replace(/^(\d{3})\.(\d{3})(\d)/, '$1.$2.$3');
+        if (value.length > 9) value = value.replace(/^(\d{3})\.(\d{3})\.(\d{3})(\d)/, '$1.$2.$3-$4');
         cpfInput.value = value;
+
+        if (dataNascimentoInput) {
+            location.reload();
+        }
     });
+
+    if (dataNascimentoInput) {
+        dataNascimentoInput.addEventListener('input', () => {
+            let value = dataNascimentoInput.value.replace(/\D/g, '');
+            if (value.length > 2) value = value.replace(/^(\d{2})(\d)/, '$1/$2');
+            if (value.length > 4) value = value.replace(/^(\d{2})\/(\d{2})(\d)/, '$1/$2/$3');
+            if (value.length > 8) value = value.slice(0, 10);
+            dataNascimentoInput.value = value;
+        });
+
+        telefone.addEventListener('input', () => {
+            let value = telefone.value.replace(/\D/g, '');
+            if (value.length > 9) value = value.slice(0, 9)
+            telefone.value = value;
+        })
+    }
 
     form.addEventListener('submit', function(e) {
         const cpf = cpfInput.value.trim();
-
         if (cpf.length !== 14) {
             e.preventDefault();
             alert('O CPF deve estar completo (000.000.000-00).');
             cpfInput.focus();
         }
-    });
 
-    ufInput.addEventListener('input', () => {
-        let value = ufInput.value.toUpperCase();
-        value = value.replace(/[^A-Z]/g, '');
-        if (value.length > 2) {
-            value = value.slice(0, 2);
+        if (telefone.value.length < 9) {
+            e.preventDefault();
+            alert('O telefone deve estar completo.');
+            telefone.focus();
         }
-        ufInput.value = value;
-    });
 
-    valorSaqueInput.addEventListener('input', () => {
-        let value = valorSaqueInput.value;
-
-        value = value.replace(/\D/g, '');
-
-        if (value.length > 2) {
-            value = (parseFloat(value) / 100).toFixed(2).replace(',', '.');
-            valorSaqueInput.value = value;
-        } else {
-            valorSaqueInput.value = value;
+        if (ufInput.value == "") {
+            e.preventDefault();
+            alert('Preencher UF da conta.')
         }
     });
+
+    if (btnCalculo) {
+        btnCalculo.addEventListener('click', function(e) {
+            e.preventDefault();
+            loading.style.display = 'inline-block';
+            const valorSaque = valorSaqueInput.value;
+            fetch("<?= base_url('bmg-saque/0') ?>", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                        "X-Requested-With": "XMLHttpRequest"
+                    },
+                    body: "valorSaque=" + encodeURIComponent(valorSaque) + "&btnSaque=consultar"
+                })
+                .then(response => response.json())
+                .then(data => {
+                    loading.style.display = 'none';
+                    if (data.status === 'ok') {
+                        document.getElementById('valorParcela').value = data.valorParcela;
+                    } else {
+                        alert("Erro: " + data.mensagem);
+                    }
+                })
+                .catch(err => alert("Falha na requisição: " + err));
+        });
+    }
+
+    if (ufInput) {
+        ufInput.addEventListener('input', () => {
+            let value = ufInput.value.toUpperCase().replace(/[^A-Z]/g, '');
+            ufInput.value = value.slice(0, 2);
+        });
+    }
+
+    if (valorSaqueInput) {
+        valorSaqueInput.addEventListener('input', () => {
+            let value = valorSaqueInput.value.replace(/\D/g, '');
+            valorSaqueInput.value = value.length > 2 ?
+                (parseFloat(value) / 100).toFixed(2).replace(',', '.') :
+                value;
+        });
+    }
+
+    function extrairDados() {
+        let texto = document.getElementById("entrada").value;
+
+        function extrair(regex, texto) {
+            let match = texto.match(regex);
+            return match ? match[1].trim() : null;
+        }
+
+        let contaCompleta = extrair(/Conta\s*Corrente\s*([0-9]+)/i, texto);
+        let conta = null;
+        let digito = null;
+
+        if (contaCompleta) {
+            conta = contaCompleta.slice(0, -1);
+            digito = contaCompleta.slice(-1);
+        }
+
+        let dados = {
+            UF: extrair(/NB\s*-\s*UF\s*\d+\s*-\s*([A-Z]{2})/, texto),
+            Banco: extrair(/Banco\s*([0-9]{3})/, texto),
+            Agencia: extrair(/Ag\.?\s*Banco\s*([0-9]+)/i, texto),
+            Conta: conta,
+            Digito: digito,
+            Especie: extrair(/Espécie\s*([\d]+)\s*-\s*[A-Z\sÇÃÕ]+/i, texto),
+            Nascimento: extrair(/Nascimento\s*([\d]{2}\/[\d]{2}\/[\d]{4})/, texto)
+        };
+
+        ufInput.value = dados.UF
+        bancoInput.value = dados.Banco
+        agenciaInput.value = dados.Agencia
+        contaInput.value = dados.Conta
+        digitoInput.value = dados.Digito
+        especieInput.value = dados.Especie
+        dataNascimentoInput.value = dados.Nascimento
+    }
 </script>

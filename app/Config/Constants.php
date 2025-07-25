@@ -7,12 +7,17 @@
  */
 
 define('IsProduction', false);
-define('AppName', "Insight Suite");
-
-// EMPRESAS
+// QUID
+define('AppName', "Quid");
 define('EMPRESA', 'quid');
-// define('EMPRESA', 'pravoce');
+
+// THE ONE
+// define('AppName', "The One");
 // define('EMPRESA', 'theone');
+
+// PRA VOCE
+// define('AppName', "Pra Você");
+// define('EMPRESA', 'pravoce');
 
 define ('shortURL', 'https://pravc.io/');
 

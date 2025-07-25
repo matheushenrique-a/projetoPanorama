@@ -46,7 +46,7 @@ class Home extends BaseController
     public function index()
     {
         $this->checkSession();
-        $dados['pageTitle'] = "Simplificando sua vida financeira";
+        $dados['pageTitle'] = "Insight Home";
         
         $htmlNotificacoes = $this->m_insight->gerarTimelineNotificacoes();
         $ultimasLigacoes = $this->m_argus->ultimasLigacoes(12);

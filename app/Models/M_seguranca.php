@@ -4,6 +4,7 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 use App\Libraries\dbMaster;
+use Aws\RetryMiddleware;
 
 class M_seguranca extends Model
 {
@@ -109,6 +110,26 @@ class M_seguranca extends Model
         }
 
         return false;
+    }
+
+    public function checkPermission($modulos)
+    {
+        $perfil = json_decode($this->my_session->perfil, true);
+
+        if (!is_array($modulos)) {
+            $modulos = [$modulos];
+        }
+
+        $temPermissao = false;
+
+        foreach ($modulos as $modulo) {
+            if (in_array($modulo, $perfil)) {
+                $temPermissao = true;
+                break;
+            }
+        }
+
+        return $temPermissao;
     }
 
     public function buscarUsuarios($search)

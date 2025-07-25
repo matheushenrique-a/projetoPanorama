@@ -407,46 +407,34 @@ class M_bmg extends Model
         try {
             $client = new \SoapClient(BMG_SAQUE_WSDL, ['trace' => 1, 'exceptions' => true]);
 
-            $valorSaque = $params['valorSaque'];
-
-            $retornoValorParcela = $this->obterValorParcela($valorSaque);
-
             $fixParams = [
                 'login'        => BMG_SEGURO_LOGIN,
                 'senha'        => BMG_SEGURO_SENHA,
                 'loginConsig'  => BMG_SEGURO_LOGIN_CONSIG,
                 'senhaConsig'  => BMG_SEGURO_SENHA_CONSIG,
-                'codigoEntidade'   => "1581-",
-                'codigoLoja' => BMG_LOJA_SMILE,
+                'codigoEntidade'   => 1581,
+                'codigoLoja' => (int) BMG_LOJA_SMILE,
                 'finalidadeCredito' => 1, // CONTA CORRENTE
                 'formaCredito' => 2, // TRANSFERÊNCIA BANCÁRIA
-                'codigoFormaEnvioTermo' => 15, // DIGITAL
-                'tipoSaque' => 1, // 1 - SAQUE AUTORIZADO
+                'codigoFormaEnvioTermo' => "15", // DIGITAL
+                'tipoSaque' => 2, // 1 - SAQUE AUTORIZADO
                 'bancoOrdemPagamento' => 0,
                 'cpfImpedidoComissionar' => false,
-
-                // 'numeroParcelas' => $retornoValorParcela[0]->numeroParcelas,
-                // 'valorParcela' => $retornoValorParcela[0]->valorParcela,
             ];
 
             $params = array_merge($fixParams, $params);
             
-            // return redirect()->to(base_url('bmg-saque/0'))->with('erro', [$params]);
             $response = $client->__soapCall('gravarPropostaSaqueComplementar', [$params]);
 
-            // $response = $client->__soapCall('geraScript', [$params]);
-
             return $response;
-
         } catch (SoapFault $fault) {
             echo "Erro: {$fault->faultstring}";
 
             return [
                 'erro' => true,
-                'mensagem' => "{$fault->faultstring}"
+                'mensagem' => "{$fault}"
             ];
         }
-
     }
 
     public function obterValorParcela($valorSaque)

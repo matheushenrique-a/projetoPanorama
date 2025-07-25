@@ -52,6 +52,7 @@ $routes->match(['get', 'post'], '/bmg-saque/(:any)', 'Bmg\Bmg::bmg_saque/$1');
 $routes->match(['get', 'post'], '/bmg-script-vendas/(:any)/(:any)/(:any)/(:any)/(:any)', 'Bmg\Bmg::bmg_script_vendas/$1/$2/$3/$4/$5');
 $routes->match(['get', 'post'], '/bmg-gravar-proposta', 'Bmg\Bmg::bmg_gravar_proposta');
 $routes->match(['get', 'post'], '/panorama-gravar-proposta', 'Bmg\Bmg::panorama_gravar_proposta');
+$routes->match(['get', 'post'], '/panorama-gravar-proposta-saque', 'Bmg\Bmg::panorama_gravar_proposta_saque');
 $routes->match(['get', 'post'], '/mailing', 'Bmg\Mailing::index');
 
 
@@ -105,7 +106,7 @@ $routes->match(['get', 'post'], '/integraall-validar-tse/(:any)', 'Aaspa\Integra
 $routes->match(['get', 'post'], '/calculadora-login', 'Aaspa\Integraall::calculadora_login');
 $routes->match(['get', 'post'], '/calculadora-qualificacao/(:any)', 'Aaspa\Integraall::calculadora_qualificacao/$1');
 
-//ARJGUS
+//ARGUS
 $routes->match(['get', 'post'], '/argus-atendimento-webhook', 'Argus\Argus::argus_atendimento_webhook');
 $routes->match(['get', 'post'], '/argus-atendimento-webhook-vap', 'Argus\Argus::argus_atendimento_webhook_vap');
 $routes->match(['get', 'post'], '/metricas-ligacao-operador', 'Argus\Argus::metricas_ligacao_operador');
