@@ -112,7 +112,7 @@
            thumbnail = target.children[0].src || '';
         }
         
-        alert(thumbnail);
+        //alert(thumbnail);
 
          target = target.nextElementSibling;
 
@@ -122,7 +122,7 @@
             target = target.children[0];
 
         const advertiser = target.innerText?.trim() || '';
-        alert(advertiser);
+        //alert(advertiser);
        
         chrome.runtime.sendMessage({
           action: "saveAd",

@@ -580,12 +580,12 @@ class Ads extends BaseController
     //https://insightsuite.pravoce.io/ads-load
     public function loadMiner(){
         $accessToken = META_TOKEN;
-        $keywordClean = "slim"; //palavra chave para busca
+        $keywordClean = "natural"; //palavra chave para busca
         $country = 'us'; //país para busca
         $group = $keywordClean; //grupo para busca
         $language = 'en'; //idioma para busca
         $limit = 1000;
-        $searchUrl = 'https://graph.facebook.com/v23.0/ads_archive?search_terms=' . $keywordClean . '&ad_type=ALL&languages=' . $language . '&ad_active_status=ACTIVE&ad_reached_countries=' . $country . '&access_token=' . $accessToken . '&ad_delivery_date_min=2025-07-19&media_type=VIDEO&limit=' . $limit . '&ad_delivery_date_max=2025-07-19&unmask_removed_content=true';
+        $searchUrl = 'https://graph.facebook.com/v23.0/ads_archive?search_terms=' . $keywordClean . '&ad_type=ALL&languages=' . $language . '&ad_active_status=ACTIVE&ad_reached_countries=' . $country . '&access_token=' . $accessToken . '&ad_delivery_date_min=2025-07-20&media_type=VIDEO&limit=' . $limit . '&ad_delivery_date_max=2025-07-20&unmask_removed_content=true';
         $allAds = [];
         $this->fetchAds($searchUrl, $allAds);
 
