@@ -182,7 +182,7 @@
 
 													</div>
 													<div class="pt-4 pb-5 d-flex justify-content-center gap-10">
-														<a href="<?php echo assetfolder; ?>insight-listar-propostas" class="text-primary opacity-75-hover fs-6 fw-semibold">Ver mais propostas</a>
+														<a href="<?php echo assetfolder; ?>insight-listar-propostas/0/0" class="text-primary opacity-75-hover fs-6 fw-semibold">Ver mais propostas</a>
 														<span class="text-gray-500 opacity-75-hover fs-6 fw-semibold">| </span>
 														<a href="<?php echo assetfolder; ?>bmg-saque/0" class="text-primary opacity-75-hover fs-6 fw-semibold">Criar nova proposta</a>
 													</div>

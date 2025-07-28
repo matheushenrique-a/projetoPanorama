@@ -65,28 +65,36 @@ class Insight extends BaseController
         return $this->loadpage('insight/listar_notificacoes', $dados);
     }
 
-    public function insight_listar_propostas()
+    public function insight_listar_propostas($idProposta ,$action)
     {
         $dados['pageTitle'] = 'Propostas';
         $buscarProp = $this->getpost('buscarProp');
+
+        if ($action == "remove") {
+            $this->dbMaster->delete('quid_propostas', ['idquid_propostas' => $idProposta]);
+            return redirect()->to(urlInstitucional . 'insight-listar-propostas/0/0');
+        }
 
         if (!empty($buscarProp)) {
             helper('cookie');
             $cpf = $this->getpost('txtCPF', false);
             $celular = $this->getpost('celular', false);
             $nome = $this->getpost('txtNome', false);
+            $nomeAssessor = $this->getpost('nomeAssessor', false);
             $statusPropostaFiltro = $this->getpost('statusPropostaFiltro', false);
             $paginas = $this->getpost('paginas', false);
 
             Services::response()->setCookie('cpf', $cpf);
             Services::response()->setCookie('celular', $celular);
             Services::response()->setCookie('nome', $nome);
+            Services::response()->setCookie('nomeAssessor', $nomeAssessor);
             Services::response()->setCookie('statusPropostaFiltro', $statusPropostaFiltro);
             Services::response()->setCookie('paginas', $paginas);
         } else {
             $cpf = $this->getpost('txtCPF', true);
             $celular = $this->getpost('celular', true);
             $nome = $this->getpost('txtNome', true);
+            $nomeAssessor = $this->getpost('nomeAssessor', true);
             $statusPropostaFiltro = $this->getpost('statusPropostaFiltro', true);
             $paginas = $this->getpost('paginas', true);
         }
@@ -99,8 +107,11 @@ class Insight extends BaseController
         if (!empty($cpf)) $likeCheck['cpf'] = $cpf;
         if (!empty($celular)) $likeCheck['telefone'] = $celular;
         if (!empty($nome)) $likeCheck['nome'] = $nome;
+        if (!empty($nomeAssessor)) $likeCheck['assessor'] = $nomeAssessor;
 
-        $whereCheck["assessor"] = $this->session->nickname;
+        if ($this->session->role !== "SUPERVISOR") {
+            $whereCheck["assessor"] = $this->session->nickname;
+        }
 
         $likeCheck = array("likeCheck" => $likeCheck);
 

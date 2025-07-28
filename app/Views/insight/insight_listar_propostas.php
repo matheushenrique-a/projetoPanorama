@@ -1,6 +1,6 @@
 					<!--begin::Main-->
 
-		
+
 					<div class="app-main flex-column flex-row-fluid" id="kt_app_main">
 						<!--begin::Content wrapper-->
 						<div class="d-flex flex-column flex-column-fluid">
@@ -133,7 +133,7 @@
 									<div class="card" style="justify-content: start;">
 										<!--begin::Card header-->
 										<!--begin::Form-->
-										<form id="frmDataLake" class="form" action="<?php echo assetfolder; ?>insight-listar-propostas" method="POST">
+										<form id="frmDataLake" class="form" action="<?php echo assetfolder; ?>insight-listar-propostas/0/0" method="POST">
 											<div class="card-header border-0 pt-6" style="justify-content: start;">
 												<!--begin::Card title-->
 												<div class="card-title">
@@ -143,6 +143,14 @@
 															<input type="text" class="form-control" placeholder="Nome cliente" name="txtNome" value="" />
 														</div>
 													</div>
+													<?php if ($my_security->checkPermission("SUPERVISOR")): ?>
+														<div class="d-flex align-items-center position-relative my-1 mx-3">
+															<div class="mb-3">
+																<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Assessor:</label>
+																<input type="text" class="form-control" placeholder="Nome assessor" name="nomeAssessor" value="" />
+															</div>
+														</div>
+													<?php endif; ?>
 													<div class="d-flex align-items-center position-relative my-1 mx-3">
 														<div class="mb-3">
 															<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">CPF:</label>
@@ -199,7 +207,7 @@
 													<!--begin::Table row-->
 													<tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
 														<th data-sortable="false" class="min-w-25px">Adesão</th>
-														<th data-sortable="false" class="min-w-200px">Cliente</th>
+														<th data-sortable="false" class="min-w-200px">Cliente | Assessor</th>
 														<th data-sortable="false" class="min-w-100px">CPF</th>
 														<th data-sortable="false" class="min-w-25">Celular</th>
 														<th data-sortable="false" class="min-w-50">Criação</th>
@@ -211,7 +219,7 @@
 												</thead>
 												<!--end::Table head-->
 												<!--begin::Table body-->
-												<tbody class="text-gray-600 fw-semibold">
+												<tbody class="text-gray-700 fw-semibold">
 
 													<?php
 													foreach ($propostas['result']->getResult() as $row) {
@@ -222,8 +230,9 @@
 																<?php echo $row->adesao; ?>
 															</td>
 															<!--begin::NOME-->
-															<td>
+															<td class="d-flex flex-column gap-2">
 																<?php echo $row->nome; ?>
+																<P class="text-gray-500 fw-bold fs-8"><?php echo $row->assessor ?></P>
 															</td>
 															<!--begin::VALORES-->
 															<td>
@@ -243,12 +252,12 @@
 																R$ <?php echo $row->valor; ?>
 															</td>
 															<td class="text-primary">
-																<?php echo $row->produto?>
+																<?php echo $row->produto ?>
 															</td>
 															<!--begin::OPERADOR-->
 															<td>
 																<div>
-																	<a target="_blank" href="https://grupoquid.panoramaemprestimos.com.br/emprestimoInterno.do?action=exibir&codigo=<?php echo $row->panorama_id?>" class="btn btn-sm btn-icon btn-bg-light btn-active-color-primary w-25px h-25px">
+																	<a target="_blank" href="https://grupoquid.panoramaemprestimos.com.br/emprestimoInterno.do?action=exibir&codigo=<?php echo $row->panorama_id ?>" class="btn btn-sm btn-icon btn-bg-light btn-active-color-primary w-25px h-25px">
 																		<span class="svg-icon svg-icon-5 svg-icon-gray-700">
 																			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
 																				<path d="M14.4 11H3C2.4 11 2 11.4 2 12C2 12.6 2.4 13 3 13H14.4V11Z" fill="currentColor" />
@@ -258,6 +267,9 @@
 																	</a>
 																</div>
 															</td>
+															<?php if ($my_security->checkPermission("ADMIN")): ?>
+																<td><a href="<?php echo assetfolder; ?>insight-listar-propostas/<?php echo $row->idquid_propostas; ?>/remove"><i class="text-danger bi bi-trash"></i></a></td>
+															<?php endif; ?>
 														</tr>
 													<?php }; ?>
 												</tbody>

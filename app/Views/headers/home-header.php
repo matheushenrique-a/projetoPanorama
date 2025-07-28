@@ -3954,7 +3954,7 @@ License: For each use you must have a valid license purchased only from above li
 										<!--end:Item-->
 										<!--begin:Item-->
 										<div class="col-6">
-											<a href="<?php echo assetfolder;?>insight-listar-propostas" class="d-flex flex-column flex-center h-100 p-6 bg-hover-light border-end">
+											<a href="<?php echo assetfolder;?>insight-listar-propostas/0/0" class="d-flex flex-column flex-center h-100 p-6 bg-hover-light border-end">
 												<!--begin::Svg Icon | path: icons/duotune/abstract/abs042.svg-->
 												<span class="svg-icon svg-icon-3x svg-icon-primary mb-2">
 													<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
