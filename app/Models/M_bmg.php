@@ -505,4 +505,41 @@ class M_bmg extends Model
             ];
         }
     }
+
+    public function gravar_proposta_bmg_database($data) {
+        $adesao = $data['adesao'];
+        $cpf = $data['cpf'];
+        $nome = $data['nomeCliente'];
+        $assessor = $this->session->nickname;
+        $produto = "Saque Complementar";
+        $valor = $data['valorSaque'];
+        $telefone = $data['celular1']['ddd'] . $data['celular1']['numero'];
+        $status = "Análise";
+        $panorama_id = $data['panorama_id'];
+
+        $this->dbMasterDefault->insert('quid_propostas', [
+            "adesao" => $adesao, 
+            "cpf" => $cpf,
+            "nome" => $nome,
+            "assessor" => $assessor,
+            "produto" => $produto,
+            "valor" => $valor,
+            "telefone" => $telefone,
+            "status" => $status,
+            "panorama_id" => $panorama_id
+        ]);
+    }
+
+    public function ultimasPropostasBMG($limit = 6){
+        $sql = "select * from quid_propostas where assessor = '" . $this->session->nickname . "' ";
+        $sql .= " order by data_criacao DESC LIMIT $limit;"; 
+        
+        return $this->dbMasterDefault->runQuery($sql);
+    }
+
+    public function countPropostasBMG(){
+        $sql = "select * from quid_propostas where assessor = '" . $this->session->nickname . "' ";
+        $sql .= "AND DATE(data_criacao) = CURDATE();"; 
+        return $this->dbMasterDefault->runQuery($sql)['countAll'];
+    }
 }

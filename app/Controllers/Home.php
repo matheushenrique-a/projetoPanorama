@@ -12,6 +12,7 @@ use App\Models\M_twilio;
 use Config\Services;
 use App\Models\M_integraall;
 use App\Models\M_argus;
+use App\Models\M_bmg;
 use App\Models\M_seguranca;
 use App\Models\M_insight;
 
@@ -25,8 +26,10 @@ class Home extends BaseController
     protected $m_argus;
     protected $m_security;
     protected $m_insight;
+    protected $m_bmg;
 
-    public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger) {
+    public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
+    {
         parent::initController($request, $response, $logger);
         $this->checkSession();
 
@@ -41,20 +44,31 @@ class Home extends BaseController
         $this->m_argus =  new M_argus();
         $this->m_security = new M_seguranca();
         $this->m_insight = new M_insight();
+        $this->m_bmg = new M_bmg();
     }
 
     public function index()
     {
         $this->checkSession();
         $dados['pageTitle'] = "Insight Home";
-        
+
         $htmlNotificacoes = $this->m_insight->gerarTimelineNotificacoes();
-        $ultimasLigacoes = $this->m_argus->ultimasLigacoes(12);
+        $ultimasLigacoes = $this->m_argus->ultimasLigacoes(8);
         $countLigacoes = $this->m_argus->countLigacoes();
         $countPropostas = $this->m_integraall->countPropostas();
-        $ultimasPropostas = $this->m_integraall->ultimasPropostas(9);
+        $ultimasPropostas = $this->m_integraall->ultimasPropostas(8);
+
         $graficoAvebacoes = $this->m_integraall->graficoAvebacoes();
         $ranking_ativacoes = $this->m_integraall->ranking_ativacoes();
+        
+        $tabulacoesSucesso = $this->m_argus->tabulacoesSucesso();
+        $dados['tabulacoesSucesso'] = $tabulacoesSucesso;
+        
+        $ultimasPropostasBMG = $this->m_bmg->ultimasPropostasBMG(8);
+        $dados['ultimasPropostasBMG'] = $ultimasPropostasBMG;
+
+        $countPropostasBMG = $this->m_bmg->countPropostasBMG();
+        $dados['countPropostasBMG'] = $countPropostasBMG;
 
         $dados['ranking_ativacoes'] = $ranking_ativacoes;
         $dados['graficoAvebacoes'] = $graficoAvebacoes;
@@ -66,5 +80,4 @@ class Home extends BaseController
         $dados['countPropostas'] = $countPropostas;
         return $this->loadpage('headers/home-default', $dados);
     }
-
 }

@@ -68,7 +68,7 @@
                                                                 <input maxlength="14" type="text" value="<?= esc($cpf ?? '') ?>" class="form-control fs-3 fw-bold" placeholder="000.000.000-00" name="cpf" id="cpf" required />
                                                             </div>
                                                             <div class="input-group">
-                                                                <span class="input-group-text" style="width: 155px">Matricula</span>
+                                                                <span class="input-group-text" style="width: 155px">Número Benefício</span>
                                                                 <input type="text" value="<?= esc($cardData->cartoes->cartoesRetorno[0]->matricula ?? '') ?>" class="form-control fs-3 fw-bold" placeholder="" name="matricula" id="matricula" readonly />
                                                             </div>
                                                             <div class="input-group">
@@ -350,7 +350,7 @@
             e.preventDefault();
             loading.style.display = 'inline-block';
             const valorSaque = valorSaqueInput.value;
-            fetch("<?= base_url('bmg-saque/0') ?>", {
+            fetch("<?= urlInstitucional . 'bmg-saque/0' ?>", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/x-www-form-urlencoded",
@@ -358,16 +358,30 @@
                     },
                     body: "valorSaque=" + encodeURIComponent(valorSaque) + "&btnSaque=consultar"
                 })
-                .then(response => response.json())
-                .then(data => {
-                    loading.style.display = 'none';
-                    if (data.status === 'ok') {
-                        document.getElementById('valorParcela').value = data.valorParcela;
-                    } else {
-                        alert("Erro: " + data.mensagem);
+                .then(response => {
+                    if (!response.ok) { // Se o status HTTP não for 200-299
+                        throw new Error("HTTP " + response.status);
+                    }
+                    return response.text(); // Primeiro pega como texto
+                })
+                .then(text => {
+                    try {
+                        const data = JSON.parse(text); // Tenta converter para JSON
+                        loading.style.display = 'none';
+                        if (data.status === 'ok') {
+                            document.getElementById('valorParcela').value = data.valorParcela;
+                        } else {
+                            alert("Erro: " + data.mensagem);
+                        }
+                    } catch (e) {
+                        alert("Resposta não é JSON: " + text);
                     }
                 })
-                .catch(err => alert("Falha na requisição: " + err));
+                .catch(err => {
+                    loading.style.display = 'none';
+                    alert("Falha na requisição: " + err);
+                });
+
         });
     }
 

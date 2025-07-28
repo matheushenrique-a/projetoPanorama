@@ -63,7 +63,7 @@
 														</svg>
 													</span>
 													<!--end::Svg Icon-->
-													<div class="text-gray-900 fw-bold fs-2 mb-2 mt-5"><?php echo $indicadores['propostas_hoje'];?> proposta(s)</div>
+													<div class="text-gray-900 fw-bold fs-2 mb-2 mt-5"><?php echo $indicadores['propostas_hoje']; ?>  proposta(s)</div>
 													<div class="fw-semibold text-gray-400">criada(s) na data de hoje.</div>
 												</div>
 												<!--end::Body-->

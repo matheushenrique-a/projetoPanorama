@@ -886,12 +886,11 @@ class Bmg extends BaseController
                 'matricula' => $matricula,
                 'valorParcela' => $valorParcela,
                 'numeroParcelas' => $numeroParcelas,
-                // 'email' => "maria.silva@gmail.com"
             ];
 
-            
+
             $returnData = $this->m_bmg->gravarPropostaSaque($dataSaque);
-            
+
             $dataPanorama = [
                 "cpf" => $cpf,
                 'celular1' => [
@@ -904,18 +903,35 @@ class Bmg extends BaseController
                 'quantidadeParcelas' => $numeroParcelas,
                 'nomeCliente' => $this->getpost('nomeCliente'),
                 'especie' => $this->getpost('especie'),
-                'adesao' => $returnData,
+                'adesao' => $returnData, //
                 'dataNascimento' => $this->getpost('dataNascimento'),
             ];
 
-            if (isset($returnData['erro']) && $returnData['erro']) {
-                return redirect()->to(base_url('bmg-saque/0'))->with('erro', $returnData['mensagem']);
-            } else {
 
+
+            if (isset($returnData['erro']) && $returnData['erro']) {
+                return redirect()->to(urlInstitucional . 'bmg-saque/0')->with('erro', $returnData['mensagem']);
+            } else {
                 $propostaPanorama = $this->panorama_gravar_proposta_saque($dataPanorama);
+
+                $database = [
+                    'adesao' => $returnData,
+                    "cpf" => $cpf,
+                    'celular1' => [
+                        'ddd' => $ddd,
+                        'numero' => $telefone,
+                    ],
+                    "valorSaque" => $valorSaque,
+                    'valorParcela' => $valorParcela,
+                    'quantidadeParcelas' => $numeroParcelas,
+                    'nomeCliente' => $this->getpost('nomeCliente'),
+                    'panorama_id' => $propostaPanorama['proposta']
+                ];
+
+                $this->m_bmg->gravar_proposta_bmg_database($database);
             }
 
-            return redirect()->to(base_url('bmg-saque/0'))->with('sucesso', $propostaPanorama['mensagem'] . " " . $returnData);
+            return redirect()->to(urlInstitucional . 'bmg-saque/0')->with('sucesso', $propostaPanorama['mensagem'] . " " . $returnData);
         }
 
         if ($this->getPost('btnSaque') === 'consultar') {
@@ -967,11 +983,11 @@ class Bmg extends BaseController
         $dados['cardData'] = $returnData;
 
         if (isset($returnData->erro) && $returnData->erro) {
-            return redirect()->to(base_url('bmg-saque/0'))->with('erro', $returnData['mensagem']);
+            return redirect()->to(urlInstitucional . 'bmg-saque/0')->with('erro', $returnData['mensagem']);
         } else if (!isset($returnData->limite->valorSaqueMaximo)) {
-            return redirect()->to(base_url('bmg-saque/0'))->with('cardData', $returnData)->with('cpfDigitado', $cpf);
+            return redirect()->to(urlInstitucional . 'bmg-saque/0')->with('cardData', $returnData)->with('cpfDigitado', $cpf);
         } else {
-            return redirect()->to(base_url('bmg-saque/0'))->with('cardData', $returnData)->with('cpfDigitado', $cpf)->with('valorParcela', $valorParcela);
+            return redirect()->to(urlInstitucional . 'bmg-saque/0')->with('cardData', $returnData)->with('cpfDigitado', $cpf)->with('valorParcela', $valorParcela);
         }
     }
 

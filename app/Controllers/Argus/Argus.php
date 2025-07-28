@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controllers\Argus;
+
 use App\Controllers\BaseController;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
@@ -17,7 +18,8 @@ class Argus extends BaseController
     protected $telegram;
     protected $twilio;
 
-    public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger) {
+    public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
+    {
         parent::initController($request, $response, $logger);
         //$this->checkSession();
 
@@ -50,20 +52,24 @@ class Argus extends BaseController
     // }
 
 
-    public function listaOPeradores(){
+    public function listaOPeradores()
+    {
         $this->dbMasterDefault->setOrderBy(array('nickname', 'ASC'));
         $users = $this->dbMasterDefault->select('user_account', ['empresa' => $this->session->empresa]);
-		return $users;
-    }  
+        return $users;
+    }
 
     //http://localhost/InsightSuite/public/argus-listar-chamadas
-    public function listarChamadas(){
+    public function listarChamadas()
+    {
         $buscarProp = $this->getpost('buscarProp');
         $company = "";
-        if ($this->session->empresa == "VAP"){$company = "_vap";}
+        if ($this->session->empresa == "VAP") {
+            $company = "_vap";
+        }
         $users = $this->listaOPeradores();
 
-        if (!empty($buscarProp)){
+        if (!empty($buscarProp)) {
             helper('cookie');
             $cpf = $this->getpost('txtCPF', false);
             $idLigacao = $this->getpost('idLigacao', false);
@@ -74,8 +80,8 @@ class Argus extends BaseController
             $statusWhatsApp = $this->getpost('statusWhatsApp', false);
             $paginas = $this->getpost('paginas', false);
             $operadorFiltro = $this->getpost('operadorFiltro', false);
-            $flag = $this->getpost('flag',false);
-            
+            $flag = $this->getpost('flag', false);
+
             Services::response()->setCookie('cpf', $cpf);
             Services::response()->setCookie('idLigacao', $idLigacao);
             Services::response()->setCookie('celular', $celular);
@@ -96,16 +102,16 @@ class Argus extends BaseController
             $statusWhatsApp = $this->getpost('statusWhatsApp', true);
             $paginas = $this->getpost('paginas', true);
             $operadorFiltro = $this->getpost('operadorFiltro', true);
-            $flag = $this->getpost('flag',true);
+            $flag = $this->getpost('flag', true);
         }
 
         $flag = (empty($flag) ? 'ACAO' : $flag);
-        
+
         $whereCheck = [];
         $likeCheck = [];
         $whereNotIn = [];
         $whereIn = [];
-        
+
         if (!empty($cpf)) $likeCheck['cpf'] = $cpf;
         //if (!empty($paginas)) $whereCheck['paginas'] = $paginas;
         if (!empty($idLigacao)) $likeCheck['idLigacao'] = $idLigacao;
@@ -114,17 +120,17 @@ class Argus extends BaseController
         if (!empty($nome)) $likeCheck['nome'] = $nome;
         if (!empty($emailPessoal)) $likeCheck['emailPessoal'] = $emailPessoal;
         if ($flag == "OPTIN") $whereCheck['Optin_pan'] = "V";
-        
+
         //foreach($fasesAdd as $item){echo "'" . $item . "', ";}exit;
 
         $likeCheck = array("likeCheck" => $likeCheck);
 
-        $paginas = (empty($paginas)  ? 10 : $paginas); 
+        $paginas = (empty($paginas)  ? 10 : $paginas);
         $this->dbMasterDefault->setLimit($paginas);
         $this->dbMasterDefault->setOrderBy(array('id_proposta', 'DESC'));
-       //$propostas = $this->dbMasterDefault->select('aaspa_cliente_vap', $whereCheck, $whereNotIn + $likeCheck + $whereIn);
+        //$propostas = $this->dbMasterDefault->select('aaspa_cliente_vap', $whereCheck, $whereNotIn + $likeCheck + $whereIn);
 
-       
+
 
         $query = "select *, (select count(*) from whatsapp_log w where w.to = c.celular) messages from aaspa_cliente$company c where 1=1 ";
         if (!empty($cpf))
@@ -139,7 +145,7 @@ class Argus extends BaseController
             $query .= "and c.assessor like '%$operadorFiltro%' ";
         if (!empty($statusWhatsApp))
             $query .= " having messages > 0";
-        
+
 
         $query .= " order by id_proposta desc limit $paginas;";
 
@@ -163,9 +169,10 @@ class Argus extends BaseController
         return $this->loadpage('aaspa/listar_chamadas', $dados);
     }
 
-    
+
     //https://a613-2804-1b3-6149-9c04-d1cc-cd1c-6041-2e1c.ngrok-free.app/InsightSuite/public/argus-atendimento-webhook
-    public function argus_atendimento_webhook(){
+    public function argus_atendimento_webhook()
+    {
         $request = file_get_contents('php://input');
         $response = json_decode($request, true);
 
@@ -188,14 +195,13 @@ class Argus extends BaseController
 
             //$this->telegram->notifyTelegramGroup($nomeCliente);
 
-            if (!empty($nomeCliente)){
-                $this->dbMasterDefault->insert('aaspa_cliente',['codCliente' => $codCliente, 'nome' => $nomeCliente, 'cpf' => $cpfCnpj, 'celular' => $telefoneE164, 'assessor' => $nomeUsuario, 'dataInicioLigacao' => $dataInicioLigacao, 'idLigacao' => $idLigacao]);
+            if (!empty($nomeCliente)) {
+                $this->dbMasterDefault->insert('aaspa_cliente', ['codCliente' => $codCliente, 'nome' => $nomeCliente, 'cpf' => $cpfCnpj, 'celular' => $telefoneE164, 'assessor' => $nomeUsuario, 'dataInicioLigacao' => $dataInicioLigacao, 'idLigacao' => $idLigacao]);
             }
             http_response_code(200);
-            
         }
 
-      
+
 
         // $codCliente = "_aDmnVGyECSiY9Aza3Qq9YwkhmUQ%3D";
         // $nomeCliente = "PEDRO HENRIQUE DE SOUZA";
@@ -209,86 +215,124 @@ class Argus extends BaseController
         //$output = $this->telegram->notifyTelegramGroup("CALL codCliente: $nomeCliente, $nomeUsuario: $idLigacao");
     }
 
-        //https://8b46-177-73-197-2.ngrok-free.app/InsightSuite/public/argus-atendimento-webhook-vap
-        //https://localhost/InsightSuite/public/argus-atendimento-webhook-vap
-        //https://insightsuite.pravoce.io/argus-atendimento-webhook-vap
-        public function argus_atendimento_webhook_vap(){
+    public function argus_tabulacao_webhook()
+    {
+        try {
             $request = file_get_contents('php://input');
             $response = json_decode($request, true);
 
-            //$this->telegram->notifyTelegramGroup("Nome " . $response['nomeCliente'] . " - "  . $request, telegramQuid);
-    
-            if ((isset($response['nomeCliente']))) {
-                $idDominio = $response['idDominio'];
-                $idCampanha = $response['idCampanha'];
-                $idSkill = $response['idSkill'];
-                $idLote = $response['idLote'];
-                $idLigacao = $response['idLigacao'];
-                $dataInicioLigacao = $response['dataInicioLigacao'];
-                $idTipoWebhook = $response['idTipoWebhook'];
-    
-                $codCliente = $response['codCliente'];
-                $nomeCliente = $response['nomeCliente'];
-                $cpfCnpj = $response['cpfCnpj'];
-                $nomeUsuario = $response['nomeUsuario'];
-                $telefoneE164 = "55" . $response['telefone'];
-    
-                
-                if (!empty($nomeCliente)){
-                    $this->dbMasterDefault->insert('aaspa_cliente_vap',['codCliente' => $codCliente, 'nome' => $nomeCliente, 'cpf' => $cpfCnpj, 'celular' => $telefoneE164, 'assessor' => $nomeUsuario, 'dataInicioLigacao' => $dataInicioLigacao, 'idLigacao' => $idLigacao]);
-                }
-                http_response_code(200);
-                
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                http_response_code(400);
+                return;
             }
-    
-          
-    
-            // $codCliente = "_aDmnVGyECSiY9Aza3Qq9YwkhmUQ%3D";
-            // $nomeCliente = "PEDRO HENRIQUE DE SOUZA";
-            // $cpfCnpj = "";
-            // $nomeUsuario = "FERNANDO DANTAS DOS SANTOS JUNIOR";
-            // $idLigacao = 107372507;
-            // $dataInicioLigacao = "2025-03-14T13:46:00.000Z";
-            // $telefoneE164 = "5573981487632";
-    
-    
-            //$output = $this->telegram->notifyTelegramGroup("CALL codCliente: $nomeCliente, $nomeUsuario: $idLigacao");
-    
-    
-    
+
+            if (empty($response['nomeCliente'])) {
+                http_response_code(400);
+                return;
+            }
+
+            $data = [
+                'codCliente' => $response['codCliente'] ?? null,
+                'nome' => $response['nomeCliente'],
+                'celular' => $response['telefone'] ?? null,
+                'assessor' => $response['nomeUsuario'] ?? null,
+                'dataInicioLigacao' => $response['dataInicioLigacao'] ?? null,
+                'idLigacao' => $response['idLigacao'] ?? null,
+                'tempoLigacao' => $response['tempoLigacao'] ?? null,
+                'idTabulacao' => $response['idTabulacao'] ?? null,
+                'tabulacaoDesc' => $response['tabulacaoDesc'] ?? null
+            ];
+
+            if (!empty($response['nomeCliente'])) {
+                $this->dbMasterDefault->insert('argus_tabulacao', $data);
+                http_response_code(200);
+            } else {
+                http_response_code(400);
+            }
+        } catch (\Throwable $e) {
+            http_response_code(500);
+        }
+    }
+
+
+
+    //https://8b46-177-73-197-2.ngrok-free.app/InsightSuite/public/argus-atendimento-webhook-vap
+    //https://localhost/InsightSuite/public/argus-atendimento-webhook-vap
+    //https://insightsuite.pravoce.io/argus-atendimento-webhook-vap
+    public function argus_atendimento_webhook_vap()
+    {
+        $request = file_get_contents('php://input');
+        $response = json_decode($request, true);
+
+        //$this->telegram->notifyTelegramGroup("Nome " . $response['nomeCliente'] . " - "  . $request, telegramQuid);
+
+        if ((isset($response['nomeCliente']))) {
+            $idDominio = $response['idDominio'];
+            $idCampanha = $response['idCampanha'];
+            $idSkill = $response['idSkill'];
+            $idLote = $response['idLote'];
+            $idLigacao = $response['idLigacao'];
+            $dataInicioLigacao = $response['dataInicioLigacao'];
+            $idTipoWebhook = $response['idTipoWebhook'];
+
+            $codCliente = $response['codCliente'];
+            $nomeCliente = $response['nomeCliente'];
+            $cpfCnpj = $response['cpfCnpj'];
+            $nomeUsuario = $response['nomeUsuario'];
+            $telefoneE164 = "55" . $response['telefone'];
+
+
+            if (!empty($nomeCliente)) {
+                $this->dbMasterDefault->insert('aaspa_cliente_vap', ['codCliente' => $codCliente, 'nome' => $nomeCliente, 'cpf' => $cpfCnpj, 'celular' => $telefoneE164, 'assessor' => $nomeUsuario, 'dataInicioLigacao' => $dataInicioLigacao, 'idLigacao' => $idLigacao]);
+            }
+            http_response_code(200);
         }
 
 
-        //https://8b46-177-73-197-2.ngrok-free.app/InsightSuite/public/metricas-ligacao-operador
-        //http://localhost/InsightSuite/public/metricas-ligacao-operador
-        //https://insightsuite.pravoce.io/metricas-ligacao-operador
-        public function metricas_ligacao_operador(){
-            $sqlLigacoesOperador = "select assessor, count(codCliente) total from aaspa_cliente c INNER JOIN user_account u ON c.assessor = u.nickname 
+
+        // $codCliente = "_aDmnVGyECSiY9Aza3Qq9YwkhmUQ%3D";
+        // $nomeCliente = "PEDRO HENRIQUE DE SOUZA";
+        // $cpfCnpj = "";
+        // $nomeUsuario = "FERNANDO DANTAS DOS SANTOS JUNIOR";
+        // $idLigacao = 107372507;
+        // $dataInicioLigacao = "2025-03-14T13:46:00.000Z";
+        // $telefoneE164 = "5573981487632";
+
+
+        //$output = $this->telegram->notifyTelegramGroup("CALL codCliente: $nomeCliente, $nomeUsuario: $idLigacao");
+
+
+
+    }
+
+
+    //https://8b46-177-73-197-2.ngrok-free.app/InsightSuite/public/metricas-ligacao-operador
+    //http://localhost/InsightSuite/public/metricas-ligacao-operador
+    //https://insightsuite.pravoce.io/metricas-ligacao-operador
+    public function metricas_ligacao_operador()
+    {
+        $sqlLigacoesOperador = "select assessor, count(codCliente) total from aaspa_cliente c INNER JOIN user_account u ON c.assessor = u.nickname 
             WHERE perfil_acesso LIKE '%AASPA%' AND empresa = 'QUID' AND u.status = 'ATIVO' AND u.role = 'OPERADOR'
             AND c.last_update >= '" . date('Y-m-d') . " 00:00:01' AND c.last_update <= '" . date('Y-m-d') . " 23:00:01'
             GROUP by assessor 
             ORDER BY assessor limit 100;";
 
-            $ligacoes = $this->dbMasterDefault->runQuery($sqlLigacoesOperador);
+        $ligacoes = $this->dbMasterDefault->runQuery($sqlLigacoesOperador);
 
-            $sendData = "☎️☎️☎️ LIGAÇÕES DE HOJE \n";
-            $totalGeral = 0;
-            if ($ligacoes['existRecord']){
-                foreach ($ligacoes["result"]->getResult() as $row){
-                    $assessor = $row->assessor;
-                    $assessorShort = substr($assessor, 0, 17) . "...";
-                    $total = $row->total;
-                    $totalGeral = $total + $totalGeral;
+        $sendData = "☎️☎️☎️ LIGAÇÕES DE HOJE \n";
+        $totalGeral = 0;
+        if ($ligacoes['existRecord']) {
+            foreach ($ligacoes["result"]->getResult() as $row) {
+                $assessor = $row->assessor;
+                $assessorShort = substr($assessor, 0, 17) . "...";
+                $total = $row->total;
+                $totalGeral = $total + $totalGeral;
 
-                    $sendData .=  "- $assessorShort [$total] \n";
-                }
+                $sendData .=  "- $assessorShort [$total] \n";
             }
-            $sendData .=  "\nTotal Geral: $totalGeral\n";
-
-            $this->telegram->notifyTelegramGroup($sendData, telegramQuid);
         }
+        $sendData .=  "\nTotal Geral: $totalGeral\n";
 
-
-    
-    
+        $this->telegram->notifyTelegramGroup($sendData, telegramQuid);
+    }
 }

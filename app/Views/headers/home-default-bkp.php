@@ -57,7 +57,7 @@
 												<!--begin::Header-->
 												<div class="card-header pt-5">
 													<!--begin::Title-->
-													<a class="menu-link" href="<?php echo assetfolder;?>fgts-listar-propostas">
+													<a class="menu-link" href="<?php echo assetfolder; ?>fgts-listar-propostas">
 														<div class="card-title d-flex flex-column">
 															<!--begin::Amount-->
 															<span class="fs-2hx fw-bold text-white me-2 lh-1 ls-n2">69</span>
@@ -157,14 +157,14 @@
 															<!--end::Amount-->
 															<!--begin::Badge-->
 															<span class="badge badge-light-success fs-base">
-															<!--begin::Svg Icon | path: icons/duotune/arrows/arr066.svg-->
-															<span class="svg-icon svg-icon-5 svg-icon-success ms-n1">
-																<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-																	<rect opacity="0.5" x="13" y="6" width="13" height="2" rx="1" transform="rotate(90 13 6)" fill="currentColor" />
-																	<path d="M12.5657 8.56569L16.75 12.75C17.1642 13.1642 17.8358 13.1642 18.25 12.75C18.6642 12.3358 18.6642 11.6642 18.25 11.25L12.7071 5.70711C12.3166 5.31658 11.6834 5.31658 11.2929 5.70711L5.75 11.25C5.33579 11.6642 5.33579 12.3358 5.75 12.75C6.16421 13.1642 6.83579 13.1642 7.25 12.75L11.4343 8.56569C11.7467 8.25327 12.2533 8.25327 12.5657 8.56569Z" fill="currentColor" />
-																</svg>
-															</span>
-															<!--end::Svg Icon-->2.2%</span>
+																<!--begin::Svg Icon | path: icons/duotune/arrows/arr066.svg-->
+																<span class="svg-icon svg-icon-5 svg-icon-success ms-n1">
+																	<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+																		<rect opacity="0.5" x="13" y="6" width="13" height="2" rx="1" transform="rotate(90 13 6)" fill="currentColor" />
+																		<path d="M12.5657 8.56569L16.75 12.75C17.1642 13.1642 17.8358 13.1642 18.25 12.75C18.6642 12.3358 18.6642 11.6642 18.25 11.25L12.7071 5.70711C12.3166 5.31658 11.6834 5.31658 11.2929 5.70711L5.75 11.25C5.33579 11.6642 5.33579 12.3358 5.75 12.75C6.16421 13.1642 6.83579 13.1642 7.25 12.75L11.4343 8.56569C11.7467 8.25327 12.2533 8.25327 12.5657 8.56569Z" fill="currentColor" />
+																	</svg>
+																</span>
+																<!--end::Svg Icon-->2.2%</span>
 															<!--end::Badge-->
 														</div>
 														<!--end::Info-->
@@ -400,8 +400,8 @@
 										<div class="col-xxl-6">
 											<!--begin::Engage widget 10-->
 											<div class="card card-flush h-md-100">
-											
-											
+
+
 												<!--begin::Timeline-->
 												<div class="card">
 													<!--begin::Card head-->
@@ -427,7 +427,7 @@
 																<li class="nav-item" role="presentation">
 																	<a id="kt_activity_today_tab" class="nav-link justify-content-center text-active-gray-800 active" data-bs-toggle="tab" role="tab" href="#kt_activity_today">Hoje</a>
 																</li>
-																
+
 															</ul>
 															<!--end::Tab nav-->
 														</div>
@@ -437,32 +437,32 @@
 
 													<!--begin::Card body-->
 													<div class="card-body">
-														
+
 														<!--begin::Tab Content-->
 														<div class="tab-content">
-															
+
 															<!--begin::Tab panel-->
 															<div id="kt_activity_today" class="card-body p-0 tab-pane fade show active" role="tabpanel" aria-labelledby="kt_activity_today_tab">
 
-															<?php echo $htmlNotificacoes;?>
+																<?php echo $htmlNotificacoes; ?>
 
 
-															<!--begin::Actions-->
-															<a href="<?php echo assetfolder;?>insight-listar-notificacoes" class="text-primary opacity-75-hover fs-6 fw-semibold">Ver mais notificações
-															<span class="svg-icon svg-icon-4 svg-icon-gray-800 ms-1">
-																<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-																	<path opacity="0.3" d="M4.7 17.3V7.7C4.7 6.59543 5.59543 5.7 6.7 5.7H9.8C10.2694 5.7 10.65 5.31944 10.65 4.85C10.65 4.38056 10.2694 4 9.8 4H5C3.89543 4 3 4.89543 3 6V19C3 20.1046 3.89543 21 5 21H18C19.1046 21 20 20.1046 20 19V14.2C20 13.7306 19.6194 13.35 19.15 13.35C18.6806 13.35 18.3 13.7306 18.3 14.2V17.3C18.3 18.4046 17.4046 19.3 16.3 19.3H6.7C5.59543 19.3 4.7 18.4046 4.7 17.3Z" fill="currentColor" />
-																	<rect x="21.9497" y="3.46448" width="13" height="2" rx="1" transform="rotate(135 21.9497 3.46448)" fill="currentColor" />
-																	<path d="M19.8284 4.97161L19.8284 9.93937C19.8284 10.5252 20.3033 11 20.8891 11C21.4749 11 21.9497 10.5252 21.9497 9.93937L21.9497 3.05029C21.9497 2.498 21.502 2.05028 20.9497 2.05028L14.0607 2.05027C13.4749 2.05027 13 2.52514 13 3.11094C13 3.69673 13.4749 4.17161 14.0607 4.17161L19.0284 4.17161C19.4702 4.17161 19.8284 4.52978 19.8284 4.97161Z" fill="currentColor" />
-																</svg>
-															</span>
-															<!--end::Svg Icon--></a>
+																<!--begin::Actions-->
+																<a href="<?php echo assetfolder; ?>insight-listar-notificacoes" class="text-primary opacity-75-hover fs-6 fw-semibold">Ver mais notificações
+																	<span class="svg-icon svg-icon-4 svg-icon-gray-800 ms-1">
+																		<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+																			<path opacity="0.3" d="M4.7 17.3V7.7C4.7 6.59543 5.59543 5.7 6.7 5.7H9.8C10.2694 5.7 10.65 5.31944 10.65 4.85C10.65 4.38056 10.2694 4 9.8 4H5C3.89543 4 3 4.89543 3 6V19C3 20.1046 3.89543 21 5 21H18C19.1046 21 20 20.1046 20 19V14.2C20 13.7306 19.6194 13.35 19.15 13.35C18.6806 13.35 18.3 13.7306 18.3 14.2V17.3C18.3 18.4046 17.4046 19.3 16.3 19.3H6.7C5.59543 19.3 4.7 18.4046 4.7 17.3Z" fill="currentColor" />
+																			<rect x="21.9497" y="3.46448" width="13" height="2" rx="1" transform="rotate(135 21.9497 3.46448)" fill="currentColor" />
+																			<path d="M19.8284 4.97161L19.8284 9.93937C19.8284 10.5252 20.3033 11 20.8891 11C21.4749 11 21.9497 10.5252 21.9497 9.93937L21.9497 3.05029C21.9497 2.498 21.502 2.05028 20.9497 2.05028L14.0607 2.05027C13.4749 2.05027 13 2.52514 13 3.11094C13 3.69673 13.4749 4.17161 14.0607 4.17161L19.0284 4.17161C19.4702 4.17161 19.8284 4.52978 19.8284 4.97161Z" fill="currentColor" />
+																		</svg>
+																	</span>
+																	<!--end::Svg Icon--></a>
 
 															</div>
 															<!--end::Tab panel-->
-															
-															
-															
+
+
+
 														</div>
 														<!--end::Tab Content-->
 
@@ -471,7 +471,7 @@
 												</div>
 												<!--end::Timeline-->
 
-											
+
 											</div>
 											<!--end::Engage widget 10-->
 										</div>
@@ -519,14 +519,14 @@
 																	<span class="fs-1 fw-semibold text-gray-400 me-1 mt-n1">$</span>
 																	<span class="fs-3x fw-bold text-gray-800 me-2 lh-1 ls-n2">18,89</span>
 																	<span class="badge badge-light-success fs-base">
-																	<!--begin::Svg Icon | path: icons/duotune/arrows/arr066.svg-->
-																	<span class="svg-icon svg-icon-5 svg-icon-success ms-n1">
-																		<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-																			<rect opacity="0.5" x="13" y="6" width="13" height="2" rx="1" transform="rotate(90 13 6)" fill="currentColor" />
-																			<path d="M12.5657 8.56569L16.75 12.75C17.1642 13.1642 17.8358 13.1642 18.25 12.75C18.6642 12.3358 18.6642 11.6642 18.25 11.25L12.7071 5.70711C12.3166 5.31658 11.6834 5.31658 11.2929 5.70711L5.75 11.25C5.33579 11.6642 5.33579 12.3358 5.75 12.75C6.16421 13.1642 6.83579 13.1642 7.25 12.75L11.4343 8.56569C11.7467 8.25327 12.2533 8.25327 12.5657 8.56569Z" fill="currentColor" />
-																		</svg>
-																	</span>
-																	<!--end::Svg Icon-->4,8%</span>
+																		<!--begin::Svg Icon | path: icons/duotune/arrows/arr066.svg-->
+																		<span class="svg-icon svg-icon-5 svg-icon-success ms-n1">
+																			<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+																				<rect opacity="0.5" x="13" y="6" width="13" height="2" rx="1" transform="rotate(90 13 6)" fill="currentColor" />
+																				<path d="M12.5657 8.56569L16.75 12.75C17.1642 13.1642 17.8358 13.1642 18.25 12.75C18.6642 12.3358 18.6642 11.6642 18.25 11.25L12.7071 5.70711C12.3166 5.31658 11.6834 5.31658 11.2929 5.70711L5.75 11.25C5.33579 11.6642 5.33579 12.3358 5.75 12.75C6.16421 13.1642 6.83579 13.1642 7.25 12.75L11.4343 8.56569C11.7467 8.25327 12.2533 8.25327 12.5657 8.56569Z" fill="currentColor" />
+																			</svg>
+																		</span>
+																		<!--end::Svg Icon-->4,8%</span>
 																</div>
 																<!--end::Statistics-->
 																<!--begin::Description-->
@@ -624,14 +624,14 @@
 																	<span class="fs-1 fw-semibold text-gray-400 me-1 mt-n1">$</span>
 																	<span class="fs-3x fw-bold text-gray-800 me-2 lh-1 ls-n2">8,55</span>
 																	<span class="badge badge-light-success fs-base">
-																	<!--begin::Svg Icon | path: icons/duotune/arrows/arr066.svg-->
-																	<span class="svg-icon svg-icon-5 svg-icon-success ms-n1">
-																		<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-																			<rect opacity="0.5" x="13" y="6" width="13" height="2" rx="1" transform="rotate(90 13 6)" fill="currentColor" />
-																			<path d="M12.5657 8.56569L16.75 12.75C17.1642 13.1642 17.8358 13.1642 18.25 12.75C18.6642 12.3358 18.6642 11.6642 18.25 11.25L12.7071 5.70711C12.3166 5.31658 11.6834 5.31658 11.2929 5.70711L5.75 11.25C5.33579 11.6642 5.33579 12.3358 5.75 12.75C6.16421 13.1642 6.83579 13.1642 7.25 12.75L11.4343 8.56569C11.7467 8.25327 12.2533 8.25327 12.5657 8.56569Z" fill="currentColor" />
-																		</svg>
-																	</span>
-																	<!--end::Svg Icon-->2.2%</span>
+																		<!--begin::Svg Icon | path: icons/duotune/arrows/arr066.svg-->
+																		<span class="svg-icon svg-icon-5 svg-icon-success ms-n1">
+																			<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+																				<rect opacity="0.5" x="13" y="6" width="13" height="2" rx="1" transform="rotate(90 13 6)" fill="currentColor" />
+																				<path d="M12.5657 8.56569L16.75 12.75C17.1642 13.1642 17.8358 13.1642 18.25 12.75C18.6642 12.3358 18.6642 11.6642 18.25 11.25L12.7071 5.70711C12.3166 5.31658 11.6834 5.31658 11.2929 5.70711L5.75 11.25C5.33579 11.6642 5.33579 12.3358 5.75 12.75C6.16421 13.1642 6.83579 13.1642 7.25 12.75L11.4343 8.56569C11.7467 8.25327 12.2533 8.25327 12.5657 8.56569Z" fill="currentColor" />
+																			</svg>
+																		</span>
+																		<!--end::Svg Icon-->2.2%</span>
 																</div>
 																<!--end::Statistics-->
 																<!--begin::Description-->
@@ -1790,7 +1790,7 @@
 																		<div class="border border-gray-300 border-dashed rounded min-w-100px w-100 py-2 px-4 mb-3">
 																			<!--begin::Number-->
 																			<span class="fs-6 text-gray-700 fw-bold">$
-																			<span class="ms-n1" data-kt-countup="true" data-kt-countup-value="284,900.00">0</span></span>
+																				<span class="ms-n1" data-kt-countup="true" data-kt-countup-value="284,900.00">0</span></span>
 																			<!--end::Number-->
 																			<!--begin::Label-->
 																			<div class="fw-semibold text-gray-400">Budget</div>
@@ -1818,15 +1818,15 @@
 																	<!--end::Users group-->
 																	<!--begin::Actions-->
 																	<a href="../../demo1/dist/apps/projects/project.html" class="text-primary opacity-75-hover fs-6 fw-semibold">View Project
-																	<!--begin::Svg Icon | path: icons/duotune/arrows/arr095.svg-->
-																	<span class="svg-icon svg-icon-4 svg-icon-gray-800 ms-1">
-																		<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-																			<path opacity="0.3" d="M4.7 17.3V7.7C4.7 6.59543 5.59543 5.7 6.7 5.7H9.8C10.2694 5.7 10.65 5.31944 10.65 4.85C10.65 4.38056 10.2694 4 9.8 4H5C3.89543 4 3 4.89543 3 6V19C3 20.1046 3.89543 21 5 21H18C19.1046 21 20 20.1046 20 19V14.2C20 13.7306 19.6194 13.35 19.15 13.35C18.6806 13.35 18.3 13.7306 18.3 14.2V17.3C18.3 18.4046 17.4046 19.3 16.3 19.3H6.7C5.59543 19.3 4.7 18.4046 4.7 17.3Z" fill="currentColor" />
-																			<rect x="21.9497" y="3.46448" width="13" height="2" rx="1" transform="rotate(135 21.9497 3.46448)" fill="currentColor" />
-																			<path d="M19.8284 4.97161L19.8284 9.93937C19.8284 10.5252 20.3033 11 20.8891 11C21.4749 11 21.9497 10.5252 21.9497 9.93937L21.9497 3.05029C21.9497 2.498 21.502 2.05028 20.9497 2.05028L14.0607 2.05027C13.4749 2.05027 13 2.52514 13 3.11094C13 3.69673 13.4749 4.17161 14.0607 4.17161L19.0284 4.17161C19.4702 4.17161 19.8284 4.52978 19.8284 4.97161Z" fill="currentColor" />
-																		</svg>
-																	</span>
-																	<!--end::Svg Icon--></a>
+																		<!--begin::Svg Icon | path: icons/duotune/arrows/arr095.svg-->
+																		<span class="svg-icon svg-icon-4 svg-icon-gray-800 ms-1">
+																			<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+																				<path opacity="0.3" d="M4.7 17.3V7.7C4.7 6.59543 5.59543 5.7 6.7 5.7H9.8C10.2694 5.7 10.65 5.31944 10.65 4.85C10.65 4.38056 10.2694 4 9.8 4H5C3.89543 4 3 4.89543 3 6V19C3 20.1046 3.89543 21 5 21H18C19.1046 21 20 20.1046 20 19V14.2C20 13.7306 19.6194 13.35 19.15 13.35C18.6806 13.35 18.3 13.7306 18.3 14.2V17.3C18.3 18.4046 17.4046 19.3 16.3 19.3H6.7C5.59543 19.3 4.7 18.4046 4.7 17.3Z" fill="currentColor" />
+																				<rect x="21.9497" y="3.46448" width="13" height="2" rx="1" transform="rotate(135 21.9497 3.46448)" fill="currentColor" />
+																				<path d="M19.8284 4.97161L19.8284 9.93937C19.8284 10.5252 20.3033 11 20.8891 11C21.4749 11 21.9497 10.5252 21.9497 9.93937L21.9497 3.05029C21.9497 2.498 21.502 2.05028 20.9497 2.05028L14.0607 2.05027C13.4749 2.05027 13 2.52514 13 3.11094C13 3.69673 13.4749 4.17161 14.0607 4.17161L19.0284 4.17161C19.4702 4.17161 19.8284 4.52978 19.8284 4.97161Z" fill="currentColor" />
+																			</svg>
+																		</span>
+																		<!--end::Svg Icon--></a>
 																	<!--end::Actions-->
 																</div>
 																<!--end::Footer-->
@@ -1909,14 +1909,14 @@
 															<!--end::Value-->
 															<!--begin::Label-->
 															<span class="badge badge-light-success fs-base">
-															<!--begin::Svg Icon | path: icons/duotune/arrows/arr066.svg-->
-															<span class="svg-icon svg-icon-5 svg-icon-success ms-n1">
-																<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-																	<rect opacity="0.5" x="13" y="6" width="13" height="2" rx="1" transform="rotate(90 13 6)" fill="currentColor" />
-																	<path d="M12.5657 8.56569L16.75 12.75C17.1642 13.1642 17.8358 13.1642 18.25 12.75C18.6642 12.3358 18.6642 11.6642 18.25 11.25L12.7071 5.70711C12.3166 5.31658 11.6834 5.31658 11.2929 5.70711L5.75 11.25C5.33579 11.6642 5.33579 12.3358 5.75 12.75C6.16421 13.1642 6.83579 13.1642 7.25 12.75L11.4343 8.56569C11.7467 8.25327 12.2533 8.25327 12.5657 8.56569Z" fill="currentColor" />
-																</svg>
-															</span>
-															<!--end::Svg Icon-->9.2%</span>
+																<!--begin::Svg Icon | path: icons/duotune/arrows/arr066.svg-->
+																<span class="svg-icon svg-icon-5 svg-icon-success ms-n1">
+																	<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+																		<rect opacity="0.5" x="13" y="6" width="13" height="2" rx="1" transform="rotate(90 13 6)" fill="currentColor" />
+																		<path d="M12.5657 8.56569L16.75 12.75C17.1642 13.1642 17.8358 13.1642 18.25 12.75C18.6642 12.3358 18.6642 11.6642 18.25 11.25L12.7071 5.70711C12.3166 5.31658 11.6834 5.31658 11.2929 5.70711L5.75 11.25C5.33579 11.6642 5.33579 12.3358 5.75 12.75C6.16421 13.1642 6.83579 13.1642 7.25 12.75L11.4343 8.56569C11.7467 8.25327 12.2533 8.25327 12.5657 8.56569Z" fill="currentColor" />
+																	</svg>
+																</span>
+																<!--end::Svg Icon-->9.2%</span>
 															<!--end::Label-->
 														</div>
 														<!--end::Statistics-->
@@ -2424,14 +2424,14 @@
 																	<td class="text-end pe-0">
 																		<!--begin::Label-->
 																		<span class="badge badge-light-success fs-base">
-																		<!--begin::Svg Icon | path: icons/duotune/arrows/arr066.svg-->
-																		<span class="svg-icon svg-icon-5 svg-icon-success ms-n1">
-																			<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-																				<rect opacity="0.5" x="13" y="6" width="13" height="2" rx="1" transform="rotate(90 13 6)" fill="currentColor" />
-																				<path d="M12.5657 8.56569L16.75 12.75C17.1642 13.1642 17.8358 13.1642 18.25 12.75C18.6642 12.3358 18.6642 11.6642 18.25 11.25L12.7071 5.70711C12.3166 5.31658 11.6834 5.31658 11.2929 5.70711L5.75 11.25C5.33579 11.6642 5.33579 12.3358 5.75 12.75C6.16421 13.1642 6.83579 13.1642 7.25 12.75L11.4343 8.56569C11.7467 8.25327 12.2533 8.25327 12.5657 8.56569Z" fill="currentColor" />
-																			</svg>
-																		</span>
-																		<!--end::Svg Icon-->9.2%</span>
+																			<!--begin::Svg Icon | path: icons/duotune/arrows/arr066.svg-->
+																			<span class="svg-icon svg-icon-5 svg-icon-success ms-n1">
+																				<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+																					<rect opacity="0.5" x="13" y="6" width="13" height="2" rx="1" transform="rotate(90 13 6)" fill="currentColor" />
+																					<path d="M12.5657 8.56569L16.75 12.75C17.1642 13.1642 17.8358 13.1642 18.25 12.75C18.6642 12.3358 18.6642 11.6642 18.25 11.25L12.7071 5.70711C12.3166 5.31658 11.6834 5.31658 11.2929 5.70711L5.75 11.25C5.33579 11.6642 5.33579 12.3358 5.75 12.75C6.16421 13.1642 6.83579 13.1642 7.25 12.75L11.4343 8.56569C11.7467 8.25327 12.2533 8.25327 12.5657 8.56569Z" fill="currentColor" />
+																				</svg>
+																			</span>
+																			<!--end::Svg Icon-->9.2%</span>
 																		<!--end::Label-->
 																	</td>
 																	<td class="text-end pe-12">
@@ -2471,14 +2471,14 @@
 																	<td class="text-end pe-0">
 																		<!--begin::Label-->
 																		<span class="badge badge-light-danger fs-base">
-																		<!--begin::Svg Icon | path: icons/duotune/arrows/arr065.svg-->
-																		<span class="svg-icon svg-icon-5 svg-icon-danger ms-n1">
-																			<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-																				<rect opacity="0.5" x="11" y="18" width="13" height="2" rx="1" transform="rotate(-90 11 18)" fill="currentColor" />
-																				<path d="M11.4343 15.4343L7.25 11.25C6.83579 10.8358 6.16421 10.8358 5.75 11.25C5.33579 11.6642 5.33579 12.3358 5.75 12.75L11.2929 18.2929C11.6834 18.6834 12.3166 18.6834 12.7071 18.2929L18.25 12.75C18.6642 12.3358 18.6642 11.6642 18.25 11.25C17.8358 10.8358 17.1642 10.8358 16.75 11.25L12.5657 15.4343C12.2533 15.7467 11.7467 15.7467 11.4343 15.4343Z" fill="currentColor" />
-																			</svg>
-																		</span>
-																		<!--end::Svg Icon-->0.4%</span>
+																			<!--begin::Svg Icon | path: icons/duotune/arrows/arr065.svg-->
+																			<span class="svg-icon svg-icon-5 svg-icon-danger ms-n1">
+																				<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+																					<rect opacity="0.5" x="11" y="18" width="13" height="2" rx="1" transform="rotate(-90 11 18)" fill="currentColor" />
+																					<path d="M11.4343 15.4343L7.25 11.25C6.83579 10.8358 6.16421 10.8358 5.75 11.25C5.33579 11.6642 5.33579 12.3358 5.75 12.75L11.2929 18.2929C11.6834 18.6834 12.3166 18.6834 12.7071 18.2929L18.25 12.75C18.6642 12.3358 18.6642 11.6642 18.25 11.25C17.8358 10.8358 17.1642 10.8358 16.75 11.25L12.5657 15.4343C12.2533 15.7467 11.7467 15.7467 11.4343 15.4343Z" fill="currentColor" />
+																				</svg>
+																			</span>
+																			<!--end::Svg Icon-->0.4%</span>
 																		<!--end::Label-->
 																	</td>
 																	<td class="text-end pe-12">
@@ -2518,14 +2518,14 @@
 																	<td class="text-end pe-0">
 																		<!--begin::Label-->
 																		<span class="badge badge-light-success fs-base">
-																		<!--begin::Svg Icon | path: icons/duotune/arrows/arr066.svg-->
-																		<span class="svg-icon svg-icon-5 svg-icon-success ms-n1">
-																			<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-																				<rect opacity="0.5" x="13" y="6" width="13" height="2" rx="1" transform="rotate(90 13 6)" fill="currentColor" />
-																				<path d="M12.5657 8.56569L16.75 12.75C17.1642 13.1642 17.8358 13.1642 18.25 12.75C18.6642 12.3358 18.6642 11.6642 18.25 11.25L12.7071 5.70711C12.3166 5.31658 11.6834 5.31658 11.2929 5.70711L5.75 11.25C5.33579 11.6642 5.33579 12.3358 5.75 12.75C6.16421 13.1642 6.83579 13.1642 7.25 12.75L11.4343 8.56569C11.7467 8.25327 12.2533 8.25327 12.5657 8.56569Z" fill="currentColor" />
-																			</svg>
-																		</span>
-																		<!--end::Svg Icon-->9.2%</span>
+																			<!--begin::Svg Icon | path: icons/duotune/arrows/arr066.svg-->
+																			<span class="svg-icon svg-icon-5 svg-icon-success ms-n1">
+																				<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+																					<rect opacity="0.5" x="13" y="6" width="13" height="2" rx="1" transform="rotate(90 13 6)" fill="currentColor" />
+																					<path d="M12.5657 8.56569L16.75 12.75C17.1642 13.1642 17.8358 13.1642 18.25 12.75C18.6642 12.3358 18.6642 11.6642 18.25 11.25L12.7071 5.70711C12.3166 5.31658 11.6834 5.31658 11.2929 5.70711L5.75 11.25C5.33579 11.6642 5.33579 12.3358 5.75 12.75C6.16421 13.1642 6.83579 13.1642 7.25 12.75L11.4343 8.56569C11.7467 8.25327 12.2533 8.25327 12.5657 8.56569Z" fill="currentColor" />
+																				</svg>
+																			</span>
+																			<!--end::Svg Icon-->9.2%</span>
 																		<!--end::Label-->
 																	</td>
 																	<td class="text-end pe-12">
@@ -2565,14 +2565,14 @@
 																	<td class="text-end pe-0">
 																		<!--begin::Label-->
 																		<span class="badge badge-light-success fs-base">
-																		<!--begin::Svg Icon | path: icons/duotune/arrows/arr066.svg-->
-																		<span class="svg-icon svg-icon-5 svg-icon-success ms-n1">
-																			<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-																				<rect opacity="0.5" x="13" y="6" width="13" height="2" rx="1" transform="rotate(90 13 6)" fill="currentColor" />
-																				<path d="M12.5657 8.56569L16.75 12.75C17.1642 13.1642 17.8358 13.1642 18.25 12.75C18.6642 12.3358 18.6642 11.6642 18.25 11.25L12.7071 5.70711C12.3166 5.31658 11.6834 5.31658 11.2929 5.70711L5.75 11.25C5.33579 11.6642 5.33579 12.3358 5.75 12.75C6.16421 13.1642 6.83579 13.1642 7.25 12.75L11.4343 8.56569C11.7467 8.25327 12.2533 8.25327 12.5657 8.56569Z" fill="currentColor" />
-																			</svg>
-																		</span>
-																		<!--end::Svg Icon-->9.2%</span>
+																			<!--begin::Svg Icon | path: icons/duotune/arrows/arr066.svg-->
+																			<span class="svg-icon svg-icon-5 svg-icon-success ms-n1">
+																				<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+																					<rect opacity="0.5" x="13" y="6" width="13" height="2" rx="1" transform="rotate(90 13 6)" fill="currentColor" />
+																					<path d="M12.5657 8.56569L16.75 12.75C17.1642 13.1642 17.8358 13.1642 18.25 12.75C18.6642 12.3358 18.6642 11.6642 18.25 11.25L12.7071 5.70711C12.3166 5.31658 11.6834 5.31658 11.2929 5.70711L5.75 11.25C5.33579 11.6642 5.33579 12.3358 5.75 12.75C6.16421 13.1642 6.83579 13.1642 7.25 12.75L11.4343 8.56569C11.7467 8.25327 12.2533 8.25327 12.5657 8.56569Z" fill="currentColor" />
+																				</svg>
+																			</span>
+																			<!--end::Svg Icon-->9.2%</span>
 																		<!--end::Label-->
 																	</td>
 																	<td class="text-end pe-12">
@@ -2612,14 +2612,14 @@
 																	<td class="text-end pe-0">
 																		<!--begin::Label-->
 																		<span class="badge badge-light-danger fs-base">
-																		<!--begin::Svg Icon | path: icons/duotune/arrows/arr065.svg-->
-																		<span class="svg-icon svg-icon-5 svg-icon-danger ms-n1">
-																			<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-																				<rect opacity="0.5" x="11" y="18" width="13" height="2" rx="1" transform="rotate(-90 11 18)" fill="currentColor" />
-																				<path d="M11.4343 15.4343L7.25 11.25C6.83579 10.8358 6.16421 10.8358 5.75 11.25C5.33579 11.6642 5.33579 12.3358 5.75 12.75L11.2929 18.2929C11.6834 18.6834 12.3166 18.6834 12.7071 18.2929L18.25 12.75C18.6642 12.3358 18.6642 11.6642 18.25 11.25C17.8358 10.8358 17.1642 10.8358 16.75 11.25L12.5657 15.4343C12.2533 15.7467 11.7467 15.7467 11.4343 15.4343Z" fill="currentColor" />
-																			</svg>
-																		</span>
-																		<!--end::Svg Icon-->0.4%</span>
+																			<!--begin::Svg Icon | path: icons/duotune/arrows/arr065.svg-->
+																			<span class="svg-icon svg-icon-5 svg-icon-danger ms-n1">
+																				<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+																					<rect opacity="0.5" x="11" y="18" width="13" height="2" rx="1" transform="rotate(-90 11 18)" fill="currentColor" />
+																					<path d="M11.4343 15.4343L7.25 11.25C6.83579 10.8358 6.16421 10.8358 5.75 11.25C5.33579 11.6642 5.33579 12.3358 5.75 12.75L11.2929 18.2929C11.6834 18.6834 12.3166 18.6834 12.7071 18.2929L18.25 12.75C18.6642 12.3358 18.6642 11.6642 18.25 11.25C17.8358 10.8358 17.1642 10.8358 16.75 11.25L12.5657 15.4343C12.2533 15.7467 11.7467 15.7467 11.4343 15.4343Z" fill="currentColor" />
+																				</svg>
+																			</span>
+																			<!--end::Svg Icon-->0.4%</span>
 																		<!--end::Label-->
 																	</td>
 																	<td class="text-end pe-12">
@@ -2832,3 +2832,78 @@
 						<!--end::Footer-->
 					</div>
 					<!--end:::Main-->
+
+					<!-- <div class="col-xl-4 w-50">
+												<!--begin::List widget 11-->
+					<div class="card h-xl-100">
+
+						<!--begin::Header-->
+						<div class="card-header pt-7 mb-3 pb-3">
+							<!--begin::Title-->
+							<h3 class="card-title align-items-start flex-column">
+								<span class="card-label fw-bolder text-gray-800">Últimas Propostas Integrall</span>
+								<span class="text-gray-400 mt-1 fw-bold fs-6"><?php echo $countPropostas; ?> <?php echo ($countPropostas > 1  ? 'propostas digitadas hoje' : 'proposta digitada hoje'); ?></span>
+							</h3>
+							<!--end::Title-->
+							<!--begin::Toolbar-->
+							<div class="card-toolbar">
+								<a href="<?php echo assetfolder; ?>" class="btn btn-sm btn-light" title="">Atualizar</a>
+							</div>
+							<!--end::Toolbar-->
+						</div>
+						<!--end::Header-->
+						<!--begin::Body-->
+						<div class="card-body pt-4">
+
+							<?php
+
+							foreach ($ultimasPropostas["result"]->getResult() as $row) {
+								$nomeCliente = $row->nomeCliente;
+								$integraallId = $row->integraallId;
+								$cpf = $row->cpf;
+								$statusAdicional = $row->statusAdicional;
+								$statusAdicionalId = $row->statusAdicionalId;
+								$nomeStatus = $row->nomeStatus;
+								$statusId = $row->statusId;
+								$data_criacao = $row->data_criacao;
+								$linkKompletoCliente = $row->linkKompletoCliente;
+								$telefonepessoal = "55" . normalizePhone(numberOnly($row->telefonepessoal));
+								$telefonepessoalMask = formatarTelefone(normalizePhone($row->telefonepessoal));
+
+							?>
+
+								<!--begin::Item-->
+								<div class="d-flex flex-stack">
+									<div class="d-flex align-items-center me-5">
+										<div class="symbol symbol-40px me-4"><span class="symbol-label <?php echo (empty($linkKompletoCliente) ? '' : 'bg-info'); ?>"><i class="las la-file-invoice fs-1 p-0 text-<?php echo (empty($linkKompletoCliente) ? 'gray-600' : 'white'); ?>"></i></span></div>
+										<div class="me-5">
+											<span class="text-gray-800 fw-bolder fs-6"><?php echo substr($nomeCliente, 0, 15); ?>...</span>
+											<span class="text-gray-400 fw-bold fs-7 d-block text-start ps-0"><?php echo $integraallId . " | " . $cpf; ?></span>
+										</div>
+									</div>
+									<div class="text-gray-400 fw-bolder fs-7 text-end">
+										<span class="text-gray-800 fw-bolder fs-6 d-block"><a href="<?php echo assetfolder; ?>aaspa-zapsms/<?php echo $telefonepessoal; ?>" class="text-gray-800 text-hover-info"><u><?php echo $telefonepessoalMask; ?></u></a></span>
+										<span class="text-gray-400 fw-bold fs-7 d-block text-start ps-0"><?php echo time_elapsed_string($data_criacao); ?></span>
+									</div>
+								</div>
+								<div class="d-flex flex-stack">
+
+									<div class="text-gray-400 fw-bolder fs-7 text-star mt-1 ms-15">
+										<span class="badge badge-light-<?php echo getStatusNomePorId($statusId)[2]; ?>"><?php echo getStatusNomePorId($statusId)[1]; ?></span>
+										<span class="badge badge-light-<?php echo getStatusAdicionalPorId($statusAdicionalId)[2]; ?>"><?php echo getStatusAdicionalPorId($statusAdicionalId)[1]; ?></span>
+									</div>
+								</div>
+								<div class="separator separator-dashed my-3"></div>
+								<!--end::Item-->
+
+							<?php }; ?>
+							<div class="pt-9">
+								<a href="<?php echo assetfolder; ?>aaspa-listar-propostas" class="text-primary opacity-75-hover fs-6 fw-semibold">Ver mais propostas</a>
+								<span class="text-gray-500 opacity-75-hover fs-6 fw-semibold">| </span>
+								<a href="<?php echo assetfolder; ?>aaspa-receptivo/0" class="text-primary opacity-75-hover fs-6 fw-semibold">Criar nova proposta</a>
+							</div>
+						</div>
+						<!--end::Body-->
+					</div>
+					<!--end::List widget 11-->
+					</div>

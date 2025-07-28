@@ -44,7 +44,7 @@ class Painel extends BaseController
             'pageTitle' => 'Painel de Usuários',
             'usuarios' => $usuarios['result']->getResult(),
             'nickname' => $nickname,
-            'role' => $role,
+            'role' => $role
         ];
 
         return $this->loadpage('seguranca/painel', $dados);
@@ -65,7 +65,7 @@ class Painel extends BaseController
 
             $supervisorDados = $findSupervisorId['firstRow'];
 
-            $supervisorId = $supervisorDados->userId ?? 164815; 
+            $supervisorId = $supervisorDados->userId ?? 164815;
 
             // configurar permissões
             $permissions = [];
@@ -75,11 +75,11 @@ class Painel extends BaseController
                 if ($cargo == "SUPERVISOR") {
                     array_push($permissions, "SUPERVISOR", "QUID", "BMG");
                 } else {
-                    array_push($permissions, "QUID", "BMG" );
+                    array_push($permissions, "QUID", "BMG");
                 }
             }
 
-            if(EMPRESA == 'theone') {
+            if (EMPRESA == 'theone') {
                 if ($cargo == "SUPERVISOR") {
                     array_push($permissions, "SUPERVISOR", "THEONE");
                 } else {
@@ -87,7 +87,7 @@ class Painel extends BaseController
                 }
             }
 
-            if (EMPRESA == 'pravoce'){
+            if (EMPRESA == 'pravoce') {
                 if ($cargo == "SUPERVISOR") {
                     array_push($permissions, "SUPERVISOR", "PRAVOCE");
                 } else {
