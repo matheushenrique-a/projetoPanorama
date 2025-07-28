@@ -275,6 +275,8 @@
     const btnSalvarProposta = document.getElementById('btnSalvarProposta');
     const nomeClienteInput = document.getElementById('nomeCliente');
     const telefone = document.getElementById('telefone')
+    const dddInput = document.getElementById('ddd')
+    const telefoneInput = document.getElementById('telefone')
 
     const bancoInput = document.getElementById('idBanco')
     const agenciaInput = document.getElementById('agencia')
@@ -418,6 +420,20 @@
             digito = contaCompleta.slice(-1);
         }
 
+        function extrairTelefone(regex, texto) {
+            const match = texto.match(regex);
+            if (match) {
+                return {
+                    ddd: match[1],
+                    numero: match[2] + match[3]
+                };
+            }
+            return {
+                ddd: '',
+                numero: ''
+            };
+        }
+
         let dados = {
             UF: extrair(/NB\s*-\s*UF\s*\d+\s*-\s*([A-Z]{2})/, texto),
             Banco: extrair(/Banco\s*([0-9]{3})/, texto),
@@ -425,7 +441,9 @@
             Conta: conta,
             Digito: digito,
             Especie: extrair(/Espécie\s*([\d]+)\s*-\s*[A-Z\sÇÃÕ]+/i, texto),
-            Nascimento: extrair(/Nascimento\s*([\d]{2}\/[\d]{2}\/[\d]{4})/, texto)
+            Nascimento: extrair(/Nascimento\s*([\d]{2}\/[\d]{2}\/[\d]{4})/, texto),
+            Nome: extrair(/Nome\s+([A-Z\sÁÂÃÉÊÍÓÔÕÚÇ]+?)\s+CPF/i, texto),
+            Telefone1: extrairTelefone(/Tel\.?\s*1\s*\(?(\d{2})\)?\s*(\d{4,5})-?(\d{4})/i, texto)
         };
 
         ufInput.value = dados.UF
@@ -435,5 +453,8 @@
         digitoInput.value = dados.Digito
         especieInput.value = dados.Especie
         dataNascimentoInput.value = dados.Nascimento
+        nomeClienteInput.value = dados.Nome
+        dddInput.value = dados.Telefone1.ddd
+        telefoneInput.value = dados.Telefone1.numero
     }
 </script>

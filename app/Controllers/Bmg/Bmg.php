@@ -331,8 +331,9 @@ class Bmg extends BaseController
         try {
             $output = file_get_contents($url);
         } catch (\Exception $e) {
-            $returnData["mensagem"] = "Erro ao gravar Panorama:<br>{$e->faultcode} - {$e->faultstring}";;
+            $returnData["mensagem"] = "Erro ao gravar Panorama:<br>" . $e->getMessage();
         }
+
 
         if (isset($output) && (is_numeric($output) && $output > 0)) {
             $returnData["status"] = true;
@@ -759,6 +760,8 @@ class Bmg extends BaseController
 
         $numeroFormat = $ddd . $numero;
 
+        // var_dump($this->session->nickname);
+
         $data = [
             'CONTRATO' => $adesao,
             'STATUS' => 'ADESÃO',
@@ -806,12 +809,13 @@ class Bmg extends BaseController
         }
 
         $dadosString = implode(';', $valores);
-
+        $dadosStringISO = mb_convert_encoding($dadosString, 'ISO-8859-1', 'UTF-8');
         $url = 'https://grupoquid.panoramaemprestimos.com.br/html.do?action=adicionarOperacao'
             . '&token=44321'
             . '&idImportacao=1466'
-            . '&dados=' . urlencode($dadosString);
+            . '&dados=' . rawurlencode($dadosStringISO);
 
+        // var_dump($url);
 
         $output = "";
 
@@ -837,21 +841,16 @@ class Bmg extends BaseController
         $data['pageTitle'] = "BMG Saque";
 
         $cpf = $this->getpost('cpf') ?? '';
-        $ufconta = $this->getpost('ufconta') ?? '';
 
-        $telefone = $this->m_argus->ultimaLigacao(['assessor' => $this->session->nickname]);
-        $nomeCliente = $telefone['firstRow']->nome ?? "";
+        $dddPost = $this->getpost('ddd');
+        $telefonePost = $this->getpost('telefone');
+        $nomeCliente = $this->getpost('nomeCliente');
 
-        if ($telefone['existRecord']) {
-            $ddd = substr($telefone['firstRow']->celular, 2, 2);
-            $telefone = substr($telefone['firstRow']->celular, 4, 9);
-        } else {
-            $ddd = $this->getpost('ddd') ?? '';
-            $telefone = $this->getpost('telefone') ?? '';
-        }
+        // $ddd = substr($telefonePost, 2, 2);
+        // $telefone = substr($telefonePost, 4, 9);
 
-        $data['ddd'] = $ddd;
-        $data['telefone'] = $telefone;
+        $data['ddd'] = $dddPost;
+        $data['telefone'] = $telefonePost;
         $data['nomeCliente'] = $nomeCliente;
 
         $idBanco = $this->getpost('idBanco') ?? '';
@@ -872,8 +871,8 @@ class Bmg extends BaseController
                 "cpf" => $cpf,
                 // "ufconta" => $ufconta,
                 'celular1' => [
-                    'ddd' => $ddd,
-                    'numero' => $telefone,
+                    'ddd' => $dddPost,
+                    'numero' => $telefonePost,
                 ],
                 "agencia" => ["numero" => $agencia],
                 "banco" => ["numero" => (int) $idBanco],
@@ -894,8 +893,8 @@ class Bmg extends BaseController
             $dataPanorama = [
                 "cpf" => $cpf,
                 'celular1' => [
-                    'ddd' => $ddd,
-                    'numero' => $telefone,
+                    'ddd' => $dddPost,
+                    'numero' => $telefonePost,
                 ],
                 "valorSaque" => $valorSaque,
                 'matricula' => $matricula,
@@ -903,10 +902,9 @@ class Bmg extends BaseController
                 'quantidadeParcelas' => $numeroParcelas,
                 'nomeCliente' => $this->getpost('nomeCliente'),
                 'especie' => $this->getpost('especie'),
-                'adesao' => $returnData, //
+                'adesao' => $returnData, 
                 'dataNascimento' => $this->getpost('dataNascimento'),
             ];
-
 
 
             if (isset($returnData['erro']) && $returnData['erro']) {
@@ -918,8 +916,8 @@ class Bmg extends BaseController
                     'adesao' => $returnData,
                     "cpf" => $cpf,
                     'celular1' => [
-                        'ddd' => $ddd,
-                        'numero' => $telefone,
+                        'ddd' => $dddPost,
+                        'numero' => $telefonePost,
                     ],
                     "valorSaque" => $valorSaque,
                     'valorParcela' => $valorParcela,

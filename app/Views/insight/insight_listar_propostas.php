@@ -1,4 +1,6 @@
 					<!--begin::Main-->
+
+		
 					<div class="app-main flex-column flex-row-fluid" id="kt_app_main">
 						<!--begin::Content wrapper-->
 						<div class="d-flex flex-column flex-column-fluid">
@@ -201,9 +203,9 @@
 														<th data-sortable="false" class="min-w-100px">CPF</th>
 														<th data-sortable="false" class="min-w-25">Celular</th>
 														<th data-sortable="false" class="min-w-50">Criação</th>
-														<th data-sortable="false" class="min-w-125px">Valor</th>
+														<th data-sortable="false" class="min-w-50">Valor</th>
+														<th data-sortable="false" class="min-w-25px">Produto</th>
 														<th data-sortable="false" class="min-w-50px">Ver</th>
-														<th data-sortable="false" class="min-w-25px">AÇÃO</th>
 													</tr>
 													<!--end::Table row-->
 												</thead>
@@ -240,6 +242,9 @@
 															<td class="text-success">
 																R$ <?php echo $row->valor; ?>
 															</td>
+															<td class="text-primary">
+																<?php echo $row->produto?>
+															</td>
 															<!--begin::OPERADOR-->
 															<td>
 																<div>
@@ -252,15 +257,6 @@
 																		</span>
 																	</a>
 																</div>
-															</td>
-															<td>
-																<div><!--begin::PopUp menu-->
-																	<a href="#" class="btn btn-sm btn-icon btn-light btn-active-light-primary"><!--begin::Svg Icon | path: icons/duotune/general/gen052.svg--><span class="svg-icon svg-icon-2 m-0"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-																				<rect x="10" y="10" width="4" height="4" rx="2" fill="currentColor" />
-																				<rect x="17" y="10" width="4" height="4" rx="2" fill="currentColor" />
-																				<rect x="3" y="10" width="4" height="4" rx="2" fill="currentColor" />
-																			</svg></span><!--end::Svg Icon--></a>
-																</div><!--end::PopUp menu-->
 															</td>
 														</tr>
 													<?php }; ?>
