@@ -407,23 +407,28 @@ class M_bmg extends Model
         try {
             $client = new \SoapClient(BMG_SAQUE_WSDL, ['trace' => 1, 'exceptions' => true]);
 
+            if ($params['finalidadeCredito'] == "3") {
+                $formaCredito = 18;
+            } else {
+                $formaCredito = 2;
+            }
+
             $fixParams = [
                 'login'        => BMG_SEGURO_LOGIN,
                 'senha'        => BMG_SEGURO_SENHA,
                 'loginConsig'  => BMG_SEGURO_LOGIN_CONSIG,
                 'senhaConsig'  => BMG_SEGURO_SENHA_CONSIG,
-                'codigoEntidade'   => 1581,
                 'codigoLoja' => (int) BMG_LOJA_SMILE,
-                'finalidadeCredito' => 1, // CONTA CORRENTE
-                'formaCredito' => 2, // TRANSFERÊNCIA BANCÁRIA
+                'finalidadeCredito' => $params['finalidadeCredito'], // CONTA CORRENTE
+                'formaCredito' => $formaCredito, // TRANSFERÊNCIA BANCÁRIA // CONTA BMG
                 'codigoFormaEnvioTermo' => "15", // DIGITAL
-                'tipoSaque' => 2, // 1 - SAQUE AUTORIZADO
+                'tipoSaque' => 2,
                 'bancoOrdemPagamento' => 0,
                 'cpfImpedidoComissionar' => false,
             ];
 
             $params = array_merge($fixParams, $params);
-            
+
             $response = $client->__soapCall('gravarPropostaSaqueComplementar', [$params]);
 
             return $response;
@@ -437,7 +442,7 @@ class M_bmg extends Model
         }
     }
 
-    public function obterValorParcela($valorSaque)
+    public function obterValorParcela($data)
     {
         try {
             $client = new \SoapClient(BMG_SAQUE_WSDL, ['trace' => 1, 'exceptions' => true]);
@@ -445,10 +450,14 @@ class M_bmg extends Model
             $params = [
                 'login'        => BMG_SEGURO_LOGIN,
                 'senha'        => BMG_SEGURO_SENHA,
-                'codigoEntidade'   => "1581-",
             ];
 
-            $params['valorSaque'] = $valorSaque;
+            $params['valorSaque'] = $data['valorMaximo'];
+            $params['codigoEntidade'] = $data['codigoEntidade'];
+
+            if ($data['codigoEntidade'] == '164') {
+                $params['sequencialOrgao'] = '4';
+            }
 
             $response = $client->__soapCall('buscarSimulacao', [$params]);
 
@@ -471,7 +480,6 @@ class M_bmg extends Model
             $fixParams = [
                 'login'        => BMG_SEGURO_LOGIN,
                 'senha'        => BMG_SEGURO_SENHA,
-                'codigoEntidade'   => "1581-",
             ];
 
             $params = array_merge($fixParams, $params);
@@ -506,7 +514,8 @@ class M_bmg extends Model
         }
     }
 
-    public function gravar_proposta_bmg_database($data) {
+    public function gravar_proposta_bmg_database($data)
+    {
         $adesao = $data['adesao'];
         $cpf = $data['cpf'];
         $nome = $data['nomeCliente'];
@@ -518,7 +527,7 @@ class M_bmg extends Model
         $panorama_id = $data['panorama_id'];
 
         $this->dbMasterDefault->insert('quid_propostas', [
-            "adesao" => $adesao, 
+            "adesao" => $adesao,
             "cpf" => $cpf,
             "nome" => $nome,
             "assessor" => $assessor,
@@ -530,16 +539,18 @@ class M_bmg extends Model
         ]);
     }
 
-    public function ultimasPropostasBMG($limit = 6){
-        $sql = "select * from quid_propostas where assessor = '" . $this->session->nickname . "' ";
-        $sql .= " order by data_criacao DESC LIMIT $limit;"; 
-        
+    public function ultimasPropostasBMG($limit = 6)
+    {
+        $sql = "select * from quid_propostas where assessor = '" . $this->session->nickname . "'  AND DATE(data_criacao) = CURDATE()";
+        $sql .= " order by data_criacao DESC LIMIT $limit;";
+
         return $this->dbMasterDefault->runQuery($sql);
     }
 
-    public function countPropostasBMG(){
+    public function countPropostasBMG()
+    {
         $sql = "select * from quid_propostas where assessor = '" . $this->session->nickname . "' ";
-        $sql .= "AND DATE(data_criacao) = CURDATE();"; 
+        $sql .= "AND DATE(data_criacao) = CURDATE();";
         return $this->dbMasterDefault->runQuery($sql)['countAll'];
     }
 }

@@ -809,7 +809,7 @@ class Bmg extends BaseController
         }
 
         $dadosString = implode(';', $valores);
-        $dadosStringISO = mb_convert_encoding($dadosString, 'ISO-8859-1', 'UTF-8');
+        $dadosStringISO = $dadosString;
         $url = 'https://grupoquid.panoramaemprestimos.com.br/html.do?action=adicionarOperacao'
             . '&token=44321'
             . '&idImportacao=1466'
@@ -841,13 +841,13 @@ class Bmg extends BaseController
         $data['pageTitle'] = "BMG Saque";
 
         $cpf = $this->getpost('cpf') ?? '';
+        $codigoEntidade = $this->getpost('codigoEntidade') ?? '';
+
+        $data['codigoEntidade'] = $codigoEntidade;
 
         $dddPost = $this->getpost('ddd');
         $telefonePost = $this->getpost('telefone');
         $nomeCliente = $this->getpost('nomeCliente');
-
-        // $ddd = substr($telefonePost, 2, 2);
-        // $telefone = substr($telefonePost, 4, 9);
 
         $data['ddd'] = $dddPost;
         $data['telefone'] = $telefonePost;
@@ -866,10 +866,10 @@ class Bmg extends BaseController
         if ($this->getpost('btnSaque') === 'salvar') {
             $numeroParcelas = (int) $this->getpost('parcelas') ?? '';
             $valorParcela = (float) $this->getpost('valorParcela') ?? '';
+            $finalidadeCredito = (int) $this->getpost('finalidadeCredito') ?? 1;
 
             $dataSaque = [
                 "cpf" => $cpf,
-                // "ufconta" => $ufconta,
                 'celular1' => [
                     'ddd' => $dddPost,
                     'numero' => $telefonePost,
@@ -880,13 +880,18 @@ class Bmg extends BaseController
                     "numero" => $conta,
                     "digitoVerificador" => $digito,
                 ],
+                "finalidadeCredito" => $finalidadeCredito,
                 "valorSaque" => (float) $valorSaque,
                 'numeroContaInterna' => $numeroContaInterna,
+                'codigoEntidade' => $codigoEntidade,
                 'matricula' => $matricula,
                 'valorParcela' => $valorParcela,
                 'numeroParcelas' => $numeroParcelas,
             ];
 
+            if ($codigoEntidade == "164") {
+                $dataSaque['sequencialOrgao'] = "4";
+            }
 
             $returnData = $this->m_bmg->gravarPropostaSaque($dataSaque);
 
@@ -902,7 +907,7 @@ class Bmg extends BaseController
                 'quantidadeParcelas' => $numeroParcelas,
                 'nomeCliente' => $this->getpost('nomeCliente'),
                 'especie' => $this->getpost('especie'),
-                'adesao' => $returnData, 
+                'adesao' => $returnData,
                 'dataNascimento' => $this->getpost('dataNascimento'),
             ];
 
@@ -934,8 +939,12 @@ class Bmg extends BaseController
 
         if ($this->getPost('btnSaque') === 'consultar') {
             $valorSaque = $this->getPost('valorSaque') ?? '';
+            $entidade = $this->getpost('codigoEntidade');
 
-            $obtemValorParcela = $this->m_bmg->obterValorParcela($valorSaque);
+            $data['valorSaque'] = $valorSaque;
+            $data['codigoEntidade'] = $entidade;
+
+            $obtemValorParcela = $this->m_bmg->obterValorParcela($data);
             $valorParcela = $obtemValorParcela[0]->valorParcela;
 
             if ($this->request->isAJAX()) {
@@ -960,19 +969,32 @@ class Bmg extends BaseController
         $cpf = $this->getpost('cpf') ?? '';
         $matricula = $this->getpost('matricula') ?? '';
         $contaInterna = $this->getpost('contaInterna') ?? '';
+        $entidade = $this->getpost('codigoEntidade');
 
         $params = [
             'cpf' => $cpf,
             'matricula' => $matricula,
-            'contaInterna' => $contaInterna
+            'contaInterna' => $contaInterna,
+            'codigoEntidade' => $entidade
         ];
+
+        if ($entidade == "164") {
+            $params['sequencialOrgao'] = '4';
+        }
 
         $returnData = $this->m_bmg->obterLimiteSaque($params);
 
         if (isset($returnData->limite->valorSaqueMaximo)) {
             $valorMaximo = $returnData->limite->valorSaqueMaximo;
 
-            $obtemValorParcela = $this->m_bmg->obterValorParcela($valorMaximo);
+            $data['valorMaximo'] = $valorMaximo;
+            $data['codigoEntidade'] = $entidade;
+
+            if ($entidade == "164") {
+                $data['sequencialOrgao'] = '4';
+            }
+
+            $obtemValorParcela = $this->m_bmg->obterValorParcela($data);
 
             $valorParcela = $obtemValorParcela[0]->valorParcela;
             $dados['valorParcela'] = $valorParcela;
@@ -985,7 +1007,7 @@ class Bmg extends BaseController
         } else if (!isset($returnData->limite->valorSaqueMaximo)) {
             return redirect()->to(urlInstitucional . 'bmg-saque/0')->with('cardData', $returnData)->with('cpfDigitado', $cpf);
         } else {
-            return redirect()->to(urlInstitucional . 'bmg-saque/0')->with('cardData', $returnData)->with('cpfDigitado', $cpf)->with('valorParcela', $valorParcela);
+            return redirect()->to(urlInstitucional . 'bmg-saque/0')->with('cardData', $returnData)->with('cpfDigitado', $cpf)->with('valorParcela', $valorParcela)->with('codigoEntidade', $entidade);
         }
     }
 

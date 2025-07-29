@@ -157,6 +157,19 @@
 															<input type="text" class="form-control" placeholder="CPF" name="txtCPF" value="" />
 														</div>
 													</div>
+
+													<style>
+														input[type="date"]::-webkit-calendar-picker-indicator {
+															filter: invert(50%) sepia(100%) saturate(500%) hue-rotate(180deg);
+														}
+													</style>
+
+													<div class="d-flex align-items-center position-relative my-1 mx-3">
+														<div class="mb-3">
+															<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Data:</label>
+															<input type="date" class="form-control" placeholder="" name="date" value="" />
+														</div>
+													</div>
 													<div class="d-flex align-items-center position-relative my-1 mx-3">
 														<div class="mb-3">
 															<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Telefone:</label>

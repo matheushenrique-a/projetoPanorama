@@ -83,8 +83,10 @@ class Insight extends BaseController
             $nomeAssessor = $this->getpost('nomeAssessor', false);
             $statusPropostaFiltro = $this->getpost('statusPropostaFiltro', false);
             $paginas = $this->getpost('paginas', false);
+            $date = $this->getpost('date', false);
 
             Services::response()->setCookie('cpf', $cpf);
+            Services::response()->setCookie('date', $date);
             Services::response()->setCookie('celular', $celular);
             Services::response()->setCookie('nome', $nome);
             Services::response()->setCookie('nomeAssessor', $nomeAssessor);
@@ -97,6 +99,7 @@ class Insight extends BaseController
             $nomeAssessor = $this->getpost('nomeAssessor', true);
             $statusPropostaFiltro = $this->getpost('statusPropostaFiltro', true);
             $paginas = $this->getpost('paginas', true);
+            $date = $this->getpost('date', true);
         }
 
         $whereCheck = [];
@@ -108,6 +111,7 @@ class Insight extends BaseController
         if (!empty($celular)) $likeCheck['telefone'] = $celular;
         if (!empty($nome)) $likeCheck['nome'] = $nome;
         if (!empty($nomeAssessor)) $likeCheck['assessor'] = $nomeAssessor;
+        if (!empty($date)) $likeCheck['DATE(data_criacao)'] = $date;
 
         if ($this->session->role !== "SUPERVISOR") {
             $whereCheck["assessor"] = $this->session->nickname;

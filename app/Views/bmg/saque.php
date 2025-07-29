@@ -4,6 +4,10 @@
 
 <?php $erro = session()->getFlashdata('erro'); ?>
 
+<?php
+$codigoEntidade = session('codigoEntidade');
+?>
+
 
 <?php if ($valores = session()->getFlashdata('valores')): ?>
     <div class="alert alert-success">
@@ -68,6 +72,14 @@
                                                                 <input maxlength="14" type="text" value="<?= esc($cpf ?? '') ?>" class="form-control fs-3 fw-bold" placeholder="000.000.000-00" name="cpf" id="cpf" required />
                                                             </div>
                                                             <div class="input-group">
+                                                                <span class="input-group-text" style="width: 155px">Cod. Entidade</span>
+                                                                <select class="form-select fs-5 fw-bold" id="codigoEntidade" name="codigoEntidade">
+                                                                    <option value="1581-" <?= ($codigoEntidade == '1581-') ? 'selected' : '' ?>>INSS - 1581</option>
+                                                                    <option value="4277-" <?= ($codigoEntidade == '4277-') ? 'selected' : '' ?>>INSS BENEFÍCIO - 4277</option>
+                                                                    <option value="164" <?= ($codigoEntidade == '164') ? 'selected' : '' ?>>SIAPE - 164</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="input-group">
                                                                 <span class="input-group-text" style="width: 155px">Número Benefício</span>
                                                                 <input type="text" value="<?= esc($cardData->cartoes->cartoesRetorno[0]->matricula ?? '') ?>" class="form-control fs-3 fw-bold" placeholder="" name="matricula" id="matricula" readonly />
                                                             </div>
@@ -78,8 +90,8 @@
                                                             <div class="d-flex align-items-center position-relative my-1 mt-5 mb-0">
                                                                 <button type="submit" class="btn btn-primary" name="consultaCpf" value="consultaCpf">Consultar</button>
                                                             </div>
-
                                                             <?php if (!empty($cardData->cartoes->cartoesRetorno[0]->matricula) && $cardData->limite->mensagemDeErro == ""): ?>
+
                                                                 <div class="input-group">
                                                                     <h3 class="ms-2 mt-8" id="lblInfo">Dados Cliente:</h3>
                                                                 </div>
@@ -97,56 +109,68 @@
                                                                     <span class="input-group-text" style="width: 100px">Número</span>
                                                                     <input type="text" class="form-control fs-3 fw-bold" value="<?= esc($telefone) ?>" style="color:rgb(188, 188, 188); width: 250px" name="telefone" id="telefone" required />
                                                                 </div>
-                                                                <div class="input-group">
-                                                                    <span class="input-group-text" style="width: 135px">UF da Conta</span>
-                                                                    <!-- <input maxlength="2" type="text" class="form-control fs-3 fw-bold" name="ufconta" id="ufconta" required /> -->
-                                                                    <select class="form-select" id="ufconta" name="ufconta">
-                                                                        <option value=""></option>
-                                                                        <option value="AC">AC</option>
-                                                                        <option value="AL">AL</option>
-                                                                        <option value="AP">AP</option>
-                                                                        <option value="AM">AM</option>
-                                                                        <option value="BA">BA</option>
-                                                                        <option value="CE">CE</option>
-                                                                        <option value="DF">DF</option>
-                                                                        <option value="ES">ES</option>
-                                                                        <option value="GO">GO</option>
-                                                                        <option value="MA">MA</option>
-                                                                        <option value="MT">MT</option>
-                                                                        <option value="MS">MS</option>
-                                                                        <option value="MG">MG</option>
-                                                                        <option value="PA">PA</option>
-                                                                        <option value="PB">PB</option>
-                                                                        <option value="PR">PR</option>
-                                                                        <option value="PE">PE</option>
-                                                                        <option value="PI">PI</option>
-                                                                        <option value="RJ">RJ</option>
-                                                                        <option value="RN">RN</option>
-                                                                        <option value="RS">RS</option>
-                                                                        <option value="RO">RO</option>
-                                                                        <option value="RR">RR</option>
-                                                                        <option value="SC">SC</option>
-                                                                        <option value="SP">SP</option>
-                                                                        <option value="SE">SE</option>
-                                                                        <option value="TO">TO</option>
-                                                                    </select>
-                                                                    <span class="input-group-text" style="width: 155px">Espécie Benefício</span>
-                                                                    <input maxlength="2" type="text" class="form-control fs-3 fw-bold" name="especieBeneficio" id="especieBeneficio" required />
-                                                                </div>
+                                                                <?php if (isset($codigoEntidade) && $codigoEntidade !== "164"): ?>
+                                                                    <div class="input-group">
+                                                                        <span class="input-group-text" style="width: 135px">UF da Conta</span>
+                                                                        <!-- <input maxlength="2" type="text" class="form-control fs-3 fw-bold" name="ufconta" id="ufconta" required /> -->
+                                                                        <select class="form-select" id="ufconta" name="ufconta">
+                                                                            <option value=""></option>
+                                                                            <option value="AC">AC</option>
+                                                                            <option value="AL">AL</option>
+                                                                            <option value="AP">AP</option>
+                                                                            <option value="AM">AM</option>
+                                                                            <option value="BA">BA</option>
+                                                                            <option value="CE">CE</option>
+                                                                            <option value="DF">DF</option>
+                                                                            <option value="ES">ES</option>
+                                                                            <option value="GO">GO</option>
+                                                                            <option value="MA">MA</option>
+                                                                            <option value="MT">MT</option>
+                                                                            <option value="MS">MS</option>
+                                                                            <option value="MG">MG</option>
+                                                                            <option value="PA">PA</option>
+                                                                            <option value="PB">PB</option>
+                                                                            <option value="PR">PR</option>
+                                                                            <option value="PE">PE</option>
+                                                                            <option value="PI">PI</option>
+                                                                            <option value="RJ">RJ</option>
+                                                                            <option value="RN">RN</option>
+                                                                            <option value="RS">RS</option>
+                                                                            <option value="RO">RO</option>
+                                                                            <option value="RR">RR</option>
+                                                                            <option value="SC">SC</option>
+                                                                            <option value="SP">SP</option>
+                                                                            <option value="SE">SE</option>
+                                                                            <option value="TO">TO</option>
+                                                                        </select>
+                                                                        <span class="input-group-text" style="width: 155px">Espécie Benefício</span>
+                                                                        <input maxlength="2" type="text" class="form-control fs-3 fw-bold" name="especieBeneficio" id="especieBeneficio" required />
+                                                                    </div>
+                                                                <?php endif; ?>
                                                                 <div class="input-group">
                                                                     <h3 class="ms-2 mt-6 mb-2" id="lblNiver">Informações de pagamento:</h3>
                                                                 </div>
                                                                 <div class="input-group">
-                                                                    <span class="input-group-text" style="width: 155px">Banco</span>
-                                                                    <input type="text" class="form-control fs-3 fw-bold" placeholder="" name="idBanco" id="idBanco" style="width: 35px" required />
-                                                                    <span class="input-group-text" style="width: 155px">Agência</span>
-                                                                    <input type="text" class="form-control fs-3 fw-bold" placeholder="" name="agencia" id="agencia" style="width: 35px" required />
+                                                                    <span class="input-group-text" style="width: 155px">Tipo Conta</span>
+                                                                    <select class="form-select fs-5 fw-bold" id="finalidadeCredito" name="finalidadeCredito">
+                                                                        <option value="1">Conta Corrente</option>
+                                                                        <option value="2">Conta Poupança</option>
+                                                                        <option value="3">Conta BMG</option>
+                                                                    </select>
                                                                 </div>
-                                                                <div class="input-group">
-                                                                    <span class="input-group-text">Conta</span>
-                                                                    <input type="text" class="form-control w-25 fs-3 fw-bold" placeholder="" name="conta" id="conta" required />
-                                                                    <span class="input-group-text">Digito</span>
-                                                                    <input type="text" class="form-control fs-3 fw-bold" placeholder="" name="digito" id="digito" required />
+                                                                <div id="dadosBancarios">
+                                                                    <div class="input-group">
+                                                                        <span class="input-group-text" style="width: 155px">Banco</span>
+                                                                        <input type="text" class="form-control fs-3 fw-bold" placeholder="" name="idBanco" id="idBanco" style="width: 35px" required />
+                                                                        <span class="input-group-text" style="width: 155px">Agência</span>
+                                                                        <input type="text" class="form-control fs-3 fw-bold" placeholder="" name="agencia" id="agencia" style="width: 35px" required />
+                                                                    </div>
+                                                                    <div class="input-group">
+                                                                        <span class="input-group-text">Conta</span>
+                                                                        <input type="text" class="form-control w-25 fs-3 fw-bold" placeholder="" name="conta" id="conta" required />
+                                                                        <span class="input-group-text">Digito</span>
+                                                                        <input type="text" class="form-control fs-3 fw-bold" placeholder="" name="digito" id="digito" required />
+                                                                    </div>
                                                                 </div>
                                                                 <div class="input-group mt-8" style="width: 400px;">
                                                                     <span class="input-group-text" style="width: 130px">Valor do Saque</span>
@@ -436,7 +460,7 @@
 
         let dados = {
             UF: extrair(/NB\s*-\s*UF\s*\d+\s*-\s*([A-Z]{2})/, texto),
-            Banco: extrair(/Banco\s*([0-9]{3})/, texto),
+            Banco: extrair(/^\s*Banco\s+([0-9]{1,3})\s*$/im, texto),
             Agencia: extrair(/Ag\.?\s*Banco\s*([0-9]+)/i, texto),
             Conta: conta,
             Digito: digito,
@@ -446,15 +470,38 @@
             Telefone1: extrairTelefone(/Tel\.?\s*1\s*\(?(\d{2})\)?\s*(\d{4,5})-?(\d{4})/i, texto)
         };
 
-        ufInput.value = dados.UF
+        if (ufInput) {
+            ufInput.value = dados.UF
+            especieInput.value = dados.Especie
+        }
+
         bancoInput.value = dados.Banco
         agenciaInput.value = dados.Agencia
         contaInput.value = dados.Conta
         digitoInput.value = dados.Digito
-        especieInput.value = dados.Especie
         dataNascimentoInput.value = dados.Nascimento
         nomeClienteInput.value = dados.Nome
         dddInput.value = dados.Telefone1.ddd
         telefoneInput.value = dados.Telefone1.numero
     }
+
+
+    document.getElementById('finalidadeCredito').addEventListener('change', function() {
+        const dadosBancarios = document.getElementById('dadosBancarios');
+        if (this.value === '3') {
+            dadosBancarios.style.display = 'none';
+            // remover required ao esconder
+            document.getElementById('idBanco').required = false;
+            document.getElementById('agencia').required = false;
+            document.getElementById('conta').required = false;
+            document.getElementById('digito').required = false;
+        } else {
+            dadosBancarios.style.display = 'block';
+            // adicionar required novamente
+            document.getElementById('idBanco').required = true;
+            document.getElementById('agencia').required = true;
+            document.getElementById('conta').required = true;
+            document.getElementById('digito').required = true;
+        }
+    });
 </script>

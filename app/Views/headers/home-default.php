@@ -131,7 +131,7 @@
 													<div class="card-header pt-7 mb-3 pb-3">
 														<!--begin::Title-->
 														<h3 class="card-title align-items-start flex-column">
-															<span class="card-label fw-bolder text-gray-800">Últimas Propostas</span>
+															<span class="card-label fw-bolder text-gray-800">Propostas de Hoje</span>
 															<span class="text-gray-400 mt-1 fw-bold fs-6"><?php echo $countPropostasBMG; ?> <?php echo ($countPropostasBMG > 1  ? 'propostas digitadas hoje' : 'proposta digitada hoje'); ?></span>
 														</h3>
 														<!--end::Title-->
