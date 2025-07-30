@@ -853,10 +853,10 @@ class Bmg extends BaseController
         $data['telefone'] = $telefonePost;
         $data['nomeCliente'] = $nomeCliente;
 
-        $idBanco = $this->getpost('idBanco') ?? '';
-        $agencia = $this->getpost('agencia') ?? '';
-        $conta = $this->getpost('conta') ?? '';
-        $digito = $this->getpost('digito') ?? '';
+        $idBanco = $this->getpost('idBanco');
+        $agencia = $this->getpost('agencia');
+        $conta = $this->getpost('conta');
+        $digito = $this->getpost('digito');
 
         $valorSaque = $this->getpost('valorSaque') ?? '';
 
@@ -937,13 +937,13 @@ class Bmg extends BaseController
             return redirect()->to(urlInstitucional . 'bmg-saque/0')->with('sucesso', $propostaPanorama['mensagem'] . " " . $returnData);
         }
 
-        if ($this->getPost('btnSaque') === 'consultar') {
-            $valorSaque = $this->getPost('valorSaque') ?? '';
+        if ($this->getpost('btnSaque') === 'consultar') {
+            $valorSaque = $this->getpost('valorSaque') ?? '';
             $entidade = $this->getpost('codigoEntidade');
 
             $data['valorSaque'] = $valorSaque;
             $data['codigoEntidade'] = $entidade;
-
+            
             $obtemValorParcela = $this->m_bmg->obterValorParcela($data);
             $valorParcela = $obtemValorParcela[0]->valorParcela;
 
@@ -987,12 +987,8 @@ class Bmg extends BaseController
         if (isset($returnData->limite->valorSaqueMaximo)) {
             $valorMaximo = $returnData->limite->valorSaqueMaximo;
 
-            $data['valorMaximo'] = $valorMaximo;
+            $data['valorSaque'] = $valorMaximo;
             $data['codigoEntidade'] = $entidade;
-
-            if ($entidade == "164") {
-                $data['sequencialOrgao'] = '4';
-            }
 
             $obtemValorParcela = $this->m_bmg->obterValorParcela($data);
 

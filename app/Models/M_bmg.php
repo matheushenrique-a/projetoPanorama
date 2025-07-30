@@ -437,7 +437,7 @@ class M_bmg extends Model
 
             return [
                 'erro' => true,
-                'mensagem' => "{$fault}"
+                'mensagem' => "{$fault->faultstring}"
             ];
         }
     }
@@ -452,7 +452,7 @@ class M_bmg extends Model
                 'senha'        => BMG_SEGURO_SENHA,
             ];
 
-            $params['valorSaque'] = $data['valorMaximo'];
+            $params['valorSaque'] = $data['valorSaque'];
             $params['codigoEntidade'] = $data['codigoEntidade'];
 
             if ($data['codigoEntidade'] == '164') {

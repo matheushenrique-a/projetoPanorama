@@ -8,6 +8,12 @@
 $codigoEntidade = session('codigoEntidade');
 ?>
 
+<?php if (isset($cardData)): ?>
+    <div class="alert alert-success">
+        <pre><?= print_r($cardData, true) ?></pre>
+    </div>
+<?php endif; ?>
+
 
 <?php if ($valores = session()->getFlashdata('valores')): ?>
     <div class="alert alert-success">
@@ -74,8 +80,8 @@ $codigoEntidade = session('codigoEntidade');
                                                             <div class="input-group">
                                                                 <span class="input-group-text" style="width: 155px">Cod. Entidade</span>
                                                                 <select class="form-select fs-5 fw-bold" id="codigoEntidade" name="codigoEntidade">
-                                                                    <option value="1581-" <?= ($codigoEntidade == '1581-') ? 'selected' : '' ?>>INSS - 1581</option>
-                                                                    <option value="4277-" <?= ($codigoEntidade == '4277-') ? 'selected' : '' ?>>INSS BENEFÍCIO - 4277</option>
+                                                                    <option value="1581-" <?= ($codigoEntidade == '1581') ? 'selected' : '' ?>>INSS - 1581</option>
+                                                                    <option value="4277-" <?= ($codigoEntidade == '4277') ? 'selected' : '' ?>>INSS BENEFÍCIO - 4277</option>
                                                                     <option value="164" <?= ($codigoEntidade == '164') ? 'selected' : '' ?>>SIAPE - 164</option>
                                                                 </select>
                                                             </div>
@@ -302,6 +308,8 @@ $codigoEntidade = session('codigoEntidade');
     const dddInput = document.getElementById('ddd')
     const telefoneInput = document.getElementById('telefone')
 
+    const codigoEntidade = document.getElementById('codigoEntidade')
+
     const bancoInput = document.getElementById('idBanco')
     const agenciaInput = document.getElementById('agencia')
     const contaInput = document.getElementById('conta')
@@ -376,13 +384,17 @@ $codigoEntidade = session('codigoEntidade');
             e.preventDefault();
             loading.style.display = 'inline-block';
             const valorSaque = valorSaqueInput.value;
+            const codigoEntidadeValue = codigoEntidade.value;
+
             fetch("<?= urlInstitucional . 'bmg-saque/0' ?>", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/x-www-form-urlencoded",
                         "X-Requested-With": "XMLHttpRequest"
                     },
-                    body: "valorSaque=" + encodeURIComponent(valorSaque) + "&btnSaque=consultar"
+                    body: "valorSaque=" + encodeURIComponent(valorSaque) +
+                        "&codigoEntidade=" + encodeURIComponent(codigoEntidadeValue) +
+                        "&btnSaque=consultar"
                 })
                 .then(response => {
                     if (!response.ok) { // Se o status HTTP não for 200-299
@@ -485,23 +497,24 @@ $codigoEntidade = session('codigoEntidade');
         telefoneInput.value = dados.Telefone1.numero
     }
 
-
-    document.getElementById('finalidadeCredito').addEventListener('change', function() {
-        const dadosBancarios = document.getElementById('dadosBancarios');
-        if (this.value === '3') {
-            dadosBancarios.style.display = 'none';
-            // remover required ao esconder
-            document.getElementById('idBanco').required = false;
-            document.getElementById('agencia').required = false;
-            document.getElementById('conta').required = false;
-            document.getElementById('digito').required = false;
-        } else {
-            dadosBancarios.style.display = 'block';
-            // adicionar required novamente
-            document.getElementById('idBanco').required = true;
-            document.getElementById('agencia').required = true;
-            document.getElementById('conta').required = true;
-            document.getElementById('digito').required = true;
-        }
-    });
+    if (bancoInput) {
+        document.getElementById('finalidadeCredito').addEventListener('change', function() {
+            const dadosBancarios = document.getElementById('dadosBancarios');
+            if (this.value === '3') {
+                dadosBancarios.style.display = 'none';
+                // remover required ao esconder
+                document.getElementById('idBanco').required = false;
+                document.getElementById('agencia').required = false;
+                document.getElementById('conta').required = false;
+                document.getElementById('digito').required = false;
+            } else {
+                dadosBancarios.style.display = 'block';
+                // adicionar required novamente
+                document.getElementById('idBanco').required = true;
+                document.getElementById('agencia').required = true;
+                document.getElementById('conta').required = true;
+                document.getElementById('digito').required = true;
+            }
+        });
+    }
 </script>
