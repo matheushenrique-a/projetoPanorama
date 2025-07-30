@@ -117,6 +117,10 @@ class Insight extends BaseController
             $whereCheck["assessor"] = $this->session->nickname;
         }
 
+        if ($this->session->role == "SUPERVISOR" && !$this->my_security->checkPermission("ADMIN")) {
+            $whereCheck['report_to'] = $this->session->userId;
+        }
+
         $likeCheck = array("likeCheck" => $likeCheck);
 
         $paginas = (empty($paginas)  ? 10 : $paginas);

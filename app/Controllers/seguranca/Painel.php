@@ -8,20 +8,27 @@ use Config\Services;
 
 class Painel extends BaseController
 {
+    protected $session;
+    protected $my_security;
+
     public function listar_usuarios()
     {
         $buscarProp = $this->getpost('buscarProp');
+        $this->session = session();
 
         if (!empty($buscarProp)) {
             helper('cookie');
             $nickname = $this->getpost('content', false);
             $role = $this->getpost('role', false);
+            $quantidade = $this->getpost('quantidade', false);
 
             Services::response()->setCookie('nickname', $nickname);
             Services::response()->setCookie('role', $role);
+            Services::response()->setCookie('quantidade', $quantidade);
         } else {
             $nickname = $this->getpost('nickname', true);
             $role = $this->getpost('role', true);
+            $quantidade = $this->getpost('quantidade', true);
         }
 
         $whereCheck = [];
@@ -29,13 +36,17 @@ class Painel extends BaseController
 
         $whereCheck['empresa'] = EMPRESA;
 
+        if(!$this->my_security->checkPermission("ADMIN")){
+            $likeCheck['report_to'] = $this->session->userId;
+        }
+
         if (!empty($role)) $whereCheck['role'] = $role;
         if (!empty($nickname)) $likeCheck['nickname'] = $nickname;
 
         $parametros = [];
         if (!empty($likeCheck)) $parametros['likeCheck'] = $likeCheck;
 
-        $this->dbMaster->setLimit(20);
+        $this->dbMaster->setLimit((int) $quantidade);
         $this->dbMaster->setOrderBy(['userId', 'DESC']);
 
         $usuarios = $this->dbMaster->select('user_account', $whereCheck, $parametros);
@@ -44,7 +55,8 @@ class Painel extends BaseController
             'pageTitle' => 'Painel de Usuários',
             'usuarios' => $usuarios['result']->getResult(),
             'nickname' => $nickname,
-            'role' => $role
+            'role' => $role,
+            'quantidade' => $quantidade
         ];
 
         return $this->loadpage('seguranca/painel', $dados);
@@ -65,7 +77,7 @@ class Painel extends BaseController
 
             $supervisorDados = $findSupervisorId['firstRow'];
 
-            $supervisorId = $supervisorDados->userId ?? 164815;
+            $supervisorId = $supervisorDados->userId ?? 1;
 
             // configurar permissões
             $permissions = [];
@@ -122,7 +134,7 @@ class Painel extends BaseController
                 $this->dbMaster->insert('user_account', $dados);
             }
 
-            return redirect()->to(urlInstitucional . '/painel');
+            return redirect()->to(urlInstitucional . 'painel');
         }
 
         $dados['pageTitle'] = "Cadastro";

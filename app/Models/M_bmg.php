@@ -525,6 +525,7 @@ class M_bmg extends Model
         $telefone = $data['celular1']['ddd'] . $data['celular1']['numero'];
         $status = "Análise";
         $panorama_id = $data['panorama_id'];
+        $report_to = $this->session->report_to;
 
         $this->dbMasterDefault->insert('quid_propostas', [
             "adesao" => $adesao,
@@ -535,7 +536,8 @@ class M_bmg extends Model
             "valor" => $valor,
             "telefone" => $telefone,
             "status" => $status,
-            "panorama_id" => $panorama_id
+            "panorama_id" => $panorama_id,
+            "report_to" => $report_to
         ]);
     }
 
