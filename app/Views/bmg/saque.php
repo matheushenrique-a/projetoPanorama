@@ -8,13 +8,6 @@
 $codigoEntidade = session('codigoEntidade');
 ?>
 
-<?php if (isset($cardData)): ?>
-    <div class="alert alert-success">
-        <pre><?= print_r($cardData, true) ?></pre>
-    </div>
-<?php endif; ?>
-
-
 <?php if ($valores = session()->getFlashdata('valores')): ?>
     <div class="alert alert-success">
         <pre><?= print_r($valores, true) ?></pre>
@@ -96,7 +89,7 @@ $codigoEntidade = session('codigoEntidade');
                                                             <div class="d-flex align-items-center position-relative my-1 mt-5 mb-0">
                                                                 <button type="submit" class="btn btn-primary" name="consultaCpf" value="consultaCpf">Consultar</button>
                                                             </div>
-                                                            <?php if (!empty($cardData->cartoes->cartoesRetorno[0]->matricula) && $cardData->limite->mensagemDeErro == ""): ?>
+                                                            <?php if (!empty($cardData->cartoes->cartoesRetorno[0]->matricula) && $cardData->limite->mensagemDeErro == "" && $cardData->cartoes->cartoesRetorno[0]->mensagemImpedimento == ""): ?>
 
                                                                 <div class="input-group">
                                                                     <h3 class="ms-2 mt-8" id="lblInfo">Dados Cliente:</h3>
@@ -230,17 +223,24 @@ $codigoEntidade = session('codigoEntidade');
                                             <p><?= esc($cardData['mensagem']); ?></p>
                                         </div>
                                     </div>
-                                <?php elseif (isset($cardData) && is_object($cardData) && $cardData->limite->valorSaqueMinimo > 99): ?>
-                                    <div class="p-2">
-                                        <div class="alert alert-success fw-semibold d-flex flex-column align-items-center">
-                                            <p class="fw-bold fs-3">Saque disponível para <?= esc($cpf) ?? "cliente informado" ?>.</p>
-                                        </div>
-                                    </div>
-                                <?php elseif (isset($cardData) && is_object($cardData) && $cardData->limite->mensagemDeErro !== ""): ?>
+                                <?php elseif (isset($cardData) && is_object($cardData) && $cardData->limite->mensagemDeErro !== null): ?>
                                     <div class="p-2">
                                         <div class="alert alert-danger fw-semibold d-flex flex-column align-items-center">
                                             <p class="fw-bold fs-3">Saque indisponível para <?= esc($cpf) ?? "cliente informado" ?>.</p>
                                             <p><?= esc($cardData->limite->mensagemDeErro); ?></p>
+                                        </div>
+                                    </div>
+                                <?php elseif (isset($cardData) && is_object($cardData) && $cardData->cartoes->cartoesRetorno[0]->mensagemImpedimento !== ""): ?>
+                                    <div class="p-2">
+                                        <div class="alert alert-danger fw-semibold d-flex flex-column align-items-center">
+                                            <p class="fw-bold fs-3">Saque indisponível para <?= esc($cpf) ?? "cliente informado" ?>.</p>
+                                            <p><?= esc($cardData->cartoes->cartoesRetorno[0]->mensagemImpedimento); ?></p>
+                                        </div>
+                                    </div>
+                                <?php elseif (isset($cardData) && is_object($cardData) && $cardData->limite->valorSaqueMinimo > 99): ?>
+                                    <div class="p-2">
+                                        <div class="alert alert-success fw-semibold d-flex flex-column align-items-center">
+                                            <p class="fw-bold fs-3">Saque disponível para <?= esc($cpf) ?? "cliente informado" ?>.</p>
                                         </div>
                                     </div>
                                 <?php else: ?>
