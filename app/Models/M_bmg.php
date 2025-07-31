@@ -487,23 +487,32 @@ class M_bmg extends Model
             $responseCards = $client->__soapCall('buscarCartoesDisponiveis', [$params]);
 
             if (isset($responseCards->cartoesRetorno) && is_array($responseCards->cartoesRetorno) && count($responseCards->cartoesRetorno) > 0) {
-                $params['numeroContaInterna'] = $responseCards->cartoesRetorno[0]->numeroContaInterna;
-                $params['matricula'] = $responseCards->cartoesRetorno[0]->matricula;
-                $params['tipoSaque'] = 1;
-                $params['cpfImpedidoComissionar'] = false;
-                $responseLimit = $client->__soapCall('buscarLimiteSaque', [$params]);
+                $cartoesComLimites = [];
+
+                foreach ($responseCards->cartoesRetorno as $cartao) {
+                    $params['numeroContaInterna'] = $cartao->numeroContaInterna;
+                    $params['matricula'] = $cartao->matricula;
+                    $params['tipoSaque'] = 1;
+                    $params['cpfImpedidoComissionar'] = false;
+
+                    $limite = $client->__soapCall('buscarLimiteSaque', [$params]);
+
+                    $cartoesComLimites[] = (object)[
+                        'cartao' => $cartao,
+                        'limite' => $limite
+                    ];
+                }
+
+                return (object)[
+                    'erro' => false,
+                    'cartoes' => $cartoesComLimites
+                ];
             } else {
                 return [
                     'erro' => true,
                     'mensagem' => 'Nenhum cartão disponível ou retorno inesperado.'
                 ];
             }
-
-            $response = new \stdClass();
-            $response->cartoes = $responseCards;
-            $response->limite = $responseLimit;
-
-            return $response;
         } catch (SoapFault $fault) {
             echo "Erro: {$fault->faultcode} - {$fault->faultstring}";
 

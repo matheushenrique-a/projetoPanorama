@@ -863,6 +863,31 @@ class Bmg extends BaseController
         $matricula = $this->getpost('matricula') ?? '';
         $numeroContaInterna = (int) $this->getpost('contaInterna') ?? '';
 
+        if ($this->getpost('btnSaque') === 'cardSelected') {
+            $valorSaqueMaximo = $this->getpost('valorSaqueMaximo');
+            $contaInterna = $this->getpost('contaInterna');
+            $matricula = $this->getpost('matricula');
+            $entidade = $this->getpost('entidade');
+            $cpf = $this->getpost('cpf');
+
+            $cardDataJson = $this->request->getPost('cardData');
+            $cardData = json_decode($cardDataJson);
+
+            $data['valorSaque'] = $valorSaqueMaximo;
+            $data['codigoEntidade'] = $entidade;
+
+            $obtemValorParcela = $this->m_bmg->obterValorParcela($data);
+            $valorParcela = $obtemValorParcela[0]->valorParcela;
+
+            return redirect()->to(urlInstitucional . 'bmg-saque/0')
+            ->with('contaInterna', $contaInterna)
+            ->with('matricula', $matricula)
+            ->with('valorParcela', $valorParcela)
+            ->with('valorSaque', $valorSaqueMaximo)
+            ->with('cpfDigitado', $cpf)
+            ->with('cardData', $cardData);
+        }
+
         if ($this->getpost('btnSaque') === 'salvar') {
             $numeroParcelas = (int) $this->getpost('parcelas') ?? '';
             $valorParcela = (float) $this->getpost('valorParcela') ?? '';
@@ -943,7 +968,7 @@ class Bmg extends BaseController
 
             $data['valorSaque'] = $valorSaque;
             $data['codigoEntidade'] = $entidade;
-            
+
             $obtemValorParcela = $this->m_bmg->obterValorParcela($data);
             $valorParcela = $obtemValorParcela[0]->valorParcela;
 
@@ -967,14 +992,10 @@ class Bmg extends BaseController
     public function bmg_limite_saque($cpf)
     {
         $cpf = $this->getpost('cpf') ?? '';
-        $matricula = $this->getpost('matricula') ?? '';
-        $contaInterna = $this->getpost('contaInterna') ?? '';
         $entidade = $this->getpost('codigoEntidade');
 
         $params = [
             'cpf' => $cpf,
-            'matricula' => $matricula,
-            'contaInterna' => $contaInterna,
             'codigoEntidade' => $entidade
         ];
 
@@ -984,26 +1005,42 @@ class Bmg extends BaseController
 
         $returnData = $this->m_bmg->obterLimiteSaque($params);
 
-        if (isset($returnData->limite->valorSaqueMaximo)) {
-            $valorMaximo = $returnData->limite->valorSaqueMaximo;
+        $dados['cardData'] = $returnData;
+
+        if (isset($returnData->erro) && $returnData->erro) {
+            return redirect()->to(urlInstitucional . 'bmg-saque/0')->with('erro', $returnData->mensagem);
+        }
+
+        if (isset($returnData->cartoes[0]->limite->valorSaqueMaximo) && count($returnData->cartoes) == 1) {
+            $valorMaximo = $returnData->cartoes[0]->limite->valorSaqueMaximo;
+            $matricula = $returnData->cartoes[0]->cartao->matricula;
+            $contaInterna = $returnData->cartoes[0]->cartao->numeroContaInterna;
 
             $data['valorSaque'] = $valorMaximo;
             $data['codigoEntidade'] = $entidade;
 
             $obtemValorParcela = $this->m_bmg->obterValorParcela($data);
 
-            $valorParcela = $obtemValorParcela[0]->valorParcela;
+            $valorParcela = $obtemValorParcela[0]->valorParcela ?? 0;
             $dados['valorParcela'] = $valorParcela;
-        }
 
-        $dados['cardData'] = $returnData;
-
-        if (isset($returnData->erro) && $returnData->erro) {
-            return redirect()->to(urlInstitucional . 'bmg-saque/0')->with('erro', $returnData['mensagem']);
-        } else if (!isset($returnData->limite->valorSaqueMaximo)) {
-            return redirect()->to(urlInstitucional . 'bmg-saque/0')->with('cardData', $returnData)->with('cpfDigitado', $cpf);
+            return redirect()->to(urlInstitucional . 'bmg-saque/0')
+                ->with('cardData', $returnData)
+                ->with('cpfDigitado', $cpf)
+                ->with('valorParcela', $valorParcela)
+                ->with('codigoEntidade', $entidade)
+                ->with('matricula', $matricula)
+                ->with('contaInterna', $contaInterna)
+                ->with('valorSaque', $valorMaximo);
+        } elseif (isset($returnData->cartoes) && count($returnData->cartoes) > 1) {
+            return redirect()->to(urlInstitucional . 'bmg-saque/0')
+                ->with('cardData', $returnData)
+                ->with('cpfDigitado', $cpf)
+                ->with('codigoEntidade', $entidade);
         } else {
-            return redirect()->to(urlInstitucional . 'bmg-saque/0')->with('cardData', $returnData)->with('cpfDigitado', $cpf)->with('valorParcela', $valorParcela)->with('codigoEntidade', $entidade);
+            return redirect()->to(urlInstitucional . 'bmg-saque/0')
+                ->with('cardData', $returnData)
+                ->with('cpfDigitado', $cpf);
         }
     }
 

@@ -1,12 +1,21 @@
 <?php $cardData = session('cardData'); ?>
 <?php $cpf = session('cpfDigitado'); ?>
 <?php $valorParcela = session('valorParcela'); ?>
+<?php $matricula = session('matricula'); ?>
+<?php $contaInterna = session('contaInterna'); ?>
+<?php $valorSaque = session('valorSaque'); ?>
 
 <?php $erro = session()->getFlashdata('erro'); ?>
 
 <?php
 $codigoEntidade = session('codigoEntidade');
 ?>
+
+<?php if (isset($cardData)): ?>
+    <div class="alert alert-success">
+        <pre><?= print_r($cardData, true) ?></pre>
+    </div>
+<?php endif; ?>
 
 <?php if ($valores = session()->getFlashdata('valores')): ?>
     <div class="alert alert-success">
@@ -78,21 +87,31 @@ $codigoEntidade = session('codigoEntidade');
                                                                     <option value="164" <?= ($codigoEntidade == '164') ? 'selected' : '' ?>>SIAPE - 164</option>
                                                                 </select>
                                                             </div>
-                                                            <div class="input-group">
-                                                                <span class="input-group-text" style="width: 155px">Número Benefício</span>
-                                                                <input type="text" value="<?= esc($cardData->cartoes->cartoesRetorno[0]->matricula ?? '') ?>" class="form-control fs-3 fw-bold" placeholder="" name="matricula" id="matricula" readonly />
-                                                            </div>
-                                                            <div class="input-group">
-                                                                <span class="input-group-text" style="width: 155px">Conta Interna</span>
-                                                                <input type="text" value="<?= esc($cardData->cartoes->cartoesRetorno[0]->numeroContaInterna ?? '') ?>" class="form-control fs-3 fw-bold" placeholder="" name="contaInterna" id="contaInterna" readonly />
-                                                            </div>
+
                                                             <div class="d-flex align-items-center position-relative my-1 mt-5 mb-0">
                                                                 <button type="submit" class="btn btn-primary" name="consultaCpf" value="consultaCpf">Consultar</button>
                                                             </div>
-                                                            <?php if (!empty($cardData->cartoes->cartoesRetorno[0]->matricula) && $cardData->limite->mensagemDeErro == "" && $cardData->cartoes->cartoesRetorno[0]->mensagemImpedimento == ""): ?>
+
+                                                            <?php
+                                                            $temCartaoDisponivel = false;
+
+                                                            if (isset($contaInterna) && isset($matricula)) {
+                                                                $temCartaoDisponivel = true;
+                                                            }
+                                                            ?>
+
+                                                            <?php if ($temCartaoDisponivel): ?>
 
                                                                 <div class="input-group">
                                                                     <h3 class="ms-2 mt-8" id="lblInfo">Dados Cliente:</h3>
+                                                                </div>
+                                                                <div class="input-group">
+                                                                    <span class="input-group-text" style="width: 160px">Número Benefício</span>
+                                                                    <input type="text" value="<?= esc($matricula) ?>" class="form-control fs-3 fw-bold" placeholder="" name="matricula" id="matricula" readonly />
+                                                                </div>
+                                                                <div class="input-group">
+                                                                    <span class="input-group-text" style="width: 160px">Conta Interna</span>
+                                                                    <input type="text" value="<?= esc($contaInterna) ?>" class="form-control fs-3 fw-bold" placeholder="" name="contaInterna" id="contaInterna" readonly />
                                                                 </div>
                                                                 <div class="input-group">
                                                                     <span class="input-group-text" style="width: 160px">Nome do Cliente</span>
@@ -173,7 +192,7 @@ $codigoEntidade = session('codigoEntidade');
                                                                 </div>
                                                                 <div class="input-group mt-8" style="width: 400px;">
                                                                     <span class="input-group-text" style="width: 130px">Valor do Saque</span>
-                                                                    <input type="text" value="<?= esc($cardData->limite->valorSaqueMaximo ?? '') ?>" class="form-control fs-3 fw-bold" name="valorSaque" id="valorSaque" style="width: 100px" required />
+                                                                    <input type="text" value="<?= esc($valorSaque ?? '') ?>" class="form-control fs-3 fw-bold" name="valorSaque" id="valorSaque" style="width: 100px" required />
                                                                     <button type="submit" name="btnSaque" id="btnCalculo" value="calcular" class="btn btn-info">Calcular</button>
                                                                     <div class="position-relative">
                                                                         <div id="loading" class="spinner-border" style="position: absolute; top: 13px; left: 20px; display: none" role="status">
@@ -223,76 +242,134 @@ $codigoEntidade = session('codigoEntidade');
                                             <p><?= esc($cardData['mensagem']); ?></p>
                                         </div>
                                     </div>
-                                <?php elseif (isset($cardData) && is_object($cardData) && $cardData->limite->mensagemDeErro !== null): ?>
+
+                                <?php elseif (isset($cardData->erro) && $cardData->erro): ?>
                                     <div class="p-2">
                                         <div class="alert alert-danger fw-semibold d-flex flex-column align-items-center">
                                             <p class="fw-bold fs-3">Saque indisponível para <?= esc($cpf) ?? "cliente informado" ?>.</p>
-                                            <p><?= esc($cardData->limite->mensagemDeErro); ?></p>
+                                            <p><?= esc($cardData->mensagem); ?></p>
                                         </div>
                                     </div>
-                                <?php elseif (isset($cardData) && is_object($cardData) && $cardData->cartoes->cartoesRetorno[0]->mensagemImpedimento !== ""): ?>
-                                    <div class="p-2">
-                                        <div class="alert alert-danger fw-semibold d-flex flex-column align-items-center">
-                                            <p class="fw-bold fs-3">Saque indisponível para <?= esc($cpf) ?? "cliente informado" ?>.</p>
-                                            <p><?= esc($cardData->cartoes->cartoesRetorno[0]->mensagemImpedimento); ?></p>
-                                        </div>
+
+                                <?php elseif (isset($cardData->cartoes) && is_array($cardData->cartoes) && count($cardData->cartoes) > 0): ?>
+                                    <?php $temDisponivel = false; ?>
+
+                                    <div class="accordion" id="accordionValoresCartoes">
+                                        <?php foreach ($cardData->cartoes as $index => $item): ?>
+                                            <?php
+                                            $cartao = $item->cartao ?? null;
+                                            $limite = $item->limite ?? null;
+                                            $numeroCartao = $cartao->numeroCartao ?? 'Cartão ' . ($index + 1);
+                                            $mensagemImpedimento = $cartao->mensagemImpedimento ?? '';
+                                            $mensagemErroLimite = $limite->mensagemDeErro ?? '';
+                                            $valorSaqueMinimo = $limite->valorSaqueMinimo ?? 0;
+                                            $valorSaqueMaximo = $limite->valorSaqueMaximo ?? 0;
+                                            $valorMin = $valorSaqueMinimo > 0 ? number_format($valorSaqueMinimo, 2, ',', '.') : '-';
+                                            $valorMax = $valorSaqueMaximo > 0 ? number_format($valorSaqueMaximo, 2, ',', '.') : '-';
+                                            $numeroContaInterna = $cartao->numeroContaInterna ?? '';
+                                            $matricula = $cartao->matricula ?? '';
+                                            $entidade = $cartao->entidade ?? '1581';
+                                            $jsonCardData = json_encode($cardData);
+                                            ?>
+
+                                            <div class="accordion-item mb-3">
+                                                <h2 class="accordion-header" id="header_<?= $index ?>">
+                                                    <button class="accordion-button fs-4 fw-semibold <?= $index === 0 ? '' : 'collapsed' ?>" type="button" data-bs-toggle="collapse" data-bs-target="#collapse_<?= $index ?>" aria-expanded="<?= $index === 0 ? 'true' : 'false' ?>" aria-controls="collapse_<?= $index ?>">
+                                                        Cartão <?= esc($numeroCartao) ?>
+                                                    </button>
+                                                </h2>
+                                                <div id="collapse_<?= $index ?>" class="accordion-collapse collapse <?= $index === 0 ? 'show' : '' ?>" aria-labelledby="header_<?= $index ?>" data-bs-parent="#accordionValoresCartoes">
+                                                    <div class="accordion-body">
+                                                        <?php if (!empty($mensagemErroLimite)): ?>
+                                                            <div class="alert alert-danger fw-semibold d-flex flex-column align-items-center">
+                                                                <p class="fw-bold fs-5">Saque indisponível.</p>
+                                                                <p><?= esc($mensagemErroLimite); ?></p>
+                                                            </div>
+                                                        <?php elseif (!empty($mensagemImpedimento)): ?>
+                                                            <div class="alert alert-danger fw-semibold d-flex flex-column align-items-center">
+                                                                <p class="fw-bold fs-5">Saque indisponível.</p>
+                                                                <p><?= esc($mensagemImpedimento); ?></p>
+                                                            </div>
+                                                        <?php elseif ($valorSaqueMinimo > 99): ?>
+                                                            <?php $temDisponivel = true; ?>
+                                                            <div class="alert alert-success fw-semibold d-flex flex-column align-items-center">
+                                                                <p class="fw-bold fs-5">Saque disponível para este cartão.</p>
+                                                            </div>
+
+                                                            <div class="d-flex justify-content-around mt-3">
+                                                                <div class="align-items-center d-flex gap-3">
+                                                                    <h4 style="width: 80px;">Mínimo:</h4>
+                                                                    <input type="text" class="form-control text-muted" value="R$ <?= $valorMin ?>" readonly style="width: 110px" />
+                                                                </div>
+                                                                <div class="align-items-center d-flex gap-3">
+                                                                    <h4 style="width: 80px;">Máximo:</h4>
+                                                                    <input type="text" class="form-control text-muted" value="R$ <?= $valorMax ?>" readonly style="width: 110px" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="mt-8">
+                                                                <form id="frmDataLake2" class="form" action="<?php echo assetfolder; ?>bmg-saque/0" method="POST">
+                                                                    <input type="hidden" name="numeroCartao" value="<?= esc($numeroCartao) ?>" />
+                                                                    <input type="hidden" name="cpf" value="<?= esc($cpf) ?>" />
+                                                                    <input type="hidden" name="valorSaqueMaximo" value="<?= esc($valorSaqueMaximo) ?>" />
+                                                                    <input type="hidden" name="contaInterna" value="<?= esc($numeroContaInterna ?? '') ?>" />
+                                                                    <input type="hidden" name="matricula" value="<?= esc($matricula ?? '') ?>" />
+                                                                    <input type="hidden" name="entidade" value="<?= esc($entidade) ?>" />
+                                                                    <input type="hidden" name="cardData" value='<?= esc($jsonCardData) ?>' />
+                                                                    <button name="btnSaque" value="cardSelected" type="submit" class="btn btn-primary">Selecionar Cartão</button>
+                                                                </form>
+                                                            </div>
+                                                        <?php else: ?>
+                                                            <div class="alert alert-warning fw-semibold d-flex flex-column align-items-center">
+                                                                <p class="fw-bold fs-5">Saque não disponível para este cartão.</p>
+                                                            </div>
+                                                        <?php endif; ?>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <?php endforeach; ?>
                                     </div>
-                                <?php elseif (isset($cardData) && is_object($cardData) && $cardData->limite->valorSaqueMinimo > 99): ?>
-                                    <div class="p-2">
-                                        <div class="alert alert-success fw-semibold d-flex flex-column align-items-center">
-                                            <p class="fw-bold fs-3">Saque disponível para <?= esc($cpf) ?? "cliente informado" ?>.</p>
+
+                                    <?php if (!$temDisponivel): ?>
+                                        <div class="p-2">
+                                            <div class="alert alert-warning fw-semibold d-flex flex-column align-items-center">
+                                                <p class="fw-bold fs-3">Nenhum dos cartões está disponível para saque no momento.</p>
+                                            </div>
                                         </div>
-                                    </div>
+                                    <?php endif; ?>
+
                                 <?php else: ?>
                                     <div class="accordion-body">
                                         <h4>Consulte um CPF para verificar disponibilidade de saque.</h4>
                                     </div>
                                 <?php endif; ?>
                             </div>
-                            <h2 class="accordion-header" id="kt_accordion_abordagem_header_1">
-                                <button class="accordion-button fs-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#kt_elegibilidade" aria-expanded="true" aria-controls="kt_accordion_abordagem_body_1">
-                                    VALORES:
-                                </button>
-                            </h2>
-                            <div id="kt_elegibilidade" class="accordion-collapse  shown" aria-labelledby="kt_accordion_abordagem_header_1" data-bs-parent="#kt_accordion_abordagem">
-                                <div class="accordion-body d-flex justify-content-around">
-                                    <div class="align-items-center d-flex gap-3">
-                                        <h4 style="width: 80px;">Mínimo:</h4>
-                                        <input type="text" class="form-control text-muted" value="R$ <?= esc($cardData->limite->valorSaqueMinimo ?? '-') ?>" name="valorSaque" id="valorSaque" style="width: 100px" readonly />
-                                    </div>
-                                    <div class="align-items-center d-flex gap-3">
-                                        <h4 style="width: 80px;">Máximo:</h4>
-                                        <input type="text" class="form-control text-muted" value="R$ <?= esc($cardData->limite->valorSaqueMaximo ?? '-') ?>" name="valorSaque" id="valorSaque" style="width: 100px" readonly />
-                                    </div>
-                                </div>
-                            </div>
+
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <!--Footer-->
-
-    <div id="kt_app_footer" class="app-footer mt-10">
-        <div class="app-container container-fluid d-flex flex-column flex-md-row flex-center flex-md-stack py-3">
-            <div class="text-dark order-2 order-md-1">
-                <span class="text-muted fw-semibold me-1">2025&copy;</span>
-                <a href="https://keenthemes.com" target="_blank" class="text-gray-800 text-hover-primary">Insight</a>
-            </div>
-            <ul class="menu menu-gray-600 menu-hover-primary fw-semibold order-1">
-                <li class="menu-item">
-                    <a href="https://keenthemes.com" target="_blank" class="menu-link px-2">About</a>
-                </li>
-                <li class="menu-item">
-                    <a href="https://devs.keenthemes.com" target="_blank" class="menu-link px-2">Support</a>
-                </li>
-                <li class="menu-item">
-                    <a href="https://1.envato.market/EA4JP" target="_blank" class="menu-link px-2">Purchase</a>
-                </li>
-            </ul>
+<!--Footer-->
+<div id="kt_app_footer" class="app-footer mt-10">
+    <div class="app-container container-fluid d-flex flex-column flex-md-row flex-center flex-md-stack py-3">
+        <div class="text-dark order-2 order-md-1">
+            <span class="text-muted fw-semibold me-1">2025&copy;</span>
+            <a href="https://keenthemes.com" target="_blank" class="text-gray-800 text-hover-primary">Insight</a>
         </div>
+        <ul class="menu menu-gray-600 menu-hover-primary fw-semibold order-1">
+            <li class="menu-item">
+                <a href="https://keenthemes.com" target="_blank" class="menu-link px-2">About</a>
+            </li>
+            <li class="menu-item">
+                <a href="https://devs.keenthemes.com" target="_blank" class="menu-link px-2">Support</a>
+            </li>
+            <li class="menu-item">
+                <a href="https://1.envato.market/EA4JP" target="_blank" class="menu-link px-2">Purchase</a>
+            </li>
+        </ul>
     </div>
 </div>
 <script>
@@ -373,19 +450,22 @@ $codigoEntidade = session('codigoEntidade');
             telefone.focus();
         }
 
-        if (ufInput.value == "") {
-            e.preventDefault();
-            alert('Preencher UF da conta.')
+        if (ufInput) {
+            if (ufInput.value == "") {
+                e.preventDefault();
+                alert('Preencher UF da conta.')
+            }
         }
     });
 
     if (btnCalculo) {
         btnCalculo.addEventListener('click', function(e) {
             e.preventDefault();
-            loading.style.display = 'inline-block';
-            const valorSaque = valorSaqueInput.value;
+            let valorSaque = valorSaqueInput.value;
             const codigoEntidadeValue = codigoEntidade.value;
+            const saqueMaximo = <?= isset($cardData->limite->valorSaqueMaximo) ? json_encode($cardData->limite->valorSaqueMaximo) : '0' ?>;
 
+            loading.style.display = 'inline-block';
             fetch("<?= urlInstitucional . 'bmg-saque/0' ?>", {
                     method: "POST",
                     headers: {
