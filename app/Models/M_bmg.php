@@ -529,7 +529,7 @@ class M_bmg extends Model
         $cpf = $data['cpf'];
         $nome = $data['nomeCliente'];
         $assessor = $this->session->nickname;
-        $produto = "Saque Complementar";
+        $produto = "Saque";
         $valor = $data['valorSaque'];
         $telefone = $data['celular1']['ddd'] . $data['celular1']['numero'];
         $status = "Análise";
@@ -563,5 +563,21 @@ class M_bmg extends Model
         $sql = "select * from quid_propostas where assessor = '" . $this->session->nickname . "' ";
         $sql .= "AND DATE(data_criacao) = CURDATE();";
         return $this->dbMasterDefault->runQuery($sql)['countAll'];
+    }
+
+    public function countPropostasPorDia()
+    {
+        $nickname = $this->session->nickname;
+
+        $sql = "
+        SELECT DATE(data_criacao) as data, COUNT(*) as total
+        FROM quid_propostas
+        WHERE assessor = '{$nickname}'
+        AND DATE(data_criacao) >= CURDATE() - INTERVAL 4 DAY
+        GROUP BY DATE(data_criacao)
+        ORDER BY data
+        ";
+
+        return $this->dbMasterDefault->runQuery($sql)['result']->getResult();
     }
 }

@@ -137,27 +137,6 @@
 											<div class="card-header border-0 pt-6" style="justify-content: start;">
 												<!--begin::Card title-->
 												<div class="card-title">
-													<div class="d-flex align-items-center position-relative my-1 mx-3">
-														<div class="mb-3">
-															<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Nome:</label>
-															<input type="text" class="form-control" placeholder="Nome cliente" name="txtNome" value="" />
-														</div>
-													</div>
-													<?php if ($my_security->checkPermission("SUPERVISOR")): ?>
-														<div class="d-flex align-items-center position-relative my-1 mx-3">
-															<div class="mb-3">
-																<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Assessor:</label>
-																<input type="text" class="form-control" placeholder="Nome assessor" name="nomeAssessor" value="" />
-															</div>
-														</div>
-													<?php endif; ?>
-													<div class="d-flex align-items-center position-relative my-1 mx-3">
-														<div class="mb-3">
-															<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">CPF:</label>
-															<input type="text" class="form-control" placeholder="CPF" name="txtCPF" value="" />
-														</div>
-													</div>
-
 													<style>
 														input[type="date"]::-webkit-calendar-picker-indicator {
 															filter: invert(50%) sepia(100%) saturate(500%) hue-rotate(180deg);
@@ -172,8 +151,28 @@
 													</div>
 													<div class="d-flex align-items-center position-relative my-1 mx-3">
 														<div class="mb-3">
-															<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Telefone:</label>
-															<input type="text" class="form-control" placeholder="" name="celular" value="" />
+															<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Nome:</label>
+															<input type="text" class="form-control" placeholder="Nome cliente" name="txtNome" value="" />
+														</div>
+													</div>
+													<div class="d-flex align-items-center position-relative my-1 mx-3">
+														<div class="mb-3">
+															<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Adesão:</label>
+															<input type="text" class="form-control" placeholder="Nº Adesão" name="adesao" value="" />
+														</div>
+													</div>
+													<?php if ($my_security->checkPermission("SUPERVISOR")): ?>
+														<div class="d-flex align-items-center position-relative my-1 mx-3">
+															<div class="mb-3">
+																<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Assessor:</label>
+																<input type="text" class="form-control" placeholder="Nome assessor" name="nomeAssessor" value="" />
+															</div>
+														</div>
+													<?php endif; ?>
+													<div class="d-flex align-items-center position-relative my-1 mx-3">
+														<div class="mb-3">
+															<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">CPF:</label>
+															<input type="text" class="form-control" placeholder="CPF" name="txtCPF" value="" />
 														</div>
 													</div>
 												</div>
@@ -219,11 +218,11 @@
 												<thead>
 													<!--begin::Table row-->
 													<tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
-														<th data-sortable="false" class="min-w-25px">Adesão</th>
+														<th class="min-w-25px">Data</th>
+														<th data-sortable="false" class="min-w-50">Adesão</th>
 														<th data-sortable="false" class="min-w-200px">Cliente | Assessor</th>
 														<th data-sortable="false" class="min-w-100px">CPF</th>
 														<th data-sortable="false" class="min-w-25">Celular</th>
-														<th data-sortable="false" class="min-w-50">Criação</th>
 														<th data-sortable="false" class="min-w-50">Valor</th>
 														<th data-sortable="false" class="min-w-25px">Produto</th>
 														<th data-sortable="false" class="min-w-50px">Ver</th>
@@ -240,10 +239,14 @@
 
 														<tr>
 															<td>
+																<?php echo date('d/m/Y', strtotime($row->data_criacao)); ?>
+															</td>
+															<td>
 																<?php echo $row->adesao; ?>
 															</td>
+
 															<!--begin::NOME-->
-															<td class="d-flex flex-column gap-2">
+															<td class="d-flex flex-column">
 																<?php echo $row->nome; ?>
 																<P class="text-gray-500 fw-bold fs-8"><?php echo $row->assessor ?></P>
 															</td>
@@ -256,9 +259,7 @@
 																<?php echo formatarTelefone($row->telefone); ?>
 															</td>
 															<!--begin::DATA CRIACAO=-->
-															<td>
-																<?php echo date('d/m/Y', strtotime($row->data_criacao)); ?>
-															</td>
+
 
 															<!--begin::FASE-->
 															<td class="text-success">

@@ -52,6 +52,19 @@ class Home extends BaseController
         $this->checkSession();
         $dados['pageTitle'] = "Insight Home";
 
+        $resultados = $this->m_bmg->countPropostasPorDia();
+
+        $labels = [];
+        $valores = [];
+
+        foreach ($resultados as $row) {
+            $labels[] = date('d/m', strtotime($row->data)); // ex: "31/07"
+            $valores[] = (int)$row->total;
+        }
+
+        $dados['labels'] = $labels;
+        $dados['dados'] = $valores;
+
         $htmlNotificacoes = $this->m_insight->gerarTimelineNotificacoes();
         $ultimasLigacoes = $this->m_argus->ultimasLigacoes(8);
         $countLigacoes = $this->m_argus->countLigacoes();
@@ -60,10 +73,10 @@ class Home extends BaseController
 
         $graficoAvebacoes = $this->m_integraall->graficoAvebacoes();
         $ranking_ativacoes = $this->m_integraall->ranking_ativacoes();
-        
+
         $tabulacoesSucesso = $this->m_argus->tabulacoesSucesso();
         $dados['tabulacoesSucesso'] = $tabulacoesSucesso;
-        
+
         $ultimasPropostasBMG = $this->m_bmg->ultimasPropostasBMG(8);
         $dados['ultimasPropostasBMG'] = $ultimasPropostasBMG;
 

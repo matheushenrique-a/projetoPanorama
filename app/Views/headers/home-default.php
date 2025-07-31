@@ -161,7 +161,7 @@
 															<!--begin::Item-->
 															<div class="d-flex flex-stack">
 																<div class="d-flex align-items-center me-5">
-																	<a target="_blank" href="https://grupoquid.panoramaemprestimos.com.br/emprestimoInterno.do?action=exibir&codigo=<?php echo $row->panorama_id?>" class="symbol symbol-40px me-4"><span class="symbol-label bg-info"><i class="las la-file-invoice fs-1 p-0 text-white"></i></span></a>
+																	<a target="_blank" href="https://grupoquid.panoramaemprestimos.com.br/emprestimoInterno.do?action=exibir&codigo=<?php echo $row->panorama_id ?>" class="symbol symbol-40px me-4"><span class="symbol-label bg-info"><i class="las la-file-invoice fs-1 p-0 text-white"></i></span></a>
 																	<div class="me-5">
 																		<span class="text-gray-800 fw-bolder fs-6"><?php echo substr($nomeCliente, 0, 30); ?>...</span>
 																		<span class="text-gray-400 fw-bold fs-7 d-block text-start ps-0"><?php echo $adesao . " | " . $cpf; ?></span>
@@ -190,6 +190,62 @@
 												</div>
 												<!--end::List widget 11-->
 											</div>
+
+											<div class="col-xl-4 w-50">
+												<!--begin::List widget 11-->
+												<div class="card h-xl-100">
+													<!--begin::Header-->
+													<div class="card pt-7 mb-3 pb-3">
+														<!--begin::Header-->
+														<div class="mx-5">
+															<div class="card-header pt-5">
+																<!--begin::Title-->
+																<h3 class="card-title align-items-start flex-column">
+																	<span class="card-label fw-bold text-dark">Suas Averbações por Dia</span>
+																	<span class="text-gray-400 mt-1 fw-semibold fs-6">Últimos 5 dias</span>
+																</h3>
+																<!--end::Title-->
+															</div>
+
+															<canvas id="graficoPropostas" width="600" height="400"></canvas>
+
+														</div>
+													</div>
+												</div>
+											</div>
+
+											<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+
+											<script>
+												const ctx = document.getElementById('graficoPropostas').getContext('2d');
+												const grafico = new Chart(ctx, {
+													type: 'bar',
+													data: {
+														labels: <?= json_encode($labels); ?>,
+														datasets: [{
+															label: 'Propostas',
+															data: <?= json_encode($dados); ?>,
+															backgroundColor: 'rgba(48, 221, 149, 0.6)',
+															borderColor: 'rgba(44, 230, 121, 1)',
+															borderWidth: 1,
+															borderRadius: 4,
+															barThickness: 40,
+														}]
+													},
+													options: {
+														responsive: true,
+														scales: {
+															y: {
+																beginAtZero: true,
+																ticks: {
+																	precision: 0
+																}
+															}
+														}
+													}
+												});
+											</script>
+
 
 
 											<!--end::Col-->
@@ -259,169 +315,170 @@
 										<!--end::Row-->
 
 
+										<?php if ($my_security->checkPermission("ADMIN")): ?>
+											<!--begin::Row-->
+											<div class="row gx-5 gx-xl-10">
+												<!--begin::Col-->
+												<div class="col-xxl-6 mb-5 mb-xl-10">
+													<!--begin::Chart widget 8-->
+													<div class="card card-flush h-xl-100">
+														<!--begin::Header-->
+														<div class="card-header pt-5">
+															<!--begin::Title-->
+															<h3 class="card-title align-items-start flex-column">
+																<span class="card-label fw-bold text-dark">Suas Averbações por Dia</span>
+																<span class="text-gray-400 mt-1 fw-semibold fs-6">Últimos 30 dias</span>
+															</h3>
+															<!--end::Title-->
+														</div>
+														<!--end::Header-->
+														<!--begin::Body-->
+														<div class="card-body pt-6">
+															<!--begin::Tab content-->
+															<div class="tab-content">
 
-										<!--begin::Row-->
-										<div class="row gx-5 gx-xl-10">
-											<!--begin::Col-->
-											<div class="col-xxl-6 mb-5 mb-xl-10">
-												<!--begin::Chart widget 8-->
-												<div class="card card-flush h-xl-100">
-													<!--begin::Header-->
-													<div class="card-header pt-5">
-														<!--begin::Title-->
-														<h3 class="card-title align-items-start flex-column">
-															<span class="card-label fw-bold text-dark">Suas Averbações por Dia</span>
-															<span class="text-gray-400 mt-1 fw-semibold fs-6">Últimos 30 dias</span>
-														</h3>
-														<!--end::Title-->
-													</div>
-													<!--end::Header-->
-													<!--begin::Body-->
-													<div class="card-body pt-6">
-														<!--begin::Tab content-->
-														<div class="tab-content">
-
-															<div class="card card-bordered">
-																<div class="card-body">
-																	<div id="kt_apexcharts_3" style="height: 350px;"></div>
+																<div class="card card-bordered">
+																	<div class="card-body">
+																		<div id="kt_apexcharts_3" style="height: 350px;"></div>
+																	</div>
 																</div>
-															</div>
 
-															<script>
-																window.addEventListener("load", function() {
-																	const el = document.getElementById("kt_apexcharts_3");
-																	if (!el) return console.log("vaco");
-																	console.log("go");
+																<script>
+																	window.addEventListener("load", function() {
+																		const el = document.getElementById("kt_apexcharts_3");
+																		if (!el) return console.log("vaco");
+																		console.log("go");
 
-																	const height = parseInt(KTUtil.css(el, "height"));
-																	const labelColor = KTUtil.getCssVariableValue("--kt-gray-500");
-																	const borderColor = KTUtil.getCssVariableValue("--kt-gray-200");
-																	const baseColor = KTUtil.getCssVariableValue("--kt-info");
-																	const lightColor = KTUtil.getCssVariableValue("--kt-info-light");
+																		const height = parseInt(KTUtil.css(el, "height"));
+																		const labelColor = KTUtil.getCssVariableValue("--kt-gray-500");
+																		const borderColor = KTUtil.getCssVariableValue("--kt-gray-200");
+																		const baseColor = KTUtil.getCssVariableValue("--kt-info");
+																		const lightColor = KTUtil.getCssVariableValue("--kt-info-light");
 
-																	const options = {
-																		series: [{
-																			name: "Averbações",
-																			data: [<?php echo $graficoAvebacoes['firstRow']->Averbacoes; ?>]
-																		}],
-																		chart: {
-																			fontFamily: "inherit",
-																			type: "area",
-																			height: height,
-																			toolbar: {
-																				show: false
-																			}
-																		},
-																		legend: {
-																			show: false
-																		},
-																		dataLabels: {
-																			enabled: false
-																		},
-																		fill: {
-																			type: "solid",
-																			opacity: 1
-																		},
-																		stroke: {
-																			curve: "smooth",
-																			show: true,
-																			width: 3,
-																			colors: [baseColor]
-																		},
-																		xaxis: {
-																			categories: [<?php echo $graficoAvebacoes['firstRow']->Datas; ?>],
-																			axisBorder: {
-																				show: false
-																			},
-																			axisTicks: {
-																				show: false
-																			},
-																			labels: {
-																				style: {
-																					colors: labelColor,
-																					fontSize: "12px"
+																		const options = {
+																			series: [{
+																				name: "Averbações",
+																				data: [<?php echo $graficoAvebacoes['firstRow']->Averbacoes; ?>]
+																			}],
+																			chart: {
+																				fontFamily: "inherit",
+																				type: "area",
+																				height: height,
+																				toolbar: {
+																					show: false
 																				}
 																			},
-																			crosshairs: {
-																				position: "front",
-																				stroke: {
-																					color: baseColor,
-																					width: 1,
-																					dashArray: 3
+																			legend: {
+																				show: false
+																			},
+																			dataLabels: {
+																				enabled: false
+																			},
+																			fill: {
+																				type: "solid",
+																				opacity: 1
+																			},
+																			stroke: {
+																				curve: "smooth",
+																				show: true,
+																				width: 3,
+																				colors: [baseColor]
+																			},
+																			xaxis: {
+																				categories: [<?php echo $graficoAvebacoes['firstRow']->Datas; ?>],
+																				axisBorder: {
+																					show: false
+																				},
+																				axisTicks: {
+																					show: false
+																				},
+																				labels: {
+																					style: {
+																						colors: labelColor,
+																						fontSize: "12px"
+																					}
+																				},
+																				crosshairs: {
+																					position: "front",
+																					stroke: {
+																						color: baseColor,
+																						width: 1,
+																						dashArray: 3
+																					}
+																				},
+																				tooltip: {
+																					enabled: true,
+																					offsetY: 0,
+																					style: {
+																						fontSize: "12px"
+																					}
+																				}
+																			},
+																			yaxis: {
+																				labels: {
+																					style: {
+																						colors: labelColor,
+																						fontSize: "12px"
+																					}
+																				}
+																			},
+																			states: {
+																				normal: {
+																					filter: {
+																						type: "none",
+																						value: 0
+																					}
+																				},
+																				hover: {
+																					filter: {
+																						type: "none",
+																						value: 0
+																					}
+																				},
+																				active: {
+																					allowMultipleDataPointsSelection: false,
+																					filter: {
+																						type: "none",
+																						value: 0
+																					}
 																				}
 																			},
 																			tooltip: {
-																				enabled: true,
-																				offsetY: 0,
 																				style: {
 																					fontSize: "12px"
-																				}
-																			}
-																		},
-																		yaxis: {
-																			labels: {
-																				style: {
-																					colors: labelColor,
-																					fontSize: "12px"
-																				}
-																			}
-																		},
-																		states: {
-																			normal: {
-																				filter: {
-																					type: "none",
-																					value: 0
+																				},
+																				y: {
+																					formatter: val => val + " propostas"
 																				}
 																			},
-																			hover: {
-																				filter: {
-																					type: "none",
-																					value: 0
+																			colors: [lightColor],
+																			grid: {
+																				borderColor: borderColor,
+																				strokeDashArray: 4,
+																				yaxis: {
+																					lines: {
+																						show: true
+																					}
 																				}
 																			},
-																			active: {
-																				allowMultipleDataPointsSelection: false,
-																				filter: {
-																					type: "none",
-																					value: 0
-																				}
+																			markers: {
+																				strokeColor: baseColor,
+																				strokeWidth: 3
 																			}
-																		},
-																		tooltip: {
-																			style: {
-																				fontSize: "12px"
-																			},
-																			y: {
-																				formatter: val => val + " propostas"
-																			}
-																		},
-																		colors: [lightColor],
-																		grid: {
-																			borderColor: borderColor,
-																			strokeDashArray: 4,
-																			yaxis: {
-																				lines: {
-																					show: true
-																				}
-																			}
-																		},
-																		markers: {
-																			strokeColor: baseColor,
-																			strokeWidth: 3
-																		}
-																	};
+																		};
 
-																	new ApexCharts(el, options).render();
-																});
-															</script>
+																		new ApexCharts(el, options).render();
+																	});
+																</script>
 
+															</div>
+															<!--end::Tab content-->
 														</div>
-														<!--end::Tab content-->
+														<!--end::Body-->
 													</div>
-													<!--end::Body-->
+													<!--end::Chart widget 8-->
 												</div>
-												<!--end::Chart widget 8-->
-											</div>
+											<?php endif; ?>
 											<!--end::Col-->
 											<!--begin::Col-->
 											<?php if ($my_security->checkPermission("ADMIN")): ?>
@@ -559,8 +616,8 @@
 											<?php endif; ?>
 
 											<!--end::Tables widget 13-->
-										</div>
-										<!--end::Col-->
+											</div>
+											<!--end::Col-->
 									</div>
 									<!--end::Row-->
 									<!--begin::Row-->

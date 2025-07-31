@@ -65,7 +65,7 @@ class Insight extends BaseController
         return $this->loadpage('insight/listar_notificacoes', $dados);
     }
 
-    public function insight_listar_propostas($idProposta ,$action)
+    public function insight_listar_propostas($idProposta, $action)
     {
         $dados['pageTitle'] = 'Propostas';
         $buscarProp = $this->getpost('buscarProp');
@@ -84,6 +84,7 @@ class Insight extends BaseController
             $statusPropostaFiltro = $this->getpost('statusPropostaFiltro', false);
             $paginas = $this->getpost('paginas', false);
             $date = $this->getpost('date', false);
+            $adesao = $this->getpost('adesao', false);
 
             Services::response()->setCookie('cpf', $cpf);
             Services::response()->setCookie('date', $date);
@@ -92,6 +93,7 @@ class Insight extends BaseController
             Services::response()->setCookie('nomeAssessor', $nomeAssessor);
             Services::response()->setCookie('statusPropostaFiltro', $statusPropostaFiltro);
             Services::response()->setCookie('paginas', $paginas);
+            Services::response()->setCookie('adesao', $adesao);
         } else {
             $cpf = $this->getpost('txtCPF', true);
             $celular = $this->getpost('celular', true);
@@ -100,6 +102,7 @@ class Insight extends BaseController
             $statusPropostaFiltro = $this->getpost('statusPropostaFiltro', true);
             $paginas = $this->getpost('paginas', true);
             $date = $this->getpost('date', true);
+            $adesao = $this->getpost('adesao', true);
         }
 
         $whereCheck = [];
@@ -112,6 +115,7 @@ class Insight extends BaseController
         if (!empty($nome)) $likeCheck['nome'] = $nome;
         if (!empty($nomeAssessor)) $likeCheck['assessor'] = $nomeAssessor;
         if (!empty($date)) $likeCheck['DATE(data_criacao)'] = $date;
+        if(!empty($adesao)) $likeCheck['adesao'] = $adesao;
 
         if ($this->session->role !== "SUPERVISOR") {
             $whereCheck["assessor"] = $this->session->nickname;
@@ -145,35 +149,96 @@ class Insight extends BaseController
     {
         $indicadores = [];
         $nickname = $this->session->nickname;
+        $userId = $this->session->userId;
 
-        $indicadores['propostas_hoje'] = $this->dbMaster->runQuery(
-            "SELECT COUNT(*) AS total 
+        if ($this->my_security->checkPermission("ADMIN")) {
+            $indicadores['propostas_hoje'] = $this->dbMaster->runQuery(
+                "SELECT COUNT(*) AS total 
+         FROM quid_propostas 
+         WHERE DATE(data_criacao) = CURDATE()"
+            )['firstRow']->total;
+
+            $indicadores['propostas_ontem'] = $this->dbMaster->runQuery(
+                "SELECT COUNT(*) AS total 
+         FROM quid_propostas 
+         WHERE DATE(data_criacao) = DATE_SUB(CURDATE(), INTERVAL 1 DAY)"
+            )['firstRow']->total;
+
+            $indicadores['propostas_7dias'] = $this->dbMaster->runQuery(
+                "SELECT COUNT(*) AS total 
+         FROM quid_propostas 
+         WHERE DATE(data_criacao) BETWEEN DATE_SUB(CURDATE(), INTERVAL 7 DAY) AND CURDATE()"
+            )['firstRow']->total;
+
+            $indicadores['propostas_30dias'] = $this->dbMaster->runQuery(
+                "SELECT COUNT(*) AS total 
+         FROM quid_propostas 
+         WHERE DATE(data_criacao) BETWEEN DATE_SUB(CURDATE(), INTERVAL 30 DAY) AND CURDATE()"
+            )['firstRow']->total;
+
+            return $indicadores;
+        }
+
+        if ($this->session->role == "SUPERVISOR" && !$this->my_security->checkPermission("ADMIN")) {
+            $indicadores['propostas_hoje'] = $this->dbMaster->runQuery(
+                "SELECT COUNT(*) AS total 
+         FROM quid_propostas 
+         WHERE DATE(data_criacao) = CURDATE() 
+           AND report_to = '{$userId}'"
+            )['firstRow']->total;
+
+            $indicadores['propostas_ontem'] = $this->dbMaster->runQuery(
+                "SELECT COUNT(*) AS total 
+         FROM quid_propostas 
+         WHERE DATE(data_criacao) = DATE_SUB(CURDATE(), INTERVAL 1 DAY) 
+           AND report_to = '{$userId}'"
+            )['firstRow']->total;
+
+            $indicadores['propostas_7dias'] = $this->dbMaster->runQuery(
+                "SELECT COUNT(*) AS total 
+         FROM quid_propostas 
+         WHERE DATE(data_criacao) BETWEEN DATE_SUB(CURDATE(), INTERVAL 7 DAY) AND CURDATE() 
+           AND report_to = '{$userId}'"
+            )['firstRow']->total;
+
+            $indicadores['propostas_30dias'] = $this->dbMaster->runQuery(
+                "SELECT COUNT(*) AS total 
+         FROM quid_propostas 
+         WHERE DATE(data_criacao) BETWEEN DATE_SUB(CURDATE(), INTERVAL 30 DAY) AND CURDATE() 
+           AND report_to = '{$userId}'"
+            )['firstRow']->total;
+
+            return $indicadores;
+        } else {
+            $indicadores['propostas_hoje'] = $this->dbMaster->runQuery(
+                "SELECT COUNT(*) AS total 
          FROM quid_propostas 
          WHERE DATE(data_criacao) = CURDATE() 
            AND assessor = '{$nickname}'"
-        )['firstRow']->total;
+            )['firstRow']->total;
 
-        $indicadores['propostas_ontem'] = $this->dbMaster->runQuery(
-            "SELECT COUNT(*) AS total 
+            $indicadores['propostas_ontem'] = $this->dbMaster->runQuery(
+                "SELECT COUNT(*) AS total 
          FROM quid_propostas 
          WHERE DATE(data_criacao) = DATE_SUB(CURDATE(), INTERVAL 1 DAY) 
            AND assessor = '{$nickname}'"
-        )['firstRow']->total;
+            )['firstRow']->total;
 
-        $indicadores['propostas_7dias'] = $this->dbMaster->runQuery(
-            "SELECT COUNT(*) AS total 
+            $indicadores['propostas_7dias'] = $this->dbMaster->runQuery(
+                "SELECT COUNT(*) AS total 
          FROM quid_propostas 
          WHERE DATE(data_criacao) BETWEEN DATE_SUB(CURDATE(), INTERVAL 7 DAY) AND CURDATE() 
            AND assessor = '{$nickname}'"
-        )['firstRow']->total;
+            )['firstRow']->total;
 
-        $indicadores['propostas_30dias'] = $this->dbMaster->runQuery(
-            "SELECT COUNT(*) AS total 
+            $indicadores['propostas_30dias'] = $this->dbMaster->runQuery(
+                "SELECT COUNT(*) AS total 
          FROM quid_propostas 
          WHERE DATE(data_criacao) BETWEEN DATE_SUB(CURDATE(), INTERVAL 30 DAY) AND CURDATE() 
            AND assessor = '{$nickname}'"
-        )['firstRow']->total;
+            )['firstRow']->total;
 
-        return $indicadores;
+            return $indicadores;
+        }
     }
 }
