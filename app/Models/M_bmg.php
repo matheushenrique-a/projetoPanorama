@@ -528,18 +528,25 @@ class M_bmg extends Model
         $adesao = $data['adesao'];
         $cpf = $data['cpf'];
         $nome = $data['nomeCliente'];
-        $assessor = $this->session->nickname;
         $produto = "Saque";
         $valor = $data['valorSaque'];
-        $telefone = $data['celular1']['ddd'] . $data['celular1']['numero'];
         $status = "Análise";
         $panorama_id = $data['panorama_id'];
-        $report_to = $this->session->report_to;
         $codigo_entidade = $data['codigo_entidade'];
         $valor_parcela = $data['valor_parcela'];
         $numero_parcela = $data['numero_parcela'];
         $matricula = $data['matricula'];
         $dataNascimento = $data['dataNascimento'];
+        $assessor = $data['assessor'];
+        $telefone = $data['telefone'];
+        $report_to = $data['report_to'];
+
+        if ($data['assessor']) {
+        } else {
+            $assessor = $this->session->nickname;
+            $telefone = $data['celular1']['ddd'] . $data['celular1']['numero'];
+            $report_to = $this->session->report_to;
+        }
 
         $this->dbMasterDefault->insert('quid_propostas', [
             "adesao" => $adesao,
@@ -603,6 +610,18 @@ class M_bmg extends Model
         GROUP BY DATE(data_criacao)
         ORDER BY data
         ";
+
+        return $this->dbMasterDefault->runQuery($sql)['result']->getResult();
+    }
+
+    public function listarAssessor()
+    {
+        $equipe = 164815; //$this->session->userId;
+
+        $sql = "
+        SELECT * 
+        FROM user_account 
+        WHERE report_to = {$equipe}";
 
         return $this->dbMasterDefault->runQuery($sql)['result']->getResult();
     }

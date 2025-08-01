@@ -158,7 +158,7 @@
 													<div class="d-flex align-items-center position-relative my-1 mx-3">
 														<div class="mb-3">
 															<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Adesão:</label>
-															<input type="text" class="form-control" placeholder="Nº Adesão" name="adesao" value="" />
+															<input type="text" class="form-control" placeholder="Nº Adesão" name="numeroAdesao" value="" />
 														</div>
 													</div>
 													<?php if ($my_security->checkPermission("SUPERVISOR")): ?>
@@ -196,15 +196,21 @@
 													<!--end::Card toolbar-->
 												</div>
 												<div class="card-title">
-													<div class="d-flex align-items-center position-relative my-1">
+													<div class="mb-0 mx-3">
+														<div class="d-flex align-items-center position-relative my-1 mt-0 mb-0">
+															<button type="submit" class="btn btn-primary mt-4 ms-3" name="buscarProp" value="buscarProp">Buscar Proposta</button>
+														</div>
+													</div>
+												</div>
+												<?php if ($my_security->checkPermission("SUPERVISOR")): ?>
+													<div class="card-title">
 														<div class="mb-0 mx-3">
 															<div class="d-flex align-items-center position-relative my-1 mt-0 mb-0">
-																<button type="submit" class="btn btn-primary" name="buscarProp" value="buscarProp">Buscar Proposta</button>
+																<a href="<?php echo assetfolder; ?>insight-listar-propostas/0/add" class="btn btn-primary mt-4 ms-3">+</a>
 															</div>
 														</div>
 													</div>
-													<!--end::Card toolbar-->
-												</div>
+												<?php endif; ?>
 											</div>
 										</form>
 										<!--end::Form-->

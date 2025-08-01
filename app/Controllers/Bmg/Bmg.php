@@ -899,6 +899,7 @@ class Bmg extends BaseController
             $numeroParcelas = (int) $this->getpost('parcelas') ?? '';
             $valorParcela = (float) $this->getpost('valorParcela') ?? '';
             $finalidadeCredito = (int) $this->getpost('finalidadeCredito') ?? 1;
+            $digitoAgencia = $this->getpost('digitoAgencia') ?? null;
 
             $dataSaque = [
                 "cpf" => $cpf,
@@ -906,7 +907,10 @@ class Bmg extends BaseController
                     'ddd' => $dddPost,
                     'numero' => $telefonePost,
                 ],
-                "agencia" => ["numero" => $agencia],
+                "agencia" => [
+                    "numero" => $agencia,
+                    "digitoVerificador" => $digitoAgencia
+                ],
                 "banco" => ["numero" => (int) $idBanco],
                 "conta" => [
                     "numero" => $conta,

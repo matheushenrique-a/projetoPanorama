@@ -14,6 +14,7 @@ use App\Models\M_integraall;
 use App\Models\M_argus;
 use App\Models\M_insight;
 use App\Models\M_seguranca;
+use App\Models\M_bmg;
 
 class Insight extends BaseController
 {
@@ -25,6 +26,7 @@ class Insight extends BaseController
     protected $m_argus;
     protected $m_security;
     protected $m_insight;
+    protected $m_bmg;
 
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
     {
@@ -40,9 +42,8 @@ class Insight extends BaseController
         $this->m_argus =  new M_argus();
         $this->m_security = new M_seguranca();
         $this->m_insight = new M_insight();
+        $this->m_bmg = new M_bmg();
     }
-
-
 
     public function load_notifications()
     {
@@ -75,6 +76,57 @@ class Insight extends BaseController
             return redirect()->to(urlInstitucional . 'insight-listar-propostas/0/0');
         }
 
+        if ($action == "add") {
+            $dados['pageTitle'] = 'Adicionar proposta';
+
+            $nomes = [];
+
+            $assessores = $this->m_bmg->listarAssessor();
+
+            foreach ($assessores as $assessor) {
+                $nomes[] = $assessor->nickname;
+            }
+
+            $dados['assessores'] = $assessores;
+
+            return $this->loadpage('insight/insight_incluir_proposta', $dados);
+        }
+
+        if ($action == "incluir") {
+            $assessor = $this->getpost("assessor");
+            $cpf = $this->getpost("cpf");
+            $adesao = $this->getpost("adesao");
+            $idPanorama = $this->getpost("idPanorama");
+            $codigoEntidade = $this->getpost("codigoEntidade");
+            $matricula = $this->getpost("matricula");
+            $nomeCliente = $this->getpost("nomeCliente");
+            $dataNascimento = $this->getpost("dataNascimento");
+            $ddd = $this->getpost("ddd");
+            $telefone = $this->getpost("telefone");
+            $valorSaque = $this->getpost("valorSaque");
+            $valorParcela = $this->getpost("valorParcela");
+            $parcelas = $this->getpost("parcelas");
+            $report_to = $this->session->userId;
+
+            $data['adesao'] = $adesao;
+            $data['cpf'] = $cpf;
+            $data['assessor'] = $assessor;
+            $data['valorSaque'] = $valorSaque;
+            $data['panorama_id'] = $idPanorama;
+            $data['codigo_entidade'] = $codigoEntidade;
+            $data['matricula'] = $matricula;
+            $data['valor_parcela'] = $valorParcela;
+            $data['numero_parcela'] = $parcelas;
+            $data['report_to'] = $report_to;
+            $data['nomeCliente'] = $nomeCliente;
+            $data['dataNascimento'] = $dataNascimento;
+            $data['telefone'] = $ddd . $telefone;
+
+            $salvar = $this->m_bmg->gravar_proposta_bmg_database($data);
+
+            return redirect()->to(urlInstitucional . 'insight-listar-propostas/0/0');
+        }
+
         if (!empty($buscarProp)) {
             helper('cookie');
             $cpf = $this->getpost('txtCPF', false);
@@ -84,7 +136,7 @@ class Insight extends BaseController
             $statusPropostaFiltro = $this->getpost('statusPropostaFiltro', false);
             $paginas = $this->getpost('paginas', false);
             $date = $this->getpost('date', false);
-            $adesao = $this->getpost('adesao', false);
+            $adesao = $this->getpost('numeroAdesao', false);
 
             Services::response()->setCookie('cpf', $cpf);
             Services::response()->setCookie('date', $date);
@@ -93,7 +145,7 @@ class Insight extends BaseController
             Services::response()->setCookie('nomeAssessor', $nomeAssessor);
             Services::response()->setCookie('statusPropostaFiltro', $statusPropostaFiltro);
             Services::response()->setCookie('paginas', $paginas);
-            Services::response()->setCookie('adesao', $adesao);
+            Services::response()->setCookie('numeroAdesao', $adesao);
         } else {
             $cpf = $this->getpost('txtCPF', true);
             $celular = $this->getpost('celular', true);
@@ -102,7 +154,7 @@ class Insight extends BaseController
             $statusPropostaFiltro = $this->getpost('statusPropostaFiltro', true);
             $paginas = $this->getpost('paginas', true);
             $date = $this->getpost('date', true);
-            $adesao = $this->getpost('adesao', true);
+            $adesao = $this->getpost('numeroAdesao', true);
         }
 
         $whereCheck = [];
@@ -115,7 +167,7 @@ class Insight extends BaseController
         if (!empty($nome)) $likeCheck['nome'] = $nome;
         if (!empty($nomeAssessor)) $likeCheck['assessor'] = $nomeAssessor;
         if (!empty($date)) $likeCheck['DATE(data_criacao)'] = $date;
-        if(!empty($adesao)) $likeCheck['adesao'] = $adesao;
+        if (!empty($adesao)) $likeCheck['adesao'] = $adesao;
 
         if ($this->session->role !== "SUPERVISOR") {
             $whereCheck["assessor"] = $this->session->nickname;

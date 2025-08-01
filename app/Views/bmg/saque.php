@@ -99,8 +99,8 @@
                                                             }
                                                             ?>
 
-                                                            <?php if ($temCartaoDisponivel): ?>
 
+                                                            <?php if ($temCartaoDisponivel): ?>
                                                                 <div class="input-group">
                                                                     <h3 class="ms-2 mt-8" id="lblInfo">Dados Cliente:</h3>
                                                                 </div>
@@ -177,10 +177,12 @@
                                                                 </div>
                                                                 <div id="dadosBancarios">
                                                                     <div class="input-group">
-                                                                        <span class="input-group-text" style="width: 155px">Banco</span>
+                                                                        <span class="input-group-text" style="width: 68px">Banco</span>
                                                                         <input type="text" class="form-control fs-3 fw-bold" placeholder="" name="idBanco" id="idBanco" style="width: 35px" required />
-                                                                        <span class="input-group-text" style="width: 155px">Agência</span>
+                                                                        <span class="input-group-text" style="width: 79px">Agência</span>
                                                                         <input type="text" class="form-control fs-3 fw-bold" placeholder="" name="agencia" id="agencia" style="width: 35px" required />
+                                                                        <span class="input-group-text" style="width: 65px">Digito</span>
+                                                                        <input type="text" class="form-control fs-3 fw-bold" placeholder="" name="digitoAgencia" id="digitoAgencia" style="width: 35px" />
                                                                     </div>
                                                                     <div class="input-group">
                                                                         <span class="input-group-text">Conta</span>
@@ -212,6 +214,7 @@
                                                                 <div class="d-flex align-items-center position-relative mt-6 mb-0">
                                                                     <button type="submit" class="btn btn-success" name="btnSaque" id="btnSalvarProposta" value="salvar">Enviar Proposta</button>
                                                                 </div>
+
                                                             <?php endif; ?>
                                                         </div>
                                                     </div>
