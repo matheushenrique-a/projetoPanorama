@@ -754,6 +754,13 @@ class Bmg extends BaseController
         $especie = $params['especie'] ?? '';
         $nomeCliente = $params['nomeCliente'];
         $dataNascimento = $params['dataNascimento'] ?? '';
+        $codigoEntidade = $params['codigoEntidade'];
+
+        if($codigoEntidade !== "164"){
+            $produto = "INSS";
+        } else {
+            $produto = "SIAPE";
+        }
 
         $ddd = $params['celular1']['ddd'];
         $numero = $params['celular1']['numero'];
@@ -775,7 +782,7 @@ class Bmg extends BaseController
             'TABELA' => $planoName,
             'DATA_CADASTRO' => date('d/m/Y H:i:s'),
             'BANCO' => 'BMG',
-            'PRODUTO' => 'INSS',
+            'PRODUTO' => $produto,
             'PRAZO' => $prazo,
             'PARCELA' => $parcelas,
             'EMPRESTIMO' => $valorPlano,
@@ -880,12 +887,12 @@ class Bmg extends BaseController
             $valorParcela = $obtemValorParcela[0]->valorParcela;
 
             return redirect()->to(urlInstitucional . 'bmg-saque/0')
-            ->with('contaInterna', $contaInterna)
-            ->with('matricula', $matricula)
-            ->with('valorParcela', $valorParcela)
-            ->with('valorSaque', $valorSaqueMaximo)
-            ->with('cpfDigitado', $cpf)
-            ->with('cardData', $cardData);
+                ->with('contaInterna', $contaInterna)
+                ->with('matricula', $matricula)
+                ->with('valorParcela', $valorParcela)
+                ->with('valorSaque', $valorSaqueMaximo)
+                ->with('cpfDigitado', $cpf)
+                ->with('cardData', $cardData);
         }
 
         if ($this->getpost('btnSaque') === 'salvar') {
@@ -934,6 +941,7 @@ class Bmg extends BaseController
                 'especie' => $this->getpost('especie'),
                 'adesao' => $returnData,
                 'dataNascimento' => $this->getpost('dataNascimento'),
+                'codigoEntidade' => $codigoEntidade
             ];
 
 
@@ -953,13 +961,18 @@ class Bmg extends BaseController
                     'valorParcela' => $valorParcela,
                     'quantidadeParcelas' => $numeroParcelas,
                     'nomeCliente' => $this->getpost('nomeCliente'),
-                    'panorama_id' => $propostaPanorama['proposta']
+                    'panorama_id' => $propostaPanorama['proposta'],
+                    'codigo_entidade' => $codigoEntidade,
+                    'valor_parcela' => $valorParcela,
+                    'numero_parcela' => $numeroParcelas,
+                    'matricula' => $matricula,
+                    'dataNascimento' => $this->getpost('dataNascimento')
                 ];
 
                 $this->m_bmg->gravar_proposta_bmg_database($database);
             }
 
-            return redirect()->to(urlInstitucional . 'bmg-saque/0')->with('sucesso', $propostaPanorama['mensagem'] . " " . $returnData);
+            return redirect()->to(urlInstitucional . 'bmg-saque/0')->with('sucesso', $propostaPanorama['mensagem'] . " " . $returnData)->with('panoramaId', $propostaPanorama['proposta'])->with('numeroAdesao', $returnData);
         }
 
         if ($this->getpost('btnSaque') === 'consultar') {
@@ -1008,7 +1021,8 @@ class Bmg extends BaseController
         $dados['cardData'] = $returnData;
 
         if (isset($returnData->erro) && $returnData->erro) {
-            return redirect()->to(urlInstitucional . 'bmg-saque/0')->with('erro', $returnData->mensagem);
+            return redirect()->to(urlInstitucional . 'bmg-saque/0')->with('erro', $returnData->mensagem)
+                ->with('codigoEntidade', $entidade);
         }
 
         if (isset($returnData->cartoes[0]->limite->valorSaqueMaximo) && count($returnData->cartoes) == 1) {
@@ -1028,10 +1042,10 @@ class Bmg extends BaseController
                 ->with('cardData', $returnData)
                 ->with('cpfDigitado', $cpf)
                 ->with('valorParcela', $valorParcela)
-                ->with('codigoEntidade', $entidade)
                 ->with('matricula', $matricula)
                 ->with('contaInterna', $contaInterna)
-                ->with('valorSaque', $valorMaximo);
+                ->with('valorSaque', $valorMaximo)
+                ->with('codigoEntidade', $entidade);
         } elseif (isset($returnData->cartoes) && count($returnData->cartoes) > 1) {
             return redirect()->to(urlInstitucional . 'bmg-saque/0')
                 ->with('cardData', $returnData)
@@ -1040,7 +1054,8 @@ class Bmg extends BaseController
         } else {
             return redirect()->to(urlInstitucional . 'bmg-saque/0')
                 ->with('cardData', $returnData)
-                ->with('cpfDigitado', $cpf);
+                ->with('cpfDigitado', $cpf)
+                ->with('codigoEntidade', $entidade);
         }
     }
 

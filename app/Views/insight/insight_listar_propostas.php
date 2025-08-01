@@ -217,9 +217,9 @@
 												<!--begin::Table head-->
 												<thead>
 													<!--begin::Table row-->
-													<tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
+													<tr class="text-start text-gray-800 fw-bold fs-7 text-uppercase gs-0">
 														<th class="min-w-25px">Data</th>
-														<th data-sortable="false" class="min-w-50">Adesão</th>
+														<th data-sortable="false" class="min-w-50">Adesão | Entidade</th>
 														<th data-sortable="false" class="min-w-200px">Cliente | Assessor</th>
 														<th data-sortable="false" class="min-w-100px">CPF</th>
 														<th data-sortable="false" class="min-w-25">Celular</th>
@@ -241,8 +241,11 @@
 															<td>
 																<?php echo date('d/m/Y', strtotime($row->data_criacao)); ?>
 															</td>
-															<td>
-																<?php echo $row->adesao; ?>
+															<td class="text-gray-800">
+																<?php echo $row->adesao; ?> </br>
+																<p class="text-gray-500 fw-bold fs-8">
+																	<?php echo $row->codigo_entidade; ?>
+																</p>
 															</td>
 
 															<!--begin::NOME-->
@@ -260,10 +263,9 @@
 															</td>
 															<!--begin::DATA CRIACAO=-->
 
-
 															<!--begin::FASE-->
 															<td class="text-success">
-																R$ <?php echo $row->valor; ?>
+																<?php echo 'R$ ' . number_format($row->valor, 2, ',', '.') ?>
 															</td>
 															<td class="text-primary">
 																<?php echo $row->produto ?>

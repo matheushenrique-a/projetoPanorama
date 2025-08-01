@@ -53,17 +53,29 @@ class Home extends BaseController
         $dados['pageTitle'] = "Insight Home";
 
         $resultados = $this->m_bmg->countPropostasPorDia();
+        $resultadosEquipe = $this->m_bmg->countPropostasPorDiaEquipe();
 
         $labels = [];
         $valores = [];
 
         foreach ($resultados as $row) {
-            $labels[] = date('d/m', strtotime($row->data)); // ex: "31/07"
+            $labels[] = date('d/m', strtotime($row->data)); 
             $valores[] = (int)$row->total;
+        }
+
+        $labelsEquipe = [];
+        $valoresEquipe = [];
+
+        foreach ($resultadosEquipe as $row) {
+            $labelsEquipe[] = date('d/m', strtotime($row->data));
+            $valoresEquipe[] = (int)$row->total;
         }
 
         $dados['labels'] = $labels;
         $dados['dados'] = $valores;
+
+        $dados['labelsEquipe'] = $labelsEquipe;
+        $dados['dadosEquipe'] = $valoresEquipe;
 
         $htmlNotificacoes = $this->m_insight->gerarTimelineNotificacoes();
         $ultimasLigacoes = $this->m_argus->ultimasLigacoes(8);

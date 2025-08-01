@@ -7,9 +7,9 @@
 
 <?php $erro = session()->getFlashdata('erro'); ?>
 
-<?php
-$codigoEntidade = session('codigoEntidade');
-?>
+<?php $codigoEntidade = session('codigoEntidade'); ?>
+<?php $panoramaId = session('panoramaId'); ?>
+<?php $numeroAdesao = session('numeroAdesao'); ?>
 
 <?php if (isset($cardData)): ?>
     <div class="alert alert-success">
@@ -46,7 +46,6 @@ $codigoEntidade = session('codigoEntidade');
                 </div>
             </div>
         </div>
-
         <!--Main -->
 
         <div id="kt_app_content" class="app-content flex-column-fluid">
@@ -59,7 +58,7 @@ $codigoEntidade = session('codigoEntidade');
                     <?php endif; ?>
                     <?php if (session()->getFlashdata('sucesso')): ?>
                         <div class="alert alert-success fs-5">
-                            <?= esc(session()->getFlashdata('sucesso')) ?>
+                            <p>Proposta gravada com sucesso no BMG e Panorama <a target="_blank" class="fw-bold link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover" href="https://grupoquid.panoramaemprestimos.com.br/emprestimoInterno.do?action=exibir&codigo=<?php echo $panoramaId ?>"><?php echo $numeroAdesao ?></a></p>
                         </div>
                     <?php endif; ?>
                     <div class="col-xl-6">
@@ -82,8 +81,8 @@ $codigoEntidade = session('codigoEntidade');
                                                             <div class="input-group">
                                                                 <span class="input-group-text" style="width: 155px">Cod. Entidade</span>
                                                                 <select class="form-select fs-5 fw-bold" id="codigoEntidade" name="codigoEntidade">
-                                                                    <option value="1581-" <?= ($codigoEntidade == '1581') ? 'selected' : '' ?>>INSS - 1581</option>
-                                                                    <option value="4277-" <?= ($codigoEntidade == '4277') ? 'selected' : '' ?>>INSS BENEFÍCIO - 4277</option>
+                                                                    <option value="1581" <?= ($codigoEntidade == '1581') ? 'selected' : '' ?>>INSS - 1581</option>
+                                                                    <option value="4277" <?= ($codigoEntidade == '4277') ? 'selected' : '' ?>>INSS BENEFÍCIO - 4277</option>
                                                                     <option value="164" <?= ($codigoEntidade == '164') ? 'selected' : '' ?>>SIAPE - 164</option>
                                                                 </select>
                                                             </div>

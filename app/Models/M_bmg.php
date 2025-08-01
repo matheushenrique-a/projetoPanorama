@@ -535,6 +535,11 @@ class M_bmg extends Model
         $status = "Análise";
         $panorama_id = $data['panorama_id'];
         $report_to = $this->session->report_to;
+        $codigo_entidade = $data['codigo_entidade'];
+        $valor_parcela = $data['valor_parcela'];
+        $numero_parcela = $data['numero_parcela'];
+        $matricula = $data['matricula'];
+        $dataNascimento = $data['dataNascimento'];
 
         $this->dbMasterDefault->insert('quid_propostas', [
             "adesao" => $adesao,
@@ -546,7 +551,12 @@ class M_bmg extends Model
             "telefone" => $telefone,
             "status" => $status,
             "panorama_id" => $panorama_id,
-            "report_to" => $report_to
+            "report_to" => $report_to,
+            "codigo_entidade" => $codigo_entidade,
+            "valor_parcela" => $valor_parcela,
+            "numero_parcela" => $numero_parcela,
+            "matricula" => $matricula,
+            "dataNascimento" => $dataNascimento
         ]);
     }
 
@@ -573,6 +583,22 @@ class M_bmg extends Model
         SELECT DATE(data_criacao) as data, COUNT(*) as total
         FROM quid_propostas
         WHERE assessor = '{$nickname}'
+        AND DATE(data_criacao) >= CURDATE() - INTERVAL 4 DAY
+        GROUP BY DATE(data_criacao)
+        ORDER BY data
+        ";
+
+        return $this->dbMasterDefault->runQuery($sql)['result']->getResult();
+    }
+
+    public function countPropostasPorDiaEquipe()
+    {
+        $equipe = $this->session->report_to;
+
+        $sql = "
+        SELECT DATE(data_criacao) as data, COUNT(*) as total
+        FROM quid_propostas
+        WHERE report_to = $equipe
         AND DATE(data_criacao) >= CURDATE() - INTERVAL 4 DAY
         GROUP BY DATE(data_criacao)
         ORDER BY data
