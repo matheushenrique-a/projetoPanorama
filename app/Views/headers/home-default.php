@@ -59,6 +59,7 @@
 
 											<?php if (!$my_security->checkPermission("SUPERVISOR")): ?>
 
+
 												<!--begin::Col-->
 												<div class="col-xl-4 w-50">
 													<!--begin::List widget 11-->
@@ -148,6 +149,8 @@
 
 															<?php
 
+
+
 															foreach ($ultimasPropostasBMG["result"]->getResult() as $row) {
 																$nomeCliente = $row->nome;
 																$cpf = $row->cpf;
@@ -155,7 +158,14 @@
 																$valor = $row->valor;
 																$data_criacao = $row->data_criacao;
 																$telefone = formatarTelefone($row->telefone);
-																$panorama_id = $row->panorama_id
+																$panorama_id = $row->panorama_id;
+
+																$status = match ($row->status) {
+																	"Análise"   => "info",
+																	"Aprovada"  => "success",
+																	"Cancelada" => "danger",
+																	default     => "secondary"
+																};
 
 															?>
 
@@ -172,6 +182,7 @@
 																	<div class="text-gray-400 fw-bolder fs-7 text-end">
 																		<span class="text-gray-800 fw-bolder fs-6 d-block"><a href="#" class="text-gray-800 text-hover-info"><u><?php echo $telefone; ?></u></a></span>
 																		<span class="text-gray-400 fw-bold fs-7 d-block text-start ps-0"><?php echo time_elapsed_string($data_criacao); ?></span>
+																		<span class="badge badge-light-<?php echo $status ?> fs-6"><?= $row->status ?></span>
 																	</div>
 																</div>
 																<div class="d-flex flex-stack">
@@ -191,7 +202,6 @@
 													</div>
 													<!--end::List widget 11-->
 												</div>
-
 
 
 												<div class="col-xl-4 w-50">
@@ -216,11 +226,75 @@
 													</div>
 												</div>
 
+												<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+												<?php if ($my_security->checkPermission("ADMIN")): ?>
+													<div class="col-xl-4 w-50">
+														<!--begin::List widget 11-->
+														<div class="card h-xl-100">
+															<div class="card-header pt-5 pb-3">
+																<!--begin::Title-->
+																<h3 class="card-title align-items-start flex-column">
+																	<span class="card-label fw-bold text-dark">Gráfico Mensal</span>
+																	<span class="text-gray-400 mt-1 fw-semibold fs-6">Mês atual</span>
+																</h3>
+																<!--end::Title-->
+															</div>
+															<!--begin::Header-->
+															<div class="card pt-7 mb-3 pb-3">
+
+																<!--begin::Header-->
+																<div class="d-flex justify-content-center mt-2" style="width: 400px; margin: 0 auto;">
+																	<canvas id="meuGraficoPizza" style="max-width: 100%;"></canvas>
+																</div>
+															</div>
+														</div>
+													</div>
+
+												<?php endif; ?>
+
+
+												<script>
+													const ctx3 = document.getElementById('meuGraficoPizza').getContext('2d');
+
+													const meuGraficoPizza = new Chart(ctx3, {
+														type: 'pie',
+														data: {
+															labels: ['Análise', 'Aprovadas', 'Canceladas', 'Pendente'],
+															datasets: [{
+																label: 'Quantidade',
+																data: [10, 5, 8, 8],
+																backgroundColor: [
+																	'#7d39ccff',
+																	'#3fcc69ff',
+																	'#dd4538ff',
+																	'#ebe846ff'
+																],
+																borderWidth: 1,
+																borderColor: '#a3a3a3ff'
+															}]
+														},
+														options: {
+															responsive: true,
+															plugins: {
+																legend: {
+																	position: 'bottom',
+																	labels: {
+																		usePointStyle: true, // círculos ao invés de quadrados
+																		boxWidth: 12, // tamanho do ícone
+																		padding: 20 // espaço entre legendas
+																	}
+																}
+															}
+														}
+													});
+												</script>
+
 											<?php endif; ?>
 
 											<?php if ($my_security->checkPermission("SUPERVISOR")): ?>
 												<div class="col-xl-4 w-50">
-													<!--begin::List widget 11-->
+													<!--begin::LisFt widget 11-->
 													<div class="card h-xl-100">
 														<div class="card-header pt-5 pb-3">
 															<!--begin::Title-->
@@ -308,79 +382,59 @@
 
 												<!-- ADICIONAR -->
 												<div class="col-xl-4 w-50">
-													<!--begin::Tables widget 14-->
-													<div class="card card-flush h-md-100">
-														<!--begin::Header-->
+													<div class="card card-flush h-md-100 shadow-sm">
 														<div class="card-header pt-7">
-															<!--begin::Title-->
 															<h3 class="card-title align-items-start flex-column">
-																<span class="card-label fw-bold text-gray-800">Progresso de Equipe</span>
-																<span class="text-gray-400 mt-1 fw-semibold fs-6">Updated 37 minutes ago</span>
+																<span class="card-label fw-bold text-dark fs-4">Progresso de Equipe</span>
+																<span class="text-muted mt-1 fw-semibold fs-7">Atualizado há 37 minutos</span>
 															</h3>
 														</div>
-														<!--end::Header-->
-														<!--begin::Body-->
+
 														<div class="card-body pt-6">
-															<!--begin::Table container-->
 															<div class="table-responsive">
-																<!--begin::Table-->
-																<table class="table table-row-dashed align-middle gs-0 gy-3 my-0">
-																	<!--begin::Table head-->
-																	<thead>
-																		<tr class="fs-7 fw-bold text-gray-400 border-bottom-0">
-																			<th class="p-0 pb-3">COLOCAÇÃO</th>
-																			<th class="p-0 pb-3">ASSESSOR</th>
-																			<th class="p-0 text-center pb-3">QUANTIDADE</th>
+																<table class="table align-middle table-striped table-hover">
+																	<thead class="bg-light">
+																		<tr class="fw-bold text-muted">
+																			<th class="ps-3">#</th>
+																			<th>Assessor</th>
+																			<th class="text-center">Quantidade</th>
 																		</tr>
 																	</thead>
-
 																	<tbody>
 																		<tr>
 																			<td>
-																				<p class="badge badge-square badge-success text-center p-4 fs-5">1</p>
+																				<span class="badge bg-success fs-6 rounded-circle px-3 py-2">1</span>
 																			</td>
 																			<td>
-																				<span class="text-gray-800 fw-bold text-hover-primary mb-1 fs-6">STEFANI RUTE</span>
+																				<span class="text-dark fw-bold fs-6">STEFANI RUTE</span>
 																			</td>
-																			<td class="text-end pe-0">
-																				<p class="alert alert-dismissible bg-primary text-center mx-auto p-2 w-25">5</p>
+																			<td class="text-center">
+																				<span class="badge bg-primary fs-6 px-3 py-2">5</span>
 																			</td>
 																		</tr>
 																		<tr>
 																			<td>
-																				<p class="badge badge-square badge-secondary text-center p-4 fs-5">2</p>
+																				<span class="badge bg-warning fs-6 rounded-circle px-3 py-2">2</span>
 																			</td>
 																			<td>
-																				<span class="text-gray-800 fw-bold text-hover-primary mb-1 fs-6">JOÃO VICTOR</span>
+																				<span class="text-dark fw-bold fs-6">JOÃO SILVA</span>
 																			</td>
-																			<td class="text-end pe-0">
-																				<p class="alert alert-dismissible bg-primary text-center mx-auto p-2 w-25">4</p>
+																			<td class="text-center">
+																				<span class="badge bg-primary fs-6 px-3 py-2">4</span>
 																			</td>
 																		</tr>
 																		<tr>
 																			<td>
-																				<p class="badge badge-square badge-secondary text-center p-4 fs-5">3</p>
+																				<span class="badge bg-secondary fs-6 rounded-circle px-3 py-2">3</span>
 																			</td>
 																			<td>
-																				<span class="text-gray-800 fw-bold text-hover-primary mb-1 fs-6">ANA AMÉLIA</span>
+																				<span class="text-dark fw-bold fs-6">MARIA OLIVEIRA</span>
 																			</td>
-																			<td class="text-end pe-0">
-																				<p class="alert alert-dismissible bg-primary text-center mx-auto p-2 w-25">3</p>
-																			</td>
-																		</tr>
-																		<tr>
-																			<td>
-																				<p class="badge badge-square badge-secondary text-center p-4 fs-5">4</p>
-																			</td>
-																			<td>
-																				<span class="text-gray-800 fw-bold text-hover-primary mb-1 fs-6">ANA CLARA</span>
-																			</td>
-																			<td class="text-end pe-0">
-																				<p class="alert alert-dismissible bg-primary text-center mx-auto p-2 w-25">1</p>
+																			<td class="text-center">
+																				<span class="badge bg-primary fs-6 px-3 py-2">3</span>
 																			</td>
 																		</tr>
 																	</tbody>
-																	<!--end::Table body-->
 																</table>
 															</div>
 															<!--end::Table-->

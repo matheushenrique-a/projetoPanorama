@@ -215,6 +215,10 @@
 										</form>
 										<!--end::Form-->
 										<!--end::Card header-->
+
+
+
+
 										<!--begin::Card body-->
 										<div class="card-body p-10 table-responsive">
 											<!--begin::Table-->
@@ -224,11 +228,11 @@
 												<thead>
 													<!--begin::Table row-->
 													<tr class="text-start text-gray-800 fw-bold fs-7 text-uppercase gs-0">
+														<th class="min-w-25px">Status</th>
 														<th class="min-w-25px">Data</th>
 														<th data-sortable="false" class="min-w-50">Adesão | Entidade</th>
 														<th data-sortable="false" class="min-w-200px">Cliente | Assessor</th>
 														<th data-sortable="false" class="min-w-100px">CPF</th>
-														<th data-sortable="false" class="min-w-25">Celular</th>
 														<th data-sortable="false" class="min-w-50">Valor</th>
 														<th data-sortable="false" class="min-w-25px">Produto</th>
 														<th data-sortable="false" class="min-w-50px">Ver</th>
@@ -238,65 +242,121 @@
 												<!--end::Table head-->
 												<!--begin::Table body-->
 												<tbody class="text-gray-700 fw-semibold">
+													<?php foreach ($propostas['result']->getResult() as $row):
+														$status = match ($row->status) {
+															"Análise"   => "info",
+															"Aprovada"  => "success",
+															"Cancelada" => "danger",
+															"Pendente"  => "warning",
+															default     => "secondary"
+														};
 
-													<?php
-													foreach ($propostas['result']->getResult() as $row) {
+														$modalId = "modal_proposta_" . $row->idquid_propostas;
 													?>
+														<!-- Modal exclusivo dessa proposta -->
+														<div class="modal fade" tabindex="-1" id="<?= $modalId ?>">
+															<div class="modal-dialog modal-dialog-centered">
+																<div class="modal-content">
+																	<form action="<?= assetfolder; ?>insight-listar-propostas/0/alterar-status" method="POST">
+																		<div class="modal-header">
+																			<h3 class="modal-title">Proposta <?= $row->adesao ?></h3>
+																			<div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Fechar">
+																				<i class="bi bi-x-lg fs-2"></i>
+																			</div>
+																		</div>
+
+																		<div class="modal-body">
+																			<p><strong>Nome:</strong> <?= $row->nome ?></p>
+																			<p><strong>CPF:</strong> <?= $row->cpf ?></p>
+																			<p><strong>Produto:</strong> <?= $row->produto ?></p>
+																			<p><strong>Valor:</strong> R$ <?= number_format($row->valor, 2, ',', '.') ?></p>
+																			<p><strong>Parcela:</strong> R$ <?= number_format((float)$row->valor_parcela, 2, ',', '.') ?></p>
+
+
+																			<div class="mt-8">
+																				<label for="status_<?= $row->idquid_propostas ?>" class="form-label">Alterar Status</label>
+																				<select class="form-select" id="status_<?= $row->idquid_propostas ?>" name="status">
+																					<option value="Análise" <?= $row->status == 'Análise' ? 'selected' : '' ?>>Análise</option>
+																					<option value="Aprovada" <?= $row->status == 'Aprovada' ? 'selected' : '' ?>>Aprovada</option>
+																					<option value="Cancelada" <?= $row->status == 'Cancelada' ? 'selected' : '' ?>>Cancelada</option>
+																					<option value="Pendente" <?= $row->status == 'Pendente' ? 'selected' : '' ?>>Pendente</option>
+																				</select>
+																			</div>
+																			<input type="hidden" name="id" value="<?= $row->idquid_propostas ?>">
+																		</div>
+
+																		<div class="modal-footer justify-content-between">
+																			<div>
+																				<button type="button" class="btn btn-danger d-flex align-items-center gap-2" onclick="confirmarExclusao('<?= $row->idquid_propostas ?>')">
+																					<i class="bi bi-trash fs-5 text-white"></i>
+																					<span class="text-white fw-semibold">Excluir Proposta</span>
+																				</button>
+																			</div>
+
+																			<div class="d-flex gap-2 ms-auto">
+																				<button type="submit" class="btn btn-primary">Salvar Alterações</button>
+																			</div>
+																		</div>
+																	</form>
+																</div>
+															</div>
+														</div>
 
 														<tr>
-															<td>
-																<?php echo date('d/m/Y', strtotime($row->data_criacao)); ?>
-															</td>
+															<td><span class="badge badge-light-<?= $status ?> fs-6"><?= $row->status ?></span></td>
+															<td><?= date('d/m/Y', strtotime($row->data_criacao)); ?></td>
 															<td class="text-gray-800">
-																<?php echo $row->adesao; ?> </br>
-																<p class="text-gray-500 fw-bold fs-8">
-																	<?php echo $row->codigo_entidade; ?>
+																<p style="cursor:pointer; <?= !$my_security->checkPermission("SUPERVISOR") ? 'pointer-events: none;' : '' ?>" class="m-0 p-0" data-bs-toggle="modal" data-bs-target="#<?= $modalId ?>">
+																	<?= $row->adesao; ?>
 																</p>
+																<p class="text-gray-500 fw-bold fs-8"><?= $row->codigo_entidade; ?></p>
 															</td>
-
-															<!--begin::NOME-->
 															<td class="d-flex flex-column">
-																<?php echo $row->nome; ?>
-																<P class="text-gray-500 fw-bold fs-8"><?php echo $row->assessor ?></P>
+																<?= $row->nome; ?>
+																<p class="text-gray-500 fw-bold fs-8"><?= $row->assessor ?></p>
 															</td>
-															<!--begin::VALORES-->
+															<td><?= $row->cpf; ?></td>
+															<td class="text-success">R$ <?= number_format($row->valor, 2, ',', '.') ?></td>
+															<td class="text-primary"><?= $row->produto ?></td>
 															<td>
-																<?php echo $row->cpf; ?>
+																<a target="_blank" href="https://grupoquid.panoramaemprestimos.com.br/emprestimoInterno.do?action=exibir&codigo=<?= $row->panorama_id ?>" class="btn btn-sm btn-icon btn-bg-light btn-active-color-primary w-25px h-25px">
+																	<span class="svg-icon svg-icon-5 svg-icon-gray-700">
+																		<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+																			<path d="M14.4 11H3C2.4 11 2 11.4 2 12C2 12.6 2.4 13 3 13H14.4V11Z" fill="currentColor" />
+																			<path opacity="0.3" d="M14.4 20V4L21.7 11.3C22.1 11.7 22.1 12.3 21.7 12.7L14.4 20Z" fill="currentColor" />
+																		</svg>
+																	</span>
+																</a>
 															</td>
-															<!--begin::TELEFONE=-->
-															<td>
-																<?php echo formatarTelefone($row->telefone); ?>
-															</td>
-															<!--begin::DATA CRIACAO=-->
-
-															<!--begin::FASE-->
-															<td class="text-success">
-																<?php echo 'R$ ' . number_format($row->valor, 2, ',', '.') ?>
-															</td>
-															<td class="text-primary">
-																<?php echo $row->produto ?>
-															</td>
-															<!--begin::OPERADOR-->
-															<td>
-																<div>
-																	<a target="_blank" href="https://grupoquid.panoramaemprestimos.com.br/emprestimoInterno.do?action=exibir&codigo=<?php echo $row->panorama_id ?>" class="btn btn-sm btn-icon btn-bg-light btn-active-color-primary w-25px h-25px">
-																		<span class="svg-icon svg-icon-5 svg-icon-gray-700">
-																			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-																				<path d="M14.4 11H3C2.4 11 2 11.4 2 12C2 12.6 2.4 13 3 13H14.4V11Z" fill="currentColor" />
-																				<path opacity="0.3" d="M14.4 20V4L21.7 11.3C22.1 11.7 22.1 12.3 21.7 12.7L14.4 20Z" fill="currentColor" />
-																			</svg>
-																		</span>
-																	</a>
-																</div>
-															</td>
-															<?php if ($my_security->checkPermission("ADMIN")): ?>
-																<td><a href="<?php echo assetfolder; ?>insight-listar-propostas/<?php echo $row->idquid_propostas; ?>/remove"><i class="text-danger bi bi-trash"></i></a></td>
-															<?php endif; ?>
 														</tr>
-													<?php }; ?>
+													<?php endforeach; ?>
+
 												</tbody>
-												<!--end::Table body-->
 											</table>
+
+											<!-- SweetAlert2 -->
+											<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+											<script>
+												function confirmarExclusao(id) {
+													Swal.fire({
+														title: 'Tem certeza?',
+														text: 'Você realmente deseja excluir esta proposta?',
+														icon: 'warning',
+														showCancelButton: true,
+														confirmButtonColor: '#d33',
+														cancelButtonColor: '#3085d6',
+														confirmButtonText: 'Sim, excluir',
+														cancelButtonText: 'Cancelar'
+													}).then((result) => {
+														if (result.isConfirmed) {
+															window.location.href = "<?= assetfolder; ?>insight-listar-propostas/" + id + "/remove";
+														}
+													});
+												}
+											</script>
+
+
+
 											<!--end::Table-->
 										</div>
 										<!--end::Card body-->

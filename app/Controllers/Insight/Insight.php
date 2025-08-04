@@ -92,6 +92,28 @@ class Insight extends BaseController
             return $this->loadpage('insight/insight_incluir_proposta', $dados);
         }
 
+        if ($action == "alterar-status") {
+            $id = $this->request->getPost('id');
+            $novoStatus = $this->request->getPost('status');
+
+            if ($id && $novoStatus) {
+
+                $tabela = 'quid_propostas';
+                $valores = ['status' => $novoStatus];
+                $condicao = ['idquid_propostas' => $id];
+
+                $retorno = $this->dbMasterDefault->update($tabela, $valores, $condicao);
+
+                if ($retorno['updated']) {
+                    return redirect()->to(urlInstitucional . 'insight-listar-propostas/0/0');
+                } else {
+                    return redirect()->to(urlInstitucional . 'insight-listar-propostas/0/0');
+                }
+            }
+
+            return redirect()->to(urlInstitucional . 'insight-listar-propostas/0/0');
+        }
+
         if ($action == "incluir") {
             $assessor = $this->getpost("assessor");
             $cpf = $this->getpost("cpf");

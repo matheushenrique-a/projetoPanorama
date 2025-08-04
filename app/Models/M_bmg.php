@@ -591,6 +591,7 @@ class M_bmg extends Model
         FROM quid_propostas
         WHERE assessor = '{$nickname}'
         AND DATE(data_criacao) >= CURDATE() - INTERVAL 4 DAY
+        AND status = 'Aprovada'
         GROUP BY DATE(data_criacao)
         ORDER BY data
         ";
@@ -607,6 +608,7 @@ class M_bmg extends Model
         FROM quid_propostas
         WHERE report_to = $equipe
         AND DATE(data_criacao) >= CURDATE() - INTERVAL 4 DAY
+        AND status = 'Aprovada'
         GROUP BY DATE(data_criacao)
         ORDER BY data
         ";
