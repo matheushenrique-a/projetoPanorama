@@ -537,11 +537,11 @@ class M_bmg extends Model
         $numero_parcela = $data['numero_parcela'];
         $matricula = $data['matricula'];
         $dataNascimento = $data['dataNascimento'];
-        $assessor = $data['assessor'];
-        $telefone = $data['telefone'];
-        $report_to = $data['report_to'];
 
-        if ($data['assessor']) {
+        if (isset($data['assessor'])) {
+            $report_to = $data['report_to'];
+            $assessor = $data['assessor'];
+            $telefone = $data['telefone'];
         } else {
             $assessor = $this->session->nickname;
             $telefone = $data['celular1']['ddd'] . $data['celular1']['numero'];

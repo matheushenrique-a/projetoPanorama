@@ -79,44 +79,44 @@
                         <button type="submit" class="btn btn-primary" name="btnConsultar" value="btnConsultar">Cadastrar</button>
                     </form>
                     <script>
+                        // Lista de supervisores passada do PHP para o JS
                         const supervisorList = <?= json_encode($supervisorlist) ?>;
                         const gerenteList = <?= json_encode($gerentelist) ?>;
 
-                        const roleSelect = document.getElementById('role');
-                        const reportToSelect = document.getElementById('report_to');
+                        // Função para atualizar os responsáveis no select
+                        function atualizarResponsaveis(cargo) {
+                            const select = document.getElementById('report_to');
+                            select.innerHTML = ''; // limpa as opções
 
-                        function populateReportTo(list) {
-                            reportToSelect.innerHTML = '<option value=""></option>';
-
-                            list.forEach(item => {
-                                if (item.nickname) {
+                            // Se o cargo for OPERADOR, exibe os SUPERVISORES como responsáveis
+                            if (cargo === 'OPERADOR') {
+                                supervisorList.forEach(supervisor => {
                                     const option = document.createElement('option');
-                                    option.value = item.nickname;
-                                    option.textContent = item.nickname;
-                                    reportToSelect.appendChild(option);
-                                }
-                            });
+                                    option.value = supervisor.userId;
+                                    option.textContent = supervisor.nickname;
+                                    select.appendChild(option);
+                                });
+                            } else if (cargo == 'SUPERVISOR') {
+                                gerenteList.forEach(gerente => {
+                                    const option = document.createElement('option');
+                                    option.value = gerente.userId;
+                                    option.textContent = gerente.nickname;
+                                    select.appendChild(option);
+                                })
 
-                            if ($(reportToSelect).hasClass('select2-hidden-accessible')) {
-                                $(reportToSelect).trigger('change.select2');
                             }
                         }
 
-                        roleSelect.addEventListener('change', () => {
-                            const selectedRole = roleSelect.value;
-
-                            if (selectedRole === 'OPERADOR') {
-                                populateReportTo(supervisorList);
-                            } else if (selectedRole === 'SUPERVISOR') {
-                                populateReportTo(gerenteList);
-                            } else {
-                                reportToSelect.innerHTML = '<option value=""></option>';
-                                if ($(reportToSelect).hasClass('select2-hidden-accessible')) {
-                                    $(reportToSelect).trigger('change.select2');
-                                }
-                            }
+                        // Detectar mudança no campo de cargo
+                        document.getElementById('role').addEventListener('change', function() {
+                            atualizarResponsaveis(this.value);
                         });
-                        populateReportTo([]);
+
+                        // Preencher automaticamente caso já haja valor selecionado
+                        window.addEventListener('DOMContentLoaded', function() {
+                            const cargoAtual = document.getElementById('role').value;
+                            atualizarResponsaveis(cargoAtual);
+                        });
                     </script>
                 </div>
             </div>

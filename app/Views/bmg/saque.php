@@ -11,12 +11,6 @@
 <?php $panoramaId = session('panoramaId'); ?>
 <?php $numeroAdesao = session('numeroAdesao'); ?>
 
-<?php if (isset($cardData)): ?>
-    <div class="alert alert-success">
-        <pre><?= print_r($cardData, true) ?></pre>
-    </div>
-<?php endif; ?>
-
 <?php if ($valores = session()->getFlashdata('valores')): ?>
     <div class="alert alert-success">
         <pre><?= print_r($valores, true) ?></pre>
@@ -94,7 +88,7 @@
                                                             <?php
                                                             $temCartaoDisponivel = false;
 
-                                                            if (isset($contaInterna) && isset($matricula)) {
+                                                            if (isset($contaInterna) && isset($matricula) && isset($valorSaque) && $valorSaque > 0) {
                                                                 $temCartaoDisponivel = true;
                                                             }
                                                             ?>
@@ -280,7 +274,7 @@
                                                         Cartão <?= esc($numeroCartao) ?>
                                                     </button>
                                                 </h2>
-                                                <div id="collapse_<?= $index ?>" class="accordion-collapse collapse <?= $index === 0 ? 'show' : '' ?>" aria-labelledby="header_<?= $index ?>" data-bs-parent="#accordionValoresCartoes">
+                                                <div id="collapse_<?= $index ?>" class="accordion-collapse collapse show" aria-labelledby="header_<?= $index ?>" data-bs-parent="#accordionValoresCartoes">
                                                     <div class="accordion-body">
                                                         <?php if (!empty($mensagemErroLimite)): ?>
                                                             <div class="alert alert-danger fw-semibold d-flex flex-column align-items-center">
@@ -391,6 +385,7 @@
 
     const bancoInput = document.getElementById('idBanco')
     const agenciaInput = document.getElementById('agencia')
+    const digitoAgenciaInput = document.getElementById('digitoAgencia')
     const contaInput = document.getElementById('conta')
     const digitoInput = document.getElementById('digito')
     const especieInput = document.getElementById('especieBeneficio')
@@ -552,6 +547,22 @@
             };
         }
 
+        function extrairAgencia(agenciaTexto) {
+            const match = agenciaTexto.match(/(\d+)-(\d)/);
+            return {
+                agencia: match ? match[1] : '',
+                digitoAgencia: match ? match[2] : ''
+            };
+        }
+
+        function extrairConta(contaTexto) {
+            const match = contaTexto.match(/(\d+)-(\d)/);
+            return {
+                conta: match ? match[1] : '',
+                digitoConta: match ? match[2] : ''
+            };
+        }
+
         let dados = {
             UF: extrair(/NB\s*-\s*UF\s*\d+\s*-\s*([A-Z]{2})/, texto),
             Banco: extrair(/^\s*Banco\s+([0-9]{1,3})\s*$/im, texto),
@@ -564,16 +575,46 @@
             Telefone1: extrairTelefone(/Tel\.?\s*1\s*\(?(\d{2})\)?\s*(\d{4,5})-?(\d{4})/i, texto)
         };
 
+        let dadosSiape = {
+            Nascimento: extrair(/Dt\s*Nascimento\s*-\s*Idade\s*([\d\/]{10})/, texto),
+        }
+
+        const agenciaTexto = extrair(/Ag[êe]ncia\s+(\d{3,5}-\d)/i, texto);
+        const agencia = agenciaTexto ? extrairAgencia(agenciaTexto) : {
+            agencia: '',
+            digitoAgencia: ''
+        };
+
+        const contaTexto = extrair(/Conta\s+(\d{5,}-\d)/i, texto);
+        const contaSiape = contaTexto ? extrairConta(contaTexto) : {
+            conta: '',
+            digitoConta: ''
+        };
+
+        dadosSiape.Agencia = agencia.agencia;
+        dadosSiape.DigitoAgencia = agencia.digitoAgencia;
+        dadosSiape.Conta = contaSiape.conta;
+        dadosSiape.DigitoConta = contaSiape.digitoConta;
+
+
         if (ufInput) {
             ufInput.value = dados.UF
             especieInput.value = dados.Especie
         }
 
+        if (codigoEntidade.value == "164") {
+            agenciaInput.value = dadosSiape.Agencia
+            contaInput.value = dadosSiape.Conta
+            dataNascimentoInput.value = dadosSiape.Nascimento
+            digitoAgenciaInput.value = dadosSiape.DigitoAgencia
+        } else {
+            agenciaInput.value = dados.Agencia
+            contaInput.value = dados.Conta
+            digitoInput.value = dados.Digito
+            dataNascimentoInput.value = dados.Nascimento
+        }
+
         bancoInput.value = dados.Banco
-        agenciaInput.value = dados.Agencia
-        contaInput.value = dados.Conta
-        digitoInput.value = dados.Digito
-        dataNascimentoInput.value = dados.Nascimento
         nomeClienteInput.value = dados.Nome
         dddInput.value = dados.Telefone1.ddd
         telefoneInput.value = dados.Telefone1.numero

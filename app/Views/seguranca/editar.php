@@ -14,7 +14,7 @@
                     <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
                         <!--begin::Item-->
                         <li class="breadcrumb-item text-muted">
-                            <a href="../../demo1/dist/index.html" class="text-muted text-hover-primary">Home</a>
+                            <a href="/" class="text-muted text-hover-primary">Home</a>
                         </li>
                         <!--end::Item-->
                         <!--begin::Item-->
@@ -31,7 +31,7 @@
                         </li>
                         <!--end::Item-->
                         <!--begin::Item-->
-                        <li class="breadcrumb-item text-muted">Cadastro de Usuário</li>
+                        <li class="breadcrumb-item text-muted">Edição de Usuário</li>
                         <!--end::Item-->
                     </ul>
                     <!--end::Breadcrumb-->
@@ -68,7 +68,6 @@
                                 <option value="SUPERVISOR" <?= ($cargo == 'SUPERVISOR') ? 'selected' : '' ?>>Supervisor</option>
                             </select>
                         </div>
-
                         <div class="input-group mb-2">
                             <span class="input-group-text" id="inputGroup-sizing-default">Supervisor</span>
                             <select name="report_to" id="report_to" class="form-select form-select-lg text-dark" data-placeholder="Responsável">
@@ -77,46 +76,6 @@
 
                         <button type="submit" class="btn btn-primary" name="btnConsultar" value="btnConsultar">Atualizar</button>
                     </form>
-                    <script>
-                        const supervisorList = <?= json_encode($supervisorlist) ?>;
-                        const gerenteList = <?= json_encode($gerentelist) ?>;
-
-                        const roleSelect = document.getElementById('role');
-                        const reportToSelect = document.getElementById('report_to');
-
-                        function populateReportTo(list) {
-                            reportToSelect.innerHTML = '<option value=""></option>';
-
-                            list.forEach(item => {
-                                if (item.nickname) {
-                                    const option = document.createElement('option');
-                                    option.value = item.nickname;
-                                    option.textContent = item.nickname;
-                                    reportToSelect.appendChild(option);
-                                }
-                            });
-
-                            if ($(reportToSelect).hasClass('select2-hidden-accessible')) {
-                                $(reportToSelect).trigger('change.select2');
-                            }
-                        }
-
-                        roleSelect.addEventListener('change', () => {
-                            const selectedRole = roleSelect.value;
-
-                            if (selectedRole === 'OPERADOR') {
-                                populateReportTo(supervisorList);
-                            } else if (selectedRole === 'SUPERVISOR') {
-                                populateReportTo(gerenteList);
-                            } else {
-                                reportToSelect.innerHTML = '<option value=""></option>';
-                                if ($(reportToSelect).hasClass('select2-hidden-accessible')) {
-                                    $(reportToSelect).trigger('change.select2');
-                                }
-                            }
-                        });
-                        populateReportTo([]);
-                    </script>
                 </div>
             </div>
             <div>
@@ -153,3 +112,43 @@
         <!--end::Footer-->
     </div>
 </div>
+<script>
+    // Lista de supervisores passada do PHP para o JS
+    const supervisorList = <?= json_encode($supervisorlist) ?>;
+    const gerenteList = <?= json_encode($gerentelist) ?>;
+
+    // Função para atualizar os responsáveis no select
+    function atualizarResponsaveis(cargo) {
+        const select = document.getElementById('report_to');
+        select.innerHTML = ''; // limpa as opções
+
+        // Se o cargo for OPERADOR, exibe os SUPERVISORES como responsáveis
+        if (cargo === 'OPERADOR') {
+            supervisorList.forEach(supervisor => {
+                const option = document.createElement('option');
+                option.value = supervisor.userId;
+                option.textContent = supervisor.nickname;
+                select.appendChild(option);
+            });
+        } else if (cargo == 'SUPERVISOR') {
+            gerenteList.forEach(gerente => {
+                const option = document.createElement('option');
+                option.value = gerente.userId;
+                option.textContent = gerente.nickname;
+                select.appendChild(option);
+            })
+
+        }
+    }
+
+    // Detectar mudança no campo de cargo
+    document.getElementById('role').addEventListener('change', function() {
+        atualizarResponsaveis(this.value);
+    });
+
+    // Preencher automaticamente caso já haja valor selecionado
+    window.addEventListener('DOMContentLoaded', function() {
+        const cargoAtual = document.getElementById('role').value;
+        atualizarResponsaveis(cargoAtual);
+    });
+</script>
