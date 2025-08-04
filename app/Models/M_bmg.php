@@ -600,7 +600,7 @@ class M_bmg extends Model
 
     public function countPropostasPorDiaEquipe()
     {
-        $equipe = $this->session->report_to;
+        $equipe = $this->session->userId;
 
         $sql = "
         SELECT DATE(data_criacao) as data, COUNT(*) as total

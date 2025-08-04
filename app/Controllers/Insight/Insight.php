@@ -169,7 +169,7 @@ class Insight extends BaseController
         if (!empty($date)) $likeCheck['DATE(data_criacao)'] = $date;
         if (!empty($adesao)) $likeCheck['adesao'] = $adesao;
 
-        if ($this->session->role !== "SUPERVISOR") {
+        if ($this->session->role == "OPERADOR") {
             $whereCheck["assessor"] = $this->session->nickname;
         }
 
