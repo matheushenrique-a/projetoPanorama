@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 namespace App\Models;
 
 use CodeIgniter\Model;
@@ -7,20 +8,23 @@ use App\Models\M_telegram;
 use App\Models\M_http;
 use Symfony\Component\Panther\Client;
 
-class M_insight extends Model {
+class M_insight extends Model
+{
     protected $dbMasterDefault;
     protected $session;
     protected $telegram;
     protected $m_http;
 
-    public function __construct(){
-		$this->dbMasterDefault = new dbMaster();
+    public function __construct()
+    {
+        $this->dbMasterDefault = new dbMaster();
         $this->session = session();
         $this->telegram =  new M_telegram();
         $this->m_http =  new M_http();
     }
 
-    public function load_notifications($limit = 7){
+    public function load_notifications($limit = 7)
+    {
         $userId = $this->session->userId;
         $role = $this->session->role;
         $notificacoes = null;
@@ -38,13 +42,14 @@ class M_insight extends Model {
         //     echo 'Usuário sem ROLE definida, contact o administrador';exit;
         // }
         return $notificacoes;
-	}
+    }
 
-    function gerarTimelineNotificacoes($limit = 7) {
+    function gerarTimelineNotificacoes($limit = 7)
+    {
         $html = '<div class="timeline">';
         $tituloInicial = "";
         $i = 0;
-    
+
         $notificacoes = $this->load_notifications($limit);
 
         // if (!$notificacoes['existRecord']){
@@ -56,16 +61,16 @@ class M_insight extends Model {
         //         $tipo = $row->tipo;
         //         $titulo = $row->titulo;
         //         $data_criacao = $row->data_criacao;
-        
+
         //         $icon = "";
-        
+
         //         if ($tituloInicial != $titulo) {
         //             $tituloInicial = $titulo;
         //             if ($i > 0) {
         //                 $html .= '</div></div></div>'; // Fecha bloco anterior
         //             }
         //             $i++;
-        
+
         //             $html .= '<div class="timeline-item">';
         //             $html .= '<div class="timeline-line w-40px"></div>';
         //             $html .= '<div class="timeline-icon symbol symbol-circle symbol-40px me-4">
@@ -87,7 +92,7 @@ class M_insight extends Model {
         //                         </div>
         //                         <div class="overflow-auto pb-5">';
         //         }
-        
+
         //         if (($tipo == 'proposta_criada') || ($tipo == 'proposta_atualizada')) {
         //             if ($row->tipo == "proposta_criada") {
         //                 $icon = "👋🏻 ";
@@ -100,7 +105,7 @@ class M_insight extends Model {
         //                     $icon = "⏱️ ";
         //                 }
         //             }
-        
+
         //             $html .= '<div class="d-flex align-items-center border border-dashed border-gray-300 rounded min-w-1000px px-7 py-2 mb-2">
         //                         <a href="" class="fs-5 text-dark text-hover-primary fw-semibold w-275px min-w-275px">' . $icon . htmlspecialchars($detalhes['integraallId']) . ' | ' . substr(htmlspecialchars($detalhes['nomeCliente']), 0, 15) . '...</a>
         //                         <div class="min-w-275px pe-2"><span class="badge badge-light-' . getStatusNomePorId($detalhes['statusId'])[2] . '">' . getStatusNomePorId($detalhes['statusId'])[1] . '</span> <span class="badge badge-light-' . getStatusAdicionalPorId($detalhes['statusAdicionalId'])[2] . '">' . getStatusAdicionalPorId($detalhes['statusAdicionalId'])[1] . '</span></div>
@@ -108,7 +113,7 @@ class M_insight extends Model {
         //                     </div>';
         //         } else if ($tipo == 'auditoria_whatsapp') {
         //             $icon = ($detalhes['gravidade'] == "alta") ? "🚨 " : "⚠️ ";
-        
+
         //             $html .= '<div class="d-flex align-items-center border border-dashed border-gray-300 rounded min-w-1000px px-7 py-2 mb-2">
         //                         <a href="" class="fs-5 text-dark text-hover-primary fw-semibold w-275px min-w-275px">' . $icon . htmlspecialchars($detalhes['gravidade']) . ' | ' . htmlspecialchars($detalhes['telefone_cliente']) . '</a>
         //                         <div class="min-w-275px pe-2"><span class="badge badge-light text-muted">Feedback: ' . substr(htmlspecialchars($detalhes['frase_feedback']), 0, $limit) . '...</span></div>
@@ -116,19 +121,20 @@ class M_insight extends Model {
         //                     </div>';
         //         }
         //     }
-        
+
         //     $html .= '</div></div></div>'; // fecha último bloco
         //     $html .= '</div>'; // fecha timeline principal
-        
+
         //     return $html;
         // }
 
-        
+
     }
 
-    public function getChat($telefoneWaId){
+    public function getChat($telefoneWaId)
+    {
         $chat = null;
-        if ((!empty($telefoneWaId)) and (strlen($telefoneWaId) == 13)){
+        if ((!empty($telefoneWaId)) and (strlen($telefoneWaId) == 13)) {
             $db =  $this->dbMasterDefault->getDB();
             $builder = $db->table('whatsapp_log');
             $builder->Like('whatsapp_log.To', $telefoneWaId); //bug do número 9 no whatsapp
@@ -141,9 +147,10 @@ class M_insight extends Model {
         return $chat;
     }
 
-    public function getJourney($telefoneWaId){
+    public function getJourney($telefoneWaId)
+    {
         $journey = null;
-        if ((!empty($telefoneWaId)) and (strlen($telefoneWaId) == 13)){
+        if ((!empty($telefoneWaId)) and (strlen($telefoneWaId) == 13)) {
             //JOURNEY
             $db =  $this->dbMasterDefault->getDB();
             $builder = $db->table('customer_journey');
@@ -155,8 +162,70 @@ class M_insight extends Model {
         }
         return  $journey;
     }
-    
+
+    public function atualizar_propostas()
+    {
+        $url = "https://grupoquid.panoramaemprestimos.com.br/html.do?action=exportarLayout&saida=json&chaveExportacao=a9fX3qV7zT2nP5wLmR8sD1cJ6bU0yH4eKQvZ&layout=33&dias=10";
+
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/5.0");
+        $json = curl_exec($ch);
+        $err = curl_error($ch);
+        curl_close($ch);
+
+        if ($err) {
+            echo "cURL Error: " . $err;
+            return;
+        }
+
+        $json_utf8 = mb_convert_encoding($json, 'UTF-8', 'ISO-8859-1');
+
+        $dados = json_decode($json_utf8, true);
+
+        if (!is_array($dados)) {
+            echo "Erro ao decodificar JSON.";
+            return;
+        }
+
+        $statusMap = [
+            "CRÉDITO ENVIADO" => "Aprovada",
+            "ANÁLISE BANCO" => "Análise",
+            "ADESÃO" => "Pendente",
+            "AUDITORIA" => "Pendente",
+            "CANCELADA: DECURSO DE PRAZO" => "Cancelada",
+            "CANCELADA: CLIENTE" => "Cancelada",
+            "CANCELADA: DADOS CADASTRAIS" => "Cancelada",
+            "CANCELADA: DADOS BANCÁRIOS" => "Cancelada",
+            "CANCELADA POR LIMITE" => "Cancelada",
+            "FORMALIZAÇÃO NÃO REALIZADA" => "Pendente",
+            "PENDENTE FORMALIZAÇÃO" => "Pendente",
+            "TED DEVOLVIDA" => "Pendente",
+            "CONTA CORRIGIDA" => "Análise"
+        ];
+
+        $atualizados = 0;
+
+        foreach ($dados as $item) {
+            $adesao = $item['ADESÃO'];
+            $status_original = $item['STATUS'];
+            $status_traduzido = isset($statusMap[$status_original]) ? $statusMap[$status_original] : $status_original;
+
+            $whereCheck = ['adesao' => $adesao];
+            $resultado = $this->dbMasterDefault->select('quid_propostas', $whereCheck);
+
+            if ($resultado['existRecord']) {
+                $registroBanco = $resultado['firstRow'];
+
+                if ($registroBanco->status !== $status_traduzido) {
+                    $data = [
+                        'status' => $status_traduzido,
+                    ];
+                    $this->dbMasterDefault->update('quid_propostas', $data, $whereCheck);
+                    $atualizados++;
+                }
+            }
+        }
+    }
 }
-
-
-?>

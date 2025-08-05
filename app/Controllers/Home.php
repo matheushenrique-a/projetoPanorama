@@ -59,7 +59,7 @@ class Home extends BaseController
         $valores = [];
 
         foreach ($resultados as $row) {
-            $labels[] = date('d/m', strtotime($row->data)); 
+            $labels[] = date('d/m', strtotime($row->data));
             $valores[] = (int)$row->total;
         }
 
@@ -98,6 +98,39 @@ class Home extends BaseController
         $dados['ultimasPropostasBMG'] = $ultimasPropostasBMG;
 
         $countPropostasBMG = $this->m_bmg->countPropostasBMG();
+
+
+        $tempoMinutos = 5;
+
+        $conf = $this->dbMasterDefault->select('configuracoes', ['id' => 1]);
+
+        $executar = true;
+        if ($conf['existRecord']) {
+            $ultimaExecucao = strtotime($conf['firstRow']->ultima_atualizacao_propostas);
+            $agora = time();
+
+            if (($agora - $ultimaExecucao) < ($tempoMinutos * 60)) {
+                $executar = false;
+            }
+        }
+
+        if ($executar) {
+            $this->m_insight->atualizar_propostas();
+
+            if ($conf['existRecord']) {
+                $this->dbMasterDefault->update(
+                    'configuracoes',
+                    ['ultima_atualizacao_propostas' => date('Y-m-d H:i:s')],
+                    ['id' => 1]
+                );
+            } else {
+                $this->dbMasterDefault->insert(
+                    'configuracoes',
+                    ['id' => 1, 'ultima_atualizacao_propostas' => date('Y-m-d H:i:s')]
+                );
+            }
+        }
+
         $dados['countPropostasBMG'] = $countPropostasBMG;
 
         $dados['ranking_ativacoes'] = $ranking_ativacoes;
