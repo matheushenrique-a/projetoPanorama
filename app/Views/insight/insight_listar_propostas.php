@@ -266,37 +266,64 @@
 																		</div>
 
 																		<div class="modal-body">
-																			<p><strong>Nome:</strong> <?= $row->nome ?></p>
-																			<p><strong>CPF:</strong> <?= $row->cpf ?></p>
-																			<p><strong>Produto:</strong> <?= $row->produto ?></p>
-																			<p><strong>Valor:</strong> R$ <?= number_format((float)$row->valor, 2, ',', '.') ?></p>
-																			<p><strong>Parcela:</strong> R$ <?= number_format((float)$row->valor_parcela, 2, ',', '.') ?></p>
-
-
-																			<div class="mt-8">
-																				<label for="status_<?= $row->idquid_propostas ?>" class="form-label">Alterar Status</label>
-																				<select class="form-select" id="status_<?= $row->idquid_propostas ?>" name="status">
-																					<option value="Análise" <?= $row->status == 'Análise' ? 'selected' : '' ?>>Análise</option>
-																					<option value="Aprovada" <?= $row->status == 'Aprovada' ? 'selected' : '' ?>>Aprovada</option>
-																					<option value="Cancelada" <?= $row->status == 'Cancelada' ? 'selected' : '' ?>>Cancelada</option>
-																					<option value="Pendente" <?= $row->status == 'Pendente' ? 'selected' : '' ?>>Pendente</option>
-																				</select>
+																			<div class="mb-2">
+																				<span class="fw-bold mb-1">Nome:</span>
+																				<input type="text" class="form-control form-control-solid" value="<?= $row->nome ?>" readonly />
 																			</div>
+																			<div class="d-flex gap-4">
+																				<div class="mb-2">
+																					<span class="fw-bold mb-1">CPF:</span>
+																					<input type="text" class="form-control form-control-solid" value="<?= $row->cpf ?>" readonly />
+																				</div>
+																				<div>
+																					<span class="fw-bold mb-1">Celular:</span>
+																					<input type="text" class="form-control form-control-solid" value="<?= formatarTelefone($row->telefone) ?>" readonly />
+																				</div>
+																			</div>
+																			<div class="mb-2">
+																				<span class="fw-bold mb-1">Produto:</span>
+																				<input type="text" class="form-control form-control-solid" value="<?= $row->produto ?>" readonly />
+																			</div>
+																			<div class="d-flex gap-4">
+																				<div class="mb-2">
+																					<span class="fw-bold mb-1">Valor:</span>
+																					<input type="text" class="form-control form-control-solid" value="R$ <?= number_format((float)$row->valor, 2, ',', '.') ?>" readonly />
+																				</div>
+																				<div class="mb-2">
+																					<span class="fw-bold mb-1">Valor parcela:</span>
+																					<input type="text" class="form-control form-control-solid" value="R$ <?= number_format((float)$row->valor_parcela, 2, ',', '.') ?>" readonly />
+																				</div>
+																			</div>
+
+																			<?php if ($my_security->checkPermission("SUPERVISOR")): ?>
+																				<div class="mt-4">
+																					<label for="status_<?= $row->idquid_propostas ?>" class="form-label">Alterar Status</label>
+																					<select class="form-select" id="status_<?= $row->idquid_propostas ?>" name="status">
+																						<option value="Análise" <?= $row->status == 'Análise' ? 'selected' : '' ?>>Análise</option>
+																						<option value="Aprovada" <?= $row->status == 'Aprovada' ? 'selected' : '' ?>>Aprovada</option>
+																						<option value="Cancelada" <?= $row->status == 'Cancelada' ? 'selected' : '' ?>>Cancelada</option>
+																						<option value="Pendente" <?= $row->status == 'Pendente' ? 'selected' : '' ?>>Pendente</option>
+																					</select>
+																				</div>
+																			<?php endif; ?>
 																			<input type="hidden" name="id" value="<?= $row->idquid_propostas ?>">
 																		</div>
 
-																		<div class="modal-footer justify-content-between">
-																			<div>
-																				<button type="button" class="btn btn-danger d-flex align-items-center gap-2" onclick="confirmarExclusao('<?= $row->idquid_propostas ?>')">
-																					<i class="bi bi-trash fs-5 text-white"></i>
-																					<span class="text-white fw-semibold">Excluir Proposta</span>
-																				</button>
-																			</div>
+																		<?php if ($my_security->checkPermission("SUPERVISOR")) : ?>
 
-																			<div class="d-flex gap-2 ms-auto">
-																				<button type="submit" class="btn btn-primary">Salvar Alterações</button>
+																			<div class="modal-footer justify-content-between">
+																				<div>
+																					<button type="button" class="btn btn-danger d-flex align-items-center gap-2" onclick="confirmarExclusao('<?= $row->idquid_propostas ?>')">
+																						<i class="bi bi-trash fs-5 text-white"></i>
+																						<span class="text-white fw-semibold">Excluir Proposta</span>
+																					</button>
+																				</div>
+
+																				<div class="d-flex gap-2 ms-auto">
+																					<button type="submit" class="btn btn-primary">Salvar Alterações</button>
+																				</div>
 																			</div>
-																		</div>
+																		<?php endif; ?>
 																	</form>
 																</div>
 															</div>
@@ -306,7 +333,7 @@
 															<td><span class="badge badge-light-<?= $status ?> fs-6"><?= $row->status ?></span></td>
 															<td><?= date('d/m/Y', strtotime($row->data_criacao)); ?></td>
 															<td class="text-gray-800">
-																<p style="cursor:pointer; <?= !$my_security->checkPermission("SUPERVISOR") ? 'pointer-events: none;' : '' ?>" class="m-0 p-0" data-bs-toggle="modal" data-bs-target="#<?= $modalId ?>">
+																<p style="cursor:pointer;" class="m-0 p-0" data-bs-toggle="modal" data-bs-target="#<?= $modalId ?>">
 																	<?= $row->adesao; ?>
 																</p>
 																<p class="text-gray-500 fw-bold fs-8"><?= $row->codigo_entidade; ?></p>
