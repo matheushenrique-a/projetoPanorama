@@ -55,85 +55,82 @@
 									<!--begin::Content container-->
 									<div id="kt_app_content_container" class="app-container container-fluid">
 										<!--begin::Row-->
-										<div class="row g-5 g-xl-10 mb-5 mb-xl-10">
+										<div class="row g-5 g-xl-10 mb-5">
 
 											<?php if (!$my_security->checkPermission("SUPERVISOR")): ?>
 
-
-												<!--begin::Col-->
-												<div class="col-xl-4 w-50">
-													<!--begin::List widget 11-->
-													<div class="card h-xl-100">
+												<div>
+													<div class="card">
 														<!--begin::Header-->
 														<div class="card-header pt-7 mb-3 pb-3">
+
+															<!--begin::Title-->
 															<h3 class="card-title align-items-start flex-column">
-																<span class="card-label fw-bolder text-gray-800">Últimas Ligações Argus</span>
-																<span class="text-gray-400 mt-1 fw-bold fs-6">Suas 6 últimas ligações</span>
+																<span class="card-label fw-bolder text-gray-800">Barra de progresso mensal</span>
+																<span class="text-gray-600 mt-2 fw-semibold fs-6">Valor Averbado: <span class="text-success">R$ <?php if(isset($progresso->total_valor)) : echo number_format((float)$progresso->total_valor, 2, ',', '.'); else: echo "0"; endif;?></span></span>
+																<span class="text-gray-600 mt-2 fw-semibold fs-6">Meta: <span class="text-success">R$ 14.000,00</span></span></span>
 															</h3>
-															<div class="card-toolbar">
-																<a href="<?php echo assetfolder; ?>" class="btn btn-sm btn-light" title="">Atualizar</a>
-															</div>
 														</div>
-														<!--end::Header-->
-														<!--begin::Body-->
-														<div class="card-body pt-4">
-
-															<?php
-
-															$i = 0;
-															foreach ($ultimasLigacoes["result"]->getResult() as $row) {
-																$i += 1;
-																$nome = $row->nome;
-																$codCliente = $row->codCliente;
-																$data_criacao = $row->data_criacao;
-																$celular = ($row->celular);
-																$celularMask = formatarTelefone($row->celular);
-
-															?>
-
-																<!--begin::Item-->
-																<div class="d-flex flex-stack">
-																	<div class="d-flex align-items-center me-5">
-																		<div class="symbol symbol-40px me-4"><span class="symbol-label bg-success"><i class="las la-phone-volume fs-1 p-0  text-white"></i></span></div>
-																		<div class="me-5">
-																			<span class="text-gray-800 fw-bolder fs-6"><?php echo substr($nome, 0, 16); ?>...</span>
-																			<span class="text-gray-400 fw-bold fs-7 d-block text-start ps-0"><?php echo (empty($cpf)  ? substr($codCliente, 0, 15) . '...' : $cpf); ?></span>
-																		</div>
-																	</div>
-																	<div class="text-gray-400 fw-bolder fs-7 text-end">
-																		<!-- <span class="text-gray-800 fw-bolder fs-6 d-block"><a href="<?php echo assetfolder; ?>aaspa-zapsms/<?php echo $celular; ?>" class="text-gray-800 text-hover-success"><u><?php echo $celularMask; ?></u></a></span> -->
-																		<span class="text-gray-800 fw-bolder fs-6 d-block">
-																			<p class="text-gray-800 text-hover-success"><u><?php echo $celularMask; ?></u></a>
-																		</span>
-																		<span class="text-gray-400 fw-bold fs-7 d-block text-start ps-0"><?php echo time_elapsed_string($data_criacao); ?></span>
-																	</div>
-																</div>
-																<div class="separator separator-dashed my-5"></div>
-																<!--end::Item-->
-
-															<?php }; ?>
-															<!-- <div class="text-center pt-9">
-														<a href="../../demo1/dist/apps/ecommerce/catalog/add-product.html" class="btn btn-primary">Add Vehicle</a>
-													</div> -->
+														<div class="card-body">
+															<canvas id="progressChart" height="20px"></canvas>
 														</div>
-														<!--end::Body-->
 													</div>
-													<!--end::List widget 11-->
 												</div>
-												<!--end::Col-->
 
 
-												<!--begin::Col-->
+												<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+												<script>
+													const ctx4 = document.getElementById('progressChart').getContext('2d');
+
+													new Chart(ctx4, {
+														type: 'bar',
+														data: {
+															labels: ['<?= explode(' ', trim($nickname))[0] ?>'],
+															datasets: [{
+																label: 'Progresso da Meta (%)',
+																data: [<?php if(isset($progresso->percentual)): echo $progresso->percentual; else: echo 0; endif; ?>],
+																backgroundColor: 'rgba(48, 221, 149, 0.6)',
+																borderColor: 'rgba(44, 230, 121, 1)',
+																borderWidth: 1
+															}]
+														},
+														options: {
+															indexAxis: 'y', // horizontal
+															responsive: true,
+															plugins: {
+																legend: {
+																	display: false
+																},
+																tooltip: {
+																	callbacks: {
+																		label: ctx => ctx.parsed.x + '%'
+																	}
+																}
+															},
+															scales: {
+																x: {
+																	min: 0,
+																	max: 100,
+																	ticks: {
+																		callback: value => value + '%'
+																	}
+																}
+															}
+														}
+													});
+												</script>
+											<?php endif; ?>
+
+											<?php if (!$my_security->checkPermission("SUPERVISOR")): ?>
 
 												<div class="col-xl-4 w-50">
-													<!--begin::List widget 11-->
 													<div class="card h-xl-100">
 
 														<!--begin::Header-->
 														<div class="card-header pt-7 mb-3 pb-3">
 															<!--begin::Title-->
 															<h3 class="card-title align-items-start flex-column">
-																<span class="card-label fw-bolder text-gray-800">Propostas de Hoje</span>
+																<span class="card-label fw-bolder text-gray-800">Suas últimas propostas</span>
 																<span class="text-gray-400 mt-1 fw-bold fs-6"><?php echo $countPropostasBMG; ?> <?php echo ($countPropostasBMG > 1  ? 'propostas digitadas hoje' : 'proposta digitada hoje'); ?></span>
 															</h3>
 															<!--end::Title-->
@@ -175,13 +172,13 @@
 																	<div class="d-flex align-items-center me-5">
 																		<a target="_blank" href="https://grupoquid.panoramaemprestimos.com.br/emprestimoInterno.do?action=exibir&codigo=<?php echo $row->panorama_id ?>" class="symbol symbol-40px me-4"><span class="symbol-label bg-info"><i class="las la-file-invoice fs-1 p-0 text-white"></i></span></a>
 																		<div class="me-5">
-																			<span class="text-gray-800 fw-bolder fs-6"><?php echo substr($nomeCliente, 0, 30); ?>...</span>
+																			<span class="text-gray-800 fw-bolder fs-6"><?php echo substr($nomeCliente, 0, 30); ?></span>
 																			<span class="text-gray-400 fw-bold fs-7 d-block text-start ps-0"><?php echo $adesao . " | " . $cpf; ?></span>
 																			<span class="text-success fw-bolder fs-6"><?php echo 'R$ ' . number_format($valor, 2, ',', '.') ?></span>
 																		</div>
 																	</div>
 																	<div class="text-gray-400 fw-bolder fs-7 text-end">
-																		<span class="text-gray-800 fw-bolder fs-6 d-block"><a href="#" class="text-gray-800 text-hover-info"><u><?php echo $telefone; ?></u></a></span>
+																		<span class="text-gray-800 fw-bolder fs-6 d-block text-hover-info"><?php echo $telefone; ?></span>
 																		<span class="text-gray-400 fw-bold fs-7 d-block text-start ps-0"><?php echo time_elapsed_string($data_criacao); ?></span>
 																		<span class="badge badge-light-<?php echo $status ?> fs-6 mt-2"><?= $row->status ?></span>
 																	</div>
@@ -194,7 +191,7 @@
 															<?php }; ?>
 
 														</div>
-														<div class="pt-4 pb-5 d-flex justify-content-center gap-10">
+														<div class="pb-5 d-flex justify-content-center gap-10">
 															<a href="<?php echo assetfolder; ?>insight-listar-propostas/0/0" class="text-primary opacity-75-hover fs-6 fw-semibold">Ver mais propostas</a>
 															<span class="text-gray-500 opacity-75-hover fs-6 fw-semibold">| </span>
 															<a href="<?php echo assetfolder; ?>bmg-saque/0" class="text-primary opacity-75-hover fs-6 fw-semibold">Criar nova proposta</a>
@@ -342,7 +339,7 @@
 																		</tr>
 																	</thead>
 																	<tbody>
-																		<?php $posicao = 9; ?>
+																		<?php $posicao = 1; ?>
 																		<?php foreach ($ranking as $row): ?>
 																			<tr>
 																				<td>

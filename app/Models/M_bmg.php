@@ -7,6 +7,7 @@ use CodeIgniter\Model;
 use App\Libraries\dbMaster;
 use App\Models\M_telegram;
 use App\Models\M_http;
+use App\Models\M_seguranca;
 use Symfony\Component\Panther\Client;
 
 class M_bmg extends Model
@@ -15,6 +16,7 @@ class M_bmg extends Model
     protected $session;
     protected $telegram;
     protected $m_http;
+    protected $m_security;
 
     public function __construct()
     {
@@ -22,6 +24,7 @@ class M_bmg extends Model
         $this->session = session();
         $this->telegram =  new M_telegram();
         $this->m_http =  new M_http();
+        $this->m_security = new M_seguranca();
     }
 
     public function statusSeguro()
@@ -569,7 +572,7 @@ class M_bmg extends Model
 
     public function ultimasPropostasBMG($limit = 6)
     {
-        $sql = "select * from quid_propostas where assessor = '" . $this->session->nickname . "'  AND DATE(data_criacao) = CURDATE()";
+        $sql = "select * from quid_propostas where assessor = '" . $this->session->nickname . "' ";
         $sql .= " order by data_criacao DESC LIMIT $limit;";
 
         return $this->dbMasterDefault->runQuery($sql);
@@ -633,23 +636,63 @@ class M_bmg extends Model
         $meta = 14000;
         $supervisor = $this->session->userId;
 
+        if ($this->session->userId == "164990") {
+            $sql = "
+            SELECT 
+            TRIM(assessor) AS nome,
+            COUNT(*) AS total_propostas,
+            SUM(valor) AS total_valor,
+            ROUND((SUM(valor) / {$meta}) * 100, 1) AS percentual
+            FROM quid_propostas
+            WHERE MONTH(data_criacao) = MONTH(CURDATE())
+            AND YEAR(data_criacao) = YEAR(CURDATE())
+            AND status IN ('Aprovada', 'Análise')
+            GROUP BY TRIM(assessor)
+            ORDER BY total_valor DESC;
+            ";
+        } else {
+            $sql = "
+            SELECT 
+            TRIM(assessor) AS nome,
+            COUNT(*) AS total_propostas,
+            SUM(valor) AS total_valor,
+            ROUND((SUM(valor) / {$meta}) * 100, 1) AS percentual
+            FROM quid_propostas
+            WHERE MONTH(data_criacao) = MONTH(CURDATE())
+            AND YEAR(data_criacao) = YEAR(CURDATE())
+            AND report_to = {$supervisor}
+            AND status IN ('Aprovada', 'Análise')
+            GROUP BY TRIM(assessor)
+            ORDER BY total_valor DESC;
+            ";
+        }
+
+        return $this->dbMasterDefault
+            ->runQuery($sql)['result']
+            ->getResult();
+    }
+
+    public function barraProgressoAssessor()
+    {
+        $assessor = $this->session->nickname;
+        $meta = 14000;
+
         $sql = "
         SELECT 
             TRIM(assessor) AS nome,
-            COUNT(*) AS total_propostas,
             SUM(valor) AS total_valor,
             ROUND((SUM(valor) / {$meta}) * 100, 1) AS percentual
         FROM quid_propostas
         WHERE MONTH(data_criacao) = MONTH(CURDATE())
           AND YEAR(data_criacao) = YEAR(CURDATE())
-          AND report_to = {$supervisor}
+          AND assessor = '$assessor'
           AND status IN ('Aprovada', 'Análise')
         GROUP BY TRIM(assessor)
-        ORDER BY total_valor DESC;
+        LIMIT 1;
     ";
 
-        return $this->dbMasterDefault
-            ->runQuery($sql)['result']
-            ->getResult();
+        $result = $this->dbMasterDefault->runQuery($sql)['result']->getResult();
+
+        return !empty($result) ? $result[0] : null;
     }
 }

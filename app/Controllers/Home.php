@@ -79,6 +79,9 @@ class Home extends BaseController
 
         $dados['ranking'] = $this->m_bmg->tabelaAssessores();
 
+        $dados['progresso'] = $this->m_bmg->barraProgressoAssessor();
+        $dados['nickname'] = $this->session->nickname;
+
         $htmlNotificacoes = $this->m_insight->gerarTimelineNotificacoes();
         $ultimasLigacoes = $this->m_argus->ultimasLigacoes(6);
         $countLigacoes = $this->m_argus->countLigacoes();
@@ -91,7 +94,7 @@ class Home extends BaseController
         $tabulacoesSucesso = $this->m_argus->tabulacoesSucesso();
         $dados['tabulacoesSucesso'] = $tabulacoesSucesso;
 
-        $ultimasPropostasBMG = $this->m_bmg->ultimasPropostasBMG(8);
+        $ultimasPropostasBMG = $this->m_bmg->ultimasPropostasBMG(6);
         $dados['ultimasPropostasBMG'] = $ultimasPropostasBMG;
 
         $countPropostasBMG = $this->m_bmg->countPropostasBMG();
