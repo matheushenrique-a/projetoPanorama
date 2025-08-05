@@ -269,7 +269,7 @@
 																			<p><strong>Nome:</strong> <?= $row->nome ?></p>
 																			<p><strong>CPF:</strong> <?= $row->cpf ?></p>
 																			<p><strong>Produto:</strong> <?= $row->produto ?></p>
-																			<p><strong>Valor:</strong> R$ <?= number_format($row->valor, 2, ',', '.') ?></p>
+																			<p><strong>Valor:</strong> R$ <?= number_format((float)$row->valor, 2, ',', '.') ?></p>
 																			<p><strong>Parcela:</strong> R$ <?= number_format((float)$row->valor_parcela, 2, ',', '.') ?></p>
 
 

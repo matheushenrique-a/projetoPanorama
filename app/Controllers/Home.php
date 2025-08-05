@@ -77,8 +77,10 @@ class Home extends BaseController
         $dados['labelsEquipe'] = $labelsEquipe;
         $dados['dadosEquipe'] = $valoresEquipe;
 
+        $dados['ranking'] = $this->m_bmg->tabelaAssessores();
+
         $htmlNotificacoes = $this->m_insight->gerarTimelineNotificacoes();
-        $ultimasLigacoes = $this->m_argus->ultimasLigacoes(8);
+        $ultimasLigacoes = $this->m_argus->ultimasLigacoes(6);
         $countLigacoes = $this->m_argus->countLigacoes();
         $countPropostas = $this->m_integraall->countPropostas();
         $ultimasPropostas = $this->m_integraall->ultimasPropostas(8);

@@ -68,7 +68,7 @@
 														<div class="card-header pt-7 mb-3 pb-3">
 															<h3 class="card-title align-items-start flex-column">
 																<span class="card-label fw-bolder text-gray-800">Últimas Ligações Argus</span>
-																<span class="text-gray-400 mt-1 fw-bold fs-6">Suas 8 últimas ligações</span>
+																<span class="text-gray-400 mt-1 fw-bold fs-6">Suas 6 últimas ligações</span>
 															</h3>
 															<div class="card-toolbar">
 																<a href="<?php echo assetfolder; ?>" class="btn btn-sm btn-light" title="">Atualizar</a>
@@ -164,6 +164,7 @@
 																	"Análise"   => "info",
 																	"Aprovada"  => "success",
 																	"Cancelada" => "danger",
+																	"Pendente" => "warning",
 																	default     => "secondary"
 																};
 
@@ -182,7 +183,7 @@
 																	<div class="text-gray-400 fw-bolder fs-7 text-end">
 																		<span class="text-gray-800 fw-bolder fs-6 d-block"><a href="#" class="text-gray-800 text-hover-info"><u><?php echo $telefone; ?></u></a></span>
 																		<span class="text-gray-400 fw-bold fs-7 d-block text-start ps-0"><?php echo time_elapsed_string($data_criacao); ?></span>
-																		<span class="badge badge-light-<?php echo $status ?> fs-6"><?= $row->status ?></span>
+																		<span class="badge badge-light-<?php echo $status ?> fs-6 mt-2"><?= $row->status ?></span>
 																	</div>
 																</div>
 																<div class="d-flex flex-stack">
@@ -227,68 +228,6 @@
 												</div>
 
 												<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-												<?php if ($my_security->checkPermission("ADMIN")): ?>
-													<div class="col-xl-4 w-50">
-														<!--begin::List widget 11-->
-														<div class="card h-xl-100">
-															<div class="card-header pt-5 pb-3">
-																<!--begin::Title-->
-																<h3 class="card-title align-items-start flex-column">
-																	<span class="card-label fw-bold text-dark">Gráfico Mensal</span>
-																	<span class="text-gray-400 mt-1 fw-semibold fs-6">Mês atual</span>
-																</h3>
-																<!--end::Title-->
-															</div>
-															<!--begin::Header-->
-															<div class="card pt-7 mb-3 pb-3">
-
-																<!--begin::Header-->
-																<div class="d-flex justify-content-center mt-2" style="width: 400px; margin: 0 auto;">
-																	<canvas id="meuGraficoPizza" style="max-width: 100%;"></canvas>
-																</div>
-															</div>
-														</div>
-													</div>
-
-												<?php endif; ?>
-
-
-												<script>
-													const ctx3 = document.getElementById('meuGraficoPizza').getContext('2d');
-
-													const meuGraficoPizza = new Chart(ctx3, {
-														type: 'pie',
-														data: {
-															labels: ['Análise', 'Aprovadas', 'Canceladas', 'Pendente'],
-															datasets: [{
-																label: 'Quantidade',
-																data: [10, 5, 8, 8],
-																backgroundColor: [
-																	'#7d39ccff',
-																	'#3fcc69ff',
-																	'#dd4538ff',
-																	'#ebe846ff'
-																],
-																borderWidth: 1,
-																borderColor: '#a3a3a3ff'
-															}]
-														},
-														options: {
-															responsive: true,
-															plugins: {
-																legend: {
-																	position: 'bottom',
-																	labels: {
-																		usePointStyle: true, // círculos ao invés de quadrados
-																		boxWidth: 12, // tamanho do ícone
-																		padding: 20 // espaço entre legendas
-																	}
-																}
-															}
-														}
-													});
-												</script>
 
 											<?php endif; ?>
 
@@ -386,56 +325,67 @@
 														<div class="card-header pt-7">
 															<h3 class="card-title align-items-start flex-column">
 																<span class="card-label fw-bold text-dark fs-4">Progresso de Equipe</span>
-																<span class="text-muted mt-1 fw-semibold fs-7">Atualizado há 37 minutos</span>
+																<span class="text-muted mt-2 fw-semibold fs-6">Progresso mensal da equipe</span>
 															</h3>
 														</div>
 
 														<div class="card-body pt-6">
 															<div class="table-responsive">
-																<table class="table align-middle table-striped table-hover">
+																<table class="table table-rounded table-striped border gy-5 gs-7">
 																	<thead class="bg-light">
 																		<tr class="fw-bold text-muted">
-																			<th class="ps-3">#</th>
+																			<th class="ps-10">#</th>
 																			<th>Assessor</th>
+																			<th class="text-center">Progresso</th>
+																			<th class="text-center">Valor</th>
 																			<th class="text-center">Quantidade</th>
 																		</tr>
 																	</thead>
 																	<tbody>
-																		<tr>
-																			<td>
-																				<span class="badge bg-success fs-6 rounded-circle px-3 py-2">1</span>
-																			</td>
-																			<td>
-																				<span class="text-dark fw-bold fs-6">STEFANI RUTE</span>
-																			</td>
-																			<td class="text-center">
-																				<span class="badge bg-primary fs-6 px-3 py-2">5</span>
-																			</td>
-																		</tr>
-																		<tr>
-																			<td>
-																				<span class="badge bg-warning fs-6 rounded-circle px-3 py-2">2</span>
-																			</td>
-																			<td>
-																				<span class="text-dark fw-bold fs-6">JOÃO SILVA</span>
-																			</td>
-																			<td class="text-center">
-																				<span class="badge bg-primary fs-6 px-3 py-2">4</span>
-																			</td>
-																		</tr>
-																		<tr>
-																			<td>
-																				<span class="badge bg-secondary fs-6 rounded-circle px-3 py-2">3</span>
-																			</td>
-																			<td>
-																				<span class="text-dark fw-bold fs-6">MARIA OLIVEIRA</span>
-																			</td>
-																			<td class="text-center">
-																				<span class="badge bg-primary fs-6 px-3 py-2">3</span>
-																			</td>
-																		</tr>
+																		<?php $posicao = 9; ?>
+																		<?php foreach ($ranking as $row): ?>
+																			<tr>
+																				<td>
+																					<span class="badge bg-warning fs-6 rounded-circle"
+																						style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
+																						<?= $posicao; ?>
+																					</span>
+																				</td>
+																				<td>
+																					<span class="text-dark fw-bold fs-6">
+																						<?php $nomes = explode(' ', trim($row->nome));
+																						if (count($nomes) > 1) {
+																							echo $nomes[0] . ' ' . $nomes[count($nomes) - 1];
+																						} else {
+																							echo $row->nome;
+																						}
+																						?>
+																					</span>
+																				</td>
+																				<td class="text-center">
+																					<span class="badge badge-light-success fs-base">
+																						<span class="svg-icon svg-icon-5 svg-icon-success ms-n1">
+																							<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+																								<rect opacity="0.5" x="13" y="6" width="13" height="2" rx="1" transform="rotate(90 13 6)" fill="currentColor" />
+																								<path d="M12.5657 8.56569L16.75 12.75C17.1642 13.1642 17.8358 13.1642 18.25 12.75C18.6642 12.3358 18.6642 11.6642 18.25 11.25L12.7071 5.70711C12.3166 5.31658 11.6834 5.31658 11.2929 5.70711L5.75 11.25C5.33579 11.6642 5.33579 12.3358 5.75 12.75C6.16421 13.1642 6.83579 13.1642 7.25 12.75L11.4343 8.56569C11.7467 8.25327 12.2533 8.25327 12.5657 8.56569Z" fill="currentColor" />
+																							</svg>
+																						</span><?= $row->percentual; ?>%</span>
+																				</td>
+																				<td class="text-center">
+																					R$ <?= number_format($row->total_valor, 2, ',', '.'); ?>
+																				</td>
+																				<td class="text-center">
+																					<span class="badge bg-gray-500 fs-6 px-3 py-2">
+																						<?= $row->total_propostas; ?>
+																					</span>
+																				</td>
+																			</tr>
+																			<?php $posicao++; ?>
+																		<?php endforeach; ?>
+
 																	</tbody>
 																</table>
+
 															</div>
 															<!--end::Table-->
 														</div>

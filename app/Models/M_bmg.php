@@ -591,7 +591,7 @@ class M_bmg extends Model
         FROM quid_propostas
         WHERE assessor = '{$nickname}'
         AND DATE(data_criacao) >= CURDATE() - INTERVAL 4 DAY
-        AND status = 'Aprovada'
+        AND status IN ('Aprovada', 'Análise')
         GROUP BY DATE(data_criacao)
         ORDER BY data
         ";
@@ -608,7 +608,7 @@ class M_bmg extends Model
         FROM quid_propostas
         WHERE report_to = $equipe
         AND DATE(data_criacao) >= CURDATE() - INTERVAL 4 DAY
-        AND status = 'Aprovada'
+        AND status IN ('Aprovada', 'Análise')
         GROUP BY DATE(data_criacao)
         ORDER BY data
         ";
@@ -626,5 +626,30 @@ class M_bmg extends Model
         WHERE report_to = {$equipe}";
 
         return $this->dbMasterDefault->runQuery($sql)['result']->getResult();
+    }
+
+    public function tabelaAssessores()
+    {
+        $meta = 14000;
+        $supervisor = $this->session->userId;
+
+        $sql = "
+        SELECT 
+            TRIM(assessor) AS nome,
+            COUNT(*) AS total_propostas,
+            SUM(valor) AS total_valor,
+            ROUND((SUM(valor) / {$meta}) * 100, 1) AS percentual
+        FROM quid_propostas
+        WHERE MONTH(data_criacao) = MONTH(CURDATE())
+          AND YEAR(data_criacao) = YEAR(CURDATE())
+          AND report_to = {$supervisor}
+          AND status IN ('Aprovada', 'Análise')
+        GROUP BY TRIM(assessor)
+        ORDER BY total_valor DESC;
+    ";
+
+        return $this->dbMasterDefault
+            ->runQuery($sql)['result']
+            ->getResult();
     }
 }
