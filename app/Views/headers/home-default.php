@@ -57,7 +57,11 @@
 										<!--begin::Row-->
 										<div class="row g-5 g-xl-10 mb-5">
 
-											<?php if (!$my_security->checkPermission("SUPERVISOR")): ?>
+											<?php if ($my_security->checkPermission("FORMALIZACAO")): ?>
+												<h1>Nada pra formalização ainda... :(</h1>
+											<?php endif; ?>
+
+											<?php if (!$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("FORMALIZACAO")): ?>
 
 												<div>
 													<div class="card">
@@ -67,7 +71,9 @@
 															<!--begin::Title-->
 															<h3 class="card-title align-items-start flex-column">
 																<span class="card-label fw-bolder text-gray-800">Barra de progresso mensal</span>
-																<span class="text-gray-600 mt-2 fw-semibold fs-6">Valor Averbado: <span class="text-success">R$ <?php if(isset($progresso->total_valor)) : echo number_format((float)$progresso->total_valor, 2, ',', '.'); else: echo "0"; endif;?></span></span>
+																<span class="text-gray-600 mt-2 fw-semibold fs-6">Valor Averbado: <span class="text-success">R$ <?php if (isset($progresso->total_valor)) : echo number_format((float)$progresso->total_valor, 2, ',', '.');
+																																								else: echo "0";
+																																								endif; ?></span></span>
 																<span class="text-gray-600 mt-2 fw-semibold fs-6">Meta: <span class="text-success">R$ 14.000,00</span></span></span>
 															</h3>
 														</div>
@@ -88,7 +94,9 @@
 															labels: ['<?= explode(' ', trim($nickname))[0] ?>'],
 															datasets: [{
 																label: 'Progresso da Meta (%)',
-																data: [<?php if(isset($progresso->percentual)): echo $progresso->percentual; else: echo 0; endif; ?>],
+																data: [<?php if (isset($progresso->percentual)): echo $progresso->percentual;
+																		else: echo 0;
+																		endif; ?>],
 																backgroundColor: 'rgba(48, 221, 149, 0.6)',
 																borderColor: 'rgba(44, 230, 121, 1)',
 																borderWidth: 1
@@ -121,7 +129,7 @@
 												</script>
 											<?php endif; ?>
 
-											<?php if (!$my_security->checkPermission("SUPERVISOR")): ?>
+											<?php if (!$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("FORMALIZACAO")): ?>
 
 												<div class="col-xl-4 w-50">
 													<div class="card h-xl-100">
@@ -228,7 +236,7 @@
 
 											<?php endif; ?>
 
-											<?php if ($my_security->checkPermission("SUPERVISOR")): ?>
+											<?php if ($my_security->checkPermission("SUPERVISOR") || $my_security->checkPermission("FORMALIZACAO")): ?>
 												<div class="col-xl-4 w-50">
 													<!--begin::LisFt widget 11-->
 													<div class="card h-xl-100">
@@ -314,7 +322,7 @@
 												});
 											</script>
 
-											<?php if ($my_security->checkPermission("SUPERVISOR")): ?>
+											<?php if ($my_security->checkPermission("SUPERVISOR")|| $my_security->checkPermission("FORMALIZACAO")): ?>
 
 												<!-- ADICIONAR -->
 												<div class="col-xl-4 w-50">

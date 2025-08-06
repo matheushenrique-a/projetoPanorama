@@ -605,15 +605,28 @@ class M_bmg extends Model
     {
         $equipe = $this->session->userId;
 
-        $sql = "
-        SELECT DATE(data_criacao) as data, COUNT(*) as total
-        FROM quid_propostas
-        WHERE report_to = $equipe
-        AND DATE(data_criacao) >= CURDATE() - INTERVAL 4 DAY
-        AND status IN ('Aprovada', 'Análise')
-        GROUP BY DATE(data_criacao)
-        ORDER BY data
-        ";
+        if (($this->session->role !== "SUPERVISOR") || $this->m_security->checkPermission("FORMALIZACAO")) {
+            $sql = "
+            SELECT DATE(data_criacao) as data, COUNT(*) as total
+            FROM quid_propostas
+            WHERE DATE(data_criacao) >= CURDATE() - INTERVAL 4 DAY
+            AND status IN ('Aprovada', 'Análise')
+            GROUP BY DATE(data_criacao)
+            ORDER BY data
+            ";
+        } else {
+
+            $sql = "
+            SELECT DATE(data_criacao) as data, COUNT(*) as total
+            FROM quid_propostas
+            WHERE report_to = $equipe
+            AND DATE(data_criacao) >= CURDATE() - INTERVAL 4 DAY
+            AND status IN ('Aprovada', 'Análise')
+            GROUP BY DATE(data_criacao)
+            ORDER BY data
+            ";
+        }
+
 
         return $this->dbMasterDefault->runQuery($sql)['result']->getResult();
     }
@@ -635,7 +648,7 @@ class M_bmg extends Model
         $meta = 14000;
         $supervisor = $this->session->userId;
 
-        if ($this->session->userId == "164990") {
+        if (($this->session->role !== "SUPERVISOR") || $this->m_security->checkPermission("FORMALIZACAO")) {
             $sql = "
             SELECT 
             TRIM(assessor) AS nome,
@@ -688,7 +701,7 @@ class M_bmg extends Model
           AND status IN ('Aprovada', 'Análise')
         GROUP BY TRIM(assessor)
         LIMIT 1;
-    ";
+        ";
 
         $result = $this->dbMasterDefault->runQuery($sql)['result']->getResult();
 

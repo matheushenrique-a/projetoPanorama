@@ -195,7 +195,7 @@ class Insight extends BaseController
             $whereCheck["assessor"] = $this->session->nickname;
         }
 
-        if ($this->session->role == "SUPERVISOR" && !$this->my_security->checkPermission("ADMIN")) {
+        if ($this->session->role == "SUPERVISOR" && !$this->my_security->checkPermission("ADMIN") && !$this->my_security->checkPermission("FORMALIZACAO")) {
             $whereCheck['report_to'] = $this->session->userId;
         }
 
@@ -225,7 +225,7 @@ class Insight extends BaseController
         $nickname = $this->session->nickname;
         $userId = $this->session->userId;
 
-        if ($this->my_security->checkPermission("ADMIN")) {
+        if ($this->my_security->checkPermission("ADMIN") || $this->my_security->checkPermission("FORMALIZACAO")) {
             $indicadores['propostas_hoje'] = $this->dbMaster->runQuery(
                 "SELECT COUNT(*) AS total 
          FROM quid_propostas 

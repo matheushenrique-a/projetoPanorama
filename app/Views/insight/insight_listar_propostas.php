@@ -295,7 +295,7 @@
 																				</div>
 																			</div>
 
-																			<?php if ($my_security->checkPermission("SUPERVISOR")): ?>
+																			<?php if ($my_security->checkPermission("SUPERVISOR") || $my_security->checkPermission("FORMALIZACAO")): ?>
 																				<div class="mt-4">
 																					<label for="status_<?= $row->idquid_propostas ?>" class="form-label">Alterar Status</label>
 																					<select class="form-select" id="status_<?= $row->idquid_propostas ?>" name="status">
@@ -309,7 +309,7 @@
 																			<input type="hidden" name="id" value="<?= $row->idquid_propostas ?>">
 																		</div>
 
-																		<?php if ($my_security->checkPermission("SUPERVISOR")) : ?>
+																		<?php if ($my_security->checkPermission("SUPERVISOR") || $my_security->checkPermission("FORMALIZACAO")): ?>
 
 																			<div class="modal-footer justify-content-between">
 																				<div>
