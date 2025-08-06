@@ -92,9 +92,9 @@
                                                                 $temCartaoDisponivel = true;
                                                             }
                                                             ?>
-
-
                                                             <?php if ($temCartaoDisponivel): ?>
+
+
                                                                 <div class="input-group">
                                                                     <h3 class="ms-2 mt-8" id="lblInfo">Dados Cliente:</h3>
                                                                 </div>
@@ -161,6 +161,15 @@
                                                                 <div class="input-group">
                                                                     <h3 class="ms-2 mt-6 mb-2" id="lblNiver">Informações de pagamento:</h3>
                                                                 </div>
+                                                                <?php if (isset($codigoEntidade) && $codigoEntidade == "164"): ?>
+                                                                    <div class="input-group">
+                                                                        <span class="input-group-text" style="width: 155px">Tipo Saque</span>
+                                                                        <select class="form-select fs-5 fw-bold" id="tipoSaque" name="tipoSaque">
+                                                                            <option value="2">Saque Parcelado</option>
+                                                                            <option value="1">Saque Autorizado</option>
+                                                                        </select>
+                                                                    </div>
+                                                                <?php endif; ?>
                                                                 <div class="input-group">
                                                                     <span class="input-group-text" style="width: 155px">Tipo Conta</span>
                                                                     <select class="form-select fs-5 fw-bold" id="finalidadeCredito" name="finalidadeCredito">

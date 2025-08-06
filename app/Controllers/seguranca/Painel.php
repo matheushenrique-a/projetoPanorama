@@ -36,7 +36,7 @@ class Painel extends BaseController
 
         $whereCheck['empresa'] = EMPRESA;
 
-        if(!$this->my_security->checkPermission("ADMIN")){
+        if (!$this->my_security->checkPermission("ADMIN")) {
             $likeCheck['report_to'] = $this->session->userId;
         }
 
@@ -73,21 +73,21 @@ class Painel extends BaseController
             $cargo = $this->getpost('role');
             $supervisor = $this->getpost('report_to');
 
-            $findSupervisorId = $this->dbMaster->select('user_account', ['nickname' => $supervisor]);
-
-            $supervisorDados = $findSupervisorId['firstRow'];
-
-            $supervisorId = $supervisorDados->userId ?? 1;
-
-            // configurar permissões
             $permissions = [];
 
-            // configurar lógica de supervisor
+            if ($this->getpost('bmg')) {
+                $permissions[] = "BMG";
+            }
+
+            if ($this->getpost('bradesco')) {
+                $permissions[] = "BRADESCO";
+            }
+
             if (EMPRESA == 'quid') {
                 if ($cargo == "SUPERVISOR") {
-                    array_push($permissions, "SUPERVISOR", "QUID", "BMG");
+                    array_push($permissions, "SUPERVISOR", "QUID");
                 } else {
-                    array_push($permissions, "QUID", "BMG");
+                    array_push($permissions, "QUID");
                 }
             }
 
@@ -122,7 +122,7 @@ class Painel extends BaseController
                 'empresa' => $empresa,
                 'equipe' => $equipe,
                 'role' => $cargo,
-                'report_to' => $supervisorId,
+                'report_to' => $supervisor,
                 'perfil_acesso' => json_encode($permissions),
                 'parameters' => $parameters,
                 'status' => $status
@@ -151,6 +151,27 @@ class Painel extends BaseController
             $dados['senha'] = $usuarioDados->password;
             $dados['cargo'] = $usuarioDados->role;
             $dados['supervisor'] = $usuarioDados->report_to;
+            $dados['perfil_acesso'] = $usuarioDados->perfil_acesso;
+
+            $perfilAcesso = json_decode($dados['perfil_acesso'], true);
+
+            $permissions = [];
+
+            foreach ($perfilAcesso as $permissao) {
+                $permissions[] = $permissao;
+            }
+
+            if (in_array("BMG", $permissions)) {
+                $dados['bmg'] = true;
+            } else {
+                $dados['bmg'] = false;
+            }
+
+            if (in_array("BRADESCO", $permissions)) {
+                $dados['bradesco'] = true;
+            } else {
+                $dados['bradesco'] = false;
+            }
 
             $whereCheck['role'] = 'SUPERVISOR';
 

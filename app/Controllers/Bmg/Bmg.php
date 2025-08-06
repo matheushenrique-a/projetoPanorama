@@ -756,7 +756,7 @@ class Bmg extends BaseController
         $dataNascimento = $params['dataNascimento'] ?? '';
         $codigoEntidade = $params['codigoEntidade'];
 
-        if($codigoEntidade !== "164"){
+        if ($codigoEntidade !== "164") {
             $produto = "INSS";
         } else {
             $produto = "SIAPE";
@@ -899,7 +899,15 @@ class Bmg extends BaseController
             $numeroParcelas = (int) $this->getpost('parcelas') ?? '';
             $valorParcela = (float) $this->getpost('valorParcela') ?? '';
             $finalidadeCredito = (int) $this->getpost('finalidadeCredito') ?? 1;
-            $digitoAgencia = $this->getpost('digitoAgencia') ?? null;
+            $digitoAgencia = $this->getpost('digitoAgencia') ?? '';
+            $tipoSaque = (int) $this->getpost('tipoSaque');
+            
+
+            if (isset($tipoSaque)) {
+                $tipoSaque = 1;
+            } else {
+                $tipoSaque = 2;
+            }
 
             $dataSaque = [
                 "cpf" => $cpf,
@@ -920,6 +928,7 @@ class Bmg extends BaseController
                 "valorSaque" => (float) $valorSaque,
                 'numeroContaInterna' => $numeroContaInterna,
                 'codigoEntidade' => $codigoEntidade,
+                'tipoSaque' => $tipoSaque,
                 'matricula' => $matricula,
                 'valorParcela' => $valorParcela,
                 'numeroParcelas' => $numeroParcelas,
@@ -927,6 +936,7 @@ class Bmg extends BaseController
 
             if ($codigoEntidade == "164") {
                 $dataSaque['sequencialOrgao'] = "4";
+                $dataSaque['codigoSituacaoServidor'] = 2;
             }
 
             $returnData = $this->m_bmg->gravarPropostaSaque($dataSaque);

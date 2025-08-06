@@ -68,7 +68,21 @@
                                 <option value="SUPERVISOR">Supervisor</option>
                             </select>
                         </div>
-
+                        <span>Permissões:</span>
+                        <div class="d-flex gap-6 mt-2 mb-4">
+                            <div class="form-check">
+                                <input class="form-check-input" name="bmg" type="checkbox" value="1" id="bmg" checked/>
+                                <label class="form-check-label" for="flexCheckChecked">
+                                    BMG
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" name="bradesco" type="checkbox" value="1" id="bradesco"/>
+                                <label class="form-check-label" for="flexCheckChecked">
+                                    Bradesco
+                                </label>
+                            </div>
+                        </div>
                         <div class="input-group mb-2">
                             <span class="input-group-text" id="inputGroup-sizing-default">Supervisor</span>
                             <select name="report_to" id="report_to" class="form-select form-select-lg text-dark" data-placeholder="Responsável">

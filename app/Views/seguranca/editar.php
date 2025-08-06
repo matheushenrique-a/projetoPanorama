@@ -68,6 +68,21 @@
                                 <option value="SUPERVISOR" <?= ($cargo == 'SUPERVISOR') ? 'selected' : '' ?>>Supervisor</option>
                             </select>
                         </div>
+                        <span>Permissões:</span>
+                        <div class="d-flex gap-6 mt-2 mb-4">
+                            <div class="form-check">
+                                <input class="form-check-input" name="bmg" type="checkbox" value="1" id="bmg" <?= $bmg ? 'checked' : '' ?> />
+                                <label class="form-check-label" for="flexCheckChecked">
+                                    BMG
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" name="bradesco" type="checkbox" value="1" id="bradesco" <?= $bradesco ? 'checked' : '' ?> />
+                                <label class="form-check-label" for="flexCheckChecked">
+                                    Bradesco
+                                </label>
+                            </div>
+                        </div>
                         <div class="input-group mb-2">
                             <span class="input-group-text" id="inputGroup-sizing-default">Supervisor</span>
                             <select name="report_to" id="report_to" class="form-select form-select-lg text-dark" data-placeholder="Responsável">
@@ -116,6 +131,7 @@
     // Lista de supervisores passada do PHP para o JS
     const supervisorList = <?= json_encode($supervisorlist) ?>;
     const gerenteList = <?= json_encode($gerentelist) ?>;
+    const supervisorId = <?= json_encode($supervisor) ?>;
 
     // Função para atualizar os responsáveis no select
     function atualizarResponsaveis(cargo) {
@@ -128,6 +144,9 @@
                 const option = document.createElement('option');
                 option.value = supervisor.userId;
                 option.textContent = supervisor.nickname;
+                if (supervisor.userId == supervisorId) {
+                    option.selected = true;
+                }
                 select.appendChild(option);
             });
         } else if (cargo == 'SUPERVISOR') {
@@ -135,6 +154,9 @@
                 const option = document.createElement('option');
                 option.value = gerente.userId;
                 option.textContent = gerente.nickname;
+                if (gerente.userId == supervisorId) {
+                    option.selected = true;
+                }
                 select.appendChild(option);
             })
 

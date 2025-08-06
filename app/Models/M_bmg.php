@@ -425,7 +425,6 @@ class M_bmg extends Model
                 'finalidadeCredito' => $params['finalidadeCredito'], // CONTA CORRENTE
                 'formaCredito' => $formaCredito, // TRANSFERÊNCIA BANCÁRIA // CONTA BMG
                 'codigoFormaEnvioTermo' => "15", // DIGITAL
-                'tipoSaque' => 2,
                 'bancoOrdemPagamento' => 0,
                 'cpfImpedidoComissionar' => false,
             ];
