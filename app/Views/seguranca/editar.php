@@ -66,6 +66,7 @@
                                 <option value=""></option>
                                 <option value="OPERADOR" <?= ($cargo == 'OPERADOR') ? 'selected' : '' ?>>Operador</option>
                                 <option value="SUPERVISOR" <?= ($cargo == 'SUPERVISOR') ? 'selected' : '' ?>>Supervisor</option>
+                                <option value="AUDITOR" <?= ($cargo == 'AUDITOR') ? 'selected' : '' ?>>Auditor</option>
                             </select>
                         </div>
                         <span>Permissões:</span>
@@ -139,7 +140,7 @@
         select.innerHTML = ''; // limpa as opções
 
         // Se o cargo for OPERADOR, exibe os SUPERVISORES como responsáveis
-        if (cargo === 'OPERADOR') {
+        if (cargo === 'OPERADOR' || cargo == 'AUDITOR') {
             supervisorList.forEach(supervisor => {
                 const option = document.createElement('option');
                 option.value = supervisor.userId;

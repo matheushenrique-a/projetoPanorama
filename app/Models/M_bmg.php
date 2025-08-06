@@ -605,7 +605,7 @@ class M_bmg extends Model
     {
         $equipe = $this->session->userId;
 
-        if (($this->session->role !== "SUPERVISOR") || $this->m_security->checkPermission("FORMALIZACAO")) {
+        if (($this->session->role !== "SUPERVISOR") || $this->m_security->checkPermission("FORMALIZACAO") || $this->m_security->checkPermission("ADMIN")) {
             $sql = "
             SELECT DATE(data_criacao) as data, COUNT(*) as total
             FROM quid_propostas
@@ -648,7 +648,7 @@ class M_bmg extends Model
         $meta = 14000;
         $supervisor = $this->session->userId;
 
-        if (($this->session->role !== "SUPERVISOR") || $this->m_security->checkPermission("FORMALIZACAO")) {
+        if (($this->session->role !== "SUPERVISOR") || $this->m_security->checkPermission("FORMALIZACAO") || $this->m_security->checkPermission("ADMIN")) {
             $sql = "
             SELECT 
             TRIM(assessor) AS nome,

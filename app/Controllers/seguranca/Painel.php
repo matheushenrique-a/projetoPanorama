@@ -86,6 +86,8 @@ class Painel extends BaseController
             if (EMPRESA == 'quid') {
                 if ($cargo == "SUPERVISOR") {
                     array_push($permissions, "SUPERVISOR", "QUID");
+                } else if ($cargo == "AUDITOR") {
+                    array_push($permissions, "QUID", "FORMALIZACAO");
                 } else {
                     array_push($permissions, "QUID");
                 }

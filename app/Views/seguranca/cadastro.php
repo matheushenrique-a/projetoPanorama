@@ -65,19 +65,22 @@
                             <select name="role" id="role" class="form-select form-select-lg text-dark" data-placeholder="Cargo">
                                 <option value=""></option>
                                 <option value="OPERADOR">Operador</option>
-                                <option value="SUPERVISOR">Supervisor</option>
+                                <option value="AUDITOR">Auditor</option>
+                                <?php if ($my_security->checkPermission("ADMIN")): ?>
+                                    <option value="SUPERVISOR">Supervisor</option>
+                                <?php endif; ?>
                             </select>
                         </div>
                         <span>Permissões:</span>
                         <div class="d-flex gap-6 mt-2 mb-4">
                             <div class="form-check">
-                                <input class="form-check-input" name="bmg" type="checkbox" value="1" id="bmg" checked/>
+                                <input class="form-check-input" name="bmg" type="checkbox" value="1" id="bmg" checked />
                                 <label class="form-check-label" for="flexCheckChecked">
                                     BMG
                                 </label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" name="bradesco" type="checkbox" value="1" id="bradesco"/>
+                                <input class="form-check-input" name="bradesco" type="checkbox" value="1" id="bradesco" />
                                 <label class="form-check-label" for="flexCheckChecked">
                                     Bradesco
                                 </label>
@@ -103,7 +106,7 @@
                             select.innerHTML = ''; // limpa as opções
 
                             // Se o cargo for OPERADOR, exibe os SUPERVISORES como responsáveis
-                            if (cargo === 'OPERADOR') {
+                            if (cargo === 'OPERADOR' || cargo == 'AUDITOR') {
                                 supervisorList.forEach(supervisor => {
                                     const option = document.createElement('option');
                                     option.value = supervisor.userId;
