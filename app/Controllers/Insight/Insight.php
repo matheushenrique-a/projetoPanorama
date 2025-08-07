@@ -95,11 +95,25 @@ class Insight extends BaseController
         if ($action == "alterar-status") {
             $id = $this->request->getPost('id');
             $novoStatus = $this->request->getPost('status');
+            $nome = $this->request->getPost('nome');
+            $cpf = $this->request->getPost('cpf');
+            $telefone = $this->request->getPost('telefone');
+            $produto = $this->request->getPost('produto');
+            $valorSaque = $this->request->getPost('valorSaque');
+            $valorParcela = $this->getpost('valorParcela');
 
             if ($id && $novoStatus) {
 
                 $tabela = 'quid_propostas';
-                $valores = ['status' => $novoStatus];
+                $valores = [
+                    'status' => $novoStatus,
+                    'cpf' => $cpf,
+                    'telefone' => $telefone,
+                    'nome' => $nome,
+                    'produto' => $produto,
+                    'valor' => $valorSaque,
+                    'valor_parcela' => $valorParcela
+                ];
                 $condicao = ['idquid_propostas' => $id];
 
                 $retorno = $this->dbMasterDefault->update($tabela, $valores, $condicao);

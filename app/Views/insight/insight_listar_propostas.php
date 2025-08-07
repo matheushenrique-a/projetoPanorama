@@ -257,7 +257,7 @@
 														<div class="modal fade" tabindex="-1" id="<?= $modalId ?>">
 															<div class="modal-dialog modal-dialog-centered">
 																<div class="modal-content">
-																	<form action="<?= assetfolder; ?>insight-listar-propostas/0/alterar-status" method="POST">
+																	<form action="<?= assetfolder; ?>insight-listar-propostas/0/alterar-status" id="formEdit" method="POST">
 																		<div class="modal-header">
 																			<h3 class="modal-title">Proposta <?= $row->adesao ?></h3>
 																			<div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Fechar">
@@ -268,30 +268,33 @@
 																		<div class="modal-body">
 																			<div class="mb-2">
 																				<span class="fw-bold mb-1">Nome:</span>
-																				<input type="text" class="form-control form-control-solid" value="<?= $row->nome ?>" readonly />
+																				<input type="text" class="form-control form-control-solid" name="nome" value="<?= $row->nome ?>" data-original="<?= $row->nome ?>" />
 																			</div>
 																			<div class="d-flex gap-4">
 																				<div class="mb-2">
 																					<span class="fw-bold mb-1">CPF:</span>
-																					<input type="text" class="form-control form-control-solid" value="<?= $row->cpf ?>" readonly />
+																					<input type="text" class="form-control form-control-solid" name="cpf" id="cpf" value="<?= $row->cpf ?>" data-original="<?= $row->cpf ?>" />
 																				</div>
 																				<div>
 																					<span class="fw-bold mb-1">Celular:</span>
-																					<input type="text" class="form-control form-control-solid" value="<?= formatarTelefone($row->telefone) ?>" readonly />
+																					<?php
+																					$telFormatado = formatarTelefone($row->telefone);
+																					?>
+																					<input type="text" class="form-control form-control-solid" name="telefone" id="telefone" value="<?= $telFormatado ?>" data-original="<?= $telFormatado ?>" />
 																				</div>
 																			</div>
 																			<div class="mb-2">
 																				<span class="fw-bold mb-1">Produto:</span>
-																				<input type="text" class="form-control form-control-solid" value="<?= $row->produto ?>" readonly />
+																				<input type="text" class="form-control form-control-solid" name="produto" value="<?= $row->produto ?>" data-original="<?= $row->produto ?>" />
 																			</div>
 																			<div class="d-flex gap-4">
 																				<div class="mb-2">
 																					<span class="fw-bold mb-1">Valor:</span>
-																					<input type="text" class="form-control form-control-solid" value="R$ <?= number_format((float)$row->valor, 2, ',', '.') ?>" readonly />
+																					<input type="text" class="form-control form-control-solid" name="valorSaque" id="valorSaque" value="<?= $row->valor ?>" data-original="<?= $row->valor ?>" />
 																				</div>
 																				<div class="mb-2">
 																					<span class="fw-bold mb-1">Valor parcela:</span>
-																					<input type="text" class="form-control form-control-solid" value="R$ <?= number_format((float)$row->valor_parcela, 2, ',', '.') ?>" readonly />
+																					<input type="text" class="form-control form-control-solid" name="valorParcela" id="valorParcela" value="<?= $row->valor_parcela ?>" data-original="<?= $row->valor_parcela ?>" />
 																				</div>
 																			</div>
 
@@ -343,7 +346,7 @@
 																<p class="text-gray-500 fw-bold fs-8"><?= $row->assessor ?></p>
 															</td>
 															<td><?= $row->cpf; ?></td>
-															<td class="text-success">R$ <?= number_format($row->valor, 2, ',', '.') ?></td>
+															<td class="text-success">R$ <?= number_format((float)$row->valor, 2, ',', '.') ?></td>
 															<td class="text-primary"><?= $row->produto ?></td>
 															<td>
 																<a target="_blank" href="https://grupoquid.panoramaemprestimos.com.br/emprestimoInterno.do?action=exibir&codigo=<?= $row->panorama_id ?>" class="btn btn-sm btn-icon btn-bg-light btn-active-color-primary w-25px h-25px">
@@ -380,11 +383,128 @@
 														}
 													});
 												}
+
+												document.addEventListener('DOMContentLoaded', function() {
+													const inputValor = document.getElementById('valorSaque');
+													const inputParcela = document.getElementById('valorParcela');
+													const inputTelefone = document.getElementById('telefone');
+													const inputCPF = document.getElementById('cpf');
+													const form = document.getElementById('formEdit');
+													const modal = form?.closest('.modal');
+
+													if (modal) {
+														modal.addEventListener('hidden.bs.modal', function() {
+
+															const elementos = modal.querySelectorAll('[data-original]');
+															elementos.forEach(el => {
+																const original = el.getAttribute('data-original');
+
+																if (!original) return;
+
+																el.value = original;
+
+																const event = new Event('input', {
+																	bubbles: true
+																});
+																el.dispatchEvent(event);
+															});
+
+														});
+													}
+
+													function formatarTelefone(valor) {
+														valor = valor.replace(/\D/g, '');
+
+														if (valor.length === 0) {
+															return '';
+														}
+
+														if (valor.length < 3) {
+															return `(${valor}`;
+														}
+
+														if (valor.length < 7) {
+															return `(${valor.slice(0, 2)}) ${valor.slice(2)}`;
+														}
+
+														if (valor.length < 11) {
+															return `(${valor.slice(0, 2)}) ${valor.slice(2, 6)}-${valor.slice(6)}`;
+														}
+
+														return `(${valor.slice(0, 2)}) ${valor.slice(2, 7)}-${valor.slice(7, 11)}`;
+													}
+
+													inputCPF.addEventListener('input', () => {
+														let value = inputCPF.value.replace(/\D/g, '');
+														if (value.length > 3) value = value.replace(/^(\d{3})(\d)/, '$1.$2');
+														if (value.length > 6) value = value.replace(/^(\d{3})\.(\d{3})(\d)/, '$1.$2.$3');
+														if (value.length > 9) value = value.replace(/^(\d{3})\.(\d{3})\.(\d{3})(\d)/, '$1.$2.$3-$4');
+														inputCPF.value = value;
+													});
+
+													inputTelefone.value = formatarTelefone(inputTelefone.value);
+
+													inputTelefone.addEventListener('input', function() {
+														this.value = formatarTelefone(this.value);
+													});
+
+													form.addEventListener('submit', function() {
+														input.value = input.value.replace(/\D/g, '');
+													});
+
+
+													let valorInicial = parseFloat(inputValor.value);
+													if (!isNaN(valorInicial)) {
+														inputValor.value = 'R$ ' + valorInicial.toLocaleString('pt-BR', {
+															minimumFractionDigits: 2,
+															maximumFractionDigits: 2
+														});
+													}
+
+													let valorInicialParcela = parseFloat(inputParcela.value);
+													if (!isNaN(valorInicialParcela)) {
+														inputParcela.value = 'R$ ' + valorInicialParcela.toLocaleString('pt-BR', {
+															minimumFractionDigits: 2,
+															maximumFractionDigits: 2
+														});
+													}
+
+													inputValor.addEventListener('input', function() {
+														let val = this.value.replace(/\D/g, '');
+														if (val) {
+															val = (parseFloat(val) / 100).toFixed(2);
+															this.value = 'R$ ' + Number(val).toLocaleString('pt-BR', {
+																minimumFractionDigits: 2,
+																maximumFractionDigits: 2
+															});
+														} else {
+															this.value = '';
+														}
+													});
+
+													inputParcela.addEventListener('input', function() {
+														let val = this.value.replace(/\D/g, '');
+														if (val) {
+															val = (parseFloat(val) / 100).toFixed(2);
+															this.value = 'R$ ' + Number(val).toLocaleString('pt-BR', {
+																minimumFractionDigits: 2,
+																maximumFractionDigits: 2
+															});
+														} else {
+															this.value = '';
+														}
+													});
+
+													form.addEventListener('submit', function() {
+														let valor = input.value;
+
+														valor = valor.replace(/[R$\s]/g, '').replace(/\./g, '').replace(',', '.');
+
+														input.value = valor;
+													});
+												});
 											</script>
 
-
-
-											<!--end::Table-->
 										</div>
 										<!--end::Card body-->
 									</div>
