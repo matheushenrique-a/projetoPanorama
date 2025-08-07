@@ -901,7 +901,6 @@ class Bmg extends BaseController
             $finalidadeCredito = (int) $this->getpost('finalidadeCredito') ?? 1;
             $digitoAgencia = $this->getpost('digitoAgencia') ?? '';
             $tipoSaque = (int) $this->getpost('tipoSaque');
-            
 
             if (isset($tipoSaque)) {
                 $tipoSaque = 1;
@@ -936,6 +935,9 @@ class Bmg extends BaseController
 
             if ($codigoEntidade == "164") {
                 $dataSaque['sequencialOrgao'] = "4";
+            }
+
+            if ($codigoEntidade == "164" || $codigoEntidade == "4283-1") {
                 $dataSaque['codigoSituacaoServidor'] = 2;
             }
 

@@ -268,33 +268,45 @@
 																		<div class="modal-body">
 																			<div class="mb-2">
 																				<span class="fw-bold mb-1">Nome:</span>
-																				<input type="text" class="form-control form-control-solid" name="nome" value="<?= $row->nome ?>" data-original="<?= $row->nome ?>" />
+																				<input type="text" class="form-control form-control-solid" name="nome" value="<?= $row->nome ?>" data-original="<?= $row->nome ?>"
+																					<?php if (!$my_security->checkPermission("FORMALIZACAO") && !$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("ADMIN")): echo "readonly";
+																					endif; ?> />
 																			</div>
 																			<div class="d-flex gap-4">
 																				<div class="mb-2">
 																					<span class="fw-bold mb-1">CPF:</span>
-																					<input type="text" class="form-control form-control-solid" name="cpf" id="cpf" value="<?= $row->cpf ?>" data-original="<?= $row->cpf ?>" />
+																					<input type="text" class="form-control form-control-solid" name="cpf" id="cpf" value="<?= $row->cpf ?>" data-original="<?= $row->cpf ?>"
+																						<?php if (!$my_security->checkPermission("FORMALIZACAO") && !$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("ADMIN")): echo "readonly";
+																						endif; ?> />
 																				</div>
 																				<div>
 																					<span class="fw-bold mb-1">Celular:</span>
 																					<?php
 																					$telFormatado = formatarTelefone($row->telefone);
 																					?>
-																					<input type="text" class="form-control form-control-solid" name="telefone" id="telefone" value="<?= $telFormatado ?>" data-original="<?= $telFormatado ?>" />
+																					<input type="text" class="form-control form-control-solid" name="telefone" id="telefone" value="<?= $telFormatado ?>" data-original="<?= $telFormatado ?>"
+																						<?php if (!$my_security->checkPermission("FORMALIZACAO") && !$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("ADMIN")): echo "readonly";
+																						endif; ?> />
 																				</div>
 																			</div>
 																			<div class="mb-2">
 																				<span class="fw-bold mb-1">Produto:</span>
-																				<input type="text" class="form-control form-control-solid" name="produto" value="<?= $row->produto ?>" data-original="<?= $row->produto ?>" />
+																				<input type="text" class="form-control form-control-solid" name="produto" value="<?= $row->produto ?>" data-original="<?= $row->produto ?>"
+																					<?php if (!$my_security->checkPermission("FORMALIZACAO") && !$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("ADMIN")): echo "readonly";
+																					endif; ?> />
 																			</div>
 																			<div class="d-flex gap-4">
 																				<div class="mb-2">
 																					<span class="fw-bold mb-1">Valor:</span>
-																					<input type="text" class="form-control form-control-solid" name="valorSaque" id="valorSaque" value="<?= $row->valor ?>" data-original="<?= $row->valor ?>" />
+																					<input type="text" class="form-control form-control-solid" name="valorSaque" id="valorSaque" value="<?= $row->valor ?>" data-original="<?= $row->valor ?>"
+																						<?php if (!$my_security->checkPermission("FORMALIZACAO") && !$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("ADMIN")): echo "readonly";
+																						endif; ?> />
 																				</div>
 																				<div class="mb-2">
 																					<span class="fw-bold mb-1">Valor parcela:</span>
-																					<input type="text" class="form-control form-control-solid" name="valorParcela" id="valorParcela" value="<?= $row->valor_parcela ?>" data-original="<?= $row->valor_parcela ?>" />
+																					<input type="text" class="form-control form-control-solid" name="valorParcela" id="valorParcela" value="<?= $row->valor_parcela ?>" data-original="<?= $row->valor_parcela ?>"
+																						<?php if (!$my_security->checkPermission("FORMALIZACAO") && !$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("ADMIN")): echo "readonly";
+																						endif; ?> />
 																				</div>
 																			</div>
 

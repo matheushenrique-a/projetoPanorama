@@ -78,6 +78,7 @@
                                                                     <option value="1581" <?= ($codigoEntidade == '1581') ? 'selected' : '' ?>>INSS - 1581</option>
                                                                     <option value="4277" <?= ($codigoEntidade == '4277') ? 'selected' : '' ?>>INSS BENEFÍCIO - 4277</option>
                                                                     <option value="164" <?= ($codigoEntidade == '164') ? 'selected' : '' ?>>SIAPE - 164</option>
+                                                                    <option value="4283-1" <?= ($codigoEntidade == '4283-1') ? 'selected' : '' ?>>SIAPE BENEFÍCIO - 4283-1</option>
                                                                 </select>
                                                             </div>
 

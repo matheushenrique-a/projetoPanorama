@@ -182,7 +182,7 @@
 																		<div class="me-5">
 																			<span class="text-gray-800 fw-bolder fs-6"><?php echo substr($nomeCliente, 0, 30); ?></span>
 																			<span class="text-gray-400 fw-bold fs-7 d-block text-start ps-0"><?php echo $adesao . " | " . $cpf; ?></span>
-																			<span class="text-success fw-bolder fs-6"><?php echo 'R$ ' . number_format($valor, 2, ',', '.') ?></span>
+																			<span class="text-success fw-bolder fs-6"><?php echo 'R$ ' . number_format((float)$valor, 2, ',', '.') ?></span>
 																		</div>
 																	</div>
 																	<div class="text-gray-400 fw-bolder fs-7 text-end">
