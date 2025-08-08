@@ -43,7 +43,7 @@ define('BMG_SEGURO_SENHA_CONSIG', 'coord@2025');
 // define('BMG_SEGURO_SENHA_CONSIG', 'GtbP!8kgDuL@');
 define('BMG_ENTIDADE', '1581');
 define('BMG_LOJA_QUID', '54577'); //Unity
-define('BMG_LOJA_SMILE', '55009'); //Smile
+define('BMG_LOJA_UNITY', '54577'); //QUID
 define('BMG_CODIGO_PRODUTO_PAP', 1007);
 define('BMG_CODIGO_PRODUTO_MED', 54);
 define('BMG_CODIGO_PRODUTO_PRESTAMISTA', 5);

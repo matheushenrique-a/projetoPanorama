@@ -248,6 +248,8 @@
 															"Aprovada"  => "success",
 															"Cancelada" => "danger",
 															"Pendente"  => "warning",
+															"Adesão"   => "dark",
+															"Auditoria" => "warning",
 															default     => "secondary"
 														};
 
@@ -259,13 +261,16 @@
 																<div class="modal-content">
 																	<form action="<?= assetfolder; ?>insight-listar-propostas/0/alterar-status" id="formEdit" method="POST">
 																		<div class="modal-header">
-																			<h3 class="modal-title">Proposta <?= $row->adesao ?></h3>
+																			<h3 class="modal-title">Proposta: <?= $row->adesao ?></h3>
 																			<div class="btn btn-icon btn-sm btn-active-light-primary ms-2" data-bs-dismiss="modal" aria-label="Fechar">
 																				<i class="bi bi-x-lg fs-2"></i>
 																			</div>
 																		</div>
 
 																		<div class="modal-body">
+																			<div class="mb-2">
+																				<h4 class="badge badge-light fw-bold fs-6"><?= $row->ultimo_status ?></h4>
+																			</div>
 																			<div class="mb-2">
 																				<span class="fw-bold mb-1">Nome:</span>
 																				<input type="text" class="form-control form-control-solid nome" name="nome" value="<?= $row->nome ?>" data-original="<?= $row->nome ?>"

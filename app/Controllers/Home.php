@@ -99,7 +99,7 @@ class Home extends BaseController
 
         $countPropostasBMG = $this->m_bmg->countPropostasBMG();
 
-
+        // ATUALIZAÇÃO DE PROPOSTAS
         $tempoMinutos = 5;
 
         $conf = $this->dbMasterDefault->select('configuracoes', ['id' => 1]);

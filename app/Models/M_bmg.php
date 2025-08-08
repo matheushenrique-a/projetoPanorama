@@ -421,7 +421,7 @@ class M_bmg extends Model
                 'senha'        => BMG_SEGURO_SENHA,
                 'loginConsig'  => BMG_SEGURO_LOGIN_CONSIG,
                 'senhaConsig'  => BMG_SEGURO_SENHA_CONSIG,
-                'codigoLoja' => (int) BMG_LOJA_SMILE,
+                'codigoLoja' => (int) BMG_LOJA_UNITY,
                 'finalidadeCredito' => $params['finalidadeCredito'], // CONTA CORRENTE
                 'formaCredito' => $formaCredito, // TRANSFERÊNCIA BANCÁRIA // CONTA BMG
                 'codigoFormaEnvioTermo' => "15", // DIGITAL
@@ -532,7 +532,7 @@ class M_bmg extends Model
         $nome = $data['nomeCliente'];
         $produto = "Saque";
         $valor = $data['valorSaque'];
-        $status = "Análise";
+        $status = "Adesão";
         $panorama_id = $data['panorama_id'];
         $codigo_entidade = $data['codigo_entidade'];
         $valor_parcela = $data['valor_parcela'];
