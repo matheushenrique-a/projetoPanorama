@@ -268,14 +268,14 @@
 																		<div class="modal-body">
 																			<div class="mb-2">
 																				<span class="fw-bold mb-1">Nome:</span>
-																				<input type="text" class="form-control form-control-solid" name="nome" value="<?= $row->nome ?>" data-original="<?= $row->nome ?>"
+																				<input type="text" class="form-control form-control-solid nome" name="nome" value="<?= $row->nome ?>" data-original="<?= $row->nome ?>"
 																					<?php if (!$my_security->checkPermission("FORMALIZACAO") && !$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("ADMIN")): echo "readonly";
 																					endif; ?> />
 																			</div>
 																			<div class="d-flex gap-4">
 																				<div class="mb-2">
 																					<span class="fw-bold mb-1">CPF:</span>
-																					<input type="text" class="form-control form-control-solid" name="cpf" id="cpf" value="<?= $row->cpf ?>" data-original="<?= $row->cpf ?>"
+																					<input type="text" class="form-control form-control-solid cpf" name="cpf" id="cpf" value="<?= $row->cpf ?>" data-original="<?= $row->cpf ?>"
 																						<?php if (!$my_security->checkPermission("FORMALIZACAO") && !$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("ADMIN")): echo "readonly";
 																						endif; ?> />
 																				</div>
@@ -284,27 +284,27 @@
 																					<?php
 																					$telFormatado = formatarTelefone($row->telefone);
 																					?>
-																					<input type="text" class="form-control form-control-solid" name="telefone" id="telefone" value="<?= $telFormatado ?>" data-original="<?= $telFormatado ?>"
+																					<input type="text" class="form-control form-control-solid telefone" name="telefone" id="telefone" value="<?= $telFormatado ?>" data-original="<?= $telFormatado ?>"
 																						<?php if (!$my_security->checkPermission("FORMALIZACAO") && !$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("ADMIN")): echo "readonly";
 																						endif; ?> />
 																				</div>
 																			</div>
 																			<div class="mb-2">
 																				<span class="fw-bold mb-1">Produto:</span>
-																				<input type="text" class="form-control form-control-solid" name="produto" value="<?= $row->produto ?>" data-original="<?= $row->produto ?>"
+																				<input type="text" class="form-control form-control-solid produto" name="produto" value="<?= $row->produto ?>" data-original="<?= $row->produto ?>"
 																					<?php if (!$my_security->checkPermission("FORMALIZACAO") && !$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("ADMIN")): echo "readonly";
 																					endif; ?> />
 																			</div>
 																			<div class="d-flex gap-4">
 																				<div class="mb-2">
 																					<span class="fw-bold mb-1">Valor:</span>
-																					<input type="text" class="form-control form-control-solid" name="valorSaque" id="valorSaque" value="<?= $row->valor ?>" data-original="<?= $row->valor ?>"
+																					<input type="text" class="form-control form-control-solid valorSaque" name="valorSaque" value="<?= $row->valor ?>" data-original="<?= $row->valor ?>"
 																						<?php if (!$my_security->checkPermission("FORMALIZACAO") && !$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("ADMIN")): echo "readonly";
 																						endif; ?> />
 																				</div>
 																				<div class="mb-2">
 																					<span class="fw-bold mb-1">Valor parcela:</span>
-																					<input type="text" class="form-control form-control-solid" name="valorParcela" id="valorParcela" value="<?= $row->valor_parcela ?>" data-original="<?= $row->valor_parcela ?>"
+																					<input type="text" class="form-control form-control-solid valorParcela" name="valorParcela" value="<?= $row->valor_parcela ?>" data-original="<?= $row->valor_parcela ?>"
 																						<?php if (!$my_security->checkPermission("FORMALIZACAO") && !$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("ADMIN")): echo "readonly";
 																						endif; ?> />
 																				</div>
@@ -377,145 +377,7 @@
 											</table>
 
 											<!-- SweetAlert2 -->
-											<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-											<script>
-												function confirmarExclusao(id) {
-													Swal.fire({
-														title: 'Tem certeza?',
-														text: 'Você realmente deseja excluir esta proposta?',
-														icon: 'warning',
-														showCancelButton: true,
-														confirmButtonColor: '#d33',
-														cancelButtonColor: '#3085d6',
-														confirmButtonText: 'Sim, excluir',
-														cancelButtonText: 'Cancelar'
-													}).then((result) => {
-														if (result.isConfirmed) {
-															window.location.href = "<?= assetfolder; ?>insight-listar-propostas/" + id + "/remove";
-														}
-													});
-												}
 
-												document.addEventListener('DOMContentLoaded', function() {
-													const inputValor = document.getElementById('valorSaque');
-													const inputParcela = document.getElementById('valorParcela');
-													const inputTelefone = document.getElementById('telefone');
-													const inputCPF = document.getElementById('cpf');
-													const form = document.getElementById('formEdit');
-													const modal = form?.closest('.modal');
-
-													if (modal) {
-														modal.addEventListener('hidden.bs.modal', function() {
-
-															const elementos = modal.querySelectorAll('[data-original]');
-															elementos.forEach(el => {
-																const original = el.getAttribute('data-original');
-
-																if (!original) return;
-
-																el.value = original;
-
-																const event = new Event('input', {
-																	bubbles: true
-																});
-																el.dispatchEvent(event);
-															});
-
-														});
-													}
-
-													function formatarTelefone(valor) {
-														valor = valor.replace(/\D/g, '');
-
-														if (valor.length === 0) {
-															return '';
-														}
-
-														if (valor.length < 3) {
-															return `(${valor}`;
-														}
-
-														if (valor.length < 7) {
-															return `(${valor.slice(0, 2)}) ${valor.slice(2)}`;
-														}
-
-														if (valor.length < 11) {
-															return `(${valor.slice(0, 2)}) ${valor.slice(2, 6)}-${valor.slice(6)}`;
-														}
-
-														return `(${valor.slice(0, 2)}) ${valor.slice(2, 7)}-${valor.slice(7, 11)}`;
-													}
-
-													inputCPF.addEventListener('input', () => {
-														let value = inputCPF.value.replace(/\D/g, '');
-														if (value.length > 3) value = value.replace(/^(\d{3})(\d)/, '$1.$2');
-														if (value.length > 6) value = value.replace(/^(\d{3})\.(\d{3})(\d)/, '$1.$2.$3');
-														if (value.length > 9) value = value.replace(/^(\d{3})\.(\d{3})\.(\d{3})(\d)/, '$1.$2.$3-$4');
-														inputCPF.value = value;
-													});
-
-													inputTelefone.value = formatarTelefone(inputTelefone.value);
-
-													inputTelefone.addEventListener('input', function() {
-														this.value = formatarTelefone(this.value);
-													});
-
-													form.addEventListener('submit', function() {
-														input.value = input.value.replace(/\D/g, '');
-													});
-
-
-													let valorInicial = parseFloat(inputValor.value);
-													if (!isNaN(valorInicial)) {
-														inputValor.value = 'R$ ' + valorInicial.toLocaleString('pt-BR', {
-															minimumFractionDigits: 2,
-															maximumFractionDigits: 2
-														});
-													}
-
-													let valorInicialParcela = parseFloat(inputParcela.value);
-													if (!isNaN(valorInicialParcela)) {
-														inputParcela.value = 'R$ ' + valorInicialParcela.toLocaleString('pt-BR', {
-															minimumFractionDigits: 2,
-															maximumFractionDigits: 2
-														});
-													}
-
-													inputValor.addEventListener('input', function() {
-														let val = this.value.replace(/\D/g, '');
-														if (val) {
-															val = (parseFloat(val) / 100).toFixed(2);
-															this.value = 'R$ ' + Number(val).toLocaleString('pt-BR', {
-																minimumFractionDigits: 2,
-																maximumFractionDigits: 2
-															});
-														} else {
-															this.value = '';
-														}
-													});
-
-													inputParcela.addEventListener('input', function() {
-														let val = this.value.replace(/\D/g, '');
-														if (val) {
-															val = (parseFloat(val) / 100).toFixed(2);
-															this.value = 'R$ ' + Number(val).toLocaleString('pt-BR', {
-																minimumFractionDigits: 2,
-																maximumFractionDigits: 2
-															});
-														} else {
-															this.value = '';
-														}
-													});
-
-													form.addEventListener('submit', function() {
-														let valor = input.value;
-
-														valor = valor.replace(/[R$\s]/g, '').replace(/\./g, '').replace(',', '.');
-
-														input.value = valor;
-													});
-												});
-											</script>
 
 										</div>
 										<!--end::Card body-->
@@ -556,3 +418,118 @@
 						<!--end::Footer-->
 					</div>
 					<!--end:::Main-->
+					<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+					<script>
+						document.addEventListener('DOMContentLoaded', function() {
+
+							// Função de confirmação de exclusão
+							window.confirmarExclusao = function(id) {
+								Swal.fire({
+									title: 'Tem certeza?',
+									text: 'Você realmente deseja excluir esta proposta?',
+									icon: 'warning',
+									showCancelButton: true,
+									confirmButtonColor: '#d33',
+									cancelButtonColor: '#3085d6',
+									confirmButtonText: 'Sim, excluir',
+									cancelButtonText: 'Cancelar'
+								}).then((result) => {
+									if (result.isConfirmed) {
+										window.location.href = "<?= assetfolder; ?>insight-listar-propostas/" + id + "/remove";
+									}
+								});
+							};
+
+							// Função para formatar telefone
+							function formatarTelefone(valor) {
+								valor = valor.replace(/\D/g, '');
+								if (valor.length === 0) return '';
+								if (valor.length < 3) return `(${valor}`;
+								if (valor.length < 7) return `(${valor.slice(0, 2)}) ${valor.slice(2)}`;
+								if (valor.length < 11) return `(${valor.slice(0, 2)}) ${valor.slice(2, 6)}-${valor.slice(6)}`;
+								return `(${valor.slice(0, 2)}) ${valor.slice(2, 7)}-${valor.slice(7, 11)}`;
+							}
+
+							// Percorre todos os modais
+							document.querySelectorAll('.modal').forEach(modal => {
+
+								// Restaura valores originais ao fechar o modal
+								modal.addEventListener('hidden.bs.modal', function() {
+									modal.querySelectorAll('[data-original]').forEach(el => {
+										const original = el.getAttribute('data-original');
+										if (original !== null) {
+											el.value = original;
+											el.dispatchEvent(new Event('input', {
+												bubbles: true
+											}));
+										}
+									});
+								});
+
+								// Inputs
+								const inputCPF = modal.querySelector('.cpf');
+								const inputTelefone = modal.querySelector('.telefone');
+								const inputValor = modal.querySelector('.valorSaque');
+								const inputParcela = modal.querySelector('.valorParcela');
+
+								// Máscara CPF
+								if (inputCPF) {
+									inputCPF.addEventListener('input', () => {
+										let value = inputCPF.value.replace(/\D/g, '');
+										if (value.length > 3) value = value.replace(/^(\d{3})(\d)/, '$1.$2');
+										if (value.length > 6) value = value.replace(/^(\d{3})\.(\d{3})(\d)/, '$1.$2.$3');
+										if (value.length > 9) value = value.replace(/^(\d{3})\.(\d{3})\.(\d{3})(\d)/, '$1.$2.$3-$4');
+										inputCPF.value = value;
+									});
+								}
+
+								// Máscara telefone
+								if (inputTelefone) {
+									inputTelefone.value = formatarTelefone(inputTelefone.value);
+									inputTelefone.addEventListener('input', function() {
+										this.value = formatarTelefone(this.value);
+									});
+								}
+
+								// Função formatação moeda
+								function formatarMoeda(campo) {
+									if (!campo) return;
+									let inicial = parseFloat(campo.value);
+									if (!isNaN(inicial)) {
+										campo.value = 'R$ ' + inicial.toLocaleString('pt-BR', {
+											minimumFractionDigits: 2,
+											maximumFractionDigits: 2
+										});
+									}
+									campo.addEventListener('input', function() {
+										let val = this.value.replace(/\D/g, '');
+										if (val) {
+											val = (parseFloat(val) / 100).toFixed(2);
+											this.value = 'R$ ' + Number(val).toLocaleString('pt-BR', {
+												minimumFractionDigits: 2,
+												maximumFractionDigits: 2
+											});
+										} else {
+											this.value = '';
+										}
+									});
+								}
+
+								// Aplica formatação de moeda nos campos de valores
+								formatarMoeda(inputValor);
+								formatarMoeda(inputParcela);
+
+								// Antes de enviar formulário, limpa R$ e formata valores numéricos
+								modal.querySelectorAll('form').forEach(form => {
+									form.addEventListener('submit', function() {
+										[inputValor, inputParcela, inputTelefone, inputCPF].forEach(campo => {
+											if (campo) campo.value = campo.value.replace(/[^\d]/g, '');
+										});
+									});
+								});
+
+							});
+
+						});
+					</script>
