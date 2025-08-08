@@ -531,11 +531,11 @@ class M_bmg extends Model
         $cpf = $data['cpf'];
         $nome = $data['nomeCliente'];
         $produto = "Saque";
-        $valor = $data['valorSaque'];
+        $valor = (float) $data['valorSaque'];
         $status = "Adesão";
         $panorama_id = $data['panorama_id'];
         $codigo_entidade = $data['codigo_entidade'];
-        $valor_parcela = $data['valor_parcela'];
+        $valor_parcela = (float) $data['valor_parcela'];
         $numero_parcela = $data['numero_parcela'];
         $matricula = $data['matricula'];
         $dataNascimento = $data['dataNascimento'];
@@ -683,6 +683,38 @@ class M_bmg extends Model
             ->runQuery($sql)['result']
             ->getResult();
     }
+
+    public function tabelaAssessoresIndividual()
+    {
+        $meta = 14000;
+        $supervisor = $this->session->userId;
+        $assessorLogado = $this->session->nickname;
+
+        $sql = "
+        WITH ranking AS (
+            SELECT 
+                TRIM(assessor) AS nome,
+                COUNT(*) AS total_propostas,
+                SUM(valor) AS total_valor,
+                ROUND((SUM(valor) / {$meta}) * 100, 1) AS percentual,
+                ROW_NUMBER() OVER (ORDER BY SUM(valor) DESC) AS posicao
+            FROM quid_propostas
+            WHERE MONTH(data_criacao) = MONTH(CURDATE())
+              AND YEAR(data_criacao) = YEAR(CURDATE())
+              AND report_to = {$supervisor}
+              AND status IN ('Aprovada', 'Análise')
+            GROUP BY TRIM(assessor)
+        )
+        SELECT *
+        FROM ranking
+        WHERE nome = '{$assessorLogado}';
+    ";
+
+        $result = $this->dbMasterDefault->runQuery($sql)['result']->getResult();
+
+        return count($result) ? $result[0] : null;
+    }
+
 
     public function barraProgressoAssessor()
     {

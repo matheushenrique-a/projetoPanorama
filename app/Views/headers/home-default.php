@@ -322,7 +322,7 @@
 												});
 											</script>
 
-											<?php if ($my_security->checkPermission("SUPERVISOR")|| $my_security->checkPermission("FORMALIZACAO")): ?>
+											<?php if ($my_security->checkPermission("SUPERVISOR") || $my_security->checkPermission("FORMALIZACAO")): ?>
 
 												<!-- ADICIONAR -->
 												<div class="col-xl-4 w-50">
@@ -336,7 +336,7 @@
 
 														<div class="card-body pt-6">
 															<div class="table-responsive">
-																<table class="table table-rounded table-striped border gy-5 gs-7">
+																<table class="table table-rounded table-bordered border gy-5 gs-7">
 																	<thead class="bg-light">
 																		<tr class="fw-bold text-muted">
 																			<th class="ps-10">#</th>
@@ -347,18 +347,23 @@
 																		</tr>
 																	</thead>
 																	<tbody>
-																		<?php $posicao = 1; ?>
+																		<?php
+																		$posicao = 1;
+																		$color = "secondary";
+																		$textColor = "gray-500";
+																		?>
 																		<?php foreach ($ranking as $row): ?>
-																			<tr>
-																				<td>
+																			<tr style="<?= $posicao == 1 ? 'box-shadow: 0 0 0px gold; font-weight: bold;' : '' ?>" class=" text-gray-500">
+																				<td class="align-middle">
 																					<span class="badge bg-warning fs-6 rounded-circle"
-																						style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
-																						<?= $posicao; ?>
+																						style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; <?= $posicao == 1 ? 'box-shadow: 0 0px 6px gold;' : '' ?>">
+																						<?= $posicao == 1 ? "👑" : $posicao; ?>
 																					</span>
 																				</td>
-																				<td>
-																					<span class="text-dark fw-bold fs-6">
-																						<?php $nomes = explode(' ', trim($row->nome));
+																				<td class="align-middle">
+																					<span class="fw-bold fs-6">
+																						<?php
+																						$nomes = explode(' ', trim($row->nome));
 																						if (count($nomes) > 1) {
 																							echo $nomes[0] . ' ' . $nomes[count($nomes) - 1];
 																						} else {
@@ -367,7 +372,7 @@
 																						?>
 																					</span>
 																				</td>
-																				<td class="text-center">
+																				<td class="text-center align-middle">
 																					<span class="badge badge-light-success fs-base">
 																						<span class="svg-icon svg-icon-5 svg-icon-success ms-n1">
 																							<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -376,15 +381,16 @@
 																							</svg>
 																						</span><?= $row->percentual; ?>%</span>
 																				</td>
-																				<td class="text-center">
+																				<td class="text-center align-middle">
 																					R$ <?= number_format($row->total_valor, 2, ',', '.'); ?>
 																				</td>
-																				<td class="text-center">
-																					<span class="badge bg-gray-500 fs-6 px-3 py-2">
+																				<td class="text-center align-middle">
+																					<span class="fs-5 px-3 py-2">
 																						<?= $row->total_propostas; ?>
 																					</span>
 																				</td>
 																			</tr>
+
 																			<?php $posicao++; ?>
 																		<?php endforeach; ?>
 
