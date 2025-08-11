@@ -259,11 +259,11 @@
 																				<?php
 																				foreach ($rankingExibido as $i => $row):
 																				?>
-																					<tr style="<?= $row->posicao_real == 1 ? 'box-shadow: 0 0 0px gold; font-weight: bold;' : '' ?>"
-																						class="<?php if ($row->nome == $nickname) echo "bg-success"; ?> text-gray-500">
+																					<tr style="<?= $row->posicao_real == 1 ? 'box-shadow: 0 0 0px rgba(111, 66, 193, 0.6); font-weight: bold;' : '' ?>"
+																						class="<?php if ($row->nome == $nickname) echo "bg-info bg-opacity-25"; ?> text-gray-600">
 																						<td class="align-middle">
-																							<span class="badge bg-warning fs-6 rounded-circle"
-																								style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; <?= $row->posicao_real == 1 ? 'box-shadow: 0 0px 6px gold;' : '' ?>">
+																							<span class="badge fs-6 rounded-circle text-white"
+																								style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background-color: rgba(132, 95, 180, 1); <?= $row->posicao_real == 1 ? 'box-shadow: 0 0px 6px rgba(113, 51, 228, 0.6);' : '' ?>">
 																								<?= $row->posicao_real == 1 ? "👑" : $row->posicao_real; ?>
 																							</span>
 																						</td>
@@ -274,7 +274,7 @@
 																									$nomes = explode(' ', trim($row->nome));
 																									echo (count($nomes) > 1) ? $nomes[0] . ' ' . end($nomes) : $row->nome;
 																								} else {
-																									echo '-';
+																									echo '??????';
 																								}
 																								?>
 																							</span>
@@ -453,11 +453,10 @@
 																		$textColor = "gray-500";
 																		?>
 																		<?php foreach ($ranking as $row): ?>
-																			<tr style="<?= $posicao == 1 ? 'box-shadow: 0 0 0px gold; font-weight: bold;' : '' ?>" class="<?php if ($row->nome == $nickname): echo "bg-white";
-																																											endif;  ?> text-gray-500">
+																			<tr style="<?= $posicao == 1 ? 'box-shadow: 0 0 0px rgba(111, 66, 193, 0.6); font-weight: bold;' : '' ?>" class="text-gray-600">
 																				<td class="align-middle">
-																					<span class="badge bg-warning fs-6 rounded-circle"
-																						style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; <?= $posicao == 1 ? 'box-shadow: 0 0px 6px gold;' : '' ?>">
+																					<span class="badge fs-6 rounded-circle text-white"
+																						style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background-color: rgba(132, 95, 180, 1); <?= $posicao == 1 ? 'box-shadow: 0 0px 6px rgba(111, 66, 193, 0.6);' : '' ?>">
 																						<?= $posicao == 1 ? "👑" : $posicao; ?>
 																					</span>
 																				</td>
