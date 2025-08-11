@@ -142,6 +142,15 @@ class Insight extends BaseController
             $valorSaque = $this->getpost("valorSaque");
             $valorParcela = $this->getpost("valorParcela");
             $parcelas = $this->getpost("parcelas");
+            $dataCriacao = $this->getpost("dataProposta");
+
+            $dataCriacao = \DateTime::createFromFormat('d/m/Y', $dataCriacao);
+
+            $horaAtual = date('H:i:s');
+
+            $dataCriacaoMySQL = $dataCriacao->format('Y-m-d') . ' ' . $horaAtual;
+
+
             $report_to = $this->session->userId;
 
             $data['adesao'] = $adesao;
@@ -157,8 +166,9 @@ class Insight extends BaseController
             $data['nomeCliente'] = $nomeCliente;
             $data['dataNascimento'] = $dataNascimento;
             $data['telefone'] = $ddd . $telefone;
+            $data['data_criacao'] = $dataCriacaoMySQL;
 
-            $salvar = $this->m_bmg->gravar_proposta_bmg_database($data);
+            $this->m_bmg->gravar_proposta_bmg_database($data);
 
             return redirect()->to(urlInstitucional . 'insight-listar-propostas/0/0');
         }

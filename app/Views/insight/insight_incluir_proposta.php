@@ -77,9 +77,15 @@
                                                         <span class="input-group-text" style="width: 160px">Nome do Cliente</span>
                                                         <input type="text" class="form-control fs-3 fw-bold" value="" name="nomeCliente" id="nomeCliente" required />
                                                     </div>
-                                                    <div class="input-group" style="width: 300px;">
-                                                        <span class="input-group-text" style="width: 160px">Data de Nascimento</span>
-                                                        <input maxlength="10" type="text" class="form-control fs-3 fw-bold" placeholder="00/00/0000" name="dataNascimento" id="dataNascimento" required />
+                                                    <div class="d-flex">
+                                                        <div class="input-group w-50">
+                                                            <span class="input-group-text" style="width: 160px">Data de Nascimento</span>
+                                                            <input maxlength="10" type="text" class="form-control fs-3 fw-bold" placeholder="00/00/0000" name="dataNascimento" id="dataNascimento" required />
+                                                        </div>
+                                                        <div class="input-group w-50">
+                                                            <span class="input-group-text" style="width: 160px">Data da Proposta</span>
+                                                            <input maxlength="10" type="text" class="form-control fs-3 fw-bold" placeholder="00/00/0000" name="dataProposta" id="dataProposta" required />
+                                                        </div>
                                                     </div>
                                                     <div class="input-group">
                                                         <span class="input-group-text" style="width: 55px">DDD</span>
@@ -129,68 +135,83 @@
             </ul>
         </div>
     </div>
+</div>
 
-    <script>
-        const form = document.getElementById('frmDataLake');
-        const cpfInput = document.getElementById('cpf');
-        const valorSaqueInput = document.getElementById('valorSaque');
+<script>
+    const form = document.getElementById('frmDataLake');
+    const cpfInput = document.getElementById('cpf');
+    const valorSaqueInput = document.getElementById('valorSaque');
+    const valorParcelaInput = document.getElementById('valorParcela')
 
-        const telefone = document.getElementById('telefone')
+    const dataPropostaInput = document.getElementById('dataProposta')
+    const dataNascimentoInput = document.getElementById('dataNascimento');
 
-        const dataNascimentoInput = document.getElementById('dataNascimento');
+    const telefone = document.getElementById('telefone')
 
-        cpfInput.addEventListener('input', () => {
-            let value = cpfInput.value.replace(/\D/g, '');
-            if (value.length > 3) value = value.replace(/^(\d{3})(\d)/, '$1.$2');
-            if (value.length > 6) value = value.replace(/^(\d{3})\.(\d{3})(\d)/, '$1.$2.$3');
-            if (value.length > 9) value = value.replace(/^(\d{3})\.(\d{3})\.(\d{3})(\d)/, '$1.$2.$3-$4');
-            cpfInput.value = value;
-        });
+    cpfInput.addEventListener('input', () => {
+        let value = cpfInput.value.replace(/\D/g, '');
+        if (value.length > 3) value = value.replace(/^(\d{3})(\d)/, '$1.$2');
+        if (value.length > 6) value = value.replace(/^(\d{3})\.(\d{3})(\d)/, '$1.$2.$3');
+        if (value.length > 9) value = value.replace(/^(\d{3})\.(\d{3})\.(\d{3})(\d)/, '$1.$2.$3-$4');
+        cpfInput.value = value;
+    });
 
-        if (dataNascimentoInput) {
-            dataNascimentoInput.addEventListener('input', () => {
-                let value = dataNascimentoInput.value.replace(/\D/g, '');
-                if (value.length > 2) value = value.replace(/^(\d{2})(\d)/, '$1/$2');
-                if (value.length > 4) value = value.replace(/^(\d{2})\/(\d{2})(\d)/, '$1/$2/$3');
-                if (value.length > 8) value = value.slice(0, 10);
-                dataNascimentoInput.value = value;
-            });
+    dataNascimentoInput.addEventListener('input', () => {
+        let value = dataNascimentoInput.value.replace(/\D/g, '');
+        if (value.length > 2) value = value.replace(/^(\d{2})(\d)/, '$1/$2');
+        if (value.length > 4) value = value.replace(/^(\d{2})\/(\d{2})(\d)/, '$1/$2/$3');
+        if (value.length > 8) value = value.slice(0, 10);
+        dataNascimentoInput.value = value;
+    });
 
-            telefone.addEventListener('input', () => {
-                let value = telefone.value.replace(/\D/g, '');
-                if (value.length > 9) value = value.slice(0, 9)
-                telefone.value = value;
-            })
+    const hoje = new Date();
+    const dia = String(hoje.getDate()).padStart(2, '0');
+    const mes = String(hoje.getMonth() + 1).padStart(2, '0');
+    const ano = hoje.getFullYear();
+    dataPropostaInput.value = `${dia}/${mes}/${ano}`;
+
+    dataPropostaInput.addEventListener('input', () => {
+        let value = dataPropostaInput.value.replace(/\D/g, '');
+        if (value.length > 2) value = value.replace(/^(\d{2})(\d)/, '$1/$2');
+        if (value.length > 4) value = value.replace(/^(\d{2})\/(\d{2})(\d)/, '$1/$2/$3');
+        if (value.length > 8) value = value.slice(0, 10);
+        dataPropostaInput.value = value;
+    });
+
+    telefone.addEventListener('input', () => {
+        let value = telefone.value.replace(/\D/g, '');
+        if (value.length > 9) value = value.slice(0, 9)
+        telefone.value = value;
+    })
+
+
+    form.addEventListener('submit', function(e) {
+        const cpf = cpfInput.value.trim();
+        if (cpf.length !== 14) {
+            e.preventDefault();
+            alert('O CPF deve estar completo (000.000.000-00).');
+            cpfInput.focus();
         }
 
-        form.addEventListener('submit', function(e) {
-            const cpf = cpfInput.value.trim();
-            if (cpf.length !== 14) {
-                e.preventDefault();
-                alert('O CPF deve estar completo (000.000.000-00).');
-                cpfInput.focus();
-            }
-
-            if (telefone.value.length < 9) {
-                e.preventDefault();
-                alert('O telefone deve estar completo.');
-                telefone.focus();
-            }
-        });
-
-        if (valorSaqueInput) {
-            valorSaqueInput.addEventListener('input', () => {
-                let value = valorSaqueInput.value.replace(/\D/g, '');
-                valorSaqueInput.value = value.length > 2 ?
-                    (parseFloat(value) / 100).toFixed(2).replace(',', '.') :
-                    value;
-            });
-
-            valorSaqueInput.addEventListener('input', () => {
-                let value = valorSaqueInput.value.replace(/\D/g, '');
-                valorSaqueInput.value = value.length > 2 ?
-                    (parseFloat(value) / 100).toFixed(2).replace(',', '.') :
-                    value;
-            });
+        if (telefone.value.length < 9) {
+            e.preventDefault();
+            alert('O telefone deve estar completo.');
+            telefone.focus();
         }
-    </script>
+    });
+
+
+    valorSaqueInput.addEventListener('input', () => {
+        let value = valorSaqueInput.value.replace(/\D/g, '');
+        valorSaqueInput.value = value.length > 2 ?
+            (parseFloat(value) / 100).toFixed(2).replace(',', '.') :
+            value;
+    });
+
+    valorParcela.addEventListener('input', () => {
+        let value = valorParcela.value.replace(/\D/g, '');
+        valorParcela.value = value.length > 2 ?
+            (parseFloat(value) / 100).toFixed(2).replace(',', '.') :
+            value;
+    });
+</script>

@@ -544,10 +544,12 @@ class M_bmg extends Model
             $report_to = $data['report_to'];
             $assessor = $data['assessor'];
             $telefone = $data['telefone'];
+            $data_criacao = $data['data_criacao'];
         } else {
             $assessor = $this->session->nickname;
             $telefone = $data['celular1']['ddd'] . $data['celular1']['numero'];
             $report_to = $this->session->report_to;
+            $data_criacao = date('Y-m-d H:i:s');
         }
 
         $this->dbMasterDefault->insert('quid_propostas', [
@@ -559,6 +561,7 @@ class M_bmg extends Model
             "valor" => $valor,
             "telefone" => $telefone,
             "status" => $status,
+            "data_criacao" => $data_criacao,
             "panorama_id" => $panorama_id,
             "report_to" => $report_to,
             "codigo_entidade" => $codigo_entidade,
