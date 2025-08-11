@@ -162,6 +162,18 @@ class Insight extends BaseController
             $produto = $this->request->getPost('produto');
             $valorSaque = $this->request->getPost('valorSaque');
             $valorParcela = $this->getpost('valorParcela');
+            $panorama_id = $this->getpost('panorama_id');
+            $parcelas = $this->getpost('parcelas');
+
+            $dataCriacaoStr = $this->getpost('dataCriacao');
+            $dataCriacao = \DateTime::createFromFormat('d/m/Y', $dataCriacaoStr);
+
+            $horaAtual = date('H:i:s');
+
+            $dataCriacaoMySQL = $dataCriacao->format('Y-m-d') . ' ' . $horaAtual;
+
+            $dataNascimento = $this->getpost('dataNascimento');
+            $assessor = $this->getpost('assessor');
 
             if ($id && $novoStatus) {
 
@@ -173,7 +185,12 @@ class Insight extends BaseController
                     'nome' => $nome,
                     'produto' => $produto,
                     'valor' => $valorSaque,
-                    'valor_parcela' => $valorParcela
+                    'valor_parcela' => $valorParcela,
+                    'panorama_id' => $panorama_id,
+                    'numero_parcela' => $parcelas,
+                    'data_criacao' => $dataCriacaoMySQL,
+                    'dataNascimento' => $dataNascimento,
+                    'assessor' => $assessor
                 ];
                 $condicao = ['idquid_propostas' => $id];
 
