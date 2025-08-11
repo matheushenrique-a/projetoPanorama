@@ -92,6 +92,67 @@ class Insight extends BaseController
             return $this->loadpage('insight/insight_incluir_proposta', $dados);
         }
 
+        if ($action == "enviar-panorama") {
+            $dados['pageTitle'] = 'Adicionar proposta';
+            $dados['nomeAssessor'] = $this->session->nickname;
+
+            if ($idProposta == "1") {
+                $assessor = $this->getpost('assessor');
+                $codigoEntidade = $this->getpost('codigoEntidade');
+                $cpf = $this->getpost('cpf');
+                $dataNascimento = $this->getpost('dataNascimento');
+                $matricula = $this->getpost('matricula');
+                $nomeCliente = $this->getpost('nomeCliente');
+                $ddd = $this->getpost('ddd');
+                $telefone = $this->getpost('telefone');
+                $adesao = $this->getpost('adesao');
+                $valorSaque = $this->getpost('valorSaque');
+                $valorParcela = $this->getpost('valorParcela');
+                $quantidadeParcelas = $this->getpost('parcelas');
+
+                $checkInsight = $this->request->getPost('checkInsight');
+
+                $checkInsightBool = !empty($checkInsight);
+
+                $returnData = $this->panorama_gravar_proposta_saque($params = [
+                    'assessor' => $assessor,
+                    'codigoEntidade' => $codigoEntidade,
+                    'cpf' => $cpf,
+                    'dataNascimento' => $dataNascimento,
+                    'matricula' => $matricula,
+                    'nomeCliente' => $nomeCliente,
+                    'celular1' => ['ddd' => $ddd, 'numero' => $telefone],
+                    'adesao' => $adesao,
+                    'valorSaque' => $valorSaque,
+                    'valorParcela' => $valorParcela,
+                    'quantidadeParcelas' => $quantidadeParcelas
+                ]);
+
+                if ($checkInsightBool) {
+                    $this->m_bmg->gravar_proposta_bmg_database([
+                        'assessor' => $assessor,
+                        'report_to' => $this->session->report_to,
+                        'codigo_entidade' => $codigoEntidade,
+                        'cpf' => $cpf,
+                        'dataNascimento' => $dataNascimento,
+                        'panorama_id' => $returnData["proposta"],
+                        'matricula' => $matricula,
+                        'nomeCliente' => $nomeCliente,
+                        'telefone' => $ddd . $telefone,
+                        'adesao' => $adesao,
+                        'valorSaque' => $valorSaque,
+                        'valor_parcela' => $valorParcela,
+                        'numero_parcela' => $quantidadeParcelas,
+                        'data_criacao' => date('Y-m-d H:i:s')
+                    ]);
+                }
+
+                return redirect()->to(urlInstitucional . 'insight-listar-propostas/0/0');
+            }
+
+            return $this->loadpage('insight/insight_enviar_panorama', $dados);
+        }
+
         if ($action == "alterar-status") {
             $id = $this->request->getPost('id');
             $novoStatus = $this->request->getPost('status');
@@ -241,6 +302,111 @@ class Insight extends BaseController
         $dados['session'] = $this->session;
 
         return $this->loadpage('insight/insight_listar_propostas', $dados);
+    }
+
+    public function panorama_gravar_proposta_saque($params)
+    {
+        $returnData = [
+            "status" => false,
+            "proposta" => "",
+            "mensagem" => ""
+        ];
+
+        $planoName = 'SAQUE ELETRONICO';
+        $valorPlano = $params['valorSaque'] ?? '';
+        $parcelas = $params['valorParcela'] ?? '';
+        $prazo = $params['quantidadeParcelas'] ?? "96";
+        $cpf = $params['cpf'] ?? '';
+        $adesao = $params['adesao'] ?? '';
+        $matricula = $params['matricula'] ?? '';
+        $especie = $params['especie'] ?? '';
+        $nomeCliente = $params['nomeCliente'];
+        $dataNascimento = $params['dataNascimento'] ?? '';
+        $codigoEntidade = $params['codigoEntidade'];
+
+        if ($codigoEntidade !== "164") {
+            $produto = "INSS";
+        } else {
+            $produto = "SIAPE";
+        }
+
+        $ddd = $params['celular1']['ddd'];
+        $numero = $params['celular1']['numero'];
+
+        $numeroFormat = $ddd . $numero;
+
+        // var_dump($this->session->nickname);
+
+        $data = [
+            'CONTRATO' => $adesao,
+            'STATUS' => 'ADESÃO',
+            'NOME_CLIENTE' => $nomeCliente,
+            'ASSESSOR' => $this->session->nickname,
+            'CPF' => $cpf,
+            'TELEFONE' => formatarTelefone($numeroFormat),
+            'DATANASCIMENTO' => $dataNascimento,
+            'MATRICULA' => $matricula,
+            'ESPECIE' => $especie,
+            'TABELA' => $planoName,
+            'DATA_CADASTRO' => date('d/m/Y H:i:s'),
+            'BANCO' => 'BMG',
+            'PRODUTO' => $produto,
+            'PRAZO' => $prazo,
+            'PARCELA' => $parcelas,
+            'EMPRESTIMO' => $valorPlano,
+            'SEGURO' => '1'
+        ];
+
+        $ordem = [
+            'CONTRATO',
+            'STATUS',
+            'NOME_CLIENTE',
+            'ASSESSOR',
+            'CPF',
+            'TELEFONE',
+            'DATANASCIMENTO',
+            'MATRICULA',
+            'ESPECIE',
+            'TABELA',
+            'DATA_CADASTRO',
+            'BANCO',
+            'PRODUTO',
+            'PRAZO',
+            'PARCELA',
+            'EMPRESTIMO',
+            'SEGURO'
+        ];
+
+        $valores = [];
+
+        foreach ($ordem as $campo) {
+            $valores[] = isset($data[$campo]) ? $data[$campo] : '';
+        }
+
+        $dadosString = implode(';', $valores);
+        $dadosStringISO = $dadosString;
+        $url = 'https://grupoquid.panoramaemprestimos.com.br/html.do?action=adicionarOperacao'
+            . '&token=44321'
+            . '&idImportacao=1466'
+            . '&dados=' . rawurlencode($dadosStringISO);
+
+        $output = "";
+
+        try {
+            $output = file_get_contents($url);
+        } catch (\Exception $e) {
+            $returnData["mensagem"] = "Erro ao gravar proposta no Panorama:<br>" . $output . "<br>URL:<br>" . $url . "<br>DadosString:<br>" . $dadosString;
+        }
+
+        if (isset($output) && (is_numeric($output) && $output > 0)) {
+            $returnData["status"] = true;
+            $returnData["mensagem"] = "Proposta gravada com sucesso no BMG e Panorama:";
+            $returnData["proposta"] = $output;
+        } else {
+            $returnData["mensagem"] = "Erro ao gravar proposta no Panorama:<br>" . $output . "<br>URL:<br>" . $url . "<br>DadosString:<br>" . $dadosString;
+        }
+
+        return $returnData;
     }
 
     public function indicadores()

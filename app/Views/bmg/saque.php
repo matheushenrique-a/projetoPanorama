@@ -212,7 +212,7 @@
                                                                     <input type="text" class="form-control fs-3 fw-bold" value="96" name="parcelas" id="parcelas" readonly />
                                                                 </div>
                                                                 <div class="input-group mt-6 d-flex">
-                                                                    <textarea class="form-control fs-8" id="entrada" placeholder="Cole aqui o Ctrl+A da página"></textarea>
+                                                                    <textarea class="form-control fs-8" id="entrada" placeholder="Cole aqui o Ctrl+A do Vanguard"></textarea>
                                                                     <button class="btn btn-info" id="extratorDados">Extrair Dados</button>
                                                                 </div>
                                                                 <div class="d-flex align-items-center position-relative mt-6 mb-0">

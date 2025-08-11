@@ -206,11 +206,19 @@
 													<div class="card-title">
 														<div class="mb-0 mx-3">
 															<div class="d-flex align-items-center position-relative my-1 mt-0 mb-0">
-																<a href="<?php echo assetfolder; ?>insight-listar-propostas/0/add" class="btn btn-primary mt-4 ms-3">+</a>
+																<a href="<?php echo assetfolder; ?>insight-listar-propostas/0/add" class="btn btn-primary mt-4 ms-3">Criar no Insight</a>
 															</div>
 														</div>
 													</div>
 												<?php endif; ?>
+
+												<div class="card-title">
+													<div class="mb-0 mx-3">
+														<div class="d-flex align-items-center position-relative my-1 mt-0 mb-0">
+															<a href="<?php echo assetfolder; ?>insight-listar-propostas/0/enviar-panorama" class="btn btn-primary mt-4 ms-3">Criar Proposta</a>
+														</div>
+													</div>
+												</div>
 											</div>
 										</form>
 										<!--end::Form-->
