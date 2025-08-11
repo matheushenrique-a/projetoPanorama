@@ -210,14 +210,112 @@
 												</div>
 
 
-												<div class="col-xl-4 w-50">
+												<div class="w-50">
+													<?php if (!$my_security->checkPermission("SUPERVISOR")): ?>
+
+														<div class="mb-10">
+															<div class="card card-flush h-md-100">
+																<div class="card-header pt-7">
+																	<h3 class="card-title align-items-start flex-column">
+																		<span class="card-label fw-bold text-dark fs-4">Progresso de Equipe</span>
+																		<span class="text-muted mt-2 fw-semibold fs-6">Progresso mensal da equipe</span>
+																	</h3>
+																</div>
+
+																<div class="card-body pt-6">
+																	<div class="table-responsive">
+																		<table class="table table-rounded table-bordered border gy-5 gs-7">
+																			<thead class="bg-light">
+																				<tr class="fw-bold text-muted">
+																					<th class="ps-10">#</th>
+																					<th>Assessor</th>
+																					<th class="text-center">Progresso</th>
+																					<th class="text-center">Valor</th>
+																					<th class="text-center">Quantidade</th>
+																				</tr>
+																			</thead>
+																			<tbody>
+																				<?php
+																				$posicao = 1;
+																				$maxExibir = 5;
+																				$rankingExibido = [];
+																				$indiceLogado = null;
+
+																				foreach ($ranking as $i => $row) {
+																					$row->posicao_real = $i + 1;
+																					if ($row->nome == $nickname) {
+																						$indiceLogado = $i;
+																					}
+																				}
+
+																				foreach ($ranking as $i => $row) {
+																					if ($posicao <= $maxExibir || $i == $indiceLogado) {
+																						$rankingExibido[] = $row;
+																						$posicao++;
+																					}
+																				}
+																				?>
+
+																				<?php
+																				foreach ($rankingExibido as $i => $row):
+																				?>
+																					<tr style="<?= $row->posicao_real == 1 ? 'box-shadow: 0 0 0px gold; font-weight: bold;' : '' ?>"
+																						class="<?php if ($row->nome == $nickname) echo "bg-success"; ?> text-gray-500">
+																						<td class="align-middle">
+																							<span class="badge bg-warning fs-6 rounded-circle"
+																								style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; <?= $row->posicao_real == 1 ? 'box-shadow: 0 0px 6px gold;' : '' ?>">
+																								<?= $row->posicao_real == 1 ? "👑" : $row->posicao_real; ?>
+																							</span>
+																						</td>
+																						<td class="align-middle">
+																							<span class="fw-bold fs-6">
+																								<?php
+																								if ($row->nome == $nickname) {
+																									$nomes = explode(' ', trim($row->nome));
+																									echo (count($nomes) > 1) ? $nomes[0] . ' ' . end($nomes) : $row->nome;
+																								} else {
+																									echo '-';
+																								}
+																								?>
+																							</span>
+																						</td>
+																						<td class="text-center align-middle">
+																							<span class="badge badge-light-success fs-base">
+																								<?= $row->percentual; ?>%
+																							</span>
+																						</td>
+																						<td class="text-center align-middle">
+																							R$ <?= number_format($row->total_valor, 2, ',', '.'); ?>
+																						</td>
+																						<td class="text-center align-middle">
+																							<span class="fs-5 px-3 py-2">
+																								<?= $row->total_propostas; ?>
+																							</span>
+																						</td>
+																					</tr>
+																				<?php endforeach; ?>
+
+
+
+																			</tbody>
+																		</table>
+
+																	</div>
+																	<!--end::Table-->
+																</div>
+																<!--end: Card Body-->
+															</div>
+															<!--end::Tables widget 14-->
+														</div>
+													<?php endif; ?>
 													<!--begin::List widget 11-->
-													<div class="card h-xl-100">
-														<div class="card-header pt-5 pb-3">
+													<div class="card">
+
+														<div class="card-header pt-5 pb-8">
 															<!--begin::Title-->
 															<h3 class="card-title align-items-start flex-column">
 																<span class="card-label fw-bold text-dark">Suas Averbações por Dia</span>
-																<span class="text-gray-400 mt-1 fw-semibold fs-6">Últimos 5 dias</span>
+																<span class="text-gray-400 mt-1 fw-semibold fs-6">Últimos 10 dias</span>
 															</h3>
 															<!--end::Title-->
 														</div>
@@ -229,7 +327,9 @@
 																<canvas id="graficoPropostas" width="600" height="400"></canvas>
 															</div>
 														</div>
+
 													</div>
+
 												</div>
 
 												<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -244,7 +344,7 @@
 															<!--begin::Title-->
 															<h3 class="card-title align-items-start flex-column">
 																<span class="card-label fw-bold text-dark">Sua Equipe</span>
-																<span class="text-gray-400 mt-1 fw-semibold fs-6">Últimos 5 dias</span>
+																<span class="text-gray-400 mt-1 fw-semibold fs-6">Últimos 10 dias</span>
 															</h3>
 															<!--end::Title-->
 														</div>
@@ -353,7 +453,8 @@
 																		$textColor = "gray-500";
 																		?>
 																		<?php foreach ($ranking as $row): ?>
-																			<tr style="<?= $posicao == 1 ? 'box-shadow: 0 0 0px gold; font-weight: bold;' : '' ?>" class=" text-gray-500">
+																			<tr style="<?= $posicao == 1 ? 'box-shadow: 0 0 0px gold; font-weight: bold;' : '' ?>" class="<?php if ($row->nome == $nickname): echo "bg-white";
+																																											endif;  ?> text-gray-500">
 																				<td class="align-middle">
 																					<span class="badge bg-warning fs-6 rounded-circle"
 																						style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; <?= $posicao == 1 ? 'box-shadow: 0 0px 6px gold;' : '' ?>">
@@ -406,6 +507,7 @@
 												</div>
 
 											<?php endif; ?>
+
 
 											<!--end::Col-->
 

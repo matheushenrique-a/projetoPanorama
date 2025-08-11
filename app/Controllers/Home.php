@@ -96,7 +96,7 @@ class Home extends BaseController
         $tabulacoesSucesso = $this->m_argus->tabulacoesSucesso();
         $dados['tabulacoesSucesso'] = $tabulacoesSucesso;
 
-        $ultimasPropostasBMG = $this->m_bmg->ultimasPropostasBMG(6);
+        $ultimasPropostasBMG = $this->m_bmg->ultimasPropostasBMG(10);
         $dados['ultimasPropostasBMG'] = $ultimasPropostasBMG;
 
         $countPropostasBMG = $this->m_bmg->countPropostasBMG();
