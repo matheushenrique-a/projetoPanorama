@@ -162,15 +162,32 @@ class M_insight extends Model
     public function importarEmMassa(array $data)
     {
         if (empty($data)) {
-            return false;
+            return redirect()
+                ->to(urlInstitucional . 'insight-listar-propostas/0/upload')
+                ->with('error', 'Nenhum dado para importar.');
         }
 
-        $resultado = $this->dbMasterDefault->insertBatch('quid_propostas', $data);
+        $tabela = 'quid_propostas';
+        $inseridos = 0;
 
-        if ($resultado === false) {
-            return redirect()->to(urlInstitucional . 'insight-listar-propostas/0/upload')->with('error', 'Erro ao importar os dados. Verifique o formato do arquivo e tente novamente.');
+        foreach ($data as $linha) {
+            $whereCheck = ['adesao' => $linha['adesao']];
+            $registro = $this->dbMasterDefault->select($tabela, $whereCheck);
+
+            if (!$registro['existRecord']) {
+                $this->dbMasterDefault->insert($tabela, $linha);
+                $inseridos++;
+            }
+        }
+
+        if ($inseridos > 0) {
+            return redirect()
+                ->to(urlInstitucional . 'insight-listar-propostas/0/upload')
+                ->with('success', "$inseridos registros importados com sucesso!");
         } else {
-            return redirect()->to(urlInstitucional . 'insight-listar-propostas/0/upload')->with('success', $resultado['rowsInserted'] . " registros importados com sucesso!");
+            return redirect()
+                ->to(urlInstitucional . 'insight-listar-propostas/0/upload')
+                ->with('error', 'Nenhum novo registro foi importado.');
         }
     }
 }
