@@ -650,8 +650,24 @@ class M_bmg extends Model
     {
         $meta = 14000;
         $supervisor = $this->session->userId;
+        $report_to = $this->session->report_to;
 
-        if (($this->session->role !== "SUPERVISOR") || $this->m_security->checkPermission("FORMALIZACAO") || $this->m_security->checkPermission("ADMIN")) {
+        if ($this->session->role == "OPERADOR") {
+            $sql = "
+            SELECT 
+            TRIM(assessor) AS nome,
+            COUNT(*) AS total_propostas,
+            SUM(valor) AS total_valor,
+            ROUND((SUM(valor) / {$meta}) * 100, 1) AS percentual
+            FROM quid_propostas
+            WHERE MONTH(data_criacao) = MONTH(CURDATE())
+            AND YEAR(data_criacao) = YEAR(CURDATE())
+            AND report_to = {$report_to}
+            AND status IN ('Aprovada', 'Análise')
+            GROUP BY TRIM(assessor)
+            ORDER BY total_valor DESC;
+            ";
+        } else if (($this->session->role !== "SUPERVISOR") || $this->m_security->checkPermission("FORMALIZACAO") || $this->m_security->checkPermission("ADMIN")) {
             $sql = "
             SELECT 
             TRIM(assessor) AS nome,
@@ -686,38 +702,6 @@ class M_bmg extends Model
             ->runQuery($sql)['result']
             ->getResult();
     }
-
-    public function tabelaAssessoresIndividual()
-    {
-        $meta = 14000;
-        $supervisor = $this->session->userId;
-        $assessorLogado = $this->session->nickname;
-
-        $sql = "
-        WITH ranking AS (
-            SELECT 
-                TRIM(assessor) AS nome,
-                COUNT(*) AS total_propostas,
-                SUM(valor) AS total_valor,
-                ROUND((SUM(valor) / {$meta}) * 100, 1) AS percentual,
-                ROW_NUMBER() OVER (ORDER BY SUM(valor) DESC) AS posicao
-            FROM quid_propostas
-            WHERE MONTH(data_criacao) = MONTH(CURDATE())
-              AND YEAR(data_criacao) = YEAR(CURDATE())
-              AND report_to = {$supervisor}
-              AND status IN ('Aprovada', 'Análise')
-            GROUP BY TRIM(assessor)
-        )
-        SELECT *
-        FROM ranking
-        WHERE nome = '{$assessorLogado}';
-    ";
-
-        $result = $this->dbMasterDefault->runQuery($sql)['result']->getResult();
-
-        return count($result) ? $result[0] : null;
-    }
-
 
     public function barraProgressoAssessor()
     {

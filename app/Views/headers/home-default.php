@@ -209,7 +209,6 @@
 													<!--end::List widget 11-->
 												</div>
 
-
 												<div class="w-50">
 													<?php if (!$my_security->checkPermission("SUPERVISOR")): ?>
 

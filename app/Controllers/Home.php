@@ -79,8 +79,6 @@ class Home extends BaseController
 
         $dados['ranking'] = $this->m_bmg->tabelaAssessores();
 
-        $dados['rankingIndividual'] = $this->m_bmg->tabelaAssessoresIndividual();
-
         $dados['progresso'] = $this->m_bmg->barraProgressoAssessor();
         $dados['nickname'] = $this->session->nickname;
 
