@@ -2,26 +2,40 @@
 
 namespace App\Libraries;
 
-class dbMaster {
+class dbMaster
+{
 	protected $db;
 	protected $orderby;
 	protected $limit = 250;
 
-	public function setOrderBy($value) {$this->orderby = $value;}
-	public function getOrderBy() {return $this->orderby;}
+	public function setOrderBy($value)
+	{
+		$this->orderby = $value;
+	}
+	public function getOrderBy()
+	{
+		return $this->orderby;
+	}
 
-	public function setLimit($value) {$this->limit = $value;}
-	public function getLimit() {return $this->limit;}
+	public function setLimit($value)
+	{
+		$this->limit = $value;
+	}
+	public function getLimit()
+	{
+		return $this->limit;
+	}
 
-	public function __construct($dbOption = null){
+	public function __construct($dbOption = null)
+	{
 
 		//Quando for necessário conectar em um banco diferente do padrão
 		//Recebe o parametro com o nome do profile no Config/Database.php
-		if (is_null($dbOption)){
+		if (is_null($dbOption)) {
 			$this->db = \Config\Database::connect();
-		}else {
+		} else {
 			$this->db = \Config\Database::connect($dbOption);
-		}	
+		}
 	}
 
 	public function select($table, $whereCheck, $parameters = null)
@@ -39,7 +53,6 @@ class dbMaster {
 			if (array_key_exists('likeCheck', $parameters)) {
 				//$builder->like($parameters['likeCheck'][0], $parameters['likeCheck'][1]);
 				$builder->like($parameters['likeCheck']);
-
 			}
 			if (array_key_exists('whereIn', $parameters)) {
 				$builder->whereIn($parameters['whereIn'][0], $parameters['whereIn'][1]);
@@ -58,7 +71,7 @@ class dbMaster {
 		// 		$builder->like($parameters);
 		// 	}
 		// }
-		
+
 		if (!is_null($whereCheck)) $builder->where($whereCheck);
 		$builder->limit($this->limit);
 		//  if ($table == 'whatsapp_conversations'){
@@ -67,7 +80,8 @@ class dbMaster {
 		return $this->resultfy($builder->get());
 	}
 
-	public function resultfy($result){
+	public function resultfy($result)
+	{
 		//echo '22:52:20 - <h3>Dump 33 da variável $this->db </h3> <br><br>' . var_dump($this->db); exit;					//<-------DEBUG
 		$returnData = array();
 		$returnData["num_rows"] = count($result->getResult());
@@ -88,15 +102,29 @@ class dbMaster {
 		return $returnData;
 	}
 
+	public function insertBatch($table, array $data)
+	{
+		if (empty($data)) {
+			return false;
+		}
+
+		$builder = $this->db->table($table);
+		$builder->insertBatch($data);
+
+		return [
+			'rowsInserted' => $this->db->affectedRows()
+		];
+	}
+
+
 	public function update($table, $fieldUpdate, $whereArrayUpdt, $fielDynamicdUpdate = null)
 	{
 		$builder = $this->db->table($table);
 
 		$builder->set($fieldUpdate);
 
-		if (!empty($fielDynamicdUpdate)){
-			foreach($fielDynamicdUpdate as $key=>$value)
-			{
+		if (!empty($fielDynamicdUpdate)) {
+			foreach ($fielDynamicdUpdate as $key => $value) {
 				$builder->set($key, $value, FALSE);
 			}
 		}
@@ -107,9 +135,9 @@ class dbMaster {
 
 		$returnData["affected_rows"] = $this->db->affectedRows();
 		$returnData["updated"] = $this->db->affectedRows() > 0 ? true : false;
-		
+
 		return $returnData;
-	}	
+	}
 
 	public function delete($table, $whereCheck)
 	{
@@ -120,7 +148,8 @@ class dbMaster {
 
 
 	//Evita consulta a uma tabela que foi recenemente consultada
-	public function IsDataUpdated($table, $whereArray = null){
+	public function IsDataUpdated($table, $whereArray = null)
+	{
 		//default interval check
 		$minutes = integration_delay_bancos[$table];
 		//echo "13:18:37 - <h3>Dump 2</h3> <br><br>" . var_dump($table); exit;					//<-------DEBUG
@@ -132,13 +161,13 @@ class dbMaster {
 		$builder->where('md5', $md5);
 		$result = $builder->get();
 		$total_rows = $this->db->affectedRows();
-		
+
 		//echo "13:17:40 - <h3>Dump 78</h3> <br><br>" . var_dump($total_rows); exit;					//<-------DEBUG 
-		if ($total_rows==1){
+		if ($total_rows == 1) {
 			//se encontrou algum registro é porque existem linhas 
 			//com menos de X minutos na tabela, logo o dado está atualizado / existente
 			return true;
-		}else {
+		} else {
 			$this->UpdateControl($md5);
 			return false;
 		}
@@ -150,30 +179,33 @@ class dbMaster {
 	}
 
 	//Cria um identificador unico para um registro
-	public function getMd5($table, $whereArray){
+	public function getMd5($table, $whereArray)
+	{
 		$md5 = trim($table) . '|';
-		
+
 		if (!is_null($whereArray)) {
-			if (count($whereArray)!=0) {
-				$md5 .= implode("|",$whereArray). '|';
+			if (count($whereArray) != 0) {
+				$md5 .= implode("|", $whereArray) . '|';
 			}
 		}
 		return $md5;
 	}
-		
-	public function UpdateControl($md5){
-			$this->delete('record_updates', array('md5' => $md5));
-			$data = array('md5' => $md5);
-			$this->insert('record_updates', $data);
 
+	public function UpdateControl($md5)
+	{
+		$this->delete('record_updates', array('md5' => $md5));
+		$data = array('md5' => $md5);
+		$this->insert('record_updates', $data);
 	}
 
-	public function runQuery($sql){
+	public function runQuery($sql)
+	{
 		$builder = $this->db->query($sql);
 		return $this->resultfy($builder);
 	}
 
-	public function runQueryGeneric($sql){
+	public function runQueryGeneric($sql)
+	{
 		$builder = $this->db->query($sql);
 		return $builder;
 	}
@@ -182,5 +214,5 @@ class dbMaster {
 	{
 		$md5 = $this->getMd5($table, $whereArray);
 		$this->delete('record_updates', array('md5' => $md5));
-	}	
-}	
+	}
+}

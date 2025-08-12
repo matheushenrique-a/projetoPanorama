@@ -79,6 +79,7 @@ $routes->match(['get', 'post'], '/whatsapp-criar-templates/(:any)/(:any)', 'Meta
 //INSIGHT
 $routes->match(['get', 'post'], '/insight-listar-notificacoes', 'Insight\Insight::insight_listar_notificacoes');
 $routes->match(['get', 'post'], '/insight-listar-propostas/(:any)/(:any)', 'Insight\Insight::insight_listar_propostas/$1/$2');
+$routes->match(['get', 'post'], '/insight-upload/(:any)/(:any)', 'Insight\Insight::insight_upload/$1/$2');
 
 //THEONE
 $routes->match(['get','post'], '/extrairdados', 'Theone\ExtrairDados::extrair');

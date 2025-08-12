@@ -139,4 +139,38 @@ class M_insight extends Model
             }
         }
     }
+
+    protected $allowedFields = [
+        'adesao',
+        'cpf',
+        'nome',
+        'assessor',
+        'produto',
+        'valor',
+        'telefone',
+        'data_criacao',
+        'panorama_id',
+        'report_to',
+        'codigo_entidade',
+        'valor_parcela',
+        'numero_parcela',
+        'matricula',
+        'dataNascimento',
+        'ultimo_status'
+    ];
+
+    public function importarEmMassa(array $data)
+    {
+        if (empty($data)) {
+            return false; 
+        }
+
+        $resultado = $this->dbMasterDefault->insertBatch('quid_propostas', $data);
+
+        if ($resultado === false) {
+            echo "Nenhum dado foi inserido.";
+        } else {
+            echo $resultado['rowsInserted'] . " registros importados com sucesso!";
+        }
+    }
 }

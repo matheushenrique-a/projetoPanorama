@@ -206,6 +206,12 @@ class Insight extends BaseController
             return redirect()->to(urlInstitucional . 'insight-listar-propostas/0/0');
         }
 
+        if ($action == "upload") {
+            $dados['pageTitle'] = 'Upload de Propostas';
+
+            return $this->loadpage('insight/insight_upload_propostas', $dados);
+        }
+
         if ($action == "incluir") {
             $assessor = $this->getpost("assessor");
             $cpf = $this->getpost("cpf");
@@ -323,6 +329,104 @@ class Insight extends BaseController
         $dados['session'] = $this->session;
 
         return $this->loadpage('insight/insight_listar_propostas', $dados);
+    }
+
+    public function insight_upload($idProposta, $action)
+    {
+        $arquivo = $this->request->getFile('arquivo');
+
+        if (!$arquivo->isValid()) {
+            return "Erro no upload: " . $arquivo->getErrorString();
+        }
+
+        // Salvar temporariamente no WRITEPATH
+        $caminho = WRITEPATH . 'uploads/' . $arquivo->getRandomName();
+        $arquivo->move(WRITEPATH . 'uploads', basename($caminho));
+
+        // Ler dados do CSV
+        $dados = $this->lerCSV($caminho);
+
+        if (empty($dados)) {
+            return "Nenhum dado encontrado no arquivo.";
+        }
+
+        $this->m_insight->importarEmMassa($dados);
+
+        return count($dados) . " registros importados com sucesso!";
+    }
+
+    private function lerCSV($caminho)
+    {
+        $dados = [];
+        if (($handle = fopen($caminho, 'r')) !== false) {
+            $linha = 0;
+            while (($row = fgetcsv($handle, 1000, ";")) !== false) {
+                if ($linha == 0) {
+                    $linha++;
+                    continue;
+                }
+
+                foreach ($row as &$campo) {
+                    $campo = mb_convert_encoding($campo, 'UTF-8', 'ISO-8859-1, Windows-1252, UTF-8');
+                    $campo = trim($campo); 
+                }
+                unset($campo); 
+
+                $dataCriacao = $this->converterDataHora($row[7]);
+
+                $dados[] = [
+                    'adesao'           => $row[0],
+                    'cpf'              => $row[1],
+                    'nome'             => $row[2],
+                    'assessor'         => $row[3],
+                    'produto'          => $row[4],
+                    'valor'            => $this->valorParaFloat($row[5]),
+                    'telefone'         => $row[6],
+                    'data_criacao'     => $dataCriacao,
+                    'panorama_id'      => $row[8],
+                    'report_to'        => $row[9],
+                    'codigo_entidade'  => $row[10],
+                    'valor_parcela'    => $this->valorParaFloat($row[11]),
+                    'numero_parcela'   => $row[12],
+                    'matricula'        => $row[13],
+                    'dataNascimento'   => $row[14],
+                    'ultimo_status'    => $row[15]
+                ];
+                $linha++;
+            }
+            fclose($handle);
+        }
+        return $dados;
+    }
+
+
+    private function valorParaFloat($valor)
+    {
+        $valor = trim($valor);
+
+        if (strpos($valor, ',') !== false) {
+            $valor = str_replace('.', '', $valor);
+            $valor = str_replace(',', '.', $valor);
+        }
+
+        return (float) $valor;
+    }
+
+    private function converterDataHora($dataHora)
+    {
+        if (empty($dataHora)) return null;
+
+        // Quebra data e hora
+        [$data, $hora] = explode(' ', $dataHora);
+
+        // Quebra a parte da data
+        $partes = explode('/', $data);
+        if (count($partes) === 3) {
+            $dataConvertida = $partes[2] . '-' . $partes[1] . '-' . $partes[0];
+            return $dataConvertida . ' ' . $hora . ':00'; // adiciona segundos
+        }
+
+        return null; // formato inválido
     }
 
     public function panorama_gravar_proposta_saque($params)
