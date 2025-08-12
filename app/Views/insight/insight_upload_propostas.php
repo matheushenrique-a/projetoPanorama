@@ -20,15 +20,15 @@
                 </div>
             </div>
         </div>
-        <div class="container mt-2 mb-20">
+        <div class="container mt-2 mb-20 d-flex flex-column align-items-center">
             <div class="card p-4 w-75 mx-auto">
                 <div>
                     <h2 class="fs-2 fw-semibold text-center p-5">Upload de Arquivo</h2>
                 </div>
                 <div class="d-flex gap-4">
-                    <form action="<?php echo assetfolder; ?>insight-upload/0/0" method="post" enctype="multipart/form-data">
-                        <div class=" d-flex justify-content-between align-items-center mt-5">
-                            <div class="input-group w-100 ms-4">
+                    <form action="<?php echo assetfolder; ?>insight-upload" method="post" enctype="multipart/form-data">
+                        <div class=" d-flex justify-content-between gap-4 align-items-center mt-5">
+                            <div class="input-group ms-4">
                                 <input type="file" class="form-control" name="arquivo" accept=".csv,.xls,.xlsx" required />
                             </div>
                             <div>
@@ -38,9 +38,17 @@
                     </form>
                 </div>
             </div>
+            <?php if (session()->getFlashdata('error')): ?>
+                <div class="alert alert-danger mt-4 w-50" role="alert">
+                    <strong>Erro!</strong> <?= session()->getFlashdata('error'); ?>
+                </div>
+            <?php elseif (session()->getFlashdata('success')): ?>
+                <div class="alert alert-success mt-4" role="alert">
+                    <strong>Sucesso!</strong> <?= session()->getFlashdata('success'); ?>
+                </div>
+            <?php endif; ?>
         </div>
     </div>
-</div>
 </div>
 <div id="kt_app_footer" class="app-footer">
     <div class="app-container container-fluid d-flex flex-column flex-md-row flex-center flex-md-stack py-3">

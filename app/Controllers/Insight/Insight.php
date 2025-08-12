@@ -162,7 +162,7 @@ class Insight extends BaseController
             $produto = $this->request->getPost('produto');
             $valorSaque = $this->request->getPost('valorSaque');
             $valorParcela = $this->getpost('valorParcela');
-            $panorama_id = $this->getpost('panorama_id');
+            $panorama_id = $this->getpost('idPanorama');
             $parcelas = $this->getpost('parcelas');
 
             $dataCriacaoStr = $this->getpost('dataCriacao');
@@ -175,7 +175,7 @@ class Insight extends BaseController
             $dataNascimento = $this->getpost('dataNascimento');
             $assessor = $this->getpost('assessor');
 
-            if ($id && $novoStatus) {
+            if ($id) {
 
                 $tabela = 'quid_propostas';
                 $valores = [
@@ -331,28 +331,28 @@ class Insight extends BaseController
         return $this->loadpage('insight/insight_listar_propostas', $dados);
     }
 
-    public function insight_upload($idProposta, $action)
+    public function insight_upload()
     {
         $arquivo = $this->request->getFile('arquivo');
+
+        if ($arquivo->getError() != 0) {
+            return "Nenhum arquivo foi enviado.";
+        }
 
         if (!$arquivo->isValid()) {
             return "Erro no upload: " . $arquivo->getErrorString();
         }
 
-        // Salvar temporariamente no WRITEPATH
         $caminho = WRITEPATH . 'uploads/' . $arquivo->getRandomName();
         $arquivo->move(WRITEPATH . 'uploads', basename($caminho));
 
-        // Ler dados do CSV
         $dados = $this->lerCSV($caminho);
 
         if (empty($dados)) {
             return "Nenhum dado encontrado no arquivo.";
         }
 
-        $this->m_insight->importarEmMassa($dados);
-
-        return count($dados) . " registros importados com sucesso!";
+        return $this->m_insight->importarEmMassa($dados);
     }
 
     private function lerCSV($caminho)
@@ -368,9 +368,9 @@ class Insight extends BaseController
 
                 foreach ($row as &$campo) {
                     $campo = mb_convert_encoding($campo, 'UTF-8', 'ISO-8859-1, Windows-1252, UTF-8');
-                    $campo = trim($campo); 
+                    $campo = trim($campo);
                 }
-                unset($campo); 
+                unset($campo);
 
                 $dataCriacao = $this->converterDataHora($row[7]);
 
