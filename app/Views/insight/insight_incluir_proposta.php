@@ -89,9 +89,9 @@
                                                     </div>
                                                     <div class="input-group">
                                                         <span class="input-group-text" style="width: 55px">DDD</span>
-                                                        <input type="text" maxlength="2" class="form-control fs-3 fw-bold" value="" style="color:rgb(188, 188, 188)" name="ddd" id="ddd" required />
+                                                        <input type="text" maxlength="2" class="form-control fs-3 fw-bold" value="" style="color:rgb(188, 188, 188)" name="ddd" id="ddd" />
                                                         <span class="input-group-text" style="width: 100px">Número</span>
-                                                        <input type="text" class="form-control fs-3 fw-bold" value="" style="color:rgb(188, 188, 188); width: 250px" name="telefone" id="telefone" required />
+                                                        <input type="text" class="form-control fs-3 fw-bold" value="" style="color:rgb(188, 188, 188); width: 250px" name="telefone" id="telefone" />
                                                     </div>
                                                     <div class="input-group mt-4" style="width: 400px;">
                                                         <span class="input-group-text" style="width: 130px">Valor do Saque</span>
@@ -184,7 +184,6 @@
         telefone.value = value;
     })
 
-
     form.addEventListener('submit', function(e) {
         const cpf = cpfInput.value.trim();
         if (cpf.length !== 14) {
@@ -192,14 +191,7 @@
             alert('O CPF deve estar completo (000.000.000-00).');
             cpfInput.focus();
         }
-
-        if (telefone.value.length < 9) {
-            e.preventDefault();
-            alert('O telefone deve estar completo.');
-            telefone.focus();
-        }
     });
-
 
     valorSaqueInput.addEventListener('input', () => {
         let value = valorSaqueInput.value.replace(/\D/g, '');

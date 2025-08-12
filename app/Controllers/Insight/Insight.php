@@ -215,8 +215,8 @@ class Insight extends BaseController
             $matricula = $this->getpost("matricula");
             $nomeCliente = $this->getpost("nomeCliente");
             $dataNascimento = $this->getpost("dataNascimento");
-            $ddd = $this->getpost("ddd");
-            $telefone = $this->getpost("telefone");
+            $ddd = $this->getpost("ddd") ?? '';
+            $telefone = $this->getpost("telefone") ?? '';
             $valorSaque = $this->getpost("valorSaque");
             $valorParcela = $this->getpost("valorParcela");
             $parcelas = $this->getpost("parcelas");
@@ -261,6 +261,7 @@ class Insight extends BaseController
             $paginas = $this->getpost('paginas', false);
             $date = $this->getpost('date', false);
             $adesao = $this->getpost('numeroAdesao', false);
+            $equipe = $this->getpost('equipe', false);
 
             Services::response()->setCookie('cpf', $cpf);
             Services::response()->setCookie('date', $date);
@@ -270,6 +271,7 @@ class Insight extends BaseController
             Services::response()->setCookie('statusPropostaFiltro', $statusPropostaFiltro);
             Services::response()->setCookie('paginas', $paginas);
             Services::response()->setCookie('numeroAdesao', $adesao);
+            Services::response()->setCookie('equipe', $equipe);
         } else {
             $cpf = $this->getpost('txtCPF', true);
             $celular = $this->getpost('celular', true);
@@ -279,6 +281,7 @@ class Insight extends BaseController
             $paginas = $this->getpost('paginas', true);
             $date = $this->getpost('date', true);
             $adesao = $this->getpost('numeroAdesao', true);
+            $equipe = $this->getpost('equipe', true);
         }
 
         $whereCheck = [];
@@ -292,6 +295,7 @@ class Insight extends BaseController
         if (!empty($nomeAssessor)) $likeCheck['assessor'] = $nomeAssessor;
         if (!empty($date)) $likeCheck['DATE(data_criacao)'] = $date;
         if (!empty($adesao)) $likeCheck['adesao'] = $adesao;
+        if (!empty($equipe)) $likeCheck['report_to'] = $equipe;
 
         if ($this->session->role == "OPERADOR") {
             $whereCheck["assessor"] = $this->session->nickname;

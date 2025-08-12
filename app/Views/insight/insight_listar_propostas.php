@@ -166,6 +166,22 @@
 										</div>
 									</div>
 								<?php endif; ?>
+								<?php if ($my_security->checkPermission("FORMALIZACAO") || $my_security->checkPermission("ADMIN")): ?>
+									<div class="d-flex align-items-center position-relative my-1 mx-3">
+										<div class="mb-3">
+											<label for="exampleFormControlInput2" class="form-label text-gray-800 mb-0">Equipe:</label>
+											<div class="d-flex align-items-center position-relative my-1">
+												<select class="form-select form-control-solid" aria-label="" name="equipe">
+													<option value=""></option>
+													<option value="164815">Matheus</option>
+													<option value="165005">Ana Karla</option>
+													<option value="165004">Paula</option>
+													<option value="165006">Jéssica</option>
+												</select>
+											</div>
+										</div>
+									</div>
+								<?php endif; ?>
 								<div class="d-flex align-items-center position-relative my-1 mx-3">
 									<div class="mb-3">
 										<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">CPF:</label>
