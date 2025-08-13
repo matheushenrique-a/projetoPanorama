@@ -899,10 +899,10 @@ class Bmg extends BaseController
             $numeroParcelas = (int) $this->getpost('parcelas') ?? '';
             $valorParcela = (float) $this->getpost('valorParcela') ?? '';
             $finalidadeCredito = (int) $this->getpost('finalidadeCredito') ?? 1;
-            $digitoAgencia = $this->getpost('digitoAgencia') ?? '';
+            $digitoAgencia = $this->getpost('digitoAgencia') ?: null;
             $tipoSaque = (int) $this->getpost('tipoSaque');
 
-            if (isset($tipoSaque)) {
+            if (isset($tipoSaque) && $tipoSaque == 1) {
                 $tipoSaque = 1;
             } else {
                 $tipoSaque = 2;
@@ -960,9 +960,25 @@ class Bmg extends BaseController
                 'codigoEntidade' => $codigoEntidade
             ];
 
-
             if (isset($returnData['erro']) && $returnData['erro']) {
-                return redirect()->to(urlInstitucional . 'bmg-saque/0')->with('erro', $returnData['mensagem']);
+                return redirect()->to(urlInstitucional . 'bmg-saque/0')
+                    ->with('erro', $returnData['mensagem'])
+                    ->with('contaInterna', $numeroContaInterna)
+                    ->with('matricula', $matricula)
+                    ->with('valorParcela', $valorParcela)
+                    ->with('valorSaque', $valorSaque)
+                    ->with('cpfDigitado', $cpf)
+                    ->with('codigoEntidade', $codigoEntidade)
+                    ->with('ddd', $dddPost)
+                    ->with('telefone', $telefonePost)
+                    ->with('nomeCliente', $this->getpost('nomeCliente'))
+                    ->with('dataNascimento', $this->getpost('dataNascimento'))
+                    ->with('banco', $idBanco)
+                    ->with('agencia', $agencia)
+                    ->with('conta', $conta)
+                    ->with('digito', $digito)
+                    ->with('especieBeneficio', $this->getpost('especie'))
+                    ->with('uf', $this->getpost('uf'));
             } else {
                 $propostaPanorama = $this->panorama_gravar_proposta_saque($dataPanorama);
 

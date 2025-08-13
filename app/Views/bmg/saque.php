@@ -1,9 +1,21 @@
 <?php $cardData = session('cardData'); ?>
 <?php $cpf = session('cpfDigitado'); ?>
-<?php $valorParcela = session('valorParcela'); ?>
 <?php $matricula = session('matricula'); ?>
 <?php $contaInterna = session('contaInterna'); ?>
+
+<?php $nomeCliente = session('nomeCliente'); ?>
+<?php $dataNascimento = session('dataNascimento'); ?>
+<?php $ddd = session('ddd'); ?>
+<?php $telefone = session('telefone'); ?>
+<?php $ufconta = session('uf'); ?>
+<?php $especieBeneficio = session('especieBeneficio'); ?>
+<?php $banco = session('banco'); ?>
+<?php $agencia = session('agencia'); ?>
+<?php $conta = session('conta'); ?>
+<?php $digito = session('digito'); ?>
+
 <?php $valorSaque = session('valorSaque'); ?>
+<?php $valorParcela = session('valorParcela'); ?>
 
 <?php $erro = session()->getFlashdata('erro'); ?>
 
@@ -16,7 +28,6 @@
         <pre><?= print_r($valores, true) ?></pre>
     </div>
 <?php endif; ?>
-
 
 <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
     <div class="d-flex flex-column flex-column-fluid">
@@ -40,7 +51,7 @@
                 </div>
             </div>
         </div>
-        <!--Main -->
+
 
         <div id="kt_app_content" class="app-content flex-column-fluid">
             <div id="kt_app_content_container" class="app-container container-xxl">
@@ -91,6 +102,8 @@
 
                                                             if (isset($contaInterna) && isset($matricula) && isset($valorSaque) && $valorSaque > 0) {
                                                                 $temCartaoDisponivel = true;
+                                                            } elseif (isset($erro)) {
+                                                                $temCartaoDisponivel = true;
                                                             }
                                                             ?>
                                                             <?php if ($temCartaoDisponivel): ?>
@@ -113,7 +126,7 @@
                                                                 </div>
                                                                 <div class="input-group" style="width: 300px;">
                                                                     <span class="input-group-text" style="width: 160px">Data de Nascimento</span>
-                                                                    <input maxlength="10" type="text" class="form-control fs-3 fw-bold" placeholder="00/00/0000" name="dataNascimento" id="dataNascimento" required />
+                                                                    <input maxlength="10" type="text" class="form-control fs-3 fw-bold" value="<?= esc($dataNascimento)?>" placeholder="00/00/0000" name="dataNascimento" id="dataNascimento" required />
                                                                 </div>
                                                                 <div class="input-group mt-6">
                                                                     <span class="input-group-text" style="width: 55px">DDD</span>
@@ -156,7 +169,7 @@
                                                                             <option value="TO">TO</option>
                                                                         </select>
                                                                         <span class="input-group-text" style="width: 155px">Espécie Benefício</span>
-                                                                        <input maxlength="2" type="text" class="form-control fs-3 fw-bold" name="especieBeneficio" id="especieBeneficio" required />
+                                                                        <input maxlength="2" type="text" class="form-control fs-3 fw-bold" value="<?= esc($especieBeneficio) ?>" name="especieBeneficio" id="especieBeneficio" required />
                                                                     </div>
                                                                 <?php endif; ?>
                                                                 <div class="input-group">
@@ -182,17 +195,17 @@
                                                                 <div id="dadosBancarios">
                                                                     <div class="input-group">
                                                                         <span class="input-group-text" style="width: 68px">Banco</span>
-                                                                        <input type="text" class="form-control fs-3 fw-bold" placeholder="" name="idBanco" id="idBanco" style="width: 35px" required />
+                                                                        <input type="text" class="form-control fs-3 fw-bold" placeholder="" value="<?= esc($banco)?>" name="idBanco" id="idBanco" style="width: 35px" required />
                                                                         <span class="input-group-text" style="width: 79px">Agência</span>
-                                                                        <input type="text" class="form-control fs-3 fw-bold" placeholder="" name="agencia" id="agencia" style="width: 35px" required />
+                                                                        <input type="text" class="form-control fs-3 fw-bold" placeholder="" value="<?= esc($agencia)?>" name="agencia" id="agencia" style="width: 35px" required />
                                                                         <span class="input-group-text" style="width: 65px">Digito</span>
                                                                         <input type="text" class="form-control fs-3 fw-bold" placeholder="" name="digitoAgencia" id="digitoAgencia" style="width: 35px" />
                                                                     </div>
                                                                     <div class="input-group">
                                                                         <span class="input-group-text">Conta</span>
-                                                                        <input type="text" class="form-control w-25 fs-3 fw-bold" placeholder="" name="conta" id="conta" required />
+                                                                        <input type="text" class="form-control w-25 fs-3 fw-bold" value="<?= esc($conta)?>" placeholder="" name="conta" id="conta" required />
                                                                         <span class="input-group-text">Digito</span>
-                                                                        <input type="text" class="form-control fs-3 fw-bold" placeholder="" name="digito" id="digito" required />
+                                                                        <input type="text" class="form-control fs-3 fw-bold" placeholder="" value="<?= esc($digito)?>" name="digito" id="digito" required />
                                                                     </div>
                                                                 </div>
                                                                 <div class="input-group mt-8" style="width: 400px;">
@@ -635,14 +648,12 @@
             const dadosBancarios = document.getElementById('dadosBancarios');
             if (this.value === '3') {
                 dadosBancarios.style.display = 'none';
-                // remover required ao esconder
                 document.getElementById('idBanco').required = false;
                 document.getElementById('agencia').required = false;
                 document.getElementById('conta').required = false;
                 document.getElementById('digito').required = false;
             } else {
                 dadosBancarios.style.display = 'block';
-                // adicionar required novamente
                 document.getElementById('idBanco').required = true;
                 document.getElementById('agencia').required = true;
                 document.getElementById('conta').required = true;

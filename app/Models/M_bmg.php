@@ -636,7 +636,7 @@ class M_bmg extends Model
 
     public function listarAssessor()
     {
-        $equipe = 164815; //$this->session->userId;
+        $equipe = $this->session->userId;
 
         $sql = "
         SELECT * 
