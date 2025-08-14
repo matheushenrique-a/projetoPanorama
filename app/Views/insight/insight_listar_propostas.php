@@ -488,9 +488,6 @@
 	</div>
 	<!--end::Footer container-->
 </div>
-<!--end::Footer-->
-</div>
-
 <!--end:::Main-->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 

@@ -190,4 +190,39 @@ class M_insight extends Model
                 ->with('error', 'Nenhum novo registro foi importado.');
         }
     }
+
+    public function importarClientesEmMassa(array $data)
+    {
+        ini_set('max_execution_time', 0);
+        set_time_limit(0);
+
+        if (empty($data)) {
+            return redirect()
+                ->to(urlInstitucional . 'clientes/upload/0')
+                ->with('error', 'Nenhum dado para importar.');
+        }
+
+        $tabela = 'quid_clientes';
+        $inseridos = 0;
+
+        foreach ($data as $linha) {
+            $whereCheck = ['cpf' => $linha['cpf']];
+            $registro = $this->dbMasterDefault->select($tabela, $whereCheck);
+
+            if (!$registro['existRecord']) {
+                $this->dbMasterDefault->insert($tabela, $linha);
+                $inseridos++;
+            }
+        }
+
+        if ($inseridos > 0) {
+            return redirect()
+                ->to(urlInstitucional . 'clientes/upload/0')
+                ->with('success', "$inseridos registros importados com sucesso!");
+        } else {
+            return redirect()
+                ->to(urlInstitucional . 'clientes/upload/0')
+                ->with('error', 'Nenhum novo cliente foi importado.');
+        }
+    }
 }

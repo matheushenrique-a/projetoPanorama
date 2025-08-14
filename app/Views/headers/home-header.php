@@ -2,19 +2,8 @@
 		$session = \Config\Services::session();
 		?> -->
 <!DOCTYPE html>
-<!--
-Author: Keenthemes
-Product Name: Metronic | Bootstrap HTML, VueJS, React, Angular, Asp.Net Core, Blazor, Django, Flask & Laravel Admin Dashboard Theme
-Purchase: https://1.envato.market/EA4JP
-Website: http://www.keenthemes.com
-Contact: support@keenthemes.com
-Follow: www.twitter.com/keenthemes
-Dribbble: www.dribbble.com/keenthemes
-Like: www.facebook.com/keenthemes
-License: For each use you must have a valid license purchased only from above link in order to legally use the theme for your project.
--->
+
 <html lang="en">
-<!--begin::Head-->
 
 <head>
 	<base href="" />
@@ -3970,8 +3959,8 @@ License: For each use you must have a valid license purchased only from above li
 									</div>
 									<!--end:Item-->
 									<!--begin:Item-->
-									<div class="col-6" style="pointer-events: none;">
-										<a href="../../demo1/dist/apps/projects/users.html" class="d-flex flex-column flex-center h-100 p-6 bg-hover-light">
+									<div class="col-6" style="<?= $my_security->checkPermission("ADMIN") ? "" : "pointer-events: none"; ?>">
+										<a href="<?php echo assetfolder ?>clientes" class="d-flex flex-column flex-center h-100 p-6 bg-hover-light">
 											<!--begin::Svg Icon | path: icons/duotune/finance/fin006.svg-->
 											<span class="svg-icon svg-icon-3x svg-icon-primary mb-2">
 												<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
