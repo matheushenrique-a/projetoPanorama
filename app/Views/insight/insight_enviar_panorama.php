@@ -198,6 +198,17 @@
             alert('O telefone deve estar completo.');
             telefone.focus();
         }
+
+        const valorParcela = parseFloat(valorParcelaInput.value) || 0;
+        const valorSaque = parseFloat(valorSaqueInput.value) || 0;
+
+        if (valorParcela > valorSaque) {
+            e.preventDefault();
+            alert('O valor da parcela não pode ser maior que o valor do saque.');
+            valorParcelaInput.focus();
+            console.log(valorParcelaInput.value)
+            console.log(valorSaqueInput.value)
+        }
     });
 
 
