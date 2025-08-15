@@ -102,6 +102,19 @@ class dbMaster
 		return $returnData;
 	}
 
+	public function insertIgnore($table, $data)
+	{
+		$builder = $this->db->table($table);
+		$builder->ignore(true)->insert($data);
+
+		$returnData = [];
+		$returnData["insert_id"] = $this->db->insertID();
+		$returnData["affected_rows"] = $this->db->affectedRows(); 
+
+		return $returnData;
+	}
+
+
 	public function insertBatch($table, array $data)
 	{
 		if (empty($data)) {

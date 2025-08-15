@@ -50,10 +50,10 @@ class Clientes extends \App\Controllers\BaseController
             $lote = [];
 
             while (($row = fgetcsv($handle, 0, ";")) !== false) {
-                
+
                 if ($linha == 0) {
                     $linha++;
-                    continue;
+                    continue; 
                 }
 
                 foreach ($row as &$campo) {
@@ -61,6 +61,18 @@ class Clientes extends \App\Controllers\BaseController
                     $campo = trim($campo);
                 }
                 unset($campo);
+
+                $tem_dado = false;
+                foreach ($row as $campo) {
+                    if (strlen($campo) > 0) {
+                        $tem_dado = true;
+                        break;
+                    }
+                }
+                if (!$tem_dado) {
+                    $linha++;
+                    continue;
+                }
 
                 $lote[] = [
                     'nb'          => $row[0],

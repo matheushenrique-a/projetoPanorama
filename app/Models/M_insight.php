@@ -204,25 +204,26 @@ class M_insight extends Model
 
         $tabela = 'quid_clientes';
         $inseridos = 0;
+        $duplicados = 0;
 
         foreach ($data as $linha) {
-            $whereCheck = ['cpf' => $linha['cpf']];
-            $registro = $this->dbMasterDefault->select($tabela, $whereCheck);
+            $result = $this->dbMasterDefault->insertIgnore($tabela, $linha);
 
-            if (!$registro['existRecord']) {
-                $this->dbMasterDefault->insert($tabela, $linha);
+            if ($result["affected_rows"] > 0) {
                 $inseridos++;
+            } else {
+                $duplicados++;
             }
         }
 
-        if ($inseridos > 0) {
-            return redirect()
-                ->to(urlInstitucional . 'clientes/upload/0')
-                ->with('success', "$inseridos registros importados com sucesso!");
-        } else {
-            return redirect()
-                ->to(urlInstitucional . 'clientes/upload/0')
-                ->with('error', 'Nenhum novo cliente foi importado.');
+        // Monta a mensagem final
+        $mensagem = "$inseridos registros importados com sucesso!";
+        if ($duplicados > 0) {
+            $mensagem .= " $duplicados registros foram ignorados por duplicidade.";
         }
+
+        return redirect()
+            ->to(urlInstitucional . 'clientes/upload/0')
+            ->with('success', $mensagem);
     }
 }
