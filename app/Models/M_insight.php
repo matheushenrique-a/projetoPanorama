@@ -194,6 +194,7 @@ class M_insight extends Model
     public function importarClientesEmMassa(array $data)
     {
         ini_set('max_execution_time', 0);
+        ini_set('memory_limit', '1024M');
         set_time_limit(0);
 
         if (empty($data)) {
@@ -217,13 +218,24 @@ class M_insight extends Model
         }
 
         // Monta a mensagem final
-        $mensagem = "$inseridos registros importados com sucesso!";
+        $mensagem = "registros importados com sucesso!";
         if ($duplicados > 0) {
-            $mensagem .= " $duplicados registros foram ignorados por duplicidade.";
+            $mensagem .= "registros foram ignorados por duplicidade.";
         }
 
         return redirect()
             ->to(urlInstitucional . 'clientes/upload/0')
             ->with('success', $mensagem);
+    }
+
+    public function pesquisarClientesPorCpf($cpf)
+    {
+        $result = $this->dbMasterDefault->selectExact('quid_clientes', ['cpf' => $cpf]);
+
+        if ($result['existRecord']) {
+            return $result['firstRow'];
+        } else {
+            return "não encontrado";
+        }
     }
 }

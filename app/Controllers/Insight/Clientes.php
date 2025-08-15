@@ -12,6 +12,7 @@ class Clientes extends \App\Controllers\BaseController
     public function index()
     {
         $dados['pageTitle'] = 'Clientes';
+        $dados['clientes'] = null;
 
         return $this->loadPage('clientes/client_list', $dados);
     }
@@ -53,7 +54,7 @@ class Clientes extends \App\Controllers\BaseController
 
                 if ($linha == 0) {
                     $linha++;
-                    continue; 
+                    continue;
                 }
 
                 foreach ($row as &$campo) {
@@ -94,10 +95,10 @@ class Clientes extends \App\Controllers\BaseController
                     'endereco'    => $row[16],
                     'bairro'      => $row[17],
                     'cep'         => $row[18],
-                    'email'       => null,
-                    'telefone1'   => null,
-                    'telefone2'   => null,
-                    'telefone3'   => null,
+                    'email'       => $row[19],
+                    'telefone1'   => $row[20],
+                    'telefone2'   => $row[21],
+                    'telefone3'   => $row[22],
                     'telefone4'   => null,
                     'telefone5'   => null,
                     'telefone6'   => null,
@@ -121,5 +122,44 @@ class Clientes extends \App\Controllers\BaseController
 
             fclose($handle);
         }
+    }
+
+    public function pesquisa()
+    {
+        $this->m_insight = new M_insight();
+        $dados['pageTitle'] = 'Pesquisa Clientes';
+
+        $cpf = $this->getpost('cpf');
+
+        if ($cpf) {
+            $dados['clientes'] = $this->m_insight->pesquisarClientesPorCpf($cpf);
+        }
+
+        return $this->loadPage('clientes/client_list', $dados);
+    }
+
+    public function update()
+    {
+        $this->m_insight = new M_insight();
+        $dados['pageTitle'] = 'Atualizar Clientes';
+
+        $cpf = $this->getpost('cpf');
+        $nome = $this->getpost('nome');
+        $nasc = $this->getpost('nasc');
+        $especie = $this->getpost('especie');
+        $salario = $this->getpost('salario');
+        $sexo = $this->getpost('sexo');
+        $margem = $this->getpost('margem');
+        $nome_banco = $this->getpost('nome_banco');
+        $dib = $this->getpost('dib');
+        $banco = $this->getpost('banco');
+        $agencia = $this->getpost('agencia');
+        $cc = $this->getpost('cc');
+        $meio_pgto = $this->getpost('meio_pgto');
+        $cidade = $this->getpost('cidade');
+        $uf = $this->getpost('uf');
+        $endereco = $this->getpost('endereco');
+        $bairro = $this->getpost('bairro');
+        $cep = $this->getpost('cep');
     }
 }

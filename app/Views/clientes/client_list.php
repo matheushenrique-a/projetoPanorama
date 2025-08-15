@@ -20,7 +20,7 @@
             <div id="kt_app_content_container" class="app-container container-xxl">
                 <div class="card" style="justify-content: start;">
 
-                    <form id="frmDataLake" class="form" action="<?php echo assetfolder; ?>clientes" method="POST">
+                    <form id="frmDataLake" class="form" action="<?php echo assetfolder; ?>clientes/pesquisa" method="POST">
                         <div class="card-header border-0 pt-6" style="justify-content: start;">
                             <div class="card-title">
                                 <div class="d-flex align-items-center position-relative my-1 mx-3">
@@ -32,26 +32,138 @@
                                 <div class="card-title">
                                     <div class="mb-0 mx-3">
                                         <div class="d-flex align-items-center position-relative my-1 mt-0 mb-0">
-                                            <button type="submit" class="btn btn-secondary mt-4 ms-3" name="buscarProp" value="buscarProp">Buscar Cliente</button>
+                                            <button type="submit" class="btn btn-secondary mt-4 ms-3" name="pesquisaCpf" value="pesquisaCpf">Buscar Cliente</button>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="card-title">
-                                    <div class="mb-0 mx-3">
-                                        <div class="d-flex align-items-center position-relative my-1 mt-0 mb-0">
-                                            <a href="<?php echo assetfolder; ?>clientes/upload/0" class="mt-4 ms-3 btn btn-info"><i class="bi bi-file-earmark-arrow-up"></i></a>
+                                <?php if ($my_security->checkPermission('ADMIN')): ?>
+                                    <div class="card-title">
+                                        <div class="mb-0 mx-3">
+                                            <div class="d-flex align-items-center position-relative my-1 mt-0 mb-0">
+                                                <a href="<?php echo assetfolder; ?>clientes/upload/0" class="mt-4 ms-3 btn btn-info"><i class="bi bi-file-earmark-arrow-up"></i></a>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </form>
                 </div>
+                <?php if (isset($clientes) && $clientes == "não encontrado"): ?>
+                    <div class="alert alert-danger mt-4 w-50" role="alert">
+                        Este CPF não existe em nossos dados!
+                    </div>
+                <?php elseif (!empty($clientes)): ?>
+                    <div class="card mt-8" style="justify-content: start;">
+                        <div class="card-header border-0 pt-6" style="justify-content: start;">
+                            <form action="<?php echo assetfolder ?>clientes/update" method="post" id="formUpdateCliente">
+                                <div class="card-title">
+                                    <div class="d-flex flex-row gap-12 position-relative my-1 mx-3">
+                                        <div>
+                                            <h2 class="mb-5">Cliente</h2>
+                                            <div class="mb-3 d-flex flex-row gap-2">
+                                                <div class="d-flex flex-column gap-2">
+                                                    <span class="fs-6">Nome:</span>
+                                                    <input type="text" class="form-control form-control-solid" style="width: 400px;" name="nome" id="nome" value="<?= esc($clientes->nome) ?>" readonly>
+                                                </div>
+                                                <div class="d-flex flex-column gap-2">
+                                                    <span class="fs-6">Nascimento:</span>
+                                                    <input type="text" class="form-control form-control-solid" style="width: 120px;" name="dataNascimento" id="dataNascimento" value="<?= esc($clientes->nasc) ?>" readonly>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 d-flex flex-row gap-2">
+                                                <div class="d-flex flex-column gap-2">
+                                                    <span class="fs-6">CPF:</span>
+                                                    <input type="text" class="form-control form-control-solid" name="cpf" id="cpf" value="<?= esc($clientes->cpf) ?>" readonly>
+                                                </div>
+                                                <div class="d-flex flex-column gap-2">
+                                                    <span class="fs-6">Número benefício:</span>
+                                                    <input type="text" class="form-control form-control-solid" name="nb" id="nb" value="<?= esc($clientes->nb) ?>" readonly>
+                                                </div>
+                                                <div class="d-flex flex-column gap-2">
+                                                    <span class="fs-6">Esp:</span>
+                                                    <input type="text" style="width: 65px;" class="form-control form-control-solid" name="nb" id="nb" value="<?= esc($clientes->especie) ?>" readonly>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 d-flex flex-row gap-2">
+                                                <div class="d-flex flex-column gap-2">
+                                                    <span class="fs-6">DIB:</span>
+                                                    <input type="text" class="form-control form-control-solid" style="width: 120px;" name="dib" id="dib" value="<?= esc($clientes->dib) ?>" readonly>
+                                                </div>
+                                                <div class="d-flex flex-column gap-2">
+                                                    <span class="fs-6">Sexo:</span>
+                                                    <input type="text" class="form-control form-control-solid" style="width: 65px;" name="sexo" id="sexo" value="<?= esc($clientes->sexo) ?>" readonly>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 d-flex flex-row gap-2">
+                                                <div class="d-flex flex-column gap-2">
+                                                    <span class="fs-6">CEP:</span>
+                                                    <input type="text" class="form-control form-control-solid" style="width: 120px;" name="cep" id="cep" value="<?= esc($clientes->cep) ?>" readonly>
+                                                </div>
+                                                <div class="d-flex flex-column gap-2">
+                                                    <span class="fs-6">Endereço:</span>
+                                                    <input type="text" style="width: 400px;" class="form-control form-control-solid" name="endereco" id="endereco" value="<?= esc($clientes->endereco) ?>" readonly>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3 d-flex flex-row gap-2">
+                                                <div class="d-flex flex-column gap-2">
+                                                    <span class="fs-6">Bairro:</span>
+                                                    <input type="text" class="form-control form-control-solid" name="bairro" id="bairro" value="<?= esc($clientes->bairro) ?>" readonly>
+                                                </div>
+                                                <div class="d-flex flex-column gap-2">
+                                                    <span class="fs-6">Cidade:</span>
+                                                    <input type="text" class="form-control form-control-solid" name="cidade" id="cidade" value="<?= esc($clientes->cidade) ?>" readonly>
+                                                </div>
+                                                <div class="d-flex flex-column gap-2">
+                                                    <span class="fs-6">UF:</span>
+                                                    <input type="text" class="form-control form-control-solid" style="width: 65px;" name="uf" id="uf" value="<?= esc($clientes->uf) ?>" readonly>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <h2 class="mb-5">Dados bancários</h2>
+                                            <div class="mb-3 d-flex flex-column gap-2">
+                                                <span class="fs-6">Banco:</span>
+                                                <input type="text" class="form-control form-control-solid" name="banco" id="banco" value="<?= esc($clientes->banco) ?>" readonly>
+                                            </div>
+                                            <div class="mb-3 d-flex flex-row gap-2">
+                                                <div class="d-flex flex-column gap-2">
+                                                    <span class="fs-6">Conta:</span>
+                                                    <input type="text" class="form-control form-control-solid" name="conta" id="conta" value="<?= esc($clientes->cc) ?>" readonly>
+                                                </div>
+                                                <div class="d-flex flex-column gap-2">
+                                                    <span class="fs-6">Agência:</span>
+                                                    <input type="text" class="form-control form-control-solid" name="agencia" id="agencia" value="<?= esc($clientes->agencia) ?>" readonly>
+                                                </div>
+                                            </div>
+                                            <h2 class="mb-5 mt-16">Telefones</h2>
+                                            <div class="mb-3 d-flex flex-row gap-2">
+                                                <div class="d-flex flex-column gap-2">
+                                                    <span class="fs-6">Celular 1:</span>
+                                                    <input type="text" class="form-control form-control-solid" name="celular1" id="celular1" value="<?= esc($clientes->telefone1) ?>" readonly>
+                                                </div>
+                                                <div class="d-flex flex-column gap-2">
+                                                    <span class="fs-6">Celular 2:</span>
+                                                    <input type="text" class="form-control form-control-solid" name="celular2" id="celular2" value="<?= esc($clientes->telefone2) ?>" readonly>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <?php if ($my_security->checkPermission('ADMIN')): ?>
+                                    <div class="card-toolbar mt-6">
+                                        <button type="submit" class="btn btn-primary mb-8">Salvar Alterações</button>
+                                    </div>
+                                <?php endif; ?>
+                            </form>
+                        </div>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
     </div>
 </div>
-<div id="kt_app_footer" class="app-footer">
+<div id=" kt_app_footer" class="app-footer">
     <!--begin::Footer container-->
     <div class="app-container container-fluid d-flex flex-column flex-md-row flex-center flex-md-stack py-3">
         <!--begin::Copyright-->

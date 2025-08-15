@@ -82,6 +82,8 @@ $routes->match(['get', 'post'], '/insight-listar-propostas/(:any)/(:any)', 'Insi
 $routes->match(['get', 'post'], '/insight-upload', 'Insight\Insight::insight_upload');
 $routes->match(['get', 'post'], '/clientes', 'Insight\Clientes::index');
 $routes->match(['get', 'post'], '/clientes/upload/(:any)', 'Insight\Clientes::upload/$1');
+$routes->match(['get', 'post'], '/clientes/pesquisa', 'Insight\Clientes::pesquisa');
+$routes->match(['get', 'post'], '/clientes/update', 'Insight\Clientes::update');
 
 //THEONE
 $routes->match(['get','post'], '/extrairdados', 'Theone\ExtrairDados::extrair');

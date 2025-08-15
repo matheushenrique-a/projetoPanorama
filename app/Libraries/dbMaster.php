@@ -59,26 +59,39 @@ class dbMaster
 			}
 		}
 
-		//echo '13:52:09 - <h3>Dump 72 da variável $this->OrderBy </h3> <br><br>' . var_dump($this->orderby); exit;					//<-------DEBUG
-		// if (is_null($this->OrderBy)){
-		// 	echo "13:49:44 - Breakpoint 2"; exit;					//<-------DEBUG
-		// } else {
-		// 	echo "13:49:47 - Breakpoint 5"; exit;					//<-------DEBUG
-		// }
-
-		// if (!is_null($parameters)){
-		// 	if (count($parameters) > 0){
-		// 		$builder->like($parameters);
-		// 	}
-		// }
-
 		if (!is_null($whereCheck)) $builder->where($whereCheck);
 		$builder->limit($this->limit);
-		//  if ($table == 'whatsapp_conversations'){
-		//  	echo $builder->getCompiledSelect();exit;
-		//  }
 		return $this->resultfy($builder->get());
 	}
+
+	public function selectExact($table, $whereCheck, $parameters = null)
+	{
+		$builder = $this->db->table($table);
+
+		if (!is_null($this->orderby)) {
+			$builder->orderBy($this->orderby[0], $this->orderby[1]);
+		}
+
+		if (!is_null($parameters)) {
+			if (array_key_exists('whereNotIn', $parameters)) {
+				$builder->whereNotIn($parameters['whereNotIn'][0], $parameters['whereNotIn'][1]);
+			}
+			if (array_key_exists('whereIn', $parameters)) {
+				$builder->whereIn($parameters['whereIn'][0], $parameters['whereIn'][1]);
+			}
+		}
+
+		if (!is_null($whereCheck)) {
+			foreach ($whereCheck as $campo => $valor) {
+				$builder->where($campo, $valor);
+			}
+		}
+
+		$builder->limit($this->limit);
+
+		return $this->resultfy($builder->get());
+	}
+
 
 	public function resultfy($result)
 	{
@@ -109,7 +122,7 @@ class dbMaster
 
 		$returnData = [];
 		$returnData["insert_id"] = $this->db->insertID();
-		$returnData["affected_rows"] = $this->db->affectedRows(); 
+		$returnData["affected_rows"] = $this->db->affectedRows();
 
 		return $returnData;
 	}
