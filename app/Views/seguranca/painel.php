@@ -119,6 +119,8 @@
 											<td>Jéssica</td>
 										<?php elseif ($row->report_to == "165005"): ?>
 											<td>Ana Karla</td>
+										<?php elseif ($row->report_to == "164979"): ?>
+											<td>Amanda</td>
 										<?php else: ?>
 											<td>-</td>
 										<?php endif; ?>
