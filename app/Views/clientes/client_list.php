@@ -68,7 +68,7 @@
                                                 </div>
                                                 <div class="d-flex flex-column gap-2">
                                                     <span class="fs-6">Nascimento:</span>
-                                                    <input type="text" class="form-control form-control-solid" style="width: 120px;" name="dataNascimento" id="dataNascimento" value="<?= esc($clientes->nasc) ?>" readonly>
+                                                    <input type="text" class="form-control form-control-solid" style="width: 120px;" name="nasc" id="nasc" value="<?= esc($clientes->nasc) ?>" readonly>
                                                 </div>
                                             </div>
                                             <div class="mb-3 d-flex flex-row gap-2">
@@ -82,7 +82,7 @@
                                                 </div>
                                                 <div class="d-flex flex-column gap-2">
                                                     <span class="fs-6">Esp:</span>
-                                                    <input type="text" style="width: 70px;" class="form-control form-control-solid" name="nb" id="nb" value="<?= esc($clientes->especie) ?>" readonly>
+                                                    <input type="text" style="width: 70px;" class="form-control form-control-solid" name="especie" id="especie" value="<?= esc($clientes->especie) ?>" readonly>
                                                 </div>
                                             </div>
                                             <div class="mb-3 d-flex flex-row gap-2">
@@ -96,7 +96,7 @@
                                                 </div>
                                                 <div class="d-flex flex-column gap-2">
                                                     <span class="fs-6">Salário:</span>
-                                                    <input type="text" class="form-control form-control-solid" style="width: 120px;" name="dib" id="dib" value="<?= esc($clientes->salario) ?>" readonly>
+                                                    <input type="text" class="form-control form-control-solid" style="width: 120px;" name="salario" id="salario" value="<?= esc($clientes->salario) ?>" readonly>
                                                 </div>
                                                 <div class="d-flex flex-column gap-2">
                                                     <span class="fs-6">Meio Pgto:</span>

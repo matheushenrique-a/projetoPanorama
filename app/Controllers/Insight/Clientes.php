@@ -154,7 +154,7 @@ class Clientes extends \App\Controllers\BaseController
         $dib        = $this->getpost('dib');
         $banco      = $this->getpost('banco');
         $agencia    = $this->getpost('agencia');
-        $cc         = $this->getpost('cc');
+        $cc         = $this->getpost('conta');
         $meio_pgto  = $this->getpost('meioPgto');
         $cidade     = $this->getpost('cidade');
         $uf         = $this->getpost('uf');
@@ -186,6 +186,14 @@ class Clientes extends \App\Controllers\BaseController
             'telefone2'  => $celular2
         ]);
 
-        
+        if ($resultado) {
+            return redirect()
+                ->to(urlInstitucional . 'clientes')
+                ->with('success', 'Cliente atualizado com sucesso.');
+        } else {
+            return redirect()
+                ->to(urlInstitucional . 'clientes')
+                ->with('error', 'Erro ao atualizar cliente.');
+        }
     }
 }

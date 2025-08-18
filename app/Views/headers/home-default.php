@@ -61,7 +61,7 @@
 												<h1>Nada pra formalização ainda... :(</h1>
 											<?php endif; ?>
 
-											<?php if (!$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("FORMALIZACAO")): ?>
+											<?php if (!$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("FORMALIZACAO") && $report_to !== "164979"): ?>
 
 												<div>
 													<div class="card">
@@ -232,7 +232,7 @@
 																					<th>Assessor</th>
 																					<th class="text-center">Progresso</th>
 																					<th class="text-center">Valor</th>
-																					<th class="text-center">Quantidade</th>
+																					<th class="text-center">Qtd</th>
 																				</tr>
 																			</thead>
 																			<tbody>
@@ -285,10 +285,10 @@
 																								<?= $row->percentual; ?>%
 																							</span>
 																						</td>
-																						<td class="text-center align-middle">
+																						<td class="align-middle" style="width: 120px;">
 																							R$ <?= number_format($row->total_valor, 2, ',', '.'); ?>
 																						</td>
-																						<td class="text-center align-middle">
+																						<td class="align-middle text-center">
 																							<span class="fs-5 px-3 py-2">
 																								<?= $row->total_propostas; ?>
 																							</span>
@@ -444,7 +444,7 @@
 																			<th>Assessor</th>
 																			<th class="text-center">Progresso</th>
 																			<th class="text-center">Valor</th>
-																			<th class="text-center">Quantidade</th>
+																			<th class="text-end">Qtd</th>
 																		</tr>
 																	</thead>
 																	<tbody>
@@ -482,10 +482,10 @@
 																							</svg>
 																						</span><?= $row->percentual; ?>%</span>
 																				</td>
-																				<td class="text-center align-middle">
+																				<td class="align-middle" style="width: 120px;">
 																					R$ <?= number_format($row->total_valor, 2, ',', '.'); ?>
 																				</td>
-																				<td class="text-center align-middle">
+																				<td class="text-end align-middle">
 																					<span class="fs-5 px-3 py-2">
 																						<?= $row->total_propostas; ?>
 																					</span>

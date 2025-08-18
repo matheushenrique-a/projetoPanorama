@@ -241,13 +241,13 @@ class M_insight extends Model
 
     public function updateCliente($id, $data)
     {
-        $where = ['id' => $id];
+        $where = ['idquid_clientes' => $id];
         $result = $this->dbMasterDefault->update('quid_clientes', $data, $where);
 
         if ($result['affected_rows'] > 0) {
-            return "Cliente atualizado com sucesso.";
+            return true;
         } else {
-            return "Erro ao atualizar cliente.";
+            return false;
         }
     }
 }
