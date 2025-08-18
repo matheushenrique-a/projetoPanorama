@@ -74,7 +74,9 @@
 																<span class="text-gray-600 mt-2 fw-semibold fs-6">Valor Averbado: <span class="text-success">R$ <?php if (isset($progresso->total_valor)) : echo number_format((float)$progresso->total_valor, 2, ',', '.');
 																																								else: echo "0";
 																																								endif; ?></span></span>
-																<span class="text-gray-600 mt-2 fw-semibold fs-6">Meta: <span class="text-success">R$ 14.000,00</span></span></span>
+																<span class="text-gray-600 mt-2 fw-semibold fs-6">Meta: <span class="text-success"><?php if ($report_to == "165004"): echo "R$ 35.000,00";
+																																					else: echo "R$ 14.000,00";
+																																					endif; ?></span></span></span>
 															</h3>
 														</div>
 														<div class="card-body">

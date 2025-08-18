@@ -90,7 +90,7 @@ class M_insight extends Model
             return;
         }
 
-        $json_utf8 = mb_convert_encoding($json, 'UTF-8', 'ISO-8859-1');
+        $json_utf8 = mb_convert_encoding($json, 'UTF-8', 'auto');
 
         $dados = json_decode($json_utf8, true);
 
@@ -236,6 +236,18 @@ class M_insight extends Model
             return $result['firstRow'];
         } else {
             return "não encontrado";
+        }
+    }
+
+    public function updateCliente($id, $data)
+    {
+        $where = ['id' => $id];
+        $result = $this->dbMasterDefault->update('quid_clientes', $data, $where);
+
+        if ($result['affected_rows'] > 0) {
+            return "Cliente atualizado com sucesso.";
+        } else {
+            return "Erro ao atualizar cliente.";
         }
     }
 }

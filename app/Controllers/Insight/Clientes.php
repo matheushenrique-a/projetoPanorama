@@ -143,23 +143,49 @@ class Clientes extends \App\Controllers\BaseController
         $this->m_insight = new M_insight();
         $dados['pageTitle'] = 'Atualizar Clientes';
 
-        $cpf = $this->getpost('cpf');
-        $nome = $this->getpost('nome');
-        $nasc = $this->getpost('nasc');
-        $especie = $this->getpost('especie');
-        $salario = $this->getpost('salario');
-        $sexo = $this->getpost('sexo');
-        $margem = $this->getpost('margem');
-        $nome_banco = $this->getpost('nome_banco');
-        $dib = $this->getpost('dib');
-        $banco = $this->getpost('banco');
-        $agencia = $this->getpost('agencia');
-        $cc = $this->getpost('cc');
-        $meio_pgto = $this->getpost('meio_pgto');
-        $cidade = $this->getpost('cidade');
-        $uf = $this->getpost('uf');
-        $endereco = $this->getpost('endereco');
-        $bairro = $this->getpost('bairro');
-        $cep = $this->getpost('cep');
+        $idClientes = $this->getpost('idClientes');
+        $cpf        = $this->getpost('cpf');
+        $nome       = $this->getpost('nome');
+        $nasc       = $this->getpost('nasc');
+        $especie    = $this->getpost('especie');
+        $salario    = $this->getpost('salario');
+        $sexo       = $this->getpost('sexo');
+        $nome_banco = $this->getpost('nomeBanco');
+        $dib        = $this->getpost('dib');
+        $banco      = $this->getpost('banco');
+        $agencia    = $this->getpost('agencia');
+        $cc         = $this->getpost('cc');
+        $meio_pgto  = $this->getpost('meioPgto');
+        $cidade     = $this->getpost('cidade');
+        $uf         = $this->getpost('uf');
+        $endereco   = $this->getpost('endereco');
+        $bairro     = $this->getpost('bairro');
+        $cep        = $this->getpost('cep');
+        $celular1   = $this->getpost('telefone1');
+        $celular2   = $this->getpost('telefone2');
+
+        $resultado = $this->m_insight->updateCliente($idClientes, [
+            'cpf'        => $cpf,
+            'nome'       => $nome,
+            'nasc'       => $nasc,
+            'especie'    => $especie,
+            'salario'    => $salario,
+            'sexo'       => $sexo,
+            'nome_banco' => $nome_banco,
+            'dib'        => $dib,
+            'banco'      => $banco,
+            'agencia'    => $agencia,
+            'cc'         => $cc,
+            'meio_pgto'  => $meio_pgto,
+            'cidade'     => $cidade,
+            'uf'         => $uf,
+            'endereco'   => $endereco,
+            'bairro'     => $bairro,
+            'cep'        => $cep,
+            'telefone1'  => $celular1,
+            'telefone2'  => $celular2
+        ]);
+
+        
     }
 }

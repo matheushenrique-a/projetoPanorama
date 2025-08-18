@@ -132,6 +132,7 @@ class Home extends BaseController
         }
 
         $dados['countPropostasBMG'] = $countPropostasBMG;
+        $dados['report_to'] = $this->session->report_to;
 
         $dados['ranking_ativacoes'] = $ranking_ativacoes;
         $dados['graficoAvebacoes'] = $graficoAvebacoes;

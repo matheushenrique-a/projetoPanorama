@@ -648,7 +648,20 @@ class M_bmg extends Model
 
     public function tabelaAssessores()
     {
-        $meta = 14000;
+        if ($this->session->role == "OPERADOR") {
+            if ($this->session->report_to == '165004') {
+                $meta = 35000;
+            } else {
+                $meta = 14000;
+            }
+        } else {
+            if ($this->session->userId == '165004') {
+                $meta = 35000;
+            } else {
+                $meta = 14000;
+            }
+        }
+
         $supervisor = $this->session->userId;
         $report_to = $this->session->report_to;
 
@@ -706,7 +719,12 @@ class M_bmg extends Model
     public function barraProgressoAssessor()
     {
         $assessor = $this->session->nickname;
-        $meta = 14000;
+
+        if ($this->session->report_to == '165004') {
+            $meta = 35000;
+        } else {
+            $meta = 14000;
+        }
 
         $sql = "
         SELECT 
