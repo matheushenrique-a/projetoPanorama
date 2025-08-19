@@ -4899,166 +4899,6 @@
 								<!--end:Menu sub-->
 							</div>
 							<!--end:AASPA BRASIL Menu item-->
-
-
-							<!--begin:AASPA BRASILMenu item-->
-							<div data-kt-menu-trigger="click" class="menu-item menu-accordion" style="<?php $my_security->DisplayMenu("AASPA-SUPER"); ?>">
-								<!--begin:Menu link-->
-								<span class="menu-link">
-									<span class="menu-icon">
-										<!--begin::Svg Icon | path: icons/duotune/communication/com013.svg-->
-										<span class="svg-icon svg-icon-2">
-											<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-												<path d="M6.28548 15.0861C7.34369 13.1814 9.35142 12 11.5304 12H12.4696C14.6486 12 16.6563 13.1814 17.7145 15.0861L19.3493 18.0287C20.0899 19.3618 19.1259 21 17.601 21H6.39903C4.87406 21 3.91012 19.3618 4.65071 18.0287L6.28548 15.0861Z" fill="currentColor" />
-												<rect opacity="0.3" x="8" y="3" width="8" height="8" rx="4" fill="currentColor" />
-											</svg>
-										</span>
-										<!--end::Svg Icon-->
-									</span>
-									<span class="menu-title">AASPA</span>
-									<span class="menu-arrow"></span>
-								</span>
-								<!--end:Menu link-->
-								<!--begin:Menu sub-->
-								<div class="menu-sub menu-sub-accordion">
-									<!--begin:Menu item-->
-									<div class="menu-item">
-										<!--begin:Menu link-->
-										<a class="menu-link" href="<?php echo assetfolder; ?>aaspa-zapsms">
-											<span class="menu-bullet">
-												<span class="bullet bullet-dot"></span>
-											</span>
-											<span class="menu-title">ZapSMS</span>
-										</a>
-										<!--end:Menu link-->
-									</div>
-								</div>
-								<!--end:Menu sub-->
-								<!--begin:Menu sub-->
-								<div class="menu-sub menu-sub-accordion">
-									<!--begin:Menu item-->
-									<div class="menu-item">
-										<!--begin:Menu link-->
-										<a class="menu-link" href="<?php echo assetfolder; ?>aaspa-receptivo/0">
-											<span class="menu-bullet">
-												<span class="bullet bullet-dot"></span>
-											</span>
-											<span class="menu-title">Receptivo</span>
-										</a>
-										<!--end:Menu link-->
-									</div>
-								</div>
-								<!--end:Menu sub-->
-								<!--begin:Menu sub-->
-								<div class="menu-sub menu-sub-accordion">
-									<!--begin:Menu item-->
-									<div class="menu-item">
-										<!--begin:Menu link-->
-										<a class="menu-link" href="<?php echo assetfolder; ?>aaspa-listar-propostas">
-											<span class="menu-bullet">
-												<span class="bullet bullet-dot"></span>
-											</span>
-											<span class="menu-title">Listar Propostas</span>
-										</a>
-										<!--end:Menu link-->
-									</div>
-								</div>
-								<!--end:Menu sub-->
-								<!--begin:Menu sub-->
-								<div class="menu-sub menu-sub-accordion">
-									<!--begin:Menu item-->
-									<div class="menu-item">
-										<!--begin:Menu link-->
-										<a class="menu-link" href="<?php echo assetfolder; ?>argus-listar-chamadas">
-											<span class="menu-bullet">
-												<span class="bullet bullet-dot"></span>
-											</span>
-											<span class="menu-title">Listar Chamadas</span>
-										</a>
-										<!--end:Menu link-->
-									</div>
-								</div>
-
-								<!--begin:Menu sub-->
-								<div class="menu-sub menu-sub-accordion">
-									<!--begin:Menu item-->
-									<div class="menu-item">
-										<!--begin:Menu link-->
-										<a class="menu-link" href="<?php echo assetfolder; ?>whatsapp-listar-templates">
-											<span class="menu-bullet">
-												<span class="bullet bullet-dot"></span>
-											</span>
-											<span class="menu-title">Modelos WhatsApp</span>
-										</a>
-										<!--end:Menu link-->
-									</div>
-								</div>
-								<!--end:Menu sub-->
-								<!--begin:Menu sub-->
-								<div class="menu-sub menu-sub-accordion">
-									<!--begin:Menu item-->
-									<div class="menu-item">
-										<!--begin:Menu link-->
-										<a class="menu-link" href="<?php echo assetfolder; ?>whatsapp-chat">
-											<span class="menu-bullet">
-												<span class="bullet bullet-dot"></span>
-											</span>
-											<span class="menu-title">WhatsApp Web</span>
-										</a>
-										<!--end:Menu link-->
-									</div>
-								</div>
-								<!--end:Menu sub-->
-								<!--begin:Menu sub-->
-								<div class="menu-sub menu-sub-accordion">
-									<!--begin:Menu item-->
-									<div class="menu-item">
-										<!--begin:Menu link-->
-										<a class="menu-link" href="<?php echo assetfolder; ?>whatsapp-chat">
-											<span class="menu-bullet">
-												<span class="bullet bullet-dot"></span>
-											</span>
-											<span class="menu-title">Modelos WhatsApp</span>
-										</a>
-										<!--end:Menu link-->
-									</div>
-								</div>
-								<!--end:Menu sub-->
-								<!--begin:Menu sub-->
-								<div class="menu-sub menu-sub-accordion">
-									<!--begin:Menu item-->
-									<div class="menu-item">
-										<!--begin:Menu link-->
-										<a class="menu-link" href="<?php echo assetfolder; ?>integraall-importar-propostas">
-											<span class="menu-bullet">
-												<span class="bullet bullet-dot"></span>
-											</span>
-											<span class="menu-title">Importar Propostas Integraall</span>
-										</a>
-										<!--end:Menu link-->
-									</div>
-								</div>
-								<!--end:Menu sub-->
-								<!--begin:Menu sub-->
-								<div class="menu-sub menu-sub-accordion">
-									<!--begin:Menu item-->
-									<div class="menu-item">
-										<!--begin:Menu link-->
-										<a class="menu-link" href="<?php echo assetfolder; ?>whatsapp-auditoria">
-											<span class="menu-bullet">
-												<span class="bullet bullet-dot"></span>
-											</span>
-											<span class="menu-title">Auditoria WhastApp</span>
-										</a>
-										<!--end:Menu link-->
-									</div>
-								</div>
-								<!--end:Menu sub-->
-
-
-							</div>
-							<!--end:AASPA BRASIL Menu item-->
-							<!--begin:BMG item-->
 							<?php if ($my_security->checkPermission("BMG")): ?>
 								<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
 									<!--begin:Menu link-->
@@ -5066,10 +4906,10 @@
 										<span class="menu-icon">
 											<!--begin::Svg Icon | path: icons/duotune/communication/com013.svg-->
 											<span class="svg-icon svg-icon-2">
-												<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-													<path d="M6.28548 15.0861C7.34369 13.1814 9.35142 12 11.5304 12H12.4696C14.6486 12 16.6563 13.1814 17.7145 15.0861L19.3493 18.0287C20.0899 19.3618 19.1259 21 17.601 21H6.39903C4.87406 21 3.91012 19.3618 4.65071 18.0287L6.28548 15.0861Z" fill="currentColor" />
-													<rect opacity="0.3" x="8" y="3" width="8" height="8" rx="4" fill="currentColor" />
+												<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+													<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M6 14h2m3 0h5M3 7v10a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1Z" />
 												</svg>
+
 											</span>
 											<!--end::Svg Icon-->
 										</span>
@@ -5123,9 +4963,8 @@
 										<span class="menu-icon">
 											<!--begin::Svg Icon | path: icons/duotune/communication/com013.svg-->
 											<span class="svg-icon svg-icon-2">
-												<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-													<path d="M6.28548 15.0861C7.34369 13.1814 9.35142 12 11.5304 12H12.4696C14.6486 12 16.6563 13.1814 17.7145 15.0861L19.3493 18.0287C20.0899 19.3618 19.1259 21 17.601 21H6.39903C4.87406 21 3.91012 19.3618 4.65071 18.0287L6.28548 15.0861Z" fill="currentColor" />
-													<rect opacity="0.3" x="8" y="3" width="8" height="8" rx="4" fill="currentColor" />
+												<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+													<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M6 14h2m3 0h5M3 7v10a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1Z" />
 												</svg>
 											</span>
 											<!--end::Svg Icon-->
@@ -5158,10 +4997,10 @@
 										<span class="menu-icon">
 											<!--begin::Svg Icon | path: icons/duotune/communication/com013.svg-->
 											<span class="svg-icon svg-icon-2">
-												<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-													<path d="M6.28548 15.0861C7.34369 13.1814 9.35142 12 11.5304 12H12.4696C14.6486 12 16.6563 13.1814 17.7145 15.0861L19.3493 18.0287C20.0899 19.3618 19.1259 21 17.601 21H6.39903C4.87406 21 3.91012 19.3618 4.65071 18.0287L6.28548 15.0861Z" fill="currentColor" />
-													<rect opacity="0.3" x="8" y="3" width="8" height="8" rx="4" fill="currentColor" />
+												<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+													<path fill-rule="evenodd" d="M5 3a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11.5c.07 0 .14-.007.207-.021.095.014.193.021.293.021h2a2 2 0 0 0 2-2V7a1 1 0 0 0-1-1h-1a1 1 0 1 0 0 2v11h-2V5a2 2 0 0 0-2-2H5Zm7 4a1 1 0 0 1 1-1h.5a1 1 0 1 1 0 2H13a1 1 0 0 1-1-1Zm0 3a1 1 0 0 1 1-1h.5a1 1 0 1 1 0 2H13a1 1 0 0 1-1-1Zm-6 4a1 1 0 0 1 1-1h6a1 1 0 1 1 0 2H7a1 1 0 0 1-1-1Zm0 3a1 1 0 0 1 1-1h6a1 1 0 1 1 0 2H7a1 1 0 0 1-1-1ZM7 6a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H7Zm1 3V8h1v1H8Z" clip-rule="evenodd" />
 												</svg>
+
 											</span>
 											<!--end::Svg Icon-->
 										</span>
@@ -5195,10 +5034,10 @@
 										<span class="menu-icon">
 											<!--begin::Svg Icon | path: icons/duotune/communication/com013.svg-->
 											<span class="svg-icon svg-icon-2">
-												<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-													<path d="M6.28548 15.0861C7.34369 13.1814 9.35142 12 11.5304 12H12.4696C14.6486 12 16.6563 13.1814 17.7145 15.0861L19.3493 18.0287C20.0899 19.3618 19.1259 21 17.601 21H6.39903C4.87406 21 3.91012 19.3618 4.65071 18.0287L6.28548 15.0861Z" fill="currentColor" />
-													<rect opacity="0.3" x="8" y="3" width="8" height="8" rx="4" fill="currentColor" />
+												<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+													<path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M16 19h4a1 1 0 0 0 1-1v-1a3 3 0 0 0-3-3h-2m-2.236-4a3 3 0 1 0 0-4M3 18v-1a3 3 0 0 1 3-3h4a3 3 0 0 1 3 3v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1Zm8-10a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
 												</svg>
+
 											</span>
 											<!--end::Svg Icon-->
 										</span>
@@ -5344,14 +5183,14 @@
 										<span class="menu-icon">
 											<!--begin::Svg Icon | path: icons/duotune/communication/com013.svg-->
 											<span class="svg-icon svg-icon-2">
-												<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-													<path d="M6.28548 15.0861C7.34369 13.1814 9.35142 12 11.5304 12H12.4696C14.6486 12 16.6563 13.1814 17.7145 15.0861L19.3493 18.0287C20.0899 19.3618 19.1259 21 17.601 21H6.39903C4.87406 21 3.91012 19.3618 4.65071 18.0287L6.28548 15.0861Z" fill="currentColor" />
-													<rect opacity="0.3" x="8" y="3" width="8" height="8" rx="4" fill="currentColor" />
+												<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+													<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m8 8-4 4 4 4m8 0 4-4-4-4m-2-3-4 14" />
 												</svg>
+
 											</span>
 											<!--end::Svg Icon-->
 										</span>
-										<span class="menu-title">ADIMIN</span>
+										<span class="menu-title">ADMIN</span>
 										<span class="menu-arrow"></span>
 									</span>
 									<!--end:Menu link-->

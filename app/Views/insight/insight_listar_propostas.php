@@ -14,7 +14,7 @@
 					<ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
 						<!--begin::Item-->
 						<li class="breadcrumb-item text-muted">
-							<a href="../../demo1/dist/index.html" class="text-muted text-hover-primary">Home</a>
+							<a href="<?php echo assetfolder ?>" class="text-muted text-hover-primary">Home</a>
 						</li>
 						<!--end::Item-->
 						<!--begin::Item-->
@@ -23,7 +23,7 @@
 						</li>
 						<!--end::Item-->
 						<!--begin::Item-->
-						<li class="breadcrumb-item text-muted">Listar propostas</li>
+						<li class="breadcrumb-item text-muted">Propostas</li>
 						<!--end::Item-->
 					</ul>
 					<!--end::Breadcrumb-->
@@ -469,24 +469,9 @@
 		<!--begin::Copyright-->
 		<div class="text-dark order-2 order-md-1">
 			<span class="text-muted fw-semibold me-1">2025&copy;</span>
-			<a href="https://keenthemes.com" target="_blank" class="text-gray-800 text-hover-primary">Insight</a>
+			<a href="#" target="_blank" class="text-gray-800 text-hover-primary">Insight</a>
 		</div>
-		<!--end::Copyright-->
-		<!--begin::Menu-->
-		<ul class="menu menu-gray-600 menu-hover-primary fw-semibold order-1">
-			<li class="menu-item">
-				<a href="https://keenthemes.com" target="_blank" class="menu-link px-2">About</a>
-			</li>
-			<li class="menu-item">
-				<a href="https://devs.keenthemes.com" target="_blank" class="menu-link px-2">Support</a>
-			</li>
-			<li class="menu-item">
-				<a href="https://1.envato.market/EA4JP" target="_blank" class="menu-link px-2">Purchase</a>
-			</li>
-		</ul>
-		<!--end::Menu-->
 	</div>
-	<!--end::Footer container-->
 </div>
 <!--end:::Main-->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
