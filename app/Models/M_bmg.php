@@ -744,4 +744,46 @@ class M_bmg extends Model
 
         return !empty($result) ? $result[0] : null;
     }
+
+    public function totalMensal()
+    {
+        $equipe = $this->session->userId;
+
+        $sql = "
+        SELECT 
+            COALESCE(SUM(valor), 0) AS total_mensal
+        FROM quid_propostas
+        WHERE report_to = {$equipe}
+        AND status IN ('Aprovada', 'Análise')
+          AND MONTH(data_criacao) = MONTH(CURRENT_DATE())
+          AND YEAR(data_criacao) = YEAR(CURRENT_DATE())
+        ";
+
+        $result = $this->dbMasterDefault
+            ->runQuery($sql, [$equipe])['result']
+            ->getRow();
+
+        return $result->total_mensal ?? 0;
+    }
+
+    public function totalMensalGerente()
+    {
+        $sql = "
+        SELECT 
+            report_to,
+            COALESCE(SUM(valor), 0) AS total_mensal
+        FROM quid_propostas
+        WHERE report_to IN (164815,165005,165004,165006)
+          AND status IN ('Aprovada', 'Análise')
+          AND MONTH(data_criacao) = MONTH(CURRENT_DATE())
+          AND YEAR(data_criacao) = YEAR(CURRENT_DATE())
+        GROUP BY report_to
+        ";
+
+        $result = $this->dbMasterDefault
+            ->runQuery($sql)['result']
+            ->getResultArray();
+
+        return $result;
+    }
 }

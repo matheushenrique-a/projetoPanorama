@@ -74,6 +74,33 @@ class Home extends BaseController
         $dados['labels'] = $labels;
         $dados['dados'] = $valores;
 
+        $totalMensal = $this->m_bmg->totalMensal();
+        
+        $usuarioSupervisor = $this->session->userId;
+
+        if($usuarioSupervisor == "164815"){ //matheus
+            $meta = 250000;
+        } else if($usuarioSupervisor == "165004"){ //paula
+            $meta = 230000;
+        } else if($usuarioSupervisor == "165006"){ //jessica
+            $meta = 200000;
+        } else if($usuarioSupervisor == "165005"){//ana karla
+            $meta = 200000;
+        } else {
+            $meta = 50000;
+        }
+
+        $dados['meta'] = $meta;
+        $dados['totalMensal'] = $totalMensal;
+
+        $dados['totalMensalGerente'] = $this->m_bmg->totalMensalGerente();
+
+        $progresso = ($totalMensal / $meta) * 100;
+
+        $progresso = round($progresso, 2);
+
+        $dados['progressoSupervisor'] = $progresso;
+
         $dados['labelsEquipe'] = $labelsEquipe;
         $dados['dadosEquipe'] = $valoresEquipe;
 
@@ -99,7 +126,6 @@ class Home extends BaseController
 
         $countPropostasBMG = $this->m_bmg->countPropostasBMG();
 
-        // ATUALIZAÇÃO DE PROPOSTAS
         $tempoMinutos = 5;
 
         $conf = $this->dbMasterDefault->select('configuracoes', ['id' => 1]);

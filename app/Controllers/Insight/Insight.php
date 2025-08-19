@@ -540,7 +540,7 @@ class Insight extends BaseController
         $nickname = $this->session->nickname;
         $userId = $this->session->userId;
 
-        if ($this->my_security->checkPermission("ADMIN") || $this->my_security->checkPermission("FORMALIZACAO")) {
+        if ($this->my_security->checkPermission("ADMIN") || $this->my_security->checkPermission("FORMALIZACAO") || $this->my_security->checkPermission("GERENTE") ) {
             $indicadores['propostas_hoje'] = $this->dbMaster->runQuery(
                 "SELECT COUNT(*) AS total 
          FROM quid_propostas 

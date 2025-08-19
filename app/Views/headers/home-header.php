@@ -94,33 +94,20 @@
 							<!--begin::Menu-->
 							<div class="menu menu-rounded menu-column menu-lg-row my-5 my-lg-0 align-items-stretch fw-semibold px-2 px-lg-0" id="kt_app_header_menu" data-kt-menu="true">
 								<!--begin:Menu item-->
-								<div class="menu-item here show menu-lg-down-accordion menu-here-bg me-0 me-lg-2">
-									<!--begin:Menu link-->
-									<span class="menu-link">
-										<span class="menu-title"><a href="<?php echo assetfolder; ?>"> &#x3C;&#x3C; Home</a></span>
-										<span class="menu-arrow d-lg-none"></span>
-									</span>
-									<!--end:Menu link-->
+								<div class="menu-item d-flex justify-content-center text-center p-2">
+									<a class="d-flex align-items-center justify-content-center text-hover-gray-800 gap-2 px-4 py-3 rounded bg-light shadow-sm text-gray-600 text-decoration-none hover-bg-primary"
+										href="<?php echo assetfolder; ?>">
+										<i class="bi bi-house-door-fill text-gray-700"></i>
+										<span>Home</span>
+									</a>
 								</div>
-								<!--begin:Menu item-->
-								<!--begin:Menu item-->
-								<?php if ($my_security->checkPermission("ADMIN")): ?>
-									<div class="menu-item here show menu-lg-down-accordion menu-here-bg me-0 me-lg-2">
-										<!--begin:Menu link-->
-										<span class="menu-link">
-											<span class="menu-title"><a href="<?php echo assetfolder; ?>aaspa-listar-propostas">Propostas</a></span>
-											<span class="menu-arrow d-lg-none"></span>
-										</span>
-										<!--end:Menu link-->
-									</div>
-								<?php endif; ?>
 
 								<!--begin:Menu item-->
 								<div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="bottom-start" class="menu-item here show menu-lg-down-accordion menu-here-bg me-0 me-lg-2">
 									<!--begin:Menu link-->
-									<span class="menu-link">
-										<span class="menu-title">Ferramentas</span>
-										<span class="menu-arrow d-lg-none"></span>
+									<span class="menu-link fw-bold text-gray-600 text-hover-gray-800 py-3 px-4 d-flex align-items-center gap-2">
+										<i class="bi bi-box-arrow-up-right text-gray-700"></i>
+										<span>Atalhos</span>
 									</span>
 									<!--end:Menu link-->
 									<!--begin:Menu sub-->

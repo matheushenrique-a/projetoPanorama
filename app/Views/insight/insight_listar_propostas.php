@@ -166,7 +166,7 @@
 										</div>
 									</div>
 								<?php endif; ?>
-								<?php if ($my_security->checkPermission("FORMALIZACAO") || $my_security->checkPermission("ADMIN")): ?>
+								<?php if ($my_security->checkPermission("FORMALIZACAO") || $my_security->checkPermission("ADMIN") || $my_security->checkPermission("GERENTE")): ?>
 									<div class="d-flex align-items-center position-relative my-1 mx-3">
 										<div class="mb-3">
 											<label for="exampleFormControlInput2" class="form-label text-gray-800 mb-0">Equipe:</label>
