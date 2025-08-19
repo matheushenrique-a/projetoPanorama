@@ -29,8 +29,8 @@
                         <div class="card" id="kt_chat_messenger">
                             <div class="accordion" id="kt_accordion_1 ms-lg-7 ms-xl-10">
                                 <div class="accordion-item">
-                                    <h2 class="accordion-header" id="kt_accordion_1_header_1">
-                                        <button class="accordion-button fs-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#kt_accordion_1_body_133" aria-expanded="true" aria-controls="kt_accordion_1_body_1">SAQUE COMPLEMENTAR</button>
+                                    <h2 class="" id="kt_accordion_1_header_1">
+                                        <button class="accordion-button fs-4 fw-semibold" type="button" >SAQUE COMPLEMENTAR</button>
                                     </h2>
                                     <div id="kt_accordion_1_body_133" class="accordion-collapse collapse show" aria-labelledby="kt_accordion_1_header_1" data-bs-parent="#kt_accordion_1">
                                         <div id="kt_accordion_1_body_133" class="accordion-collapse collapse show" aria-labelledby="kt_accordion_1_header_1" data-bs-parent="#kt_accordion_1">
