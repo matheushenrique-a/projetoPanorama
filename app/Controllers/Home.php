@@ -75,28 +75,69 @@ class Home extends BaseController
         $dados['dados'] = $valores;
 
         $totalMensal = $this->m_bmg->totalMensal();
-        
+
         $usuarioSupervisor = $this->session->userId;
 
-        if($usuarioSupervisor == "164815"){ //matheus
+        if ($usuarioSupervisor == "164815") { //matheus
             $meta = 250000;
-        } else if($usuarioSupervisor == "165004"){ //paula
+        } else if ($usuarioSupervisor == "165004") { //paula
             $meta = 230000;
-        } else if($usuarioSupervisor == "165006"){ //jessica
+        } else if ($usuarioSupervisor == "165006") { //jessica
             $meta = 200000;
-        } else if($usuarioSupervisor == "165005"){//ana karla
+        } else if ($usuarioSupervisor == "165005") { //ana karla
             $meta = 200000;
         } else {
             $meta = 50000;
         }
 
+        if ($this->session->userId == "165058") {
+            $metaJessica = 588000;
+            $metaMatheus = 588000;
+            $metaPaula = 462000;
+            $metaAnaKarla = 630000;
+
+            $dados['metaJessica'] = $metaJessica;
+            $dados['metaMatheus'] = $metaMatheus;
+            $dados['metaPaula'] = $metaPaula;
+            $dados['metaAnaKarla'] = $metaAnaKarla;
+
+            $totalMatheus = $this->m_bmg->totalMensal('164815');
+            $totalJessica = $this->m_bmg->totalMensal('165006');
+            $totalPaula = $this->m_bmg->totalMensal('165004');
+            $totalAnaKarla = $this->m_bmg->totalMensal('165005');
+
+            $dados['totalJessica'] = $totalJessica;
+            $dados['totalMatheus'] = $totalMatheus;
+            $dados['totalPaula'] = $totalPaula;
+            $dados['totalAnaKarla'] = $totalAnaKarla;
+
+            $dados['totalMensalGerente'] = $this->m_bmg->totalMensalGerente();
+
+            $progressoMatheus = ($totalMatheus / $metaMatheus) * 100;
+            $progressoMatheus = round($progressoMatheus, 2);
+
+            $dados['progressoMatheus'] = $progressoMatheus;
+
+            $progressoPaula = ($totalPaula / $metaPaula) * 100;
+            $progressoPaula = round($progressoPaula, 2);
+
+            $dados['progressoPaula'] = $progressoPaula;
+
+            $progressoJessica = ($totalJessica / $metaJessica) * 100;
+            $progressoJessica = round($progressoJessica, 2);
+
+            $dados['progressoJessica'] = $progressoJessica;
+
+            $progressoAnaKarla = ($totalAnaKarla / $metaAnaKarla) * 100;
+            $progressoAnaKarla = round($progressoAnaKarla, 2);
+
+            $dados['progressoAnaKarla'] = $progressoAnaKarla;
+        }
+
         $dados['meta'] = $meta;
         $dados['totalMensal'] = $totalMensal;
 
-        $dados['totalMensalGerente'] = $this->m_bmg->totalMensalGerente();
-
         $progresso = ($totalMensal / $meta) * 100;
-
         $progresso = round($progresso, 2);
 
         $dados['progressoSupervisor'] = $progresso;
@@ -109,14 +150,8 @@ class Home extends BaseController
         $dados['progresso'] = $this->m_bmg->barraProgressoAssessor();
         $dados['nickname'] = $this->session->nickname;
 
-        $htmlNotificacoes = $this->m_insight->gerarTimelineNotificacoes();
         $ultimasLigacoes = $this->m_argus->ultimasLigacoes(6);
         $countLigacoes = $this->m_argus->countLigacoes();
-        $countPropostas = $this->m_integraall->countPropostas();
-        $ultimasPropostas = $this->m_integraall->ultimasPropostas(8);
-
-        $graficoAvebacoes = $this->m_integraall->graficoAvebacoes();
-        $ranking_ativacoes = $this->m_integraall->ranking_ativacoes();
 
         $tabulacoesSucesso = $this->m_argus->tabulacoesSucesso();
         $dados['tabulacoesSucesso'] = $tabulacoesSucesso;
@@ -160,14 +195,9 @@ class Home extends BaseController
         $dados['countPropostasBMG'] = $countPropostasBMG;
         $dados['report_to'] = $this->session->report_to;
 
-        $dados['ranking_ativacoes'] = $ranking_ativacoes;
-        $dados['graficoAvebacoes'] = $graficoAvebacoes;
-        $dados['htmlNotificacoes'] = $htmlNotificacoes;
         $dados['ultimasLigacoes'] = $ultimasLigacoes;
         $dados['session'] = $this->session;
-        $dados['ultimasPropostas'] = $ultimasPropostas;
         $dados['countLigacoes'] = $countLigacoes;
-        $dados['countPropostas'] = $countPropostas;
         return $this->loadpage('headers/home-default', $dados);
     }
 }

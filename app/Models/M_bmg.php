@@ -745,9 +745,11 @@ class M_bmg extends Model
         return !empty($result) ? $result[0] : null;
     }
 
-    public function totalMensal()
+    public function totalMensal($equipe = null)
     {
-        $equipe = $this->session->userId;
+        if(!$equipe) {
+            $equipe = $this->session->userId;
+        }
 
         $sql = "
         SELECT 

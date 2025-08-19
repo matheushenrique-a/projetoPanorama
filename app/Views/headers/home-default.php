@@ -108,28 +108,18 @@
 
 							<div class="col-xl-4 w-50">
 								<div class="card h-xl-100">
-
-									<!--begin::Header-->
 									<div class="card-header pt-7 mb-3 pb-3">
-										<!--begin::Title-->
 										<h3 class="card-title align-items-start flex-column">
 											<span class="card-label fw-bolder text-gray-800">Suas últimas propostas</span>
 											<span class="text-gray-400 mt-1 fw-bold fs-6"><?php echo $countPropostasBMG; ?> <?php echo ($countPropostasBMG > 1  ? 'propostas digitadas hoje' : 'proposta digitada hoje'); ?></span>
 										</h3>
-										<!--end::Title-->
-										<!--begin::Toolbar-->
 										<div class="card-toolbar">
 											<a href="<?php echo assetfolder; ?>" class="btn btn-sm btn-light" title="">Atualizar</a>
 										</div>
-										<!--end::Toolbar-->
 									</div>
-									<!--end::Header-->
-									<!--begin::Body-->
 									<div class="card-body pt-4">
 
 										<?php
-
-
 
 										foreach ($ultimasPropostasBMG["result"]->getResult() as $row) {
 											$nomeCliente = $row->nome;
@@ -310,49 +300,49 @@
 
 						<?php endif; ?>
 
-						<?php if ($my_security->checkPermission("SUPERVISOR") || $my_security->checkPermission("FORMALIZACAO")): ?>
-							<div class="col-xl-4 w-50 d-flex flex-column gap-10">
-								<div class="card h-xl-45">
-									<div class="card-header pt-6 pb-2 d-flex flex-column">
-										<h3 class="card-title align-items-start flex-column">
-											<span class="card-label fw-bold text-dark">Total por Equipe</span>
-											<span class="text-gray-400 mt-1 fw-semibold fs-6">Este Mês</span>
-										</h3>
-									</div>
-									<div class="d-flex justify-content-center gap-6 flex-wrap mt-10">
+						<?php if (!$my_security->checkPermission("GERENTE")): ?>
+							<?php if ($my_security->checkPermission("SUPERVISOR") || $my_security->checkPermission("FORMALIZACAO")): ?>
+								<div class="col-xl-4 w-50 d-flex flex-column gap-10">
+									<div class="card h-xl-45">
+										<div class="card-header pt-6 pb-2 d-flex flex-column">
+											<h3 class="card-title align-items-start flex-column">
+												<span class="card-label fw-bold text-dark">Total por Equipe</span>
+												<span class="text-gray-400 mt-1 fw-semibold fs-6">Este Mês</span>
+											</h3>
+										</div>
+										<div class="d-flex justify-content-center gap-6 flex-wrap mt-10">
 
-										<!-- Progresso -->
-										<div class="d-flex flex-column align-items-center text-center">
-											<h2 class="fs-5 text-muted mb-2">Progresso <i class="bi bi-arrow-up-right"></i></h2>
-											<div class="bg-light rounded shadow-sm px-5 py-4 w-100" style="max-width: 200px;">
-												<span class="fw-bold fs-5 text-success"><?= $progressoSupervisor ?>%</span>
+											<!-- Progresso -->
+											<div class="d-flex flex-column align-items-center text-center">
+												<h2 class="fs-5 text-muted mb-2">Progresso <i class="bi bi-arrow-up-right"></i></h2>
+												<div class="bg-light rounded shadow-sm px-5 py-4 w-100" style="max-width: 200px;">
+													<span class="fw-bold fs-5 text-success"><?= $progressoSupervisor ?>%</span>
+												</div>
+											</div>
+
+											<!-- Meta -->
+											<div class="d-flex flex-column align-items-center text-center">
+												<h2 class="fs-5 text-muted mb-2">Meta <i class="bi bi-flag"></i></h2>
+												<div class="bg-light rounded px-5 py-4 w-100 shadow-sm text-center" style="max-width: 200px;">
+													<span class="fw-bold fs-5 text-success">R$ <?= number_format($meta, 2, ',', '.') ?></span>
+												</div>
 											</div>
 										</div>
 
-										<!-- Meta -->
-										<div class="d-flex flex-column align-items-center text-center">
-											<h2 class="fs-5 text-muted mb-2">Meta <i class="bi bi-flag"></i></h2>
-											<div class="bg-light rounded px-5 py-4 w-100 shadow-sm text-center" style="max-width: 200px;">
-												<span class="fw-bold fs-5 text-success">R$ <?= number_format($meta, 2, ',', '.') ?></span>
-											</div>
-										</div>
-									</div>
-
-									<!-- Total Mensal -->
-									<div class="d-flex flex-column align-items-center mt-8 mb-15 w-100">
-										<h2 class="fs-4 mb-3 text-muted">Total Mensal</h2>
-										<div class="bg-light text-gray-800 rounded px-5 py-5 fs-1 fw-bold d-flex flex-column align-items-center shadow-sm w-100" style="max-width: 400px;">
-											R$ <?= number_format($totalMensal, 2, ',', '.') ?>
-											<div class="progress mt-4 w-100" style="height: 16px;">
-												<div class="progress-bar bg-success" role="progressbar"
-													style="width: <?= $progressoSupervisor ?>%;"
-													aria-valuenow="<?= $progressoSupervisor ?>" aria-valuemin="0" aria-valuemax="100">
+										<!-- Total Mensal -->
+										<div class="d-flex flex-column align-items-center mt-8 mb-15 w-100">
+											<h2 class="fs-4 mb-3 text-muted">Total Mensal</h2>
+											<div class="bg-light text-gray-800 rounded px-5 py-5 fs-1 fw-bold d-flex flex-column align-items-center shadow-sm w-100" style="max-width: 400px;">
+												R$ <?= number_format($totalMensal, 2, ',', '.') ?>
+												<div class="progress mt-4 w-100" style="height: 16px;">
+													<div class="progress-bar bg-success" role="progressbar"
+														style="width: <?= $progressoSupervisor ?>%;"
+														aria-valuenow="<?= $progressoSupervisor ?>" aria-valuemin="0" aria-valuemax="100">
+													</div>
 												</div>
 											</div>
 										</div>
 									</div>
-								</div>
-								<?php if (!$my_security->checkPermission("GERENTE")): ?>
 									<div class="card h-xl-45">
 										<div class="card-header pt-6 pb-3">
 											<h3 class="card-title align-items-start flex-column">
@@ -366,7 +356,147 @@
 											</div>
 										</div>
 									</div>
-								<?php endif; ?>
+								</div>
+							<?php endif; ?>
+						<?php endif; ?>
+
+						<?php if ($my_security->checkPermission("GERENTE")): ?>
+							<div class="col-xl-4 w-50 d-flex flex-column gap-10">
+								<div class="card h-xl-100">
+									<div class="card-header pt-6 pb-2 d-flex flex-column">
+										<h3 class="card-title align-items-start flex-column">
+											<span class="card-label fw-bold text-dark">Total por Equipe</span>
+											<span class="text-gray-400 mt-1 fw-semibold fs-6">Este Mês</span>
+										</h3>
+									</div>
+									<div class="d-flex justify-content-center gap-10 flex-wrap mt-10 mb-8">
+										<div class="bg-light rounded shadow-sm px-10 py-4 w-75">
+											<h2 class="text-gray-700 text-center mt-2">Time Matheus</h2>
+											<div class="d-flex flex-column align-items-center mt-8 w-100">
+												<div class="d-flex justify-content-center gap-6 flex-wrap ">
+													<div>
+														<div class="bg-light px-5 mb-5">
+															<div class="d-flex align-items-center gap-4 text-center">
+																<div>
+																	<h2 class="fs-5 text-muted mb-2">Progresso <i class="bi bi-arrow-up-right"></i></h2>
+																	<span class="fw-bold fs-5 text-success"><?= $progressoMatheus ?>%</span>
+																</div>
+																<div>
+																	<h2 class="fs-5 text-muted mb-2">Meta <i class="bi bi-flag"></i></h2>
+																	<span class="fw-bold fs-5 text-success">R$ <?= number_format($metaMatheus, 2, ',', '.') ?></span>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="bg-light text-gray-800 rounded px-5 py-3 fs-1 fw-bold d-flex flex-column align-items-center shadow-sm w-100" style="max-width: 400px;">
+													<h2 class="fs-4 mt-3 text-muted">Total Mensal</h2>
+													R$ <?= number_format($totalMatheus, 2, ',', '.') ?>
+													<div class="progress mt-4 w-100" style="height: 16px;">
+														<div class="progress-bar bg-success" role="progressbar"
+															style="width: <?= $progressoMatheus ?>%;"
+															aria-valuenow="<?= $progressoMatheus ?>" aria-valuemin="0" aria-valuemax="100">
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="bg-light rounded shadow-sm px-10 py-4 w-75">
+											<h2 class="text-gray-700 text-center mt-2">Time Jéssica</h2>
+											<div class="d-flex flex-column align-items-center mt-8 w-100">
+												<div class="d-flex justify-content-center gap-6 flex-wrap ">
+													<div>
+														<div class="bg-light px-5 mb-5">
+															<div class="d-flex align-items-center gap-4 text-center">
+																<div>
+																	<h2 class="fs-5 text-muted mb-2">Progresso <i class="bi bi-arrow-up-right"></i></h2>
+																	<span class="fw-bold fs-5 text-success"><?= $progressoJessica ?>%</span>
+																</div>
+																<div>
+																	<h2 class="fs-5 text-muted mb-2">Meta <i class="bi bi-flag"></i></h2>
+																	<span class="fw-bold fs-5 text-success">R$ <?= number_format($metaJessica, 2, ',', '.') ?></span>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="bg-light text-gray-800 rounded px-5 py-3 fs-1 fw-bold d-flex flex-column align-items-center shadow-sm w-100" style="max-width: 400px;">
+													<h2 class="fs-4 mt-3 text-muted">Total Mensal</h2>
+													R$ <?= number_format($totalJessica, 2, ',', '.') ?>
+													<div class="progress mt-4 w-100" style="height: 16px;">
+														<div class="progress-bar bg-success" role="progressbar"
+															style="width: <?= $progressoJessica ?>%;"
+															aria-valuenow="<?= $progressoJessica ?>" aria-valuemin="0" aria-valuemax="100">
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="bg-light rounded shadow-sm px-10 py-4 w-75">
+											<h2 class="text-gray-700 text-center mt-2">Time Paula</h2>
+											<div class="d-flex flex-column align-items-center mt-8 w-100">
+												<div class="d-flex justify-content-center gap-6 flex-wrap ">
+													<div>
+														<div class="bg-light px-5 mb-5">
+															<div class="d-flex align-items-center gap-4 text-center">
+																<div>
+																	<h2 class="fs-5 text-muted mb-2">Progresso <i class="bi bi-arrow-up-right"></i></h2>
+																	<span class="fw-bold fs-5 text-success"><?= $progressoPaula ?>%</span>
+																</div>
+																<div>
+																	<h2 class="fs-5 text-muted mb-2">Meta <i class="bi bi-flag"></i></h2>
+																	<span class="fw-bold fs-5 text-success">R$ <?= number_format($metaPaula, 2, ',', '.') ?></span>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="bg-light text-gray-800 rounded px-5 py-3 fs-1 fw-bold d-flex flex-column align-items-center shadow-sm w-100" style="max-width: 400px;">
+													<h2 class="fs-4 mt-3 text-muted">Total Mensal</h2>
+													R$ <?= number_format($totalPaula, 2, ',', '.') ?>
+													<div class="progress mt-4 w-100" style="height: 16px;">
+														<div class="progress-bar bg-success" role="progressbar"
+															style="width: <?= $progressoPaula ?>%;"
+															aria-valuenow="<?= $progressoPaula ?>" aria-valuemin="0" aria-valuemax="100">
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="bg-light rounded shadow-sm px-10 py-4 w-75">
+											<h2 class="text-gray-700 text-center mt-2">Time Ana Karla</h2>
+											<div class="d-flex flex-column align-items-center mt-8 w-100">
+												<div class="d-flex justify-content-center gap-6 flex-wrap ">
+													<div>
+														<div class="bg-light px-5 mb-5">
+															<div class="d-flex align-items-center gap-4 text-center">
+																<div>
+																	<h2 class="fs-5 text-muted mb-2">Progresso <i class="bi bi-arrow-up-right"></i></h2>
+																	<span class="fw-bold fs-5 text-success"><?= $progressoAnaKarla ?>%</span>
+																</div>
+																<div>
+																	<h2 class="fs-5 text-muted mb-2">Meta <i class="bi bi-flag"></i></h2>
+																	<span class="fw-bold fs-5 text-success">R$ <?= number_format($metaAnaKarla, 2, ',', '.') ?></span>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="bg-light text-gray-800 rounded px-5 py-3 fs-1 fw-bold d-flex flex-column align-items-center shadow-sm w-100" style="max-width: 400px;">
+													<h2 class="fs-4 mt-3 text-muted">Total Mensal</h2>
+													R$ <?= number_format($totalAnaKarla, 2, ',', '.') ?>
+													<div class="progress mt-4 w-100" style="height: 16px;">
+														<div class="progress-bar bg-success" role="progressbar"
+															style="width: <?= $progressoAnaKarla ?>%;"
+															aria-valuenow="<?= $progressoAnaKarla ?>" aria-valuemin="0" aria-valuemax="100">
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+
+								</div>
 							</div>
 						<?php endif; ?>
 
@@ -515,15 +645,11 @@
 			</div>
 	</div>
 	<div id="kt_app_footer" class="app-footer">
-		<!--begin::Footer container-->
 		<div class="app-container container-fluid d-flex flex-column flex-md-row flex-center flex-md-stack py-3">
-			<!--begin::Copyright-->
 			<div class="text-dark order-2 order-md-1">
 				<span class="text-muted fw-semibold me-1">2025&copy;</span>
 				<a href="https://keenthemes.com" target="_blank" class="text-gray-800 text-hover-primary">Insight</a>
 			</div>
-			<!--end::Copyright-->
-			<!--begin::Menu-->
 			<ul class="menu menu-gray-600 menu-hover-primary fw-semibold order-1">
 				<li class="menu-item">
 					<a href="https://keenthemes.com" target="_blank" class="menu-link px-2">About</a>

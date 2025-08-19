@@ -3,7 +3,7 @@
 		?> -->
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="pt-br">
 
 <head>
 	<base href="" />
@@ -12,6 +12,8 @@
 	<meta name="description" content="The most advanced Bootstrap Admin Theme on Themeforest trusted by 100,000 beginners and professionals. Multi-demo, Dark Mode, RTL support and complete React, Angular, Vue, Asp.Net Core, Blazor, Django, Flask & Laravel versions. Grab your copy now and get life-time updates for free." />
 	<meta name="keywords" content="metronic, bootstrap, bootstrap 5, angular, VueJs, React, Asp.Net Core, Blazor, Django, Flask & Laravel starter kits, admin themes, web design, figma, web development, free templates, free admin themes, bootstrap theme, bootstrap template, bootstrap dashboard, bootstrap dak mode, bootstrap button, bootstrap datepicker, bootstrap timepicker, fullcalendar, datatables, flaticon" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta http-equiv="Content-Language" content="pt-BR">
+	<meta name="google" content="notranslate">
 	<meta property="og:locale" content="en_US" />
 	<meta property="og:type" content="article" />
 	<meta property="og:title" content="Metronic | Bootstrap HTML, VueJS, React, Angular, Asp.Net Core, Blazor, Django, Flask & Laravel Admin Dashboard Theme" />
@@ -5375,59 +5377,41 @@
 												</span>
 												<span class="menu-title">Ad Miner</span>
 											</a>
-											<!--end:Menu link-->
 										</div>
-										<!--begin:Menu item-->
 										<div class="menu-item">
-											<!--begin:Menu link-->
 											<a class="menu-link" href="<?php echo assetfolder; ?>ad-manager" target="">
 												<span class="menu-bullet">
 													<span class="bullet bullet-dot"></span>
 												</span>
 												<span class="menu-title">Ad Manager</span>
 											</a>
-											<!--end:Menu link-->
 										</div>
 									</div>
-									<!--end:Menu sub-->
 								</div>
 							<?php endif; ?>
-							<!--end:CONSORCIO BRASIL Menu item-->
-							<!--begin:Menu item-->
 							<div data-kt-menu-trigger="click" class="menu-item menu-accordion" style="<?php $my_security->DisplayMenu("INSS"); ?>">
-								<!--begin:Menu link-->
 								<span class="menu-link">
 									<span class="menu-icon">
-										<!--begin::Svg Icon | path: icons/duotune/finance/fin002.svg-->
 										<span class="svg-icon svg-icon-2">
 											<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 												<path d="M22 7H2V11H22V7Z" fill="currentColor" />
 												<path opacity="0.3" d="M21 19H3C2.4 19 2 18.6 2 18V6C2 5.4 2.4 5 3 5H21C21.6 5 22 5.4 22 6V18C22 18.6 21.6 19 21 19ZM14 14C14 13.4 13.6 13 13 13H5C4.4 13 4 13.4 4 14C4 14.6 4.4 15 5 15H13C13.6 15 14 14.6 14 14ZM16 15.5C16 16.3 16.7 17 17.5 17H18.5C19.3 17 20 16.3 20 15.5C20 14.7 19.3 14 18.5 14H17.5C16.7 14 16 14.7 16 15.5Z" fill="currentColor" />
 											</svg>
 										</span>
-										<!--end::Svg Icon-->
 									</span>
 									<span class="menu-title">INSS</span>
 									<span class="menu-arrow"></span>
 								</span>
-								<!--end:Menu link-->
-								<!--begin:Menu sub-->
 								<div class="menu-sub menu-sub-accordion">
-									<!--begin:Menu item-->
 									<div class="menu-item">
-										<!--begin:Menu link-->
 										<a class="menu-link" href="../../demo1/dist/authentication/general/error-500.html">
 											<span class="menu-bullet">
 												<span class="bullet bullet-dot"></span>
 											</span>
 											<span class="menu-title">Painel</span>
 										</a>
-										<!--end:Menu link-->
 									</div>
-									<!--end:Menu item-->
-									<!--begin:Menu item-->
 									<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-										<!--begin:Menu link-->
 										<span class="menu-link">
 											<span class="menu-bullet">
 												<span class="bullet bullet-dot"></span>
@@ -5435,78 +5419,50 @@
 											<span class="menu-title">Propostas</span>
 											<span class="menu-arrow"></span>
 										</span>
-										<!--end:Menu link-->
-										<!--begin:Menu sub-->
 										<div class="menu-sub menu-sub-accordion menu-active-bg">
-											<!--begin:Menu item-->
 											<div class="menu-item">
-												<!--begin:Menu link-->
 												<a class="menu-link" href="../../demo1/dist/authentication/layouts/corporate/sign-in.html">
 													<span class="menu-bullet">
 														<span class="bullet bullet-dot"></span>
 													</span>
 													<span class="menu-title">Recebidas</span>
 												</a>
-												<!--end:Menu link-->
 											</div>
-											<!--end:Menu item-->
-											<!--begin:Menu item-->
 											<div class="menu-item">
-												<!--begin:Menu link-->
 												<a class="menu-link" href="../../demo1/dist/authentication/layouts/corporate/sign-up.html">
 													<span class="menu-bullet">
 														<span class="bullet bullet-dot"></span>
 													</span>
 													<span class="menu-title">Pendentes</span>
 												</a>
-												<!--end:Menu link-->
 											</div>
-											<!--end:Menu item-->
-											<!--begin:Menu item-->
 											<div class="menu-item">
-												<!--begin:Menu link-->
 												<a class="menu-link" href="../../demo1/dist/authentication/layouts/corporate/two-steps.html">
 													<span class="menu-bullet">
 														<span class="bullet bullet-dot"></span>
 													</span>
 													<span class="menu-title">Canceladas</span>
 												</a>
-												<!--end:Menu link-->
 											</div>
-											<!--end:Menu item-->
-											<!--begin:Menu item-->
 											<div class="menu-item">
-												<!--begin:Menu link-->
 												<a class="menu-link" href="../../demo1/dist/authentication/layouts/corporate/reset-password.html">
 													<span class="menu-bullet">
 														<span class="bullet bullet-dot"></span>
 													</span>
 													<span class="menu-title">Históricas</span>
 												</a>
-												<!--end:Menu link-->
 											</div>
-											<!--end:Menu item-->
 										</div>
-										<!--end:Menu sub-->
 									</div>
-									<!--end:Menu item-->
 								</div>
-								<!--end:Menu sub-->
 							</div>
-							<!--end:Menu item-->
-
 						</div>
-						<!--end::Menu-->
 					</div>
-					<!--end::Menu wrapper-->
 				</div>
-				<!--end::sidebar menu-->
-				<!--begin::Footer-->
 				<?php if ($my_security->checkPermission("ADMIN")): ?>
 					<div class="app-sidebar-footer flex-column-auto pt-2 pb-6 px-6" id="kt_app_sidebar_footer">
 						<a href="https://preview.keenthemes.com/html/metronic/docs" class="btn btn-flex flex-center btn-custom btn-primary overflow-hidden text-nowrap px-0 h-40px w-100" data-bs-toggle="tooltip" data-bs-trigger="hover" data-bs-dismiss-="click" title="200+ in-house components and 3rd-party plugins">
 							<span class="btn-label">Docs & Components</span>
-							<!--begin::Svg Icon | path: icons/duotune/general/gen005.svg-->
 							<span class="svg-icon btn-icon svg-icon-2 m-0">
 								<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 									<path opacity="0.3" d="M19 22H5C4.4 22 4 21.6 4 21V3C4 2.4 4.4 2 5 2H14L20 8V21C20 21.6 19.6 22 19 22ZM12.5 18C12.5 17.4 12.6 17.5 12 17.5H8.5C7.9 17.5 8 17.4 8 18C8 18.6 7.9 18.5 8.5 18.5L12 18C12.6 18 12.5 18.6 12.5 18ZM16.5 13C16.5 12.4 16.6 12.5 16 12.5H8.5C7.9 12.5 8 12.4 8 13C8 13.6 7.9 13.5 8.5 13.5H15.5C16.1 13.5 16.5 13.6 16.5 13ZM12.5 8C12.5 7.4 12.6 7.5 12 7.5H8C7.4 7.5 7.5 7.4 7.5 8C7.5 8.6 7.4 8.5 8 8.5H12C12.6 8.5 12.5 8.6 12.5 8Z" fill="currentColor" />
@@ -5516,10 +5472,7 @@
 									<path d="M15 8H20L14 2V7C14 7.6 14.4 8 15 8Z" fill="currentColor" />
 								</svg>
 							</span>
-							<!--end::Svg Icon-->
 						</a>
 					</div>
 				<?php endif; ?>
-				<!--end::Footer-->
 			</div>
-			<!--end::sidebar-->
