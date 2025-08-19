@@ -52,6 +52,9 @@ class Home extends BaseController
         $this->checkSession();
         $dados['pageTitle'] = "Insight Home";
 
+        $dados['report_to'] = $this->session->report_to;
+        $dados['session'] = $this->session;
+
         $resultados = $this->m_bmg->countPropostasPorDia();
         $resultadosEquipe = $this->m_bmg->countPropostasPorDiaEquipe();
 
@@ -74,22 +77,33 @@ class Home extends BaseController
         $dados['labels'] = $labels;
         $dados['dados'] = $valores;
 
-        $totalMensal = $this->m_bmg->totalMensal();
+        if ($this->session->role == "SUPERVISOR") {
+            $usuarioSupervisor = $this->session->userId;
+            $totalMensal = $this->m_bmg->totalMensal();
 
-        $usuarioSupervisor = $this->session->userId;
+            if ($usuarioSupervisor == "164815") { //matheus
+                $meta = 250000;
+            } else if ($usuarioSupervisor == "165004") { //paula
+                $meta = 230000;
+            } else if ($usuarioSupervisor == "165006") { //jessica
+                $meta = 200000;
+            } else if ($usuarioSupervisor == "165005") { //ana karla
+                $meta = 200000;
+            } else {
+                $meta = 50000;
+            }
 
-        if ($usuarioSupervisor == "164815") { //matheus
-            $meta = 250000;
-        } else if ($usuarioSupervisor == "165004") { //paula
-            $meta = 230000;
-        } else if ($usuarioSupervisor == "165006") { //jessica
-            $meta = 200000;
-        } else if ($usuarioSupervisor == "165005") { //ana karla
-            $meta = 200000;
-        } else {
-            $meta = 50000;
+            $dados['meta'] = $meta;
+            $dados['totalMensal'] = $totalMensal;
+
+            $progresso = ($totalMensal / $meta) * 100;
+            $progresso = round($progresso, 2);
+
+            $dados['progressoSupervisor'] = $progresso;
         }
 
+
+        // USUARIO JESSICA
         if ($this->session->userId == "165058") {
             $metaJessica = 588000;
             $metaMatheus = 588000;
@@ -134,13 +148,6 @@ class Home extends BaseController
             $dados['progressoAnaKarla'] = $progressoAnaKarla;
         }
 
-        $dados['meta'] = $meta;
-        $dados['totalMensal'] = $totalMensal;
-
-        $progresso = ($totalMensal / $meta) * 100;
-        $progresso = round($progresso, 2);
-
-        $dados['progressoSupervisor'] = $progresso;
 
         $dados['labelsEquipe'] = $labelsEquipe;
         $dados['dadosEquipe'] = $valoresEquipe;
@@ -150,9 +157,6 @@ class Home extends BaseController
         $dados['progresso'] = $this->m_bmg->barraProgressoAssessor();
         $dados['nickname'] = $this->session->nickname;
 
-        $ultimasLigacoes = $this->m_argus->ultimasLigacoes(6);
-        $countLigacoes = $this->m_argus->countLigacoes();
-
         $tabulacoesSucesso = $this->m_argus->tabulacoesSucesso();
         $dados['tabulacoesSucesso'] = $tabulacoesSucesso;
 
@@ -160,7 +164,10 @@ class Home extends BaseController
         $dados['ultimasPropostasBMG'] = $ultimasPropostasBMG;
 
         $countPropostasBMG = $this->m_bmg->countPropostasBMG();
+        $dados['countPropostasBMG'] = $countPropostasBMG;
 
+
+        // atualização de propostas PANORAMA
         $tempoMinutos = 5;
 
         $conf = $this->dbMasterDefault->select('configuracoes', ['id' => 1]);
@@ -192,12 +199,6 @@ class Home extends BaseController
             }
         }
 
-        $dados['countPropostasBMG'] = $countPropostasBMG;
-        $dados['report_to'] = $this->session->report_to;
-
-        $dados['ultimasLigacoes'] = $ultimasLigacoes;
-        $dados['session'] = $this->session;
-        $dados['countLigacoes'] = $countLigacoes;
         return $this->loadpage('headers/home-default', $dados);
     }
 }
