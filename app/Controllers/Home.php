@@ -81,9 +81,7 @@ class Home extends BaseController
             $usuarioSupervisor = $this->session->userId;
             $totalMensal = $this->m_bmg->totalMensal();
 
-            if ($usuarioSupervisor == "164815") { //matheus
-                $meta = 250000;
-            } else if ($usuarioSupervisor == "165004") { //paula
+            if ($usuarioSupervisor == "165004") { //paula
                 $meta = 230000;
             } else if ($usuarioSupervisor == "165006") { //jessica
                 $meta = 200000;
@@ -106,31 +104,22 @@ class Home extends BaseController
         // USUARIO JESSICA
         if ($this->session->userId == "165058") {
             $metaJessica = 588000;
-            $metaMatheus = 588000;
             $metaPaula = 462000;
             $metaAnaKarla = 630000;
 
             $dados['metaJessica'] = $metaJessica;
-            $dados['metaMatheus'] = $metaMatheus;
             $dados['metaPaula'] = $metaPaula;
             $dados['metaAnaKarla'] = $metaAnaKarla;
 
-            $totalMatheus = $this->m_bmg->totalMensal('164815');
             $totalJessica = $this->m_bmg->totalMensal('165006');
             $totalPaula = $this->m_bmg->totalMensal('165004');
             $totalAnaKarla = $this->m_bmg->totalMensal('165005');
 
             $dados['totalJessica'] = $totalJessica;
-            $dados['totalMatheus'] = $totalMatheus;
             $dados['totalPaula'] = $totalPaula;
             $dados['totalAnaKarla'] = $totalAnaKarla;
 
             $dados['totalMensalGerente'] = $this->m_bmg->totalMensalGerente();
-
-            $progressoMatheus = ($totalMatheus / $metaMatheus) * 100;
-            $progressoMatheus = round($progressoMatheus, 2);
-
-            $dados['progressoMatheus'] = $progressoMatheus;
 
             $progressoPaula = ($totalPaula / $metaPaula) * 100;
             $progressoPaula = round($progressoPaula, 2);

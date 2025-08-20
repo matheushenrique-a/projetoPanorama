@@ -367,37 +367,6 @@
 									</div>
 									<div class="d-flex justify-content-center gap-10 flex-wrap mt-10 mb-8">
 										<div class="bg-light rounded shadow-sm px-10 py-4 w-75">
-											<h2 class="text-gray-700 text-center mt-2">Time Matheus</h2>
-											<div class="d-flex flex-column align-items-center mt-8 w-100">
-												<div class="d-flex justify-content-center gap-6 flex-wrap ">
-													<div>
-														<div class="bg-light px-5 mb-5">
-															<div class="d-flex align-items-center gap-10 text-center">
-																<div>
-																	<h2 class="fs-5 text-muted mb-2">Progresso <i class="bi bi-arrow-up-right"></i></h2>
-																	<span class="fw-bold fs-5 text-success"><?= $progressoMatheus ?>%</span>
-																</div>
-																<div>
-																	<h2 class="fs-5 text-muted mb-2">Meta <i class="bi bi-flag"></i></h2>
-																	<span class="fw-bold fs-5 text-success">R$ <?= number_format($metaMatheus, 2, ',', '.') ?></span>
-																</div>
-															</div>
-														</div>
-													</div>
-												</div>
-												<div class="bg-light text-gray-800 rounded px-5 py-3 fs-1 fw-bold d-flex flex-column align-items-center shadow-sm w-100" style="max-width: 400px;">
-													<h2 class="fs-4 mt-3 text-muted">Total Mensal</h2>
-													R$ <?= number_format($totalMatheus, 2, ',', '.') ?>
-													<div class="progress mt-4 w-100" style="height: 16px;">
-														<div class="progress-bar bg-success" role="progressbar"
-															style="width: <?= $progressoMatheus ?>%;"
-															aria-valuenow="<?= $progressoMatheus ?>" aria-valuemin="0" aria-valuemax="100">
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="bg-light rounded shadow-sm px-10 py-4 w-75">
 											<h2 class="text-gray-700 text-center mt-2">Time Jéssica</h2>
 											<div class="d-flex flex-column align-items-center mt-8 w-100">
 												<div class="d-flex justify-content-center gap-6 flex-wrap ">
