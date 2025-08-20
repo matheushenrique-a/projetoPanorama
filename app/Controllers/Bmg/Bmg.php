@@ -755,6 +755,7 @@ class Bmg extends BaseController
         $nomeCliente = $params['nomeCliente'];
         $dataNascimento = $params['dataNascimento'] ?? '';
         $codigoEntidade = $params['codigoEntidade'];
+        $observacao = $params['observacao'];
 
         if ($codigoEntidade !== "164") {
             $produto = "INSS";
@@ -766,8 +767,6 @@ class Bmg extends BaseController
         $numero = $params['celular1']['numero'];
 
         $numeroFormat = $ddd . $numero;
-
-        // var_dump($this->session->nickname);
 
         $data = [
             'CONTRATO' => $adesao,
@@ -786,7 +785,8 @@ class Bmg extends BaseController
             'PRAZO' => $prazo,
             'PARCELA' => $parcelas,
             'EMPRESTIMO' => $valorPlano,
-            'SEGURO' => '1'
+            'SEGURO' => '1',
+            'OBSERVACAO' => $observacao
         ];
 
         $ordem = [
@@ -806,7 +806,8 @@ class Bmg extends BaseController
             'PRAZO',
             'PARCELA',
             'EMPRESTIMO',
-            'SEGURO'
+            'SEGURO',
+            'OBSERVACAO'
         ];
 
         $valores = [];
@@ -821,8 +822,6 @@ class Bmg extends BaseController
             . '&token=44321'
             . '&idImportacao=1466'
             . '&dados=' . rawurlencode($dadosStringISO);
-
-        // var_dump($url);
 
         $output = "";
 
@@ -901,6 +900,7 @@ class Bmg extends BaseController
             $finalidadeCredito = (int) $this->getpost('finalidadeCredito') ?? 1;
             $digitoAgencia = $this->getpost('digitoAgencia') ?: null;
             $tipoSaque = (int) $this->getpost('tipoSaque');
+            $observacao = $this->getpost('observacao') ?? '';
 
             if (isset($tipoSaque) && $tipoSaque == 1) {
                 $tipoSaque = 1;
@@ -957,7 +957,8 @@ class Bmg extends BaseController
                 'especie' => $this->getpost('especie'),
                 'adesao' => $returnData,
                 'dataNascimento' => $this->getpost('dataNascimento'),
-                'codigoEntidade' => $codigoEntidade
+                'codigoEntidade' => $codigoEntidade,
+                'observacao' => $observacao
             ];
 
             if (isset($returnData['erro']) && $returnData['erro']) {

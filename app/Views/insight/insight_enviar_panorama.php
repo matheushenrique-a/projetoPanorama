@@ -30,7 +30,7 @@
                             <div class="accordion" id="kt_accordion_1 ms-lg-7 ms-xl-10">
                                 <div class="accordion-item">
                                     <h2 class="" id="kt_accordion_1_header_1">
-                                        <button class="accordion-button fs-4 fw-semibold" type="button" >SAQUE COMPLEMENTAR</button>
+                                        <button class="accordion-button fs-4 fw-semibold" type="button">SAQUE COMPLEMENTAR</button>
                                     </h2>
                                     <div id="kt_accordion_1_body_133" class="accordion-collapse collapse show" aria-labelledby="kt_accordion_1_header_1" data-bs-parent="#kt_accordion_1">
                                         <div id="kt_accordion_1_body_133" class="accordion-collapse collapse show" aria-labelledby="kt_accordion_1_header_1" data-bs-parent="#kt_accordion_1">
@@ -94,6 +94,10 @@
                                                         <input type="text" class="form-control fs-3 fw-bold" value="" name="valorParcela" id="valorParcela" required />
                                                         <span class="input-group-text">Quantidade</span>
                                                         <input type="text" class="form-control fs-3 fw-bold" value="96" name="parcelas" id="parcelas" readonly />
+                                                        <div class="input-group ">
+                                                            <span class="input-group-text" style="width: 120px">Observação:</span>
+                                                            <textarea class="form-control fs-4 fw-bold " placeholder="..." name="observacao" id="observacao"></textarea>
+                                                        </div>
                                                     </div>
                                                     <div class="input-group mt-6 d-flex">
                                                         <textarea class="form-control fs-8" id="entrada" placeholder="Cole aqui o Ctrl+A do Vanguard"></textarea>

@@ -109,6 +109,7 @@ class Insight extends BaseController
                 $valorSaque = $this->getpost('valorSaque');
                 $valorParcela = $this->getpost('valorParcela');
                 $quantidadeParcelas = $this->getpost('parcelas');
+                $observacao = $this->getpost('observacao') ?? "";
 
                 $checkInsight = $this->request->getPost('checkInsight');
 
@@ -125,7 +126,8 @@ class Insight extends BaseController
                     'adesao' => $adesao,
                     'valorSaque' => $valorSaque,
                     'valorParcela' => $valorParcela,
-                    'quantidadeParcelas' => $quantidadeParcelas
+                    'quantidadeParcelas' => $quantidadeParcelas,
+                    'observacao' => $observacao
                 ]);
 
                 if ($checkInsightBool) {
@@ -448,6 +450,7 @@ class Insight extends BaseController
         $nomeCliente = $params['nomeCliente'];
         $dataNascimento = $params['dataNascimento'] ?? '';
         $codigoEntidade = $params['codigoEntidade'];
+        $observacao = $params['observacao'];
 
         if ($codigoEntidade !== "164") {
             $produto = "INSS";
@@ -479,7 +482,8 @@ class Insight extends BaseController
             'PRAZO' => $prazo,
             'PARCELA' => $parcelas,
             'EMPRESTIMO' => $valorPlano,
-            'SEGURO' => '1'
+            'SEGURO' => '1',
+            'OBSERVACAO' => $observacao
         ];
 
         $ordem = [
@@ -499,7 +503,8 @@ class Insight extends BaseController
             'PRAZO',
             'PARCELA',
             'EMPRESTIMO',
-            'SEGURO'
+            'SEGURO',
+            'OBSERVACAO'
         ];
 
         $valores = [];
