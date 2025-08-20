@@ -77,7 +77,7 @@ class Home extends BaseController
         $dados['labels'] = $labels;
         $dados['dados'] = $valores;
 
-        if ($this->session->role == "SUPERVISOR") {
+        if ($this->session->role == "SUPERVISOR" || $this->session->role == "AUDITOR") {
             $usuarioSupervisor = $this->session->userId;
             $totalMensal = $this->m_bmg->totalMensal();
 

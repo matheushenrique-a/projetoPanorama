@@ -372,7 +372,7 @@
 												<div class="d-flex justify-content-center gap-6 flex-wrap ">
 													<div>
 														<div class="bg-light px-5 mb-5">
-															<div class="d-flex align-items-center gap-4 text-center">
+															<div class="d-flex align-items-center gap-10 text-center">
 																<div>
 																	<h2 class="fs-5 text-muted mb-2">Progresso <i class="bi bi-arrow-up-right"></i></h2>
 																	<span class="fw-bold fs-5 text-success"><?= $progressoMatheus ?>%</span>
@@ -403,7 +403,7 @@
 												<div class="d-flex justify-content-center gap-6 flex-wrap ">
 													<div>
 														<div class="bg-light px-5 mb-5">
-															<div class="d-flex align-items-center gap-4 text-center">
+															<div class="d-flex align-items-center gap-10 text-center">
 																<div>
 																	<h2 class="fs-5 text-muted mb-2">Progresso <i class="bi bi-arrow-up-right"></i></h2>
 																	<span class="fw-bold fs-5 text-success"><?= $progressoJessica ?>%</span>
@@ -434,7 +434,7 @@
 												<div class="d-flex justify-content-center gap-6 flex-wrap ">
 													<div>
 														<div class="bg-light px-5 mb-5">
-															<div class="d-flex align-items-center gap-4 text-center">
+															<div class="d-flex align-items-center gap-10 text-center">
 																<div>
 																	<h2 class="fs-5 text-muted mb-2">Progresso <i class="bi bi-arrow-up-right"></i></h2>
 																	<span class="fw-bold fs-5 text-success"><?= $progressoPaula ?>%</span>
@@ -465,7 +465,7 @@
 												<div class="d-flex justify-content-center gap-6 flex-wrap ">
 													<div>
 														<div class="bg-light px-5 mb-5">
-															<div class="d-flex align-items-center gap-4 text-center">
+															<div class="d-flex align-items-center gap-10 text-center">
 																<div>
 																	<h2 class="fs-5 text-muted mb-2">Progresso <i class="bi bi-arrow-up-right"></i></h2>
 																	<span class="fw-bold fs-5 text-success"><?= $progressoAnaKarla ?>%</span>
@@ -491,7 +491,6 @@
 											</div>
 										</div>
 									</div>
-
 								</div>
 							</div>
 						<?php endif; ?>

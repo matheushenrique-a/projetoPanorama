@@ -21,11 +21,6 @@ $routes->setDefaultController('Home');
 $routes->setDefaultMethod('index');
 $routes->setTranslateURIDashes(false);
 $routes->set404Override();
-// The Auto Routing (Legacy) is very dangerous. It is easy to create vulnerable apps
-// where controller filters or CSRF protection are bypassed.
-// If you don't want to define all routes, please use the Auto Routing (Improved).
-// Set `$autoRoutesImproved` to true in `app/Config/Feature.php` and set the following to true.
-//$routes->setAutoRoute(false);
 $routes->setAutoRoute(true);
 
 /*
@@ -54,7 +49,8 @@ $routes->match(['get', 'post'], '/bmg-gravar-proposta', 'Bmg\Bmg::bmg_gravar_pro
 $routes->match(['get', 'post'], '/panorama-gravar-proposta', 'Bmg\Bmg::panorama_gravar_proposta');
 $routes->match(['get', 'post'], '/panorama-gravar-proposta-saque', 'Bmg\Bmg::panorama_gravar_proposta_saque');
 $routes->match(['get', 'post'], '/mailing', 'Bmg\Mailing::index');
-
+$routes->match(['get', 'post'], '/extrair-relatorio', 'Bmg\Relatorio::index');
+$routes->match(['get', 'post'], '/envio-relatorio', 'Bmg\Relatorio::envioRelatorio');
 
 //AMBEC
 $routes->match(['get', 'post'], '/ambec-script', 'Ambec\Ambec::ambec_script');

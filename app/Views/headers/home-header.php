@@ -4924,7 +4924,10 @@
 											<!--begin:Menu link-->
 											<a class="menu-link" href="<?php echo assetfolder; ?>bmg-receptivo/0">
 												<span class="menu-bullet">
-													<span class="bullet bullet-dot"></span>
+													<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+														<path fill-rule="evenodd" d="M10.271 5.575C8.967 4.501 7 5.43 7 7.12v9.762c0 1.69 1.967 2.618 3.271 1.544l5.927-4.881a2 2 0 0 0 0-3.088l-5.927-4.88Z" clip-rule="evenodd" />
+													</svg>
+
 												</span>
 												<span class="menu-title">Receptivo Seguros</span>
 											</a>
@@ -4934,7 +4937,10 @@
 											<!--begin:Menu link-->
 											<a class="menu-link" href="<?php echo assetfolder; ?>bmg-saque/0">
 												<span class="menu-bullet">
-													<span class="bullet bullet-dot"></span>
+													<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+														<path fill-rule="evenodd" d="M10.271 5.575C8.967 4.501 7 5.43 7 7.12v9.762c0 1.69 1.967 2.618 3.271 1.544l5.927-4.881a2 2 0 0 0 0-3.088l-5.927-4.88Z" clip-rule="evenodd" />
+													</svg>
+
 												</span>
 												<span class="menu-title">Saque Complementar</span>
 											</a>
@@ -4945,9 +4951,26 @@
 												<!--begin:Menu link-->
 												<a class="menu-link" href="<?php echo assetfolder; ?>mailing">
 													<span class="menu-bullet">
-														<span class="bullet bullet-dot"></span>
+														<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+															<path fill-rule="evenodd" d="M10.271 5.575C8.967 4.501 7 5.43 7 7.12v9.762c0 1.69 1.967 2.618 3.271 1.544l5.927-4.881a2 2 0 0 0 0-3.088l-5.927-4.88Z" clip-rule="evenodd" />
+														</svg>
+
 													</span>
 													<span class="menu-title">Gerar Mailing</span>
+												</a>
+												<!--end:Menu link-->
+											</div>
+										<?php endif; ?>
+										<?php if ($my_security->checkPermission("FORMALIZACAO") || $my_security->checkPermission("ADMIN")): ?>
+											<div class="menu-item">
+												<!--begin:Menu link-->
+												<a class="menu-link" href="<?php echo assetfolder; ?>extrair-relatorio">
+													<span class="menu-bullet">
+														<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+															<path fill-rule="evenodd" d="M10.271 5.575C8.967 4.501 7 5.43 7 7.12v9.762c0 1.69 1.967 2.618 3.271 1.544l5.927-4.881a2 2 0 0 0 0-3.088l-5.927-4.88Z" clip-rule="evenodd" />
+														</svg>
+													</span>
+													<span class="menu-title">Extrair relatório</span>
 												</a>
 												<!--end:Menu link-->
 											</div>
@@ -4980,7 +5003,10 @@
 											<!--begin:Menu link-->
 											<a class="menu-link" href="<?php echo assetfolder; ?>bradesco-receptivo/0">
 												<span class="menu-bullet">
-													<span class="bullet bullet-dot"></span>
+													<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+														<path fill-rule="evenodd" d="M10.271 5.575C8.967 4.501 7 5.43 7 7.12v9.762c0 1.69 1.967 2.618 3.271 1.544l5.927-4.881a2 2 0 0 0 0-3.088l-5.927-4.88Z" clip-rule="evenodd" />
+													</svg>
+
 												</span>
 												<span class="menu-title">Receptivo Seguros</span>
 											</a>
@@ -5015,7 +5041,10 @@
 											<!--begin:Menu link-->
 											<a class="menu-link" href="<?php echo assetfolder; ?>extrairdados">
 												<span class="menu-bullet">
-													<span class="bullet bullet-dot"></span>
+													<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+														<path fill-rule="evenodd" d="M10.271 5.575C8.967 4.501 7 5.43 7 7.12v9.762c0 1.69 1.967 2.618 3.271 1.544l5.927-4.881a2 2 0 0 0 0-3.088l-5.927-4.88Z" clip-rule="evenodd" />
+													</svg>
+
 												</span>
 												<span class="menu-title">Seguradoras</span>
 											</a>
@@ -5037,7 +5066,6 @@
 												<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
 													<path stroke="currentColor" stroke-linecap="round" stroke-width="2" d="M16 19h4a1 1 0 0 0 1-1v-1a3 3 0 0 0-3-3h-2m-2.236-4a3 3 0 1 0 0-4M3 18v-1a3 3 0 0 1 3-3h4a3 3 0 0 1 3 3v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1Zm8-10a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
 												</svg>
-
 											</span>
 											<!--end::Svg Icon-->
 										</span>
@@ -5052,7 +5080,10 @@
 											<!--begin:Menu link-->
 											<a class="menu-link" href="<?php echo assetfolder; ?>painel">
 												<span class="menu-bullet">
-													<span class="bullet bullet-dot"></span>
+													<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+														<path fill-rule="evenodd" d="M10.271 5.575C8.967 4.501 7 5.43 7 7.12v9.762c0 1.69 1.967 2.618 3.271 1.544l5.927-4.881a2 2 0 0 0 0-3.088l-5.927-4.88Z" clip-rule="evenodd" />
+													</svg>
+
 												</span>
 												<span class="menu-title">Painel de Usuários</span>
 											</a>

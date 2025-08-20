@@ -747,7 +747,7 @@ class M_bmg extends Model
 
     public function totalMensal($equipe = null)
     {
-        if(!$equipe) {
+        if (!$equipe) {
             $equipe = $this->session->userId;
         }
 
@@ -787,5 +787,21 @@ class M_bmg extends Model
             ->getResultArray();
 
         return $result;
+    }
+
+    public function envioRelatorioBmg($dados)
+    {
+        try {
+            $url = 'https://ws1.bmgconsig.com.br/webservices/ConsultaStatusAde?wsdl';
+
+            $client = new \SoapClient($url, ['trace' => 1, 'exceptions' => true]);
+
+            $envioADE = $client->__soapCall('consultaStatusAde', [$dados]);
+
+            return $envioADE;
+        
+        } catch (SoapFault $fault) {
+            echo "Erro: {$fault->faultcode} - {$fault->faultstring}";
+        }
     }
 }
