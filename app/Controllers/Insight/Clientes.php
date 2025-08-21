@@ -161,8 +161,8 @@ class Clientes extends \App\Controllers\BaseController
         $endereco   = $this->getpost('endereco');
         $bairro     = $this->getpost('bairro');
         $cep        = $this->getpost('cep');
-        $celular1   = $this->getpost('telefone1');
-        $celular2   = $this->getpost('telefone2');
+        $celular1   = $this->getpost('celular1');
+        $celular2   = $this->getpost('celular2');
 
         $resultado = $this->m_insight->updateCliente($idClientes, [
             'cpf'        => $cpf,

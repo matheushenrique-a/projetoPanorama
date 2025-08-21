@@ -192,7 +192,7 @@ function formatarTelefone($numero)
 		$parte1 = substr($numero, 2, 4);
 		$parte2 = substr($numero, 6, 4);
 	} else {
-		return "Número inválido";
+		return "";
 	}
 
 	return "($ddd)$parte1-$parte2";
