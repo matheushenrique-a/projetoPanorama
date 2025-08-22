@@ -1,5 +1,6 @@
 <?php
 $row = $propostas['result']->getResult()[0];
+$moveRow = $movimento['result']->getResult() ?? '';
 
 $status = match ($row->status) {
     "Análise"   => "info",
@@ -95,17 +96,7 @@ $status = match ($row->status) {
                                                                 endif; ?> />
                                                         </div>
                                                     </div>
-                                                    <?php if ($my_security->checkPermission("SUPERVISOR") || $my_security->checkPermission("FORMALIZACAO")): ?>
-                                                        <div class="mt-6" style="width: 300px;">
-                                                            <label for="status_<?= $row->idquid_propostas ?>" class="form-label">Alterar Status</label>
-                                                            <select class="form-select" id="status_<?= $row->idquid_propostas ?>" name="status">
-                                                                <option value="Análise" <?= $row->status == 'Análise' ? 'selected' : '' ?>>Análise</option>
-                                                                <option value="Aprovada" <?= $row->status == 'Aprovada' ? 'selected' : '' ?>>Aprovada</option>
-                                                                <option value="Cancelada" <?= $row->status == 'Cancelada' ? 'selected' : '' ?>>Cancelada</option>
-                                                                <option value="Pendente" <?= $row->status == 'Pendente' ? 'selected' : '' ?>>Pendente</option>
-                                                            </select>
-                                                        </div>
-                                                    <?php endif; ?>
+
                                                     <input type="hidden" name="id" value="<?= $row->idquid_propostas ?>">
                                                 </div>
                                                 <div class="w-50">
@@ -136,6 +127,7 @@ $status = match ($row->status) {
                                                         </div>
                                                     </div>
                                                     <div class="d-flex gap-4">
+
                                                         <div class="mb-2">
                                                             <span class="fw-bold mb-1">Código Panorama:</span>
                                                             <input type="text" class="form-control form-control-solid idPanorama" name="idPanorama" value="<?= $row->panorama_id ?>" data-original="<?= $row->panorama_id ?>"
@@ -154,24 +146,76 @@ $status = match ($row->status) {
                                         </div>
                                     </div>
                                     <div class="tab-pane fade" id="kt_tab_pane_2" role="tabpanel">
+
                                         <div>
-                                            <h1>teste</h1>
+                                            <div class="">
+                                                <div class="table-responsive">
+                                                    <table class="table table-striped table-rounded table-row-gray-300 gy-4">
+                                                        <thead>
+                                                            <tr class="fw-bold fs-6 text-gray-800">
+                                                                <th>Horário</th>
+                                                                <th>Usuário</th>
+                                                                <th class="text-center">Status</th>
+                                                                <th class="w-50">Observação</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <?php foreach ($moveRow as $linha): ?>
+                                                                <tr>
+                                                                    <td><?= date('d/m/Y - H:i', strtotime($linha->horario)) ?></td>
+                                                                    <td><?= esc($linha->usuario) ?></td>
+                                                                    <td class="text-center"><?= esc($linha->status_atual) ?></td>
+                                                                    <td class="observacao"><?= html_entity_decode($linha->observacao ?? '') ?> </td>
+                                                                </tr>
+                                                            <?php endforeach; ?>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
                                         </div>
+                                        <style>
+                                            .observacao img {
+                                                max-width: 100%;
+                                                max-height: 200px;
+                                            }
+                                        </style>
                                     </div>
                                 </div>
 
 
                                 <?php if ($my_security->checkPermission("SUPERVISOR") || $my_security->checkPermission("FORMALIZACAO")): ?>
 
-                                    <div class="modal-footer d-flex gap-4 justify-content-end px-4 pb-4">
-                                        <div>
-                                            <button type="button" class="btn btn-danger d-flex align-items-center gap-2" onclick="confirmarExclusao('<?= $row->idquid_propostas ?>')">
-                                                <i class="bi bi-trash fs-5 text-white"></i>
-                                                <span class="text-white fw-semibold">Excluir Proposta</span>
-                                            </button>
-                                        </div>
-                                        <div>
-                                            <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                                    <div class="modal-footer d-flex gap-4 justify-content-between px-4 pb-4 mt-6">
+                                        <?php if ($my_security->checkPermission("SUPERVISOR") || $my_security->checkPermission("FORMALIZACAO")): ?>
+                                            <div class="d-flex gap-4">
+                                                <div style="width: 200px;">
+                                                    <label for="status_<?= $row->idquid_propostas ?>" class="form-label">Alterar Status</label>
+                                                    <select class="form-select" id="status_<?= $row->idquid_propostas ?>" name="status">
+                                                        <option value="Análise" <?= $row->status == 'Análise' ? 'selected' : '' ?>>Análise</option>
+                                                        <option value="Aprovada" <?= $row->status == 'Aprovada' ? 'selected' : '' ?>>Aprovada</option>
+                                                        <option value="Cancelada" <?= $row->status == 'Cancelada' ? 'selected' : '' ?>>Cancelada</option>
+                                                        <option value="Pendente" <?= $row->status == 'Pendente' ? 'selected' : '' ?>>Pendente</option>
+                                                    </select>
+                                                </div>
+                                                <div class="flex-grow-1">
+                                                    <label class="form-label">Observação / Print:</label>
+                                                    <div class="form-control fs-8" id="pasteArea" contenteditable="true"
+                                                        style="min-height:150px; width: 300px">
+                                                    </div>
+                                                    <input type="hidden" name="conteudo" id="conteudo">
+                                                </div>
+                                            </div>
+                                        <?php endif; ?>
+                                        <div class="d-flex gap-4">
+                                            <div>
+                                                <button type="button" class="btn btn-danger d-flex align-items-center gap-2" onclick="confirmarExclusao('<?= $row->idquid_propostas ?>')">
+                                                    <i class="bi bi-trash fs-5 text-white"></i>
+                                                    <span class="text-white fw-semibold">Excluir Proposta</span>
+                                                </button>
+                                            </div>
+                                            <div>
+                                                <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                                            </div>
                                         </div>
                                     </div>
                                 <?php endif; ?>
@@ -182,3 +226,157 @@ $status = match ($row->status) {
                 </div>
             </div>
         </div>
+    </div>
+</div>
+
+<script>
+    const pasteArea = document.getElementById('pasteArea');
+    const inputConteudo = document.getElementById('conteudo');
+
+    pasteArea.addEventListener('paste', function(e) {
+        const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+
+        for (let item of items) {
+            if (item.kind === 'file') {
+                e.preventDefault();
+                const blob = item.getAsFile();
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const img = document.createElement('img');
+                    img.src = event.target.result;
+                    img.style.maxWidth = '100%';
+                    img.style.maxHeight = '200px';
+                    pasteArea.appendChild(img);
+                }
+                reader.readAsDataURL(blob);
+            }
+        }
+    });
+
+    const formEdit = document.getElementById('formEdit')
+
+    formEdit.addEventListener('submit', function() {
+        inputConteudo.value = pasteArea.innerHTML;
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+
+        window.confirmarExclusao = function(id) {
+            Swal.fire({
+                title: 'Tem certeza?',
+                text: 'Você realmente deseja excluir esta proposta?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Sim, excluir',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "<?= assetfolder; ?>insight-listar-propostas/" + id + "/remove";
+                }
+            });
+        };
+
+        function formatarTelefone(valor) {
+            valor = valor.replace(/\D/g, '');
+            if (valor.length === 0) return '';
+            if (valor.length < 3) return `(${valor}`;
+            if (valor.length < 7) return `(${valor.slice(0, 2)}) ${valor.slice(2)}`;
+            if (valor.length < 11) return `(${valor.slice(0, 2)}) ${valor.slice(2, 6)}-${valor.slice(6)}`;
+            return `(${valor.slice(0, 2)}) ${valor.slice(2, 7)}-${valor.slice(7, 11)}`;
+        }
+
+        const inputCPF = document.querySelector('.cpf');
+        const inputTelefone = document.querySelector('.telefone');
+        const inputValor = document.querySelector('.valorSaque');
+        const inputParcela = document.querySelector('.valorParcela');
+        const dataNascimentoInput = document.querySelector('.dataNascimento');
+        const dataCriacaoInput = document.querySelector('.dataCriacao');
+
+        if (inputCPF) {
+            inputCPF.addEventListener('input', () => {
+                let value = inputCPF.value.replace(/\D/g, '');
+                if (value.length > 3) value = value.replace(/^(\d{3})(\d)/, '$1.$2');
+                if (value.length > 6) value = value.replace(/^(\d{3})\.(\d{3})(\d)/, '$1.$2.$3');
+                if (value.length > 9) value = value.replace(/^(\d{3})\.(\d{3})\.(\d{3})(\d)/, '$1.$2.$3-$4');
+                inputCPF.value = value;
+            });
+        }
+
+        if (dataNascimentoInput) {
+            dataNascimentoInput.addEventListener('input', () => {
+                let value = dataNascimentoInput.value.replace(/\D/g, '');
+                if (value.length > 2) value = value.replace(/^(\d{2})(\d)/, '$1/$2');
+                if (value.length > 4) value = value.replace(/^(\d{2})\/(\d{2})(\d)/, '$1/$2/$3');
+                if (value.length > 8) value = value.slice(0, 10);
+                dataNascimentoInput.value = value;
+            });
+        }
+
+        if (dataCriacaoInput) {
+            dataCriacaoInput.addEventListener('input', () => {
+                let value = dataCriacaoInput.value.replace(/\D/g, '');
+                if (value.length > 2) value = value.replace(/^(\d{2})(\d)/, '$1/$2');
+                if (value.length > 4) value = value.replace(/^(\d{2})\/(\d{2})(\d)/, '$1/$2/$3');
+                if (value.length > 8) value = value.slice(0, 10);
+                dataCriacaoInput.value = value;
+            });
+        }
+
+        if (inputTelefone) {
+            inputTelefone.value = formatarTelefone(inputTelefone.value);
+            inputTelefone.addEventListener('input', function() {
+                this.value = formatarTelefone(this.value);
+            });
+        }
+
+        function formatarMoeda(campo) {
+            if (!campo) return;
+            let inicial = parseFloat(campo.value);
+            if (!isNaN(inicial)) {
+                campo.value = 'R$ ' + inicial.toLocaleString('pt-BR', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                });
+            }
+            campo.addEventListener('input', function() {
+                let val = this.value.replace(/\D/g, '');
+                if (val) {
+                    val = (parseFloat(val) / 100).toFixed(2);
+                    this.value = 'R$ ' + Number(val).toLocaleString('pt-BR', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    });
+                } else {
+                    this.value = '';
+                }
+            });
+        }
+
+        function limparValorBrasileiro(valor) {
+            if (!valor) return '';
+            valor = valor.replace(/R\$|\s/g, '').replace(/\./g, '');
+
+            valor = valor.replace(',', '.');
+
+            return valor;
+        }
+
+
+        formatarMoeda(inputValor);
+        formatarMoeda(inputParcela);
+
+        formEdit.addEventListener('submit', function() {
+            [inputValor, inputParcela, inputTelefone].forEach(campo => {
+                if (!campo) return;
+
+                if (campo === inputValor || campo === inputParcela) {
+                    campo.value = limparValorBrasileiro(campo.value);
+                } else {
+                    campo.value = campo.value.replace(/\D/g, '');
+                }
+            });
+        });
+    });
+</script>

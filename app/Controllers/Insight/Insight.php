@@ -168,6 +168,7 @@ class Insight extends BaseController
             $valorParcela = $this->getpost('valorParcela');
             $panorama_id = $this->getpost('idPanorama');
             $parcelas = $this->getpost('parcelas');
+            $observacao = $this->getpost('observacao') ?? '';
 
             $dataCriacaoStr = $this->getpost('dataCriacao');
             $dataCriacao = \DateTime::createFromFormat('d/m/Y', $dataCriacaoStr);
@@ -184,12 +185,19 @@ class Insight extends BaseController
             $statusAnterior = $checkStatus['firstRow']->status;
 
             if ($statusAnterior !== $novoStatus) {
+                $obs = $this->getpost('conteudo');
+                if (empty($obs)) {
+                    die('Conteúdo vazio! Verifique se o JS está populando o hidden input.');
+                }
+
                 $movimento = [
                     'id_proposta' => $id,
                     'id_usuario' => $this->session->userId,
+                    'usuario' => $this->session->nickname,
                     'status_anterior' => $statusAnterior,
                     'status_atual' => $novoStatus,
-                    'horario' => (new DateTime())->format('Y-m-d H:i:s')
+                    'horario' => (new DateTime())->format('Y-m-d H:i:s'),
+                    'observacao' => $obs
                 ];
 
                 $this->m_insight->registrarMovimentacao($movimento);
@@ -659,8 +667,10 @@ class Insight extends BaseController
         $dados['pageTitle'] = $id;
 
         $propostas = $this->dbMasterDefault->select('quid_propostas', ['idquid_propostas' => $id]);
+        $movimento = $this->dbMasterDefault->select('historico_propostas', ['id_proposta' => $id]);
 
         $dados['propostas'] = $propostas;
+        $dados['movimento'] = $movimento;
 
         return $this->loadPage('insight/insight_proposta', $dados);
     }
