@@ -6,7 +6,6 @@ use App\Models\M_insight;
 
 class Clientes extends \App\Controllers\BaseController
 {
-
     protected $m_insight;
 
     public function index()

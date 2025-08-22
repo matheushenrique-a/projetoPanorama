@@ -4131,18 +4131,13 @@
 												</div>
 											</div>
 										</div>
-										<!--end::Username-->
 									</div>
 								</div>
-								<!--end::Menu item-->
-								<!--begin::Menu separator-->
 								<div class="separator my-2"></div>
-								<!--end::Menu separator-->
-								<!--begin::Menu item-->
+								<div class="menu-item px-5">
+									<a href="<?php echo assetfolder ?>perfil" class="menu-link px-5">Meu Perfil</a>
+								</div>
 								<?php if ($my_security->checkPermission("ADMIN")): ?>
-									<div class="menu-item px-5">
-										<a href="../../demo1/dist/account/overview.html" class="menu-link px-5">My Profile</a>
-									</div>
 									<!--end::Menu item-->
 									<!--begin::Menu item-->
 									<div class="menu-item px-5">
