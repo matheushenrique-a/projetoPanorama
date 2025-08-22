@@ -250,4 +250,13 @@ class M_insight extends Model
             return false;
         }
     }
+
+    public function checkStatus($id)
+    {
+        return $this->dbMasterDefault->select('quid_propostas', ['idquid_propostas' => $id]);
+    }
+
+    public function registrarMovimentacao($movimentacao){
+        return $this->dbMasterDefault->insert('historico_propostas', $movimentacao);
+    }
 }

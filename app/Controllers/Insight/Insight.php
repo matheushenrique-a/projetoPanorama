@@ -15,6 +15,7 @@ use App\Models\M_argus;
 use App\Models\M_insight;
 use App\Models\M_seguranca;
 use App\Models\M_bmg;
+use DateTime;
 
 class Insight extends BaseController
 {
@@ -158,6 +159,7 @@ class Insight extends BaseController
         if ($action == "alterar-status") {
             $id = $this->request->getPost('id');
             $novoStatus = $this->request->getPost('status');
+
             $nome = $this->request->getPost('nome');
             $cpf = $this->request->getPost('cpf');
             $telefone = $this->request->getPost('telefone');
@@ -177,8 +179,24 @@ class Insight extends BaseController
             $dataNascimento = $this->getpost('dataNascimento');
             $assessor = $this->getpost('assessor');
 
-            if ($id) {
+            $checkStatus = $this->m_insight->checkStatus($id);
 
+            $statusAnterior = $checkStatus['firstRow']->status;
+
+            if ($statusAnterior !== $novoStatus) {
+                $movimento = [
+                    'id_proposta' => $id,
+                    'id_usuario' => $this->session->userId,
+                    'status_anterior' => $statusAnterior,
+                    'status_atual' => $novoStatus,
+                    'horario' => (new DateTime())->format('Y-m-d H:i:s')
+                ];
+
+                $this->m_insight->registrarMovimentacao($movimento);
+            }
+
+
+            if ($id) {
                 $tabela = 'quid_propostas';
                 $valores = [
                     'status' => $novoStatus,
@@ -545,7 +563,7 @@ class Insight extends BaseController
         $nickname = $this->session->nickname;
         $userId = $this->session->userId;
 
-        if ($this->my_security->checkPermission("ADMIN") || $this->my_security->checkPermission("FORMALIZACAO") || $this->my_security->checkPermission("GERENTE") ) {
+        if ($this->my_security->checkPermission("ADMIN") || $this->my_security->checkPermission("FORMALIZACAO") || $this->my_security->checkPermission("GERENTE")) {
             $indicadores['propostas_hoje'] = $this->dbMaster->runQuery(
                 "SELECT COUNT(*) AS total 
          FROM quid_propostas 
