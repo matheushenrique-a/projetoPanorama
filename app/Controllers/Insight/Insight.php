@@ -653,4 +653,15 @@ class Insight extends BaseController
             return $indicadores;
         }
     }
+
+    public function insight_proposta($id)
+    {
+        $dados['pageTitle'] = $id;
+
+        $propostas = $this->dbMasterDefault->select('quid_propostas', ['idquid_propostas' => $id]);
+
+        $dados['propostas'] = $propostas;
+
+        return $this->loadPage('insight/insight_proposta', $dados);
+    }
 }

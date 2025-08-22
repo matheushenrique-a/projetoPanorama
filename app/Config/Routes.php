@@ -75,6 +75,7 @@ $routes->match(['get', 'post'], '/whatsapp-criar-templates/(:any)/(:any)', 'Meta
 //INSIGHT
 $routes->match(['get', 'post'], '/insight-listar-notificacoes', 'Insight\Insight::insight_listar_notificacoes');
 $routes->match(['get', 'post'], '/insight-listar-propostas/(:any)/(:any)', 'Insight\Insight::insight_listar_propostas/$1/$2');
+$routes->match(['get', 'post'], '/insight-proposta/(:any)', 'Insight\Insight::insight_proposta/$1');
 $routes->match(['get', 'post'], '/insight-upload', 'Insight\Insight::insight_upload');
 $routes->match(['get', 'post'], '/clientes', 'Insight\Clientes::index');
 $routes->match(['get', 'post'], '/clientes/upload/(:any)', 'Insight\Clientes::upload/$1');
@@ -83,7 +84,7 @@ $routes->match(['get', 'post'], '/clientes/update', 'Insight\Clientes::update');
 $routes->match(['get', 'post'], '/perfil', 'Insight\Perfil::index');
 
 //THEONE
-$routes->match(['get','post'], '/extrairdados', 'Theone\ExtrairDados::extrair');
+$routes->match(['get', 'post'], '/extrairdados', 'Theone\ExtrairDados::extrair');
 
 //AASPA
 $routes->match(['get', 'post'], '/comecar/(:any)', 'Frontline\Frontline::comecar/$1');
