@@ -11,6 +11,7 @@ $status = match ($row->status) {
     "Pendente"  => "warning",
     "Adesão"   => "dark",
     "Auditoria" => "warning",
+    "TED Devolvida" => "warning",
     default     => "secondary"
 };
 
@@ -22,6 +23,7 @@ $movimentation = match ($row->status) {
     "Pendente"  => true,
     "Adesão"   => true,
     "Auditoria" => false,
+    "TED Devolvida" => true,
     default     => false
 }
 
@@ -153,7 +155,6 @@ $movimentation = match ($row->status) {
                                                         </div>
                                                     </div>
                                                     <div class="d-flex gap-4">
-
                                                         <div class="mb-2">
                                                             <span class="fw-bold mb-1">Código Panorama:</span>
                                                             <input type="text" class="form-control form-control-solid idPanorama" name="idPanorama" value="<?= $row->panorama_id ?>" data-original="<?= $row->panorama_id ?>"
@@ -171,6 +172,44 @@ $movimentation = match ($row->status) {
                                             </div>
                                         </div>
                                     </div>
+                                    <?php if ($row->status == "TED Devolvida"): ?>
+                                        <div class="mt-5 alert alert-info">
+                                            <div class="d-flex gap-2 align-items-center">
+                                                <i class="bi bi-exclamation-circle text-info"></i>
+                                                <p class="fw-semibold fs-3 mb-0">Informe nova conta:</p>
+                                            </div>
+                                            <div class="d-flex mt-4 gap-4">
+                                                <div class="mb-2">
+                                                    <span class="fw-bold mb-1">Banco:</span>
+                                                    <input type="text" class="form-control form-control-solid" name="bancoFix" />
+                                                </div>
+                                                <div class="mb-2">
+                                                    <span class="fw-bold mb-1">Agência:</span>
+                                                    <input type="text" class="form-control form-control-solid" name="agenciaFix" />
+                                                </div>
+                                                <div class="mb-2">
+                                                    <span class="fw-bold mb-1">Conta:</span>
+                                                    <input type="text" class="form-control form-control-solid" name="contaFix" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php endif; ?>
+                                    <?php if ($ultimaLinha->status_anterior == "TED Devolvida"): ?>
+                                        <div class="d-flex mt-4 gap-4">
+                                            <div class="mb-2">
+                                                <span class="fw-bold mb-1">Banco:</span>
+                                                <input type="text" value="<?php echo $row->banco ?>" class="form-control form-control-solid" readonly />
+                                            </div>
+                                            <div class="mb-2">
+                                                <span class="fw-bold mb-1">Agência:</span>
+                                                <input type="text" value="<?php echo $row->agencia ?>" class="form-control form-control-solid" readonly />
+                                            </div>
+                                            <div class="mb-2">
+                                                <span class="fw-bold mb-1">Conta:</span>
+                                                <input type="text" value="<?php echo $row->conta ?>" class="form-control form-control-solid" readonly />
+                                            </div>
+                                        </div>
+                                    <?php endif; ?>
                                     <div class="tab-pane fade" id="kt_tab_pane_2" role="tabpanel">
 
                                         <div>
@@ -232,6 +271,7 @@ $movimentation = match ($row->status) {
                                                         <option value="Auditoria" <?= $row->status == 'Auditoria' ? 'selected' : '' ?>>Auditoria</option>
                                                         <option value="Aprovada" <?= $row->status == 'Aprovada' ? 'selected' : '' ?>>Aprovada</option>
                                                         <option value="Pendente" <?= $row->status == 'Pendente' ? 'selected' : '' ?>>Pendente</option>
+                                                        <option value="TED Devolvida" <?= $row->status == 'TED Devolvida' ? 'selected' : '' ?>>TED Devolvida</option>
                                                         <option value="Análise" <?= $row->status == 'Análise' ? 'selected' : '' ?>>Análise</option>
                                                         <option value="Cancelada" <?= $row->status == 'Cancelada' ? 'selected' : '' ?>>Cancelada</option>
                                                     </select>

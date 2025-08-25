@@ -118,7 +118,7 @@
 											if (in_array($row->status, ['Aprovada', 'Cancelada'])) {
 												continue;
 											}
-											
+
 											$nomeCliente = $row->nome;
 											$cpf = $row->cpf;
 											$adesao = $row->adesao;
@@ -146,11 +146,11 @@
 															<span class="text-gray-800 fw-bolder fs-6"><?php echo substr($assessor, 0, 30); ?></span>
 															<span class="text-gray-600 fw-bolder fs-6"><?php echo substr($nomeCliente, 0, 30); ?></span>
 														</div>
-														<span class="text-gray-400 fw-bold fs-7 d-block text-start ps-0"><?php echo $adesao . " | " . $cpf; ?></span>
 														<span class="text-success fw-bolder fs-6"><?php echo 'R$ ' . number_format((float)$valor, 2, ',', '.') ?></span>
 													</div>
 												</div>
 												<div class="text-gray-400 fw-bolder fs-7 text-end">
+													<span class="text-gray-800 fw-bold fs-6 d-block text-end ps-0"><?php echo $adesao; ?></span>
 													<span class="text-gray-400 fw-bold fs-7 d-block text-start ps-0"><?php echo time_elapsed_string($data_criacao); ?></span>
 													<span class="badge badge-light-<?php echo $status ?> fs-6 mt-2"><?= $row->status ?></span>
 												</div>
@@ -158,7 +158,6 @@
 											<div class="d-flex flex-stack">
 											</div>
 											<div class="separator separator-dashed my-3"></div>
-
 										<?php }; ?>
 
 									</div>

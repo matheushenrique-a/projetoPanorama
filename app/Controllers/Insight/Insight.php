@@ -188,9 +188,18 @@ class Insight extends BaseController
             $resumo = $this->getpost('resumo');
 
             if ($btnAudit == "statusAudit") {
-                $statusAnterior = "Adesão";
+                if ($statusAnterior == "TED Devolvida") {
+                    $banco = $this->getpost('bancoFix');
+                    $agencia = $this->getpost('agenciaFix');
+                    $conta = $this->getpost('contaFix');
+                    $statusAnterior = "TED Devolvida";
+                } else {
+                    $statusAnterior = "Adesão";
+                }
+
                 $novoStatus = "Auditoria";
             }
+
 
             if ($statusAnterior !== $novoStatus) {
                 $obs = $this->getpost('conteudo');
@@ -227,7 +236,10 @@ class Insight extends BaseController
                     'numero_parcela' => $parcelas,
                     'data_criacao' => $dataCriacaoMySQL,
                     'dataNascimento' => $dataNascimento,
-                    'assessor' => $assessor
+                    'assessor' => $assessor,
+                    'banco' => $banco ?? null,
+                    'agencia' => $agencia ?? null,
+                    'conta' => $conta ?? null
                 ];
                 $condicao = ['idquid_propostas' => $id];
 
