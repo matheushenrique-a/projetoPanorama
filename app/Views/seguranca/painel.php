@@ -57,6 +57,7 @@
 													<option value="">TODOS</option>
 													<option value="OPERADOR" <?= ($role ?? '') === 'OPERADOR' ? 'selected' : '' ?>>Operador</option>
 													<option value="SUPERVISOR" <?= ($role ?? '') === 'SUPERVISOR' ? 'selected' : '' ?>>Supervisor</option>
+													<option value="AUDITOR" <?= ($role ?? '') === 'AUDITOR' ? 'selected' : '' ?>>Auditor</option>
 												</select>
 											</div>
 										</div>
@@ -121,6 +122,10 @@
 											<td>Ana Karla</td>
 										<?php elseif ($row->report_to == "164979"): ?>
 											<td>Amanda</td>
+										<?php elseif ($row->report_to == "165001"): ?>
+											<td>Anna Paula</td>
+										<?php elseif ($row->report_to == "165058"): ?>
+											<td>Jéssica Vieira</td>
 										<?php else: ?>
 											<td>-</td>
 										<?php endif; ?>
