@@ -133,7 +133,10 @@
 												"Análise"   => "info",
 												"Aprovada"  => "success",
 												"Cancelada" => "danger",
-												"Pendente" => "warning",
+												"Pendente"  => "warning",
+												"Adesão"   => "dark",
+												"Auditoria" => "warning",
+												"TED Devolvida" => "warning",
 												default     => "secondary"
 											};
 
@@ -195,8 +198,11 @@
 												"Análise"   => "info",
 												"Aprovada"  => "success",
 												"Cancelada" => "danger",
-												"Pendente" => "warning",
-												default     => "secondary"
+												"Pendente"  => "warning",
+												"Adesão"   => "dark",
+												"Auditoria" => "warning",
+												"TED Devolvida" => "warning",
+												default => "secondary"
 											};
 
 										?>

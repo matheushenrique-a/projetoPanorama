@@ -195,7 +195,7 @@ $movimentation = match ($row->status) {
                                             </div>
                                         </div>
                                     <?php endif; ?>
-                                    <?php if ($ultimaLinha->status_anterior == "TED Devolvida"): ?>
+                                    <?php if (isset($ultimaLinha->status_anterior) && $ultimaLinha->status_anterior == "TED Devolvida"): ?>
                                         <div class="d-flex mt-4 gap-4">
                                             <div class="mb-2">
                                                 <span class="fw-bold mb-1">Banco:</span>
@@ -216,37 +216,70 @@ $movimentation = match ($row->status) {
                                         <div>
                                             <div class="">
                                                 <div class="table-responsive">
-                                                    <table class="table table-rounded table-row-bordered gx-4 table-row-gray-300 gy-4">
-                                                        <thead>
-                                                            <tr class="fw-bold fs-6 text-gray-800">
-                                                                <th>Horário</th>
-                                                                <th>Usuário</th>
-                                                                <th class="text-center">Status</th>
-                                                                <th class="w-50">Observação</th>
+                                                    <table class="table table-rounded table-striped table-hover align-middle border gy-4 gx-4">
+                                                        <thead class="bg-light">
+                                                            <tr class="fw-bold fs-6 text-gray-800 text-uppercase">
+                                                                <th><i class="bi bi-clock me-2 text-dark"></i>Horário</th>
+                                                                <th><i class="bi bi-person-circle me-2 text-dark"></i>Usuário</th>
+                                                                <th class="text-center"><i class="bi bi-flag me-2 text-dark"></i>Status</th>
+                                                                <th class="text-center"><i class="bi bi-file-text me-2 text-dark"></i>Resumo</th>
+                                                                <th class="w-25"><i class="bi bi-pencil-square me-2 text-dark"></i>Observação</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
                                                             <?php foreach ($moveRow as $linha):
                                                                 $statusMove = match ($linha->status_atual) {
-                                                                    "Análise"   => "info",
-                                                                    "Aprovada"  => "success",
-                                                                    "Cancelada" => "danger",
-                                                                    "Pendente"  => "warning",
-                                                                    "Adesão"   => "dark",
-                                                                    "Auditoria" => "warning",
-                                                                    default     => "secondary"
+                                                                    "Análise"       => "info",
+                                                                    "Aprovada"      => "success",
+                                                                    "Cancelada"     => "danger",
+                                                                    "Pendente"      => "warning",
+                                                                    "Adesão"        => "dark",
+                                                                    "Auditoria"     => "warning",
+                                                                    "TED Devolvida" => "danger",
+                                                                    default         => "secondary"
                                                                 };
-                                                            ?>
 
+                                                                $nomes = explode(' ', trim($linha->usuario));
+
+                                                                $usuario = $session->nickname;
+
+                                                                if ($session->role !== "AUDITOR") {
+                                                                    if ($usuario == $linha->usuario) {
+                                                                        if (count($nomes) > 1) {
+                                                                            $usuarioView = $nomes[0] . ' ' . end($nomes);
+                                                                        } else {
+                                                                            $usuarioView = $linha->usuario;
+                                                                        }
+                                                                    } else {
+                                                                        $usuarioView = "*****";
+                                                                    }
+                                                                } else {
+                                                                    if (count($nomes) > 1) {
+                                                                        $usuarioView = $nomes[0] . ' ' . end($nomes);
+                                                                    } else {
+                                                                        $usuarioView = $linha->usuario;
+                                                                    }
+                                                                }
+                                                            ?>
                                                                 <tr>
                                                                     <td class="text-gray-600"><?= date('d/m/Y - H:i', strtotime($linha->horario)) ?></td>
-                                                                    <td><?= esc($linha->usuario) ?></td>
-                                                                    <td class="text-center text-<?php echo $statusMove ?>"><?= esc($linha->status_atual) ?></td>
-                                                                    <td class="observacao"><?= html_entity_decode($linha->observacao ?? '') ?> </td>
+                                                                    <td class="fw-semibold text-gray-700">
+                                                                        <?php echo $usuarioView ?>
+                                                                    </td>
+                                                                    <td class="text-center">
+                                                                        <span class="badge badge-light-<?= $statusMove ?> fs-7">
+                                                                            <?= esc($linha->status_atual) ?>
+                                                                        </span>
+                                                                    </td>
+                                                                    <td class="text-gray-700"><?= esc($linha->resumo) ?></td>
+                                                                    <td class="observacao text-gray-700"">
+                                                                        <?= html_entity_decode($linha->observacao ?? '') ?>
+                                                                    </td>
                                                                 </tr>
                                                             <?php endforeach; ?>
                                                         </tbody>
                                                     </table>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -262,45 +295,45 @@ $movimentation = match ($row->status) {
 
                                 <?php if ($my_security->checkPermission("SUPERVISOR") || $my_security->checkPermission("FORMALIZACAO")): ?>
 
-                                    <div class="modal-footer d-flex gap-4 justify-content-between px-6 pb-4 mt-6">
-                                        <?php if ($my_security->checkPermission("ADMIN") || $my_security->checkPermission("FORMALIZACAO")): ?>
-                                            <div class="d-flex gap-4">
-                                                <div style="width: 200px;">
-                                                    <label for="status_<?= $row->idquid_propostas ?>" class="form-label">Alterar Status</label>
-                                                    <select class="form-select" id="status_<?= $row->idquid_propostas ?>" name="status">
-                                                        <option value="Adesão" <?= $row->status == 'Adesão' ? 'selected' : '' ?>>Adesão</option>
-                                                        <option value="Auditoria" <?= $row->status == 'Auditoria' ? 'selected' : '' ?>>Auditoria</option>
-                                                        <option value="Aprovada" <?= $row->status == 'Aprovada' ? 'selected' : '' ?>>Aprovada</option>
-                                                        <option value="Pendente" <?= $row->status == 'Pendente' ? 'selected' : '' ?>>Pendente</option>
-                                                        <option value="TED Devolvida" <?= $row->status == 'TED Devolvida' ? 'selected' : '' ?>>TED Devolvida</option>
-                                                        <option value="Análise" <?= $row->status == 'Análise' ? 'selected' : '' ?>>Análise</option>
-                                                        <option value="Cancelada" <?= $row->status == 'Cancelada' ? 'selected' : '' ?>>Cancelada</option>
-                                                    </select>
-                                                    <label class="form-label mt-2" for="desc">Resumo</label>
-                                                    <input id="resumo" name="resumo" type="text" class="form-control" maxlength="27">
+                                    <div class=" modal-footer d-flex gap-4 justify-content-between px-6 pb-4 mt-6">
+                                                                        <?php if ($my_security->checkPermission("ADMIN") || $my_security->checkPermission("FORMALIZACAO")): ?>
+                                                                            <div class="d-flex gap-4">
+                                                                                <div style="width: 200px;">
+                                                                                    <label for="status_<?= $row->idquid_propostas ?>" class="form-label">Alterar Status</label>
+                                                                                    <select class="form-select" id="status_<?= $row->idquid_propostas ?>" name="status">
+                                                                                        <option value="Adesão" <?= $row->status == 'Adesão' ? 'selected' : '' ?>>Adesão</option>
+                                                                                        <option value="Auditoria" <?= $row->status == 'Auditoria' ? 'selected' : '' ?>>Auditoria</option>
+                                                                                        <option value="Aprovada" <?= $row->status == 'Aprovada' ? 'selected' : '' ?>>Aprovada</option>
+                                                                                        <option value="Pendente" <?= $row->status == 'Pendente' ? 'selected' : '' ?>>Pendente</option>
+                                                                                        <option value="TED Devolvida" <?= $row->status == 'TED Devolvida' ? 'selected' : '' ?>>TED Devolvida</option>
+                                                                                        <option value="Análise" <?= $row->status == 'Análise' ? 'selected' : '' ?>>Análise</option>
+                                                                                        <option value="Cancelada" <?= $row->status == 'Cancelada' ? 'selected' : '' ?>>Cancelada</option>
+                                                                                    </select>
+                                                                                    <label class="form-label mt-2" for="desc">Resumo</label>
+                                                                                    <input id="resumo" name="resumo" type="text" class="form-control" maxlength="27">
+                                                                                </div>
+                                                                                <div class="flex-grow-1">
+                                                                                    <label class="form-label">Observação:</label>
+                                                                                    <div class="form-control fs-8" id="pasteArea" contenteditable="true"
+                                                                                        style="min-height:120px; width: 300px">
+                                                                                    </div>
+                                                                                    <input type="hidden" name="conteudo" id="conteudo">
+                                                                                </div>
+                                                                            </div>
+                                                                        <?php endif; ?>
+                                                                        <div class="d-flex mt-20 gap-4">
+                                                                            <div>
+                                                                                <button type="button" class="btn btn-danger d-flex align-items-center gap-2" onclick="confirmarExclusao('<?= $row->idquid_propostas ?>')">
+                                                                                    <i class="bi bi-trash fs-5 text-white"></i>
+                                                                                    <span class="text-white fw-semibold">Excluir Proposta</span>
+                                                                                </button>
+                                                                            </div>
+                                                                            <div>
+                                                                                <button type="submit" id="saveChanges" class="btn btn-primary">Salvar Alterações</button>
+                                                                            </div>
+                                                                        </div>
                                                 </div>
-                                                <div class="flex-grow-1">
-                                                    <label class="form-label">Observação:</label>
-                                                    <div class="form-control fs-8" id="pasteArea" contenteditable="true"
-                                                        style="min-height:120px; width: 300px">
-                                                    </div>
-                                                    <input type="hidden" name="conteudo" id="conteudo">
-                                                </div>
-                                            </div>
-                                        <?php endif; ?>
-                                        <div class="d-flex mt-20 gap-4">
-                                            <div>
-                                                <button type="button" class="btn btn-danger d-flex align-items-center gap-2" onclick="confirmarExclusao('<?= $row->idquid_propostas ?>')">
-                                                    <i class="bi bi-trash fs-5 text-white"></i>
-                                                    <span class="text-white fw-semibold">Excluir Proposta</span>
-                                                </button>
-                                            </div>
-                                            <div>
-                                                <button type="submit" id="saveChanges" class="btn btn-primary">Salvar Alterações</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                <?php endif; ?>
+                                            <?php endif; ?>
                             </form>
 
                         </div>

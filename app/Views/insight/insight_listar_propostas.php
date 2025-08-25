@@ -247,6 +247,7 @@
 										"Pendente"  => "warning",
 										"Adesão"   => "dark",
 										"Auditoria" => "warning",
+										"TED Devolvida" => "warning",
 										default     => "secondary"
 									};
 								?>
