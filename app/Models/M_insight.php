@@ -265,4 +265,14 @@ class M_insight extends Model
     {
         return $this->dbMasterDefault->update('quid_propostas', ['resumo' => $resumo], ['idquid_propostas' => $id]);
     }
+
+    public function checkIdOwner()
+    {
+        return $this->dbMasterDefault->select('fila_auditoria', ['idfila_auditoria' => 1]);
+    }
+
+    public function atualizarOwner($novoId)
+    {
+        return $this->dbMasterDefault->update('fila_auditoria', ["id_owner" => $novoId], ['idfila_auditoria' => 1]);
+    }
 }

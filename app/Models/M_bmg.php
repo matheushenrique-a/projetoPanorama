@@ -544,6 +544,27 @@ class M_bmg extends Model
         $matricula = $data['matricula'];
         $dataNascimento = $data['dataNascimento'];
 
+        $auditores = [
+            "1" => "165022",
+            "2" => "165021",
+            "3" => "165020",
+            "4" => "165019",
+            "5" => "165017"
+        ];
+
+        $totalAuditores = count($auditores);
+
+        $checkIdOwner = $this->m_insight->checkIdOwner();
+        $currentIndex = (int)$checkIdOwner['firstRow']->id_owner;
+
+        $nextIndex = $currentIndex + 1;
+        if ($nextIndex > $totalAuditores) {
+            $nextIndex = 1;
+        }
+        $auditoriaId = $auditores[$nextIndex];
+
+        $this->m_insight->atualizarOwner($nextIndex);
+
         if (isset($data['assessor'])) {
             $report_to = $data['report_to'];
             $assessor = $data['assessor'];
@@ -572,7 +593,8 @@ class M_bmg extends Model
             "valor_parcela" => $valor_parcela,
             "numero_parcela" => $numero_parcela,
             "matricula" => $matricula,
-            "dataNascimento" => $dataNascimento
+            "dataNascimento" => $dataNascimento,
+            "id_owner" => $auditoriaId,
         ]);
 
         $movimentacao = [

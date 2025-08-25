@@ -684,6 +684,7 @@ class Insight extends BaseController
 
         $dados['propostas'] = $propostas;
         $dados['movimento'] = $movimento;
+        $dados['session'] = $this->session;
 
         return $this->loadPage('insight/insight_proposta', $dados);
     }

@@ -58,7 +58,7 @@ $movimentation = match ($row->status) {
                         <div class="card p-2 mt-2">
                             <form action="<?= assetfolder; ?>insight-listar-propostas/0/alterar-status" id="formEdit" method="POST">
                                 <div class="mt-2 d-flex p-2 justify-content-between">
-                                    <ul class="nav nav-tabs nav-line-tabs mb-5 fs-6 ps-2">
+                                    <ul class="nav nav-tabs nav-line-tabs fs-6 ps-2">
                                         <li class="nav-item">
                                             <a class="nav-link active" data-bs-toggle="tab" href="#kt_tab_pane_1">Proposta</a>
                                         </li>
@@ -72,7 +72,7 @@ $movimentation = match ($row->status) {
                                         <div>
                                             <?php if (isset($ultimaLinha) && $ultimaLinha->observacao !== null && $ultimaLinha->observacao !== ""): ?>
                                                 <div class="alert alert-dark mb-6">
-                                                    <h3 class="text-dark">Observação:</h3>
+                                                    <h4 class="text-dark">Observação:</h4>
                                                     <?= html_entity_decode($ultimaLinha->observacao) ?>
                                                 </div>
                                             <?php endif; ?>
@@ -81,11 +81,11 @@ $movimentation = match ($row->status) {
                                                 <div>
                                                     <td class="observacao"><?= html_entity_decode($linha->observacao ?? '') ?> </td>
                                                 </div>
-                                                <?php if ($movimentation): ?>
+                                                <?php if ($movimentation && $session->role !== "AUDITOR"): ?>
                                                     <button type="submit" value="statusAudit" name="auditoria" class="btn btn-warning text-black">Enviar Auditoria <i class="bi text-black bi-arrow-up-right"></i></button>
                                                 <?php endif; ?>
                                             </div>
-                                            <div class="modal-body d-flex gap-8">
+                                            <div class="modal-body d-flex mt-4 gap-8">
                                                 <div class="w-50">
                                                     <div class="mb-2">
                                                         <span class="fw-bold mb-1">Assessor:</span>
@@ -223,7 +223,7 @@ $movimentation = match ($row->status) {
                                 <?php if ($my_security->checkPermission("SUPERVISOR") || $my_security->checkPermission("FORMALIZACAO")): ?>
 
                                     <div class="modal-footer d-flex gap-4 justify-content-between px-6 pb-4 mt-6">
-                                        <?php if ($my_security->checkPermission("SUPERVISOR") || $my_security->checkPermission("FORMALIZACAO")): ?>
+                                        <?php if ($my_security->checkPermission("ADMIN") || $my_security->checkPermission("FORMALIZACAO")): ?>
                                             <div class="d-flex gap-4">
                                                 <div style="width: 200px;">
                                                     <label for="status_<?= $row->idquid_propostas ?>" class="form-label">Alterar Status</label>
@@ -247,7 +247,7 @@ $movimentation = match ($row->status) {
                                                 </div>
                                             </div>
                                         <?php endif; ?>
-                                        <div class="d-flex gap-4">
+                                        <div class="d-flex mt-20 gap-4">
                                             <div>
                                                 <button type="button" class="btn btn-danger d-flex align-items-center gap-2" onclick="confirmarExclusao('<?= $row->idquid_propostas ?>')">
                                                     <i class="bi bi-trash fs-5 text-white"></i>
@@ -274,25 +274,27 @@ $movimentation = match ($row->status) {
     const pasteArea = document.getElementById('pasteArea');
     const inputConteudo = document.getElementById('conteudo');
 
-    pasteArea.addEventListener('paste', function(e) {
-        const items = (e.clipboardData || e.originalEvent.clipboardData).items;
+    if (pasteArea) {
+        pasteArea.addEventListener('paste', function(e) {
+            const items = (e.clipboardData || e.originalEvent.clipboardData).items;
 
-        for (let item of items) {
-            if (item.kind === 'file') {
-                e.preventDefault();
-                const blob = item.getAsFile();
-                const reader = new FileReader();
-                reader.onload = function(event) {
-                    const img = document.createElement('img');
-                    img.src = event.target.result;
-                    img.style.maxWidth = '100%';
-                    img.style.maxHeight = '300px';
-                    pasteArea.appendChild(img);
+            for (let item of items) {
+                if (item.kind === 'file') {
+                    e.preventDefault();
+                    const blob = item.getAsFile();
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const img = document.createElement('img');
+                        img.src = event.target.result;
+                        img.style.maxWidth = '100%';
+                        img.style.maxHeight = '300px';
+                        pasteArea.appendChild(img);
+                    }
+                    reader.readAsDataURL(blob);
                 }
-                reader.readAsDataURL(blob);
             }
-        }
-    });
+        });
+    }
 
     const formEdit = document.getElementById('formEdit')
 
