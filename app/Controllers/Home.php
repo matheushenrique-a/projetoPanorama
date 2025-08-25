@@ -188,6 +188,10 @@ class Home extends BaseController
             }
         }
 
+        $ultimasPropostasAuditor = $this->m_bmg->ultimasPropostasAuditor(8);
+
+        $dados['ultimasPropostasAuditor'] = $ultimasPropostasAuditor;
+
         return $this->loadpage('headers/home-default', $dados);
     }
 }

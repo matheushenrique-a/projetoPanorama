@@ -306,6 +306,7 @@ class Insight extends BaseController
             $adesao = $this->getpost('numeroAdesao', false);
             $equipe = $this->getpost('equipe', false);
             $status = $this->getpost('status', false);
+            $auditorMove = $this->getpost('auditorMove', false);
 
             Services::response()->setCookie('cpf', $cpf);
             Services::response()->setCookie('date', $date);
@@ -317,6 +318,7 @@ class Insight extends BaseController
             Services::response()->setCookie('numeroAdesao', $adesao);
             Services::response()->setCookie('equipe', $equipe);
             Services::response()->setCookie('status', $status);
+            Services::response()->setCookie('auditorMove', $auditorMove);
         } else {
             $cpf = $this->getpost('txtCPF', true);
             $celular = $this->getpost('celular', true);
@@ -328,6 +330,7 @@ class Insight extends BaseController
             $adesao = $this->getpost('numeroAdesao', true);
             $equipe = $this->getpost('equipe', true);
             $status = $this->getpost('status', true);
+            $auditorMove = $this->getpost('auditorMove', true);
         }
 
         $whereCheck = [];
@@ -343,6 +346,7 @@ class Insight extends BaseController
         if (!empty($adesao)) $likeCheck['adesao'] = $adesao;
         if (!empty($equipe)) $likeCheck['report_to'] = $equipe;
         if (!empty($status)) $likeCheck['status'] = $status;
+        if (!empty($auditorMove)) $likeCheck['id_owner'] = $this->session->userId;
 
         if ($this->session->role == "OPERADOR") {
             $whereCheck["assessor"] = $this->session->nickname;

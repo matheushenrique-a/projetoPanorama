@@ -171,7 +171,19 @@
 												?>
 											</select>
 										</div>
+
 									</div>
+									<?php if ($session->role == "AUDITOR"): ?>
+										<div class="mb-3  mx-3">
+											<label for="exampleFormControlInput2" class="form-label text-gray-800 mb-0">Mostrar:</label>
+											<div class="d-flex align-items-center position-relative my-1">
+												<select class="form-select form-control-solid" aria-label="" name="auditorMove">
+													<option value="">Todas</option>
+													<option value="1">Suas Movimentações</option>
+												</select>
+											</div>
+										</div>
+									<?php endif; ?>
 								</div>
 
 							</div>

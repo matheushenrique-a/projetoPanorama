@@ -841,4 +841,12 @@ class M_bmg extends Model
             echo "Erro: {$fault->faultcode} - {$fault->faultstring}";
         }
     }
+
+    public function ultimasPropostasAuditor($limit)
+    {
+        $sql = "select * from quid_propostas where id_owner = '" . $this->session->userId . "' ";
+        $sql .= " order by data_criacao DESC LIMIT $limit;";
+
+        return $this->dbMasterDefault->runQuery($sql);
+    }
 }

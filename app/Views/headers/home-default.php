@@ -30,10 +30,6 @@
 				<div id="kt_app_content_container" class="app-container container-fluid">
 					<div class="row g-5 g-xl-10 mb-5">
 
-						<?php if ($my_security->checkPermission("FORMALIZACAO")): ?>
-							<h1>Nada pra formalização ainda... :(</h1>
-						<?php endif; ?>
-
 						<?php if (!$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("FORMALIZACAO") && $report_to !== "164979"): ?>
 
 							<div>
@@ -98,6 +94,76 @@
 									}
 								});
 							</script>
+						<?php endif; ?>
+
+						<?php if ($session->role == "AUDITOR"): ?>
+							<div class="col-xl-4 w-50">
+								<div class="card h-xl-100">
+									<div class="card-header pt-7 mb-3 pb-3">
+										<h3 class="card-title align-items-start flex-column">
+											<span class="card-label fw-bold text-dark fs-4">Tarefas</span>
+											<span class="text-muted mt-2 fw-semibold fs-6">Fila de propostas</span>
+										</h3>
+										<div class="card-toolbar">
+											<a href="<?php echo assetfolder; ?>" class="btn btn-sm btn-light" title="">Atualizar</a>
+										</div>
+									</div>
+									<div class="card-body pt-4">
+
+										<?php
+
+										foreach ($ultimasPropostasAuditor["result"]->getResult() as $row) {
+
+											// Ignorar se status for Aprovada ou Cancelada
+											if (in_array($row->status, ['Aprovada', 'Cancelada'])) {
+												continue;
+											}
+											
+											$nomeCliente = $row->nome;
+											$cpf = $row->cpf;
+											$adesao = $row->adesao;
+											$valor = $row->valor;
+											$data_criacao = $row->data_criacao;
+											$telefone = formatarTelefone($row->telefone);
+											$panorama_id = $row->panorama_id;
+											$assessor = $row->assessor;
+											$idProposta = $row->idquid_propostas;
+
+											$status = match ($row->status) {
+												"Análise"   => "info",
+												"Aprovada"  => "success",
+												"Cancelada" => "danger",
+												"Pendente" => "warning",
+												default     => "secondary"
+											};
+
+										?>
+											<div class="d-flex flex-stack">
+												<div class="d-flex align-items-center me-5">
+													<a href="<?php echo assetfolder ?>insight-proposta/<?php echo $idProposta ?>" class="symbol symbol-40px me-4"><span class="symbol-label bg-info"><i class="las la-file-invoice fs-1 p-0 text-white"></i></span></a>
+													<div class="me-5">
+														<div class="d-flex flex-column">
+															<span class="text-gray-800 fw-bolder fs-6"><?php echo substr($assessor, 0, 30); ?></span>
+															<span class="text-gray-600 fw-bolder fs-6"><?php echo substr($nomeCliente, 0, 30); ?></span>
+														</div>
+														<span class="text-gray-400 fw-bold fs-7 d-block text-start ps-0"><?php echo $adesao . " | " . $cpf; ?></span>
+														<span class="text-success fw-bolder fs-6"><?php echo 'R$ ' . number_format((float)$valor, 2, ',', '.') ?></span>
+													</div>
+												</div>
+												<div class="text-gray-400 fw-bolder fs-7 text-end">
+													<span class="text-gray-400 fw-bold fs-7 d-block text-start ps-0"><?php echo time_elapsed_string($data_criacao); ?></span>
+													<span class="badge badge-light-<?php echo $status ?> fs-6 mt-2"><?= $row->status ?></span>
+												</div>
+											</div>
+											<div class="d-flex flex-stack">
+											</div>
+											<div class="separator separator-dashed my-3"></div>
+
+										<?php }; ?>
+
+									</div>
+								</div>
+							</div>
 						<?php endif; ?>
 
 						<?php if (!$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("FORMALIZACAO")): ?>
@@ -297,7 +363,7 @@
 						<?php endif; ?>
 
 						<?php if (!$my_security->checkPermission("GERENTE")): ?>
-							<?php if ($my_security->checkPermission("SUPERVISOR") || $my_security->checkPermission("FORMALIZACAO")): ?>
+							<?php if ($my_security->checkPermission("SUPERVISOR")): ?>
 								<div class="col-xl-4 w-50 d-flex flex-column gap-10">
 									<div class="card h-xl-45">
 										<div class="card-header pt-6 pb-2 d-flex flex-column">
@@ -532,8 +598,12 @@
 								<div class="card card-flush h-md-100 shadow-sm">
 									<div class="card-header pt-7">
 										<h3 class="card-title align-items-start flex-column">
-											<span class="card-label fw-bold text-dark fs-4">Progresso de Equipe</span>
-											<span class="text-muted mt-2 fw-semibold fs-6">Progresso mensal da equipe</span>
+											<span class="card-label fw-bold text-dark fs-4"><?php if ($my_security->checkPermission("FORMALIZACAO") || $my_security->checkPermission("ADMIN")): echo "Progresso de Assessores";
+																							else: echo "Progresso de Equipe";
+																							endif; ?></span>
+											<span class="text-muted mt-2 fw-semibold fs-6"><?php if ($my_security->checkPermission("FORMALIZACAO") || $my_security->checkPermission("ADMIN")): echo "Progresso mensal de equipes";
+																							else: echo "Progresso mensal da equipe";
+																							endif; ?></span>
 										</h3>
 									</div>
 
