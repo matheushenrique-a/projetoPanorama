@@ -8,6 +8,8 @@ use App\Libraries\dbMaster;
 use App\Models\M_telegram;
 use App\Models\M_http;
 use App\Models\M_seguranca;
+use App\Models\M_insight;
+use DateTime;
 use Symfony\Component\Panther\Client;
 
 class M_bmg extends Model
@@ -17,6 +19,7 @@ class M_bmg extends Model
     protected $telegram;
     protected $m_http;
     protected $m_security;
+    protected $m_insight;
 
     public function __construct()
     {
@@ -25,6 +28,7 @@ class M_bmg extends Model
         $this->telegram =  new M_telegram();
         $this->m_http =  new M_http();
         $this->m_security = new M_seguranca();
+        $this->m_insight = new M_insight();
     }
 
     public function statusSeguro()
@@ -552,7 +556,7 @@ class M_bmg extends Model
             $data_criacao = date('Y-m-d H:i:s');
         }
 
-        $this->dbMasterDefault->insert('quid_propostas', [
+        $insertID = $this->dbMasterDefault->insertAndGetId('quid_propostas', [
             "adesao" => $adesao,
             "cpf" => $cpf,
             "nome" => $nome,
@@ -570,6 +574,18 @@ class M_bmg extends Model
             "matricula" => $matricula,
             "dataNascimento" => $dataNascimento
         ]);
+
+        $movimentacao = [
+            'id_proposta' => $insertID,
+            'id_usuario' => $this->session->userId,
+            'usuario' => $this->session->nickname,
+            'status_anterior' => '',
+            'status_atual' => $status,
+            'horario' => (new DateTime())->format('Y-m-d H:i:s'),
+            'observacao' => '',
+        ];
+
+        $this->m_insight->registrarMovimentacao($movimentacao);
     }
 
     public function ultimasPropostasBMG($limit = 6)
@@ -799,7 +815,6 @@ class M_bmg extends Model
             $envioADE = $client->__soapCall('consultaStatusAde', [$dados]);
 
             return $envioADE;
-        
         } catch (SoapFault $fault) {
             echo "Erro: {$fault->faultcode} - {$fault->faultstring}";
         }

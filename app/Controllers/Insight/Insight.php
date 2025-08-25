@@ -184,11 +184,16 @@ class Insight extends BaseController
 
             $statusAnterior = $checkStatus['firstRow']->status;
 
+            $btnAudit = $this->getpost('auditoria');
+            $resumo = $this->getpost('resumo');
+
+            if ($btnAudit == "statusAudit") {
+                $statusAnterior = "Adesão";
+                $novoStatus = "Auditoria";
+            }
+
             if ($statusAnterior !== $novoStatus) {
                 $obs = $this->getpost('conteudo');
-                if (empty($obs)) {
-                    die('Conteúdo vazio! Verifique se o JS está populando o hidden input.');
-                }
 
                 $movimento = [
                     'id_proposta' => $id,
@@ -197,12 +202,16 @@ class Insight extends BaseController
                     'status_anterior' => $statusAnterior,
                     'status_atual' => $novoStatus,
                     'horario' => (new DateTime())->format('Y-m-d H:i:s'),
-                    'observacao' => $obs
+                    'observacao' => $obs,
+                    'resumo' => $resumo
                 ];
 
                 $this->m_insight->registrarMovimentacao($movimento);
             }
 
+            if ($resumo !== null) {
+                $this->m_insight->atualizarResumo($resumo, $id);
+            }
 
             if ($id) {
                 $tabela = 'quid_propostas';
@@ -296,6 +305,7 @@ class Insight extends BaseController
             $date = $this->getpost('date', false);
             $adesao = $this->getpost('numeroAdesao', false);
             $equipe = $this->getpost('equipe', false);
+            $status = $this->getpost('status', false);
 
             Services::response()->setCookie('cpf', $cpf);
             Services::response()->setCookie('date', $date);
@@ -306,6 +316,7 @@ class Insight extends BaseController
             Services::response()->setCookie('paginas', $paginas);
             Services::response()->setCookie('numeroAdesao', $adesao);
             Services::response()->setCookie('equipe', $equipe);
+            Services::response()->setCookie('status', $status);
         } else {
             $cpf = $this->getpost('txtCPF', true);
             $celular = $this->getpost('celular', true);
@@ -316,6 +327,7 @@ class Insight extends BaseController
             $date = $this->getpost('date', true);
             $adesao = $this->getpost('numeroAdesao', true);
             $equipe = $this->getpost('equipe', true);
+            $status = $this->getpost('status', true);
         }
 
         $whereCheck = [];
@@ -330,6 +342,7 @@ class Insight extends BaseController
         if (!empty($date)) $likeCheck['DATE(data_criacao)'] = $date;
         if (!empty($adesao)) $likeCheck['adesao'] = $adesao;
         if (!empty($equipe)) $likeCheck['report_to'] = $equipe;
+        if (!empty($status)) $likeCheck['status'] = $status;
 
         if ($this->session->role == "OPERADOR") {
             $whereCheck["assessor"] = $this->session->nickname;

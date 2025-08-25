@@ -110,6 +110,22 @@
 										<input type="text" class="form-control" placeholder="Nº Adesão" name="numeroAdesao" value="" />
 									</div>
 								</div>
+								<div class="d-flex align-items-center position-relative my-1 mx-3">
+									<div class="mb-3">
+										<label for="exampleFormControlInput2" class="form-label text-gray-800 mb-0">Status:</label>
+										<div class="d-flex align-items-center position-relative my-1">
+											<select class="form-select form-control-solid" aria-label="" name="status">
+												<option value=""></option>
+												<option value="Adesão">Adesão</option>
+												<option value="Auditoria">Auditoria</option>
+												<option value="Pendente">Pendente</option>
+												<option value="Análise">Análise</option>
+												<option value="Aprovada">Aprovada</option>
+												<option value="Cancelada">Cancelada</option>
+											</select>
+										</div>
+									</div>
+								</div>
 								<?php if ($my_security->checkPermission("SUPERVISOR") || $my_security->checkPermission("ADMIN") || $my_security->checkPermission("FORMALIZACAO") || $my_security->checkPermission("GERENTE")): ?>
 									<div class="d-flex align-items-center position-relative my-1 mx-3">
 										<div class="mb-3">
@@ -197,7 +213,7 @@
 					</form>
 
 					<div class="card-body p-10 table-responsive">
-						<table class="table align-middle table-row-dashed table-hover fs-6 gy-5" id="kt_widget_table_3" data-kt-table-widget-3="all">
+						<table class="table align-middle table-row-dashed table-hover fs-6 gy-3" id="kt_widget_table_3" data-kt-table-widget-3="all">
 							<thead>
 								<tr class="text-start text-gray-800 fw-bold fs-7 text-uppercase gs-0">
 									<th class="min-w-25px">Status</th>
@@ -223,25 +239,28 @@
 									};
 								?>
 									<tr>
-										<td><span class="badge badge-light-<?= $status ?> fs-6"><?= $row->status ?></span></td>
-										<td><?= date('d/m/Y', strtotime($row->data_criacao)); ?></td>
-										<td class="text-gray-800">
-											<a href="<?php echo assetfolder ?>insight-proposta/<?php echo $row->idquid_propostas ?>" style="cursor:pointer;" class="m-0 p-0">
+										<td class="align-middle">
+											<span class="badge badge-light-<?= $status ?> fs-6"><?= $row->status ?></span>
+											<p class="text-gray-500 fw-bold fs-6 text-center pt-1"><?= $row->resumo ?? "" ?></p>
+										</td>
+										<td class="align-middle"><?= date('d/m/Y', strtotime($row->data_criacao)); ?></td>
+										<td class="align-middle text-gray-800">
+											<a href="<?= assetfolder ?>insight-proposta/<?= $row->idquid_propostas ?>" class="m-0 p-0">
 												<?= $row->adesao; ?>
 											</a>
 											<p class="text-gray-500 fw-bold fs-8"><?= $row->codigo_entidade; ?></p>
 										</td>
-										<td class="d-flex flex-column">
+										<td class="align-middle">
 											<?= $row->nome; ?>
 											<p class="text-gray-500 fw-bold fs-8"><?= $row->assessor ?></p>
 										</td>
-										<td><?= $row->cpf; ?></td>
-										<td class="text-success">R$ <?= number_format((float)$row->valor, 2, ',', '.') ?></td>
-										<td class="text-primary"><?= $row->produto ?></td>
-										<td>
+										<td class="align-middle"><?= $row->cpf; ?></td>
+										<td class="align-middle text-success">R$ <?= number_format((float)$row->valor, 2, ',', '.') ?></td>
+										<td class="align-middle text-primary"><?= $row->produto ?></td>
+										<td class="align-middle">
 											<a target="_blank" href="https://grupoquid.panoramaemprestimos.com.br/emprestimoInterno.do?action=exibir&codigo=<?= $row->panorama_id ?>" class="btn btn-sm btn-icon btn-bg-light btn-active-color-primary w-25px h-25px">
 												<span class="svg-icon svg-icon-5 svg-icon-gray-700">
-													<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+													<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
 														<path d="M14.4 11H3C2.4 11 2 11.4 2 12C2 12.6 2.4 13 3 13H14.4V11Z" fill="currentColor" />
 														<path opacity="0.3" d="M14.4 20V4L21.7 11.3C22.1 11.7 22.1 12.3 21.7 12.7L14.4 20Z" fill="currentColor" />
 													</svg>

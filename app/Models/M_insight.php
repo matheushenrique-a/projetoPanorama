@@ -260,4 +260,9 @@ class M_insight extends Model
     {
         return $this->dbMasterDefault->insert('historico_propostas', $movimentacao);
     }
+
+    public function atualizarResumo($resumo, $id)
+    {
+        return $this->dbMasterDefault->update('quid_propostas', ['resumo' => $resumo], ['idquid_propostas' => $id]);
+    }
 }

@@ -115,6 +115,16 @@ class dbMaster
 		return $returnData;
 	}
 
+	public function insertAndGetId($table, $data)
+	{
+		$builder = $this->db->table($table);
+
+		$builder->insert($data);
+
+		return $this->db->insertID();
+	}
+
+
 	public function insertIgnore($table, $data)
 	{
 		$builder = $this->db->table($table);

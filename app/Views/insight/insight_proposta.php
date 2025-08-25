@@ -2,6 +2,8 @@
 $row = $propostas['result']->getResult()[0];
 $moveRow = $movimento['result']->getResult() ?? '';
 
+$ultimaLinha = !empty($moveRow) ? end($moveRow) : null;
+
 $status = match ($row->status) {
     "Análise"   => "info",
     "Aprovada"  => "success",
@@ -11,6 +13,18 @@ $status = match ($row->status) {
     "Auditoria" => "warning",
     default     => "secondary"
 };
+
+
+$movimentation = match ($row->status) {
+    "Análise"   => false,
+    "Aprovada"  => false,
+    "Cancelada" => false,
+    "Pendente"  => true,
+    "Adesão"   => true,
+    "Auditoria" => false,
+    default     => false
+}
+
 
 ?>
 <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
@@ -56,8 +70,20 @@ $status = match ($row->status) {
                                 <div class="tab-content p-6" id="myTabContent">
                                     <div class="tab-pane fade show active" id="kt_tab_pane_1" role="tabpanel">
                                         <div>
-                                            <div>
-                                                <span class="fw-bold badge badge-info fs-5 mb-4"><?= $row->status ?></span>
+                                            <?php if (isset($ultimaLinha) && $ultimaLinha->observacao !== null && $ultimaLinha->observacao !== ""): ?>
+                                                <div class="alert alert-dark mb-6">
+                                                    <h3 class="text-dark">Observação:</h3>
+                                                    <?= html_entity_decode($ultimaLinha->observacao) ?>
+                                                </div>
+                                            <?php endif; ?>
+                                            <div class="d-flex justify-content-between">
+                                                <span class="fw-bold badge badge-<?= $status ?> text-black fs-5 mb-4"><?= $row->status ?></span>
+                                                <div>
+                                                    <td class="observacao"><?= html_entity_decode($linha->observacao ?? '') ?> </td>
+                                                </div>
+                                                <?php if ($movimentation): ?>
+                                                    <button type="submit" value="statusAudit" name="auditoria" class="btn btn-warning text-black">Enviar Auditoria <i class="bi text-black bi-arrow-up-right"></i></button>
+                                                <?php endif; ?>
                                             </div>
                                             <div class="modal-body d-flex gap-8">
                                                 <div class="w-50">
@@ -150,7 +176,7 @@ $status = match ($row->status) {
                                         <div>
                                             <div class="">
                                                 <div class="table-responsive">
-                                                    <table class="table table-striped table-rounded table-row-gray-300 gy-4">
+                                                    <table class="table table-rounded table-row-bordered gx-4 table-row-gray-300 gy-4">
                                                         <thead>
                                                             <tr class="fw-bold fs-6 text-gray-800">
                                                                 <th>Horário</th>
@@ -160,11 +186,22 @@ $status = match ($row->status) {
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            <?php foreach ($moveRow as $linha): ?>
+                                                            <?php foreach ($moveRow as $linha):
+                                                                $statusMove = match ($linha->status_atual) {
+                                                                    "Análise"   => "info",
+                                                                    "Aprovada"  => "success",
+                                                                    "Cancelada" => "danger",
+                                                                    "Pendente"  => "warning",
+                                                                    "Adesão"   => "dark",
+                                                                    "Auditoria" => "warning",
+                                                                    default     => "secondary"
+                                                                };
+                                                            ?>
+
                                                                 <tr>
-                                                                    <td><?= date('d/m/Y - H:i', strtotime($linha->horario)) ?></td>
+                                                                    <td class="text-gray-600"><?= date('d/m/Y - H:i', strtotime($linha->horario)) ?></td>
                                                                     <td><?= esc($linha->usuario) ?></td>
-                                                                    <td class="text-center"><?= esc($linha->status_atual) ?></td>
+                                                                    <td class="text-center text-<?php echo $statusMove ?>"><?= esc($linha->status_atual) ?></td>
                                                                     <td class="observacao"><?= html_entity_decode($linha->observacao ?? '') ?> </td>
                                                                 </tr>
                                                             <?php endforeach; ?>
@@ -185,22 +222,26 @@ $status = match ($row->status) {
 
                                 <?php if ($my_security->checkPermission("SUPERVISOR") || $my_security->checkPermission("FORMALIZACAO")): ?>
 
-                                    <div class="modal-footer d-flex gap-4 justify-content-between px-4 pb-4 mt-6">
+                                    <div class="modal-footer d-flex gap-4 justify-content-between px-6 pb-4 mt-6">
                                         <?php if ($my_security->checkPermission("SUPERVISOR") || $my_security->checkPermission("FORMALIZACAO")): ?>
                                             <div class="d-flex gap-4">
                                                 <div style="width: 200px;">
                                                     <label for="status_<?= $row->idquid_propostas ?>" class="form-label">Alterar Status</label>
                                                     <select class="form-select" id="status_<?= $row->idquid_propostas ?>" name="status">
-                                                        <option value="Análise" <?= $row->status == 'Análise' ? 'selected' : '' ?>>Análise</option>
+                                                        <option value="Adesão" <?= $row->status == 'Adesão' ? 'selected' : '' ?>>Adesão</option>
+                                                        <option value="Auditoria" <?= $row->status == 'Auditoria' ? 'selected' : '' ?>>Auditoria</option>
                                                         <option value="Aprovada" <?= $row->status == 'Aprovada' ? 'selected' : '' ?>>Aprovada</option>
-                                                        <option value="Cancelada" <?= $row->status == 'Cancelada' ? 'selected' : '' ?>>Cancelada</option>
                                                         <option value="Pendente" <?= $row->status == 'Pendente' ? 'selected' : '' ?>>Pendente</option>
+                                                        <option value="Análise" <?= $row->status == 'Análise' ? 'selected' : '' ?>>Análise</option>
+                                                        <option value="Cancelada" <?= $row->status == 'Cancelada' ? 'selected' : '' ?>>Cancelada</option>
                                                     </select>
+                                                    <label class="form-label mt-2" for="desc">Resumo</label>
+                                                    <input id="resumo" name="resumo" type="text" class="form-control" maxlength="27">
                                                 </div>
                                                 <div class="flex-grow-1">
-                                                    <label class="form-label">Observação / Print:</label>
+                                                    <label class="form-label">Observação:</label>
                                                     <div class="form-control fs-8" id="pasteArea" contenteditable="true"
-                                                        style="min-height:150px; width: 300px">
+                                                        style="min-height:120px; width: 300px">
                                                     </div>
                                                     <input type="hidden" name="conteudo" id="conteudo">
                                                 </div>
@@ -214,7 +255,7 @@ $status = match ($row->status) {
                                                 </button>
                                             </div>
                                             <div>
-                                                <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                                                <button type="submit" id="saveChanges" class="btn btn-primary">Salvar Alterações</button>
                                             </div>
                                         </div>
                                     </div>
@@ -245,7 +286,7 @@ $status = match ($row->status) {
                     const img = document.createElement('img');
                     img.src = event.target.result;
                     img.style.maxWidth = '100%';
-                    img.style.maxHeight = '200px';
+                    img.style.maxHeight = '300px';
                     pasteArea.appendChild(img);
                 }
                 reader.readAsDataURL(blob);
@@ -260,6 +301,34 @@ $status = match ($row->status) {
     });
 
     document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById("formEdit");
+        const inputs = form.querySelectorAll("input, select, textarea");
+        const saveButton = document.getElementById("saveChanges");
+
+        saveButton.style.display = "none";
+
+        function checkChanges() {
+            let changed = false;
+            inputs.forEach(input => {
+                const original = input.dataset.original;
+                if (original !== undefined && input.value !== original) {
+                    changed = true;
+                }
+            });
+
+            if (changed) {
+                saveButton.style.display = "inline-flex"; // mostra
+            } else {
+                saveButton.style.display = "none"; // esconde
+            }
+        }
+
+        // Detecta mudanças
+        inputs.forEach(input => {
+            input.addEventListener("input", checkChanges);
+            input.addEventListener("change", checkChanges);
+        });
+
 
         window.confirmarExclusao = function(id) {
             Swal.fire({
