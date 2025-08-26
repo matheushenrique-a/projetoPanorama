@@ -377,6 +377,14 @@
 												<span class="text-gray-400 mt-1 fw-semibold fs-6">Este Mês</span>
 											</h3>
 										</div>
+										<div class="p-3 mt-1 justify-content-center border-bottom gap-4 d-flex">
+											<h3 class="mt-3 text-gray-600">Meta individual:</h3>
+											<div class="d-flex gap-2 rounded shadow-sm">
+												<input id="metaInput" readonly value="<?= $metaManualSupervisor ?>" style="width: 150px;" class="form-control fw-bold fs-5 text-success"></input>
+												<i id="metaEdit" class="cursor-pointer bi mt-4 bi-pencil-square fs-3"></i>
+												<a id="metaLink" href="<?php echo assetfolder ?>atualizar-meta/<?php echo $session->userId ?>/" class="d-none mt-3"><i class="bi text-primary bi-check fs-1"></i></a>
+											</div>
+										</div>
 										<div class="d-flex justify-content-center gap-6 flex-wrap mt-10">
 
 											<!-- Progresso -->
@@ -693,3 +701,58 @@
 	</div>
 </div>
 <?php endif; ?>
+
+<script>
+	const metaEdit = document.getElementById("metaEdit")
+	const metaInput = document.getElementById("metaInput")
+	const metaLink = document.getElementById("metaLink")
+
+	function formatBRL(value) {
+		let val = (value / 100).toFixed(2) + '';
+		val = val.replace(".", ",");
+		return "R$" + val.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+	}
+
+	function formatBRLfromDatabase(value) {
+		let val = parseFloat(value).toFixed(2) + '';
+		val = val.replace(".", ",");
+		return "R$" + val.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+	}
+
+	if (metaEdit) {
+		metaEdit.addEventListener('click', () => {
+			metaInput.removeAttribute("readonly");
+			metaInput.value = "";
+			metaLink.classList.remove("d-none")
+			metaInput.focus()
+		})
+
+		metaLink.addEventListener("click", (e) => {
+			let valor = metaInput.value.trim();
+
+			// remove máscara
+			valor = valor.replace("R$", "").replace(/\./g, "").replace(",", ".");
+
+			// agora NÃO divide por 100, porque já está em reais
+			let floatVal = parseFloat(valor).toFixed(2);
+
+			metaLink.href = "<?php echo assetfolder ?>atualizar-meta/<?php echo $session->userId ?>/" + floatVal;
+		});
+
+
+		metaInput.addEventListener("input", (e) => {
+			let valor = e.target.value.replace(/\D/g, "");
+
+			if (valor === "") {
+				e.target.value = "";
+				return;
+			}
+
+			e.target.value = formatBRL(valor);
+		});
+
+		if (metaInput.value.trim() !== "") {
+			metaInput.value = formatBRLfromDatabase(metaInput.value);
+		}
+	}
+</script>

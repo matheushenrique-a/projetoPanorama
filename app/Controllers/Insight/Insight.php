@@ -704,4 +704,19 @@ class Insight extends BaseController
 
         return $this->loadPage('insight/insight_proposta', $dados);
     }
+
+    public function atualizarMetas($idSupervisor, $valor)
+    {
+        $fieldUpdate = [
+            "meta" => $valor
+        ];
+
+        $whereArrayUpdt = [
+            "supervisor" => $idSupervisor
+        ];
+
+        $this->dbMasterDefault->update("equipes", $fieldUpdate, $whereArrayUpdt);
+
+        return redirect()->to(urlInstitucional);
+    }
 }

@@ -98,6 +98,8 @@ class Home extends BaseController
             $progresso = round($progresso, 2);
 
             $dados['progressoSupervisor'] = $progresso;
+
+            $dados['metaManualSupervisor'] = $this->m_insight->buscarMetaIndividual()['firstRow']->meta ?? "";
         }
 
 

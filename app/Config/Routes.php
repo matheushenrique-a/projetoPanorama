@@ -82,6 +82,7 @@ $routes->match(['get', 'post'], '/clientes/upload/(:any)', 'Insight\Clientes::up
 $routes->match(['get', 'post'], '/clientes/pesquisa', 'Insight\Clientes::pesquisa');
 $routes->match(['get', 'post'], '/clientes/update', 'Insight\Clientes::update');
 $routes->match(['get', 'post'], '/perfil', 'Insight\Perfil::index');
+$routes->match(['get', 'post'], '/atualizar-meta/(:any)/(:any)', 'Insight\Insight::atualizarMetas/$1/$2');
 
 //THEONE
 $routes->match(['get', 'post'], '/extrairdados', 'Theone\ExtrairDados::extrair');
