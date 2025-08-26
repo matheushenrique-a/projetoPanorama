@@ -686,12 +686,15 @@ class M_bmg extends Model
 
     public function tabelaAssessores()
     {
-        if ($this->session->role == "OPERADOR") {
-            $meta = $this->m_insight->buscarMetaSuaEquipe()['firstRow']->meta ?? "";
-        } else if ($this->session->role == "SUPERVISOR") {
-            $meta = $this->m_insight->buscarMetaIndividual()['firstRow']->meta ?? 15000;
+
+        if ($this->session->report_to !== "164979"){
+            if ($this->session->role == "OPERADOR") {
+                $meta = $this->m_insight->buscarMetaSuaEquipe()['firstRow']->meta ?? "";
+            } else if ($this->session->role == "SUPERVISOR") {
+                $meta = $this->m_insight->buscarMetaIndividual()['firstRow']->meta ?? 15000;
+            }
         } else {
-            $meta = 15000;
+            $meta = 20000;
         }
 
         $supervisor = $this->session->userId;

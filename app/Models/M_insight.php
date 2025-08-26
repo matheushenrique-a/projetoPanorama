@@ -289,4 +289,8 @@ class M_insight extends Model
 
         return $this->dbMasterDefault->select('equipes', ['supervisor' => $supervisor]);
     }
+
+    public function exportarDbCsv() {
+        return $this->dbMasterDefault->exportCSV('quid_propostas');
+    }
 }

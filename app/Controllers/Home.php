@@ -146,7 +146,9 @@ class Home extends BaseController
         $dados['ranking'] = $this->m_bmg->tabelaAssessores();
 
         if ($this->session->role == "OPERADOR") {
-            $dados['progresso'] = $this->m_bmg->barraProgressoAssessor();
+            if ($this->session->report_to !== "164979") {
+                $dados['progresso'] = $this->m_bmg->barraProgressoAssessor();
+            }
             $dados['metaEquipe'] = $this->m_insight->buscarMetaSuaEquipe()['firstRow']->meta ?? "";
         }
 
@@ -197,6 +199,8 @@ class Home extends BaseController
         $ultimasPropostasAuditor = $this->m_bmg->ultimasPropostasAuditor(8);
 
         $dados['ultimasPropostasAuditor'] = $ultimasPropostasAuditor;
+
+        // $this->m_insight->exportarDbCsv();
 
         return $this->loadpage('headers/home-default', $dados);
     }

@@ -74,6 +74,7 @@ class Insight extends BaseController
 
         if ($action == "remove") {
             $this->dbMaster->delete('quid_propostas', ['idquid_propostas' => $idProposta]);
+            $this->dbMaster->delete('historico_propostas', ['id_proposta' => $idProposta]);
             return redirect()->to(urlInstitucional . 'insight-listar-propostas/0/0');
         }
 

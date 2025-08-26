@@ -243,7 +243,8 @@ $movimentation = match ($row->status) {
 
                                                                 $usuario = $session->nickname;
 
-                                                                if ($session->role !== "AUDITOR") {
+
+                                                                if ($session->role == "OPERADOR") {
                                                                     if ($usuario == $linha->usuario) {
                                                                         if (count($nomes) > 1) {
                                                                             $usuarioView = $nomes[0] . ' ' . end($nomes);
@@ -335,7 +336,6 @@ $movimentation = match ($row->status) {
                                                 </div>
                                             <?php endif; ?>
                             </form>
-
                         </div>
                     </div>
                 </div>

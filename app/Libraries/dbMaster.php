@@ -181,33 +181,31 @@ class dbMaster
 		$builder->delete($whereCheck);
 	}
 
-
-
 	//Evita consulta a uma tabela que foi recenemente consultada
-	public function IsDataUpdated($table, $whereArray = null)
-	{
-		//default interval check
-		$minutes = integration_delay_bancos[$table];
-		//echo "13:18:37 - <h3>Dump 2</h3> <br><br>" . var_dump($table); exit;					//<-------DEBUG
-		$md5 = $this->getMd5($table, $whereArray);
+	// public function IsDataUpdated($table, $whereArray = null)
+	// {
+	// 	//default interval check
+	// 	$minutes = integration_delay_bancos[$table];
+	// 	//echo "13:18:37 - <h3>Dump 2</h3> <br><br>" . var_dump($table); exit;					//<-------DEBUG
+	// 	$md5 = $this->getMd5($table, $whereArray);
 
-		$builder = $this->db->table('record_updates');
-		$builder->limit(1);
-		$builder->where(' TIMESTAMPDIFF(minute,last_updated,now())  <', $minutes);
-		$builder->where('md5', $md5);
-		$result = $builder->get();
-		$total_rows = $this->db->affectedRows();
+	// 	$builder = $this->db->table('record_updates');
+	// 	$builder->limit(1);
+	// 	$builder->where(' TIMESTAMPDIFF(minute,last_updated,now())  <', $minutes);
+	// 	$builder->where('md5', $md5);
+	// 	$result = $builder->get();
+	// 	$total_rows = $this->db->affectedRows();
 
-		//echo "13:17:40 - <h3>Dump 78</h3> <br><br>" . var_dump($total_rows); exit;					//<-------DEBUG 
-		if ($total_rows == 1) {
-			//se encontrou algum registro é porque existem linhas 
-			//com menos de X minutos na tabela, logo o dado está atualizado / existente
-			return true;
-		} else {
-			$this->UpdateControl($md5);
-			return false;
-		}
-	}
+	// 	//echo "13:17:40 - <h3>Dump 78</h3> <br><br>" . var_dump($total_rows); exit;					//<-------DEBUG 
+	// 	if ($total_rows == 1) {
+	// 		//se encontrou algum registro é porque existem linhas 
+	// 		//com menos de X minutos na tabela, logo o dado está atualizado / existente
+	// 		return true;
+	// 	} else {
+	// 		$this->UpdateControl($md5);
+	// 		return false;
+	// 	}
+	// }
 
 	public function getDB()
 	{
@@ -250,5 +248,48 @@ class dbMaster
 	{
 		$md5 = $this->getMd5($table, $whereArray);
 		$this->delete('record_updates', array('md5' => $md5));
+	}
+
+	public function exportCSV($table, $columns = [], $where = [])
+	{
+		if (empty($columns)) {
+			$columns = ['*'];
+		}
+
+		$builder = $this->db->table($table);
+		$builder->select($columns);
+
+		if (!empty($where)) {
+			$builder->where($where);
+		}
+
+		$query = $builder->get();
+		$results = $query->getResultArray();
+
+		if (empty($results)) {
+			echo "Nenhum registro encontrado.";
+			exit;
+		}
+
+		header('Content-Type: text/csv; charset=UTF-8');
+		header('Content-Disposition: attachment; filename="export.csv"');
+
+		echo "\xEF\xBB\xBF";
+
+		$fp = fopen('php://output', 'w');
+
+		$separator = ';';
+
+		fputcsv($fp, array_keys($results[0]), $separator);
+
+		foreach ($results as $row) {
+			foreach ($row as $k => $v) {
+				if ($v === null) $row[$k] = '';
+			}
+			fputcsv($fp, $row, $separator);
+		}
+
+		fclose($fp);
+		exit;
 	}
 }
