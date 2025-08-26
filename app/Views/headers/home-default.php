@@ -39,9 +39,7 @@
 											<span class="card-label fw-bolder text-gray-800">Barra de progresso mensal</span>
 											<span class="text-gray-600 mt-2 fw-semibold fs-6">Valor Averbado: <span class="text-success">R$ <?php if (isset($progresso->total_valor)) : echo number_format((float)$progresso->total_valor, 2, ',', '.');
 																																			endif; ?></span></span>
-											<span class="text-gray-600 mt-2 fw-semibold fs-6">Meta: <span class="text-success"><?php if ($report_to == "165004"): echo "R$ 35.000,00";
-																																else: echo "R$ 14.000,00";
-																																endif; ?></span></span></span>
+											<span class="text-gray-600 mt-2 fw-semibold fs-6">Meta: <span class="text-success">R$ <?php echo number_format((float)$metaEquipe, 2, ',', '.') ?></span></span></span>
 										</h3>
 									</div>
 									<div class="card-body">
@@ -377,14 +375,16 @@
 												<span class="text-gray-400 mt-1 fw-semibold fs-6">Este Mês</span>
 											</h3>
 										</div>
-										<div class="p-3 mt-1 justify-content-center border-bottom gap-4 d-flex">
-											<h3 class="mt-3 text-gray-600">Meta individual:</h3>
-											<div class="d-flex gap-2 rounded shadow-sm">
-												<input id="metaInput" readonly value="<?= $metaManualSupervisor ?>" style="width: 150px;" class="form-control fw-bold fs-5 text-success"></input>
-												<i id="metaEdit" class="cursor-pointer bi mt-4 bi-pencil-square fs-3"></i>
-												<a id="metaLink" href="<?php echo assetfolder ?>atualizar-meta/<?php echo $session->userId ?>/" class="d-none mt-3"><i class="bi text-primary bi-check fs-1"></i></a>
+										<?php if ($session->userId !== "164979"): ?>
+											<div class="p-3 mt-1 justify-content-center border-bottom gap-4 d-flex">
+												<h3 class="mt-3 text-gray-600">Meta individual:</h3>
+												<div class="d-flex gap-2 rounded shadow-sm">
+													<input id="metaInput" readonly value="<?= $metaManualSupervisor ?>" style="width: 150px;" class="form-control fw-bold fs-5 text-success"></input>
+													<i id="metaEdit" class="cursor-pointer bi mt-4 bi-pencil-square fs-3"></i>
+													<a id="metaLink" href="<?php echo assetfolder ?>atualizar-meta/<?php echo $session->userId ?>/" class="d-none mt-3"><i class="bi text-primary bi-check fs-1"></i></a>
+												</div>
 											</div>
-										</div>
+										<?php endif; ?>
 										<div class="d-flex justify-content-center gap-6 flex-wrap mt-10">
 
 											<!-- Progresso -->

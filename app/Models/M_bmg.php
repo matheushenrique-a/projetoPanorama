@@ -687,17 +687,11 @@ class M_bmg extends Model
     public function tabelaAssessores()
     {
         if ($this->session->role == "OPERADOR") {
-            if ($this->session->report_to == '165004') {
-                $meta = 35000;
-            } else {
-                $meta = 14000;
-            }
+            $meta = $this->m_insight->buscarMetaSuaEquipe()['firstRow']->meta ?? "";
+        } else if ($this->session->role == "SUPERVISOR") {
+            $meta = $this->m_insight->buscarMetaIndividual()['firstRow']->meta ?? 15000;
         } else {
-            if ($this->session->userId == '165004') {
-                $meta = 35000;
-            } else {
-                $meta = 14000;
-            }
+            $meta = 15000;
         }
 
         $supervisor = $this->session->userId;
@@ -758,11 +752,7 @@ class M_bmg extends Model
     {
         $assessor = $this->session->nickname;
 
-        if ($this->session->report_to == '165004') {
-            $meta = 35000;
-        } else {
-            $meta = 14000;
-        }
+        $meta = $this->m_insight->buscarMetaSuaEquipe()['firstRow']->meta ?? "";
 
         $sql = "
         SELECT 

@@ -53,6 +53,7 @@ class Home extends BaseController
         $dados['pageTitle'] = "Insight Home";
 
         $dados['report_to'] = $this->session->report_to;
+        $dados['role'] = $this->session->role;
         $dados['session'] = $this->session;
 
         $resultados = $this->m_bmg->countPropostasPorDia();
@@ -139,13 +140,16 @@ class Home extends BaseController
             $dados['progressoAnaKarla'] = $progressoAnaKarla;
         }
 
-
         $dados['labelsEquipe'] = $labelsEquipe;
         $dados['dadosEquipe'] = $valoresEquipe;
 
         $dados['ranking'] = $this->m_bmg->tabelaAssessores();
 
-        $dados['progresso'] = $this->m_bmg->barraProgressoAssessor();
+        if ($this->session->role == "OPERADOR") {
+            $dados['progresso'] = $this->m_bmg->barraProgressoAssessor();
+            $dados['metaEquipe'] = $this->m_insight->buscarMetaSuaEquipe()['firstRow']->meta ?? "";
+        }
+
         $dados['nickname'] = $this->session->nickname;
 
         $tabulacoesSucesso = $this->m_argus->tabulacoesSucesso();

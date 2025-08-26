@@ -276,8 +276,16 @@ class M_insight extends Model
         return $this->dbMasterDefault->update('fila_auditoria', ["id_owner" => $novoId], ['idfila_auditoria' => 1]);
     }
 
-    public function buscarMetaIndividual(){
+    public function buscarMetaIndividual()
+    {
         $supervisor = $this->session->userId;
+
+        return $this->dbMasterDefault->select('equipes', ['supervisor' => $supervisor]);
+    }
+
+    public function buscarMetaSuaEquipe()
+    {
+        $supervisor = $this->session->report_to;
 
         return $this->dbMasterDefault->select('equipes', ['supervisor' => $supervisor]);
     }
