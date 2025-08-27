@@ -64,6 +64,22 @@ class dbMaster
 		return $this->resultfy($builder->get());
 	}
 
+	public function selectArquivos($id)
+	{
+		return $this->db->table('arquivos')
+			->where('id_proposta', $id)
+			->get()
+			->getResult();
+	}
+
+	public function downloadArquivos($id)
+	{
+		return $this->db->table('arquivos')
+			->where('id', $id)
+			->get()
+			->getRow();
+	}
+
 	public function selectExact($table, $whereCheck, $parameters = null)
 	{
 		$builder = $this->db->table($table);

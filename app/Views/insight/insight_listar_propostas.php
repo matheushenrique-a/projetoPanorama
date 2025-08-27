@@ -216,7 +216,14 @@
 								<div class="card-title">
 									<div class="mb-0 mx-3">
 										<div class="d-flex align-items-center position-relative my-1 mt-0 mb-0">
-											<a href="<?php echo assetfolder; ?>insight-listar-propostas/0/upload" class="mt-4 ms-3 btn btn-info">Upload <i class="bi bi-file-earmark-arrow-up"></i></a>
+											<a href="<?php echo assetfolder; ?>insight-listar-propostas/0/upload" class="mt-4 ms-3 btn btn-secondary">Importar <i class="bi fs-3 bi-file-earmark-arrow-up"></i></a>
+										</div>
+									</div>
+								</div>
+								<div class="card-title">
+									<div class="mb-0 mx-3">
+										<div class="d-flex align-items-center position-relative my-1 mt-0 mb-0">
+											<a href="<?php echo assetfolder; ?>insight-listar-propostas/0/export" class="mt-4 ms-3 btn btn-secondary">Exportar <i class="bi fs-3 bi-file-earmark-arrow-down"></i></a>
 										</div>
 									</div>
 								</div>

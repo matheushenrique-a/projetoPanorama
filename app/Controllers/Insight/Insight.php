@@ -256,12 +256,6 @@ class Insight extends BaseController
             return redirect()->to(urlInstitucional . 'insight-listar-propostas/0/0');
         }
 
-        if ($action == "upload") {
-            $dados['pageTitle'] = 'Upload de Propostas';
-
-            return $this->loadpage('insight/insight_upload_propostas', $dados);
-        }
-
         if ($action == "incluir") {
             $assessor = $this->getpost("assessor");
             $cpf = $this->getpost("cpf");
@@ -698,6 +692,8 @@ class Insight extends BaseController
 
         $propostas = $this->dbMasterDefault->select('quid_propostas', ['idquid_propostas' => $id]);
         $movimento = $this->dbMasterDefault->select('historico_propostas', ['id_proposta' => $id]);
+
+        $dados['arquivos'] = $this->dbMasterDefault->selectArquivos($id);
 
         $dados['propostas'] = $propostas;
         $dados['movimento'] = $movimento;

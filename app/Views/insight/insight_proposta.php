@@ -2,6 +2,8 @@
 $row = $propostas['result']->getResult()[0];
 $moveRow = $movimento['result']->getResult() ?? '';
 
+$qtdArquivos = count($arquivos);
+
 $ultimaLinha = !empty($moveRow) ? end($moveRow) : null;
 
 $status = match ($row->status) {
@@ -66,6 +68,9 @@ $movimentation = match ($row->status) {
                                         </li>
                                         <li class="nav-item">
                                             <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_2">Movimentações</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_3">Arquivos</a>
                                         </li>
                                     </ul>
                                 </div>
@@ -239,7 +244,10 @@ $movimentation = match ($row->status) {
                                                                     default         => "secondary"
                                                                 };
 
-                                                                $nomes = explode(' ', trim($linha->usuario));
+                                                                if ($linha->usuario !== null) {
+
+                                                                    $nomes = explode(' ', trim($linha->usuario));
+                                                                }
 
                                                                 $usuario = $session->nickname;
 
@@ -255,7 +263,9 @@ $movimentation = match ($row->status) {
                                                                         $usuarioView = "*****";
                                                                     }
                                                                 } else {
-                                                                    if (count($nomes) > 1) {
+                                                                    if ($linha->usuario == null) {
+                                                                        $usuarioView = "";
+                                                                    } else if (count($nomes) > 1) {
                                                                         $usuarioView = $nomes[0] . ' ' . end($nomes);
                                                                     } else {
                                                                         $usuarioView = $linha->usuario;
@@ -290,52 +300,95 @@ $movimentation = match ($row->status) {
                                                 max-height: 200px;
                                             }
                                         </style>
+                                        
                                     </div>
-                                </div>
+                                    <div class=" mb-10 tab-pane fade show" id="kt_tab_pane_3" role="tabpanel">
+                                                                        <div class="mb-10">
+                                                                            <h3 class="text-gray-700"><?= $qtdArquivos ?> Arquivos anexados</h3>
+                                                                            <div class="mt-5 d-flex flex-column gap-4">
+                                                                                <?php foreach ($arquivos as $arquivo): ?>
+                                                                                    <div style="width: 330px;" class="d-flex gap-3 p-2 border rounded align-items-center">
 
+                                                                                        <a href="<?= assetfolder ?>insight/download/<?= $arquivo->id ?>/<?= $arquivo->id_proposta ?>">
+                                                                                            <i class="bi ms-1 fs-6 px-2 rounded p-1 text-primary bi-download"></i>
+                                                                                        </a>
 
-                                <?php if ($my_security->checkPermission("SUPERVISOR") || $my_security->checkPermission("FORMALIZACAO")): ?>
+                                                                                        <p class="my-auto fw-semibold text-gray-700"><i class="bi bi-file-earmark"></i> <?= esc($arquivo->nome_original) ?></p>
 
-                                    <div class=" modal-footer d-flex gap-4 justify-content-between px-6 pb-4 mt-6">
-                                                                        <?php if ($my_security->checkPermission("ADMIN") || $my_security->checkPermission("FORMALIZACAO")): ?>
-                                                                            <div class="d-flex gap-4">
-                                                                                <div style="width: 200px;">
-                                                                                    <label for="status_<?= $row->idquid_propostas ?>" class="form-label">Alterar Status</label>
-                                                                                    <select class="form-select" id="status_<?= $row->idquid_propostas ?>" name="status">
-                                                                                        <option value="Adesão" <?= $row->status == 'Adesão' ? 'selected' : '' ?>>Adesão</option>
-                                                                                        <option value="Auditoria" <?= $row->status == 'Auditoria' ? 'selected' : '' ?>>Auditoria</option>
-                                                                                        <option value="Aprovada" <?= $row->status == 'Aprovada' ? 'selected' : '' ?>>Aprovada</option>
-                                                                                        <option value="Pendente" <?= $row->status == 'Pendente' ? 'selected' : '' ?>>Pendente</option>
-                                                                                        <option value="TED Devolvida" <?= $row->status == 'TED Devolvida' ? 'selected' : '' ?>>TED Devolvida</option>
-                                                                                        <option value="Análise" <?= $row->status == 'Análise' ? 'selected' : '' ?>>Análise</option>
-                                                                                        <option value="Cancelada" <?= $row->status == 'Cancelada' ? 'selected' : '' ?>>Cancelada</option>
-                                                                                    </select>
-                                                                                    <label class="form-label mt-2" for="desc">Resumo</label>
-                                                                                    <input id="resumo" name="resumo" type="text" class="form-control" maxlength="27">
-                                                                                </div>
-                                                                                <div class="flex-grow-1">
-                                                                                    <label class="form-label">Observação:</label>
-                                                                                    <div class="form-control fs-8" id="pasteArea" contenteditable="true"
-                                                                                        style="min-height:120px; width: 300px">
+                                                                                        <div class="d-flex gap-3 ms-auto justify-content-end">
+                                                                                            <p class="my-auto text-gray-700"><?= date('d/m/Y', strtotime($arquivo->created_at)) ?></p>
+
+                                                                                            <a href="<?= assetfolder ?>insight/excluir/<?= $arquivo->id ?>/<?= $arquivo->id_proposta ?>">
+                                                                                                <i class="bi text-danger bi-trash me-3"></i>
+                                                                                            </a>
+                                                                                        </div>
                                                                                     </div>
-                                                                                    <input type="hidden" name="conteudo" id="conteudo">
-                                                                                </div>
-                                                                            </div>
-                                                                        <?php endif; ?>
-                                                                        <div class="d-flex mt-20 gap-4">
-                                                                            <div>
-                                                                                <button type="button" class="btn btn-danger d-flex align-items-center gap-2" onclick="confirmarExclusao('<?= $row->idquid_propostas ?>')">
-                                                                                    <i class="bi bi-trash fs-5 text-white"></i>
-                                                                                    <span class="text-white fw-semibold">Excluir Proposta</span>
-                                                                                </button>
-                                                                            </div>
-                                                                            <div>
-                                                                                <button type="submit" id="saveChanges" class="btn btn-primary">Salvar Alterações</button>
+                                                                                <?php endforeach; ?>
                                                                             </div>
                                                                         </div>
+
                                                 </div>
-                                            <?php endif; ?>
+
+
+                                                <?php if ($my_security->checkPermission("SUPERVISOR") || $my_security->checkPermission("FORMALIZACAO")): ?>
+
+                                                    <div class=" modal-footer d-flex gap-4 justify-content-between px-6 pb-4 mt-6">
+
+                                                        <?php if ($my_security->checkPermission("ADMIN") || $my_security->checkPermission("FORMALIZACAO")): ?>
+                                                            <div class="d-flex gap-4">
+                                                                <div style="width: 200px;">
+                                                                    <label for="status_<?= $row->idquid_propostas ?>" class="form-label">Alterar Status</label>
+                                                                    <select class="form-select" id="status_<?= $row->idquid_propostas ?>" name="status">
+                                                                        <option value="Adesão" <?= $row->status == 'Adesão' ? 'selected' : '' ?>>Adesão</option>
+                                                                        <option value="Auditoria" <?= $row->status == 'Auditoria' ? 'selected' : '' ?>>Auditoria</option>
+                                                                        <option value="Aprovada" <?= $row->status == 'Aprovada' ? 'selected' : '' ?>>Aprovada</option>
+                                                                        <option value="Pendente" <?= $row->status == 'Pendente' ? 'selected' : '' ?>>Pendente</option>
+                                                                        <option value="TED Devolvida" <?= $row->status == 'TED Devolvida' ? 'selected' : '' ?>>TED Devolvida</option>
+                                                                        <option value="Análise" <?= $row->status == 'Análise' ? 'selected' : '' ?>>Análise</option>
+                                                                        <option value="Cancelada" <?= $row->status == 'Cancelada' ? 'selected' : '' ?>>Cancelada</option>
+                                                                    </select>
+                                                                    <label class="form-label mt-2" for="desc">Resumo</label>
+                                                                    <input id="resumo" name="resumo" type="text" class="form-control" maxlength="27">
+                                                                </div>
+                                                                <div class="flex-grow-1">
+                                                                    <label class="form-label">Observação:</label>
+                                                                    <div class="form-control fs-8" id="pasteArea" contenteditable="true"
+                                                                        style="min-height:120px; width: 300px">
+                                                                    </div>
+                                                                    <input type="hidden" name="conteudo" id="conteudo">
+                                                                </div>
+                                                            </div>
+                                                        <?php endif; ?>
+                                                        <div class="d-flex mt-20 gap-4">
+                                                            <div>
+                                                                <button type="button" class="btn btn-danger d-flex align-items-center gap-2" onclick="confirmarExclusao('<?= $row->idquid_propostas ?>')">
+                                                                    <i class="bi bi-trash fs-5 text-white"></i>
+                                                                    <span class="text-white fw-semibold">Excluir Proposta</span>
+                                                                </button>
+                                                            </div>
+                                                            <div>
+                                                                <button type="submit" id="saveChanges" class="btn btn-primary">Salvar Alterações</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                <?php endif; ?>
+                                            </div>
                             </form>
+                            <?php if ($my_security->checkPermission("ADMIN") || $my_security->checkPermission("FORMALIZACAO")): ?>
+                                <div class="p-8 border-top">
+                                    <form enctype="multipart/form-data" method="post" action="<?php echo assetfolder ?>insight-anexar-arquivo/<?= $row->idquid_propostas ?>">
+                                        <div class="d-flex gap-2">
+                                            <div class="d-flex gap-2 flex-column">
+                                                <span class="text-gray-800">Anexar arquivo:</span>
+                                                <input name="arquivo" style="width: auto;" type="file" class="form-control form-control-solid">
+                                            </div>
+                                            <div class="mt-8">
+                                                <button type="submit" class="btn btn-secondary">Enviar</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>
@@ -343,6 +396,7 @@ $movimentation = match ($row->status) {
         </div>
     </div>
 </div>
+
 
 <script>
     const pasteArea = document.getElementById('pasteArea');

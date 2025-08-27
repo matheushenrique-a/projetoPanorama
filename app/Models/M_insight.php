@@ -293,4 +293,12 @@ class M_insight extends Model
     public function exportarDbCsv() {
         return $this->dbMasterDefault->exportCSV('quid_propostas');
     }
+
+    public function anexarArquivoProposta($data){
+        return $this->dbMasterDefault->insert('arquivos', $data);
+    }
+
+    public function buscarArquivoAnexado($idProposta){
+        return $this->dbMasterDefault->select('arquivos', ['id_proposta' => $idProposta]);
+    }
 }
