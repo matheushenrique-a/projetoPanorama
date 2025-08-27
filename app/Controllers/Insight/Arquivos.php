@@ -10,11 +10,6 @@ class Arquivos extends \App\Controllers\BaseController
     protected $m_insight;
     protected $dbMasterDefault;
 
-    public function index()
-    {
-        $dados['pageTitle'] = '';
-    }
-
     public function uploadPropostas()
     {
         $dados['pageTitle'] = 'Upload de Propostas';

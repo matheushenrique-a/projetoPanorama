@@ -76,7 +76,8 @@ $routes->match(['get', 'post'], '/whatsapp-criar-templates/(:any)/(:any)', 'Meta
 $routes->match(['get', 'post'], '/insight-listar-notificacoes', 'Insight\Insight::insight_listar_notificacoes');
 $routes->match(['get', 'post'], '/insight-listar-propostas/(:any)/(:any)', 'Insight\Insight::insight_listar_propostas/$1/$2');
 $routes->match(['get', 'post'], '/insight-proposta/(:any)', 'Insight\Insight::insight_proposta/$1');
-$routes->match(['get', 'post'], '/insight-upload', 'Insight\Arquivos::upload');
+$routes->match(['get', 'post'], '/insight-upload', 'Insight\Arquivos::uploadPropostas');
+$routes->match(['get', 'post'], '/insight-upload/envio', 'Insight\Insight::insight_upload');
 $routes->match(['get', 'post'], '/clientes', 'Insight\Clientes::index');
 $routes->match(['get', 'post'], '/clientes/upload/(:any)', 'Insight\Clientes::upload/$1');
 $routes->match(['get', 'post'], '/clientes/pesquisa', 'Insight\Clientes::pesquisa');

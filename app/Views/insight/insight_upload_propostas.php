@@ -26,7 +26,7 @@
                     <h2 class="fs-2 fw-semibold text-center p-5">Upload de Arquivo</h2>
                 </div>
                 <div class="d-flex gap-4">
-                    <form action="<?php echo assetfolder; ?>insight-upload" method="post" enctype="multipart/form-data">
+                    <form action="<?php echo assetfolder; ?>insight-upload/envio" method="post" enctype="multipart/form-data">
                         <div class=" d-flex justify-content-between gap-4 align-items-center mt-5">
                             <div class="input-group ms-4">
                                 <input type="file" class="form-control" name="arquivo" accept=".csv,.xls,.xlsx" required />

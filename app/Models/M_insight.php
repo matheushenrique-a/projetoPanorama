@@ -182,11 +182,11 @@ class M_insight extends Model
 
         if ($inseridos > 0) {
             return redirect()
-                ->to(urlInstitucional . 'insight-listar-propostas/0/upload')
+                ->to(urlInstitucional . 'insight-upload')
                 ->with('success', "$inseridos registros importados com sucesso!");
         } else {
             return redirect()
-                ->to(urlInstitucional . 'insight-listar-propostas/0/upload')
+                ->to(urlInstitucional . 'insight-upload')
                 ->with('error', 'Nenhum novo registro foi importado.');
         }
     }
