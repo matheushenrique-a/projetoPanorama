@@ -177,6 +177,48 @@ $movimentation = match ($row->status) {
                                                 </div>
                                             </div>
                                         </div>
+                                        <?php if ($my_security->checkPermission("SUPERVISOR") || $my_security->checkPermission("FORMALIZACAO")): ?>
+
+                                            <div class=" modal-footer d-flex gap-4 justify-content-between px-6 pb-4 mt-6">
+
+                                                <?php if ($my_security->checkPermission("ADMIN") || $my_security->checkPermission("FORMALIZACAO")): ?>
+                                                    <div class="d-flex gap-4">
+                                                        <div style="width: 200px;">
+                                                            <label for="status_<?= $row->idquid_propostas ?>" class="form-label">Alterar Status</label>
+                                                            <select class="form-select" id="status_<?= $row->idquid_propostas ?>" name="status">
+                                                                <option value="Adesão" <?= $row->status == 'Adesão' ? 'selected' : '' ?>>Adesão</option>
+                                                                <option value="Auditoria" <?= $row->status == 'Auditoria' ? 'selected' : '' ?>>Auditoria</option>
+                                                                <option value="Aprovada" <?= $row->status == 'Aprovada' ? 'selected' : '' ?>>Aprovada</option>
+                                                                <option value="Pendente" <?= $row->status == 'Pendente' ? 'selected' : '' ?>>Pendente</option>
+                                                                <option value="TED Devolvida" <?= $row->status == 'TED Devolvida' ? 'selected' : '' ?>>TED Devolvida</option>
+                                                                <option value="Análise" <?= $row->status == 'Análise' ? 'selected' : '' ?>>Análise</option>
+                                                                <option value="Cancelada" <?= $row->status == 'Cancelada' ? 'selected' : '' ?>>Cancelada</option>
+                                                            </select>
+                                                            <label class="form-label mt-2" for="desc">Resumo</label>
+                                                            <input id="resumo" name="resumo" type="text" class="form-control" maxlength="27">
+                                                        </div>
+                                                        <div class="flex-grow-1">
+                                                            <label class="form-label">Observação:</label>
+                                                            <div class="form-control fs-8" id="pasteArea" contenteditable="true"
+                                                                style="min-height:120px; width: 300px">
+                                                            </div>
+                                                            <input type="hidden" name="conteudo" id="conteudo">
+                                                        </div>
+                                                    </div>
+                                                <?php endif; ?>
+                                                <div class="d-flex mt-20 gap-4">
+                                                    <div>
+                                                        <button type="button" class="btn btn-danger d-flex align-items-center gap-2" onclick="confirmarExclusao('<?= $row->idquid_propostas ?>')">
+                                                            <i class="bi bi-trash fs-5 text-white"></i>
+                                                            <span class="text-white fw-semibold">Excluir Proposta</span>
+                                                        </button>
+                                                    </div>
+                                                    <div>
+                                                        <button type="submit" id="saveChanges" class="btn btn-primary">Salvar Alterações</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <?php endif; ?>
                                     </div>
                                     <?php if ($row->status == "TED Devolvida"): ?>
                                         <div class="mt-5 alert alert-info">
@@ -216,6 +258,7 @@ $movimentation = match ($row->status) {
                                             </div>
                                         </div>
                                     <?php endif; ?>
+
                                     <div class="tab-pane fade" id="kt_tab_pane_2" role="tabpanel">
 
                                         <div>
@@ -303,79 +346,34 @@ $movimentation = match ($row->status) {
                                         
                                     </div>
                                     <div class=" mb-10 tab-pane fade show" id="kt_tab_pane_3" role="tabpanel">
-                                                                        <div class="mb-10">
-                                                                            <h3 class="text-gray-700"><?= $qtdArquivos ?> Arquivos anexados</h3>
-                                                                            <div class="mt-5 d-flex flex-column gap-4">
-                                                                                <?php foreach ($arquivos as $arquivo): ?>
-                                                                                    <div style="width: 330px;" class="d-flex gap-3 p-2 border rounded align-items-center">
+                                        <div class="mb-10">
+                                            <h3 class="text-gray-700"><?= $qtdArquivos ?> Arquivos anexados</h3>
+                                            <div class="mt-5 d-flex flex-column gap-4">
+                                                <?php foreach ($arquivos as $arquivo): ?>
+                                                    <div style="width: 330px;" class="d-flex gap-3 p-2 border rounded align-items-center">
 
-                                                                                        <a href="<?= assetfolder ?>insight/download/<?= $arquivo->id ?>/<?= $arquivo->id_proposta ?>">
-                                                                                            <i class="bi ms-1 fs-6 px-2 rounded p-1 text-primary bi-download"></i>
-                                                                                        </a>
+                                                        <a href="<?= assetfolder ?>insight/download/<?= $arquivo->id ?>/<?= $arquivo->id_proposta ?>">
+                                                            <i class="bi ms-1 fs-6 px-2 rounded p-1 text-primary bi-download"></i>
+                                                        </a>
 
-                                                                                        <p class="my-auto fw-semibold text-gray-700"><i class="bi bi-file-earmark"></i> <?= esc($arquivo->nome_original) ?></p>
+                                                        <p class="my-auto fw-semibold text-gray-700"><i class="bi bi-file-earmark"></i> <?= esc($arquivo->nome_original) ?></p>
 
-                                                                                        <div class="d-flex gap-3 ms-auto justify-content-end">
-                                                                                            <p class="my-auto text-gray-700"><?= date('d/m/Y', strtotime($arquivo->created_at)) ?></p>
+                                                        <div class="d-flex gap-3 ms-auto justify-content-end">
+                                                            <p class="my-auto text-gray-700"><?= date('d/m/Y', strtotime($arquivo->created_at)) ?></p>
 
-                                                                                            <a href="<?= assetfolder ?>insight/excluir/<?= $arquivo->id ?>/<?= $arquivo->id_proposta ?>">
-                                                                                                <i class="bi text-danger bi-trash me-3"></i>
-                                                                                            </a>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                <?php endforeach; ?>
-                                                                            </div>
-                                                                        </div>
-
-                                                </div>
-
-
-                                                <?php if ($my_security->checkPermission("SUPERVISOR") || $my_security->checkPermission("FORMALIZACAO")): ?>
-
-                                                    <div class=" modal-footer d-flex gap-4 justify-content-between px-6 pb-4 mt-6">
-
-                                                        <?php if ($my_security->checkPermission("ADMIN") || $my_security->checkPermission("FORMALIZACAO")): ?>
-                                                            <div class="d-flex gap-4">
-                                                                <div style="width: 200px;">
-                                                                    <label for="status_<?= $row->idquid_propostas ?>" class="form-label">Alterar Status</label>
-                                                                    <select class="form-select" id="status_<?= $row->idquid_propostas ?>" name="status">
-                                                                        <option value="Adesão" <?= $row->status == 'Adesão' ? 'selected' : '' ?>>Adesão</option>
-                                                                        <option value="Auditoria" <?= $row->status == 'Auditoria' ? 'selected' : '' ?>>Auditoria</option>
-                                                                        <option value="Aprovada" <?= $row->status == 'Aprovada' ? 'selected' : '' ?>>Aprovada</option>
-                                                                        <option value="Pendente" <?= $row->status == 'Pendente' ? 'selected' : '' ?>>Pendente</option>
-                                                                        <option value="TED Devolvida" <?= $row->status == 'TED Devolvida' ? 'selected' : '' ?>>TED Devolvida</option>
-                                                                        <option value="Análise" <?= $row->status == 'Análise' ? 'selected' : '' ?>>Análise</option>
-                                                                        <option value="Cancelada" <?= $row->status == 'Cancelada' ? 'selected' : '' ?>>Cancelada</option>
-                                                                    </select>
-                                                                    <label class="form-label mt-2" for="desc">Resumo</label>
-                                                                    <input id="resumo" name="resumo" type="text" class="form-control" maxlength="27">
-                                                                </div>
-                                                                <div class="flex-grow-1">
-                                                                    <label class="form-label">Observação:</label>
-                                                                    <div class="form-control fs-8" id="pasteArea" contenteditable="true"
-                                                                        style="min-height:120px; width: 300px">
-                                                                    </div>
-                                                                    <input type="hidden" name="conteudo" id="conteudo">
-                                                                </div>
-                                                            </div>
-                                                        <?php endif; ?>
-                                                        <div class="d-flex mt-20 gap-4">
-                                                            <div>
-                                                                <button type="button" class="btn btn-danger d-flex align-items-center gap-2" onclick="confirmarExclusao('<?= $row->idquid_propostas ?>')">
-                                                                    <i class="bi bi-trash fs-5 text-white"></i>
-                                                                    <span class="text-white fw-semibold">Excluir Proposta</span>
-                                                                </button>
-                                                            </div>
-                                                            <div>
-                                                                <button type="submit" id="saveChanges" class="btn btn-primary">Salvar Alterações</button>
-                                                            </div>
+                                                            <a href="<?= assetfolder ?>insight/excluir/<?= $arquivo->id ?>/<?= $arquivo->id_proposta ?>">
+                                                                <i class="bi text-danger bi-trash me-3"></i>
+                                                            </a>
                                                         </div>
                                                     </div>
-                                                <?php endif; ?>
+                                                <?php endforeach; ?>
                                             </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </form>
                             <?php if ($my_security->checkPermission("ADMIN") || $my_security->checkPermission("FORMALIZACAO")): ?>
-                                <div class="p-8 border-top">
+                                <div id="form-upload" class="p-8 border-top d-none">
                                     <form enctype="multipart/form-data" method="post" action="<?php echo assetfolder ?>insight-anexar-arquivo/<?= $row->idquid_propostas ?>">
                                         <div class="d-flex gap-2">
                                             <div class="d-flex gap-2 flex-column">
@@ -434,6 +432,27 @@ $movimentation = match ($row->status) {
         const form = document.getElementById("formEdit");
         const inputs = form.querySelectorAll("input, select, textarea");
         const saveButton = document.getElementById("saveChanges");
+        const formUpload = document.getElementById('form-upload');
+        const tabLinks = document.querySelectorAll('.nav-link[data-bs-toggle="tab"]');
+
+        if (tabLinks) {
+            tabLinks.forEach(link => {
+                link.addEventListener('shown.bs.tab', function(event) {
+                    const target = event.target.getAttribute('href'); // ex: #kt_tab_pane_3
+
+                    if (target === '#kt_tab_pane_3') {
+                        formUpload.classList.remove('d-none');
+                    } else {
+                        formUpload.classList.add('d-none');
+                    }
+                });
+            });
+        }
+
+        const activeTab = document.querySelector('.nav-link.active');
+        if (activeTab && activeTab.getAttribute('href') === '#kt_tab_pane_3') {
+            formUpload.classList.remove('d-none');
+        }
 
         saveButton.style.display = "none";
 
