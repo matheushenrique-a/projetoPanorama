@@ -80,6 +80,15 @@ class dbMaster
 			->getRow();
 	}
 
+	public function buscarInfoMetas()
+	{
+		return $this->db
+			->table('equipes')
+			->select('idequipes, nome, supervisor, meta, meta_mensal, ativo')
+			->get()
+			->getResult();
+	}
+
 	public function selectExact($table, $whereCheck, $parameters = null)
 	{
 		$builder = $this->db->table($table);

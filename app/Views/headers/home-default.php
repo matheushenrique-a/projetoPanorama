@@ -365,7 +365,7 @@
 
 						<?php endif; ?>
 
-						<?php if (!$my_security->checkPermission("GERENTE")): ?>
+						<?php if (!$my_security->checkPermission("GERENTE") && !$my_security->checkPermission("ADMIN")): ?>
 							<?php if ($my_security->checkPermission("SUPERVISOR")): ?>
 								<div class="col-xl-4 w-50 d-flex flex-column gap-10">
 									<div class="card h-xl-45">
@@ -375,16 +375,16 @@
 												<span class="text-gray-400 mt-1 fw-semibold fs-6">Este Mês</span>
 											</h3>
 										</div>
-										<?php if ($session->userId !== "164979"): ?>
-											<div class="p-3 mt-1 justify-content-center border-bottom gap-4 d-flex">
-												<h3 class="mt-3 text-gray-600">Meta individual:</h3>
-												<div class="d-flex gap-2 rounded shadow-sm">
-													<input id="metaInput" readonly value="<?= $metaManualSupervisor ?>" style="width: 150px;" class="form-control fw-bold fs-5 text-success"></input>
-													<i id="metaEdit" class="cursor-pointer bi mt-4 bi-pencil-square fs-3"></i>
-													<a id="metaLink" href="<?php echo assetfolder ?>atualizar-meta/<?php echo $session->userId ?>/" class="d-none mt-3"><i class="bi text-primary bi-check fs-1"></i></a>
-												</div>
+
+										<div class="p-3 mt-1 justify-content-center border-bottom gap-4 d-flex">
+											<h3 class="mt-3 text-gray-600">Meta individual:</h3>
+											<div class="d-flex gap-2 rounded shadow-sm">
+												<input id="metaInput" readonly value="<?= $meta ?>" style="width: 150px;" class="form-control fw-bold fs-5 text-success"></input>
+												<i id="metaEdit" class="cursor-pointer bi mt-4 bi-pencil-square fs-3"></i>
+												<a id="metaLink" href="<?php echo assetfolder ?>atualizar-meta/<?php echo $session->userId ?>/" class="d-none mt-3"><i class="bi text-primary bi-check fs-1"></i></a>
 											</div>
-										<?php endif; ?>
+										</div>
+
 										<div class="d-flex justify-content-center gap-6 flex-wrap mt-10">
 
 											<!-- Progresso -->
@@ -399,7 +399,7 @@
 											<div class="d-flex flex-column align-items-center text-center">
 												<h2 class="fs-5 text-muted mb-2">Meta <i class="bi bi-flag"></i></h2>
 												<div class="bg-light rounded px-5 py-4 w-100 shadow-sm text-center" style="max-width: 200px;">
-													<span class="fw-bold fs-5 text-success">R$ <?= number_format($meta, 2, ',', '.') ?></span>
+													<span class="fw-bold fs-5 text-success">R$ <?= number_format($metaMensal, 2, ',', '.') ?></span>
 												</div>
 											</div>
 										</div>
@@ -435,7 +435,7 @@
 							<?php endif; ?>
 						<?php endif; ?>
 
-						<?php if ($my_security->checkPermission("GERENTE")): ?>
+						<?php if ($my_security->checkPermission("GERENTE") || $my_security->checkPermission("ADMIN")): ?>
 							<div class="col-xl-4 w-50 d-flex flex-column gap-10">
 								<div class="card h-xl-100">
 									<div class="card-header pt-6 pb-2 d-flex flex-column">
@@ -444,101 +444,56 @@
 											<span class="text-gray-400 mt-1 fw-semibold fs-6">Este Mês</span>
 										</h3>
 									</div>
-									<div class="d-flex justify-content-center gap-10 flex-wrap mt-10 mb-8">
-										<div class="bg-light rounded shadow-sm px-10 py-4 w-75">
-											<h2 class="text-gray-700 text-center mt-2">Time Jéssica</h2>
-											<div class="d-flex flex-column align-items-center mt-8 w-100">
-												<div class="d-flex justify-content-center gap-6 flex-wrap ">
-													<div>
-														<div class="bg-light px-5 mb-5">
-															<div class="d-flex align-items-center gap-10 text-center">
+									<?php foreach ($equipesGerente as $equipes): ?>
+										<div class="d-flex justify-content-center gap-10 flex-wrap mt-2 border-bottom pb-4">
+											<div class="rounded px-50 py-5 w-75">
+												<h2 class="text-gray-800 text-center"><?= $equipes->nome ?></h2>
+												<div class="d-flex flex-column align-items-center mt-2 w-100">
+													<div class="p-3 justify-content-center gap-4 d-flex">
+														<h3 class="mt-3 text-gray-600">Meta individual:</h3>
+														<div class="d-flex mb-4 gap-2 rounded shadow-sm">
+															<input
+																readonly
+																value="<?= $equipes->meta ?>"
+																style="width: 150px;"
+																class="form-control fw-bold fs-5 text-success metaInput">
+
+															<i class="cursor-pointer bi mt-4 bi-pencil-square fs-3 metaEdit"></i>
+
+															<a href="<?php echo assetfolder ?>atualizar-meta/<?php echo $equipes->supervisor ?>/"
+																class="d-none mt-3 metaLink">
+																<i class="bi text-primary bi-check fs-1"></i>
+															</a>
+														</div>
+													</div>
+													<div class="d-flex justify-content-center gap-6 flex-wrap ">
+														<div class="px-5 mb-3">
+															<div class="d-flex align-items-center gap-15 text-center">
 																<div>
 																	<h2 class="fs-5 text-muted mb-2">Progresso <i class="bi bi-arrow-up-right"></i></h2>
-																	<span class="fw-bold fs-5 text-success"><?= $progressoJessica ?>%</span>
+																	<span class="fw-bold fs-5 text-success"><?= $equipes->progresso ?>%</span>
 																</div>
 																<div>
 																	<h2 class="fs-5 text-muted mb-2">Meta <i class="bi bi-flag"></i></h2>
-																	<span class="fw-bold fs-5 text-success">R$ <?= number_format($metaJessica, 2, ',', '.') ?></span>
+																	<span class="fw-bold fs-5 text-success">R$ <?= number_format($equipes->metaMensal, 2, ',', '.') ?></span>
 																</div>
 															</div>
 														</div>
 													</div>
-												</div>
-												<div class="bg-light text-gray-800 rounded px-5 py-3 fs-1 fw-bold d-flex flex-column align-items-center shadow-sm w-100" style="max-width: 400px;">
-													<h2 class="fs-4 mt-3 text-muted">Total Mensal</h2>
-													R$ <?= number_format($totalJessica, 2, ',', '.') ?>
-													<div class="progress mt-4 w-100" style="height: 16px;">
-														<div class="progress-bar bg-success" role="progressbar"
-															style="width: <?= $progressoJessica ?>%;"
-															aria-valuenow="<?= $progressoJessica ?>" aria-valuemin="0" aria-valuemax="100">
+													<div class="bg-light mt-2 text-gray-800 rounded px-5 py-3 fs-1 fw-bold d-flex flex-column align-items-center shadow-sm w-100" style="max-width: 400px;">
+														<h2 class="fs-4 mt-3 text-muted">Total Mensal</h2>
+														R$ <?= number_format($equipes->totalMensal, 2, ',', '.') ?>
+														<div class="progress mt-4 w-100" style="height: 16px;">
+															<div class="progress-bar bg-success" role="progressbar"
+																style="width: <?= $equipes->progresso ?>%;"
+																aria-valuenow="<?= $equipes->progresso ?>" aria-valuemin="0" aria-valuemax="100">
+															</div>
 														</div>
 													</div>
 												</div>
 											</div>
 										</div>
-										<div class="bg-light rounded shadow-sm px-10 py-4 w-75">
-											<h2 class="text-gray-700 text-center mt-2">Time Paula</h2>
-											<div class="d-flex flex-column align-items-center mt-8 w-100">
-												<div class="d-flex justify-content-center gap-6 flex-wrap ">
-													<div>
-														<div class="bg-light px-5 mb-5">
-															<div class="d-flex align-items-center gap-10 text-center">
-																<div>
-																	<h2 class="fs-5 text-muted mb-2">Progresso <i class="bi bi-arrow-up-right"></i></h2>
-																	<span class="fw-bold fs-5 text-success"><?= $progressoPaula ?>%</span>
-																</div>
-																<div>
-																	<h2 class="fs-5 text-muted mb-2">Meta <i class="bi bi-flag"></i></h2>
-																	<span class="fw-bold fs-5 text-success">R$ <?= number_format($metaPaula, 2, ',', '.') ?></span>
-																</div>
-															</div>
-														</div>
-													</div>
-												</div>
-												<div class="bg-light text-gray-800 rounded px-5 py-3 fs-1 fw-bold d-flex flex-column align-items-center shadow-sm w-100" style="max-width: 400px;">
-													<h2 class="fs-4 mt-3 text-muted">Total Mensal</h2>
-													R$ <?= number_format($totalPaula, 2, ',', '.') ?>
-													<div class="progress mt-4 w-100" style="height: 16px;">
-														<div class="progress-bar bg-success" role="progressbar"
-															style="width: <?= $progressoPaula ?>%;"
-															aria-valuenow="<?= $progressoPaula ?>" aria-valuemin="0" aria-valuemax="100">
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div class="bg-light rounded shadow-sm px-10 py-4 w-75">
-											<h2 class="text-gray-700 text-center mt-2">Time Ana Karla</h2>
-											<div class="d-flex flex-column align-items-center mt-8 w-100">
-												<div class="d-flex justify-content-center gap-6 flex-wrap ">
-													<div>
-														<div class="bg-light px-5 mb-5">
-															<div class="d-flex align-items-center gap-10 text-center">
-																<div>
-																	<h2 class="fs-5 text-muted mb-2">Progresso <i class="bi bi-arrow-up-right"></i></h2>
-																	<span class="fw-bold fs-5 text-success"><?= $progressoAnaKarla ?>%</span>
-																</div>
-																<div>
-																	<h2 class="fs-5 text-muted mb-2">Meta <i class="bi bi-flag"></i></h2>
-																	<span class="fw-bold fs-5 text-success">R$ <?= number_format($metaAnaKarla, 2, ',', '.') ?></span>
-																</div>
-															</div>
-														</div>
-													</div>
-												</div>
-												<div class="bg-light text-gray-800 rounded px-5 py-3 fs-1 fw-bold d-flex flex-column align-items-center shadow-sm w-100" style="max-width: 400px;">
-													<h2 class="fs-4 mt-3 text-muted">Total Mensal</h2>
-													R$ <?= number_format($totalAnaKarla, 2, ',', '.') ?>
-													<div class="progress mt-4 w-100" style="height: 16px;">
-														<div class="progress-bar bg-success" role="progressbar"
-															style="width: <?= $progressoAnaKarla ?>%;"
-															aria-valuenow="<?= $progressoAnaKarla ?>" aria-valuemin="0" aria-valuemax="100">
-														</div>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
+									<?php endforeach; ?>
 								</div>
 							</div>
 						<?php endif; ?>
@@ -755,4 +710,52 @@
 			metaInput.value = formatBRLfromDatabase(metaInput.value);
 		}
 	}
+
+	document.querySelectorAll(".metaEdit").forEach((editBtn) => {
+		const input = editBtn.closest(".d-flex").querySelector(".metaInput");
+		const link = editBtn.closest(".d-flex").querySelector(".metaLink");
+
+		// clicar no lápis -> habilita só este input
+		editBtn.addEventListener("click", () => {
+			input.removeAttribute("readonly");
+			input.value = "";
+			link.classList.remove("d-none");
+			input.focus();
+		});
+
+		// clicar no check -> pega valor do input correspondente e monta URL
+		link.addEventListener("click", (e) => {
+			e.preventDefault(); // evita navegar imediatamente
+
+			let valor = input.value.trim();
+
+			// remove máscara R$ e pontos, troca vírgula por ponto
+			valor = valor.replace("R$", "").replace(/\./g, "").replace(",", ".");
+
+			// converte para float
+			let floatVal = parseFloat(valor).toFixed(2);
+
+			// monta href usando o supervisor do link
+			const supervisorId = link.getAttribute("href").split("/").slice(-2, -1)[0];
+			link.href = `<?php echo assetfolder ?>atualizar-meta/${supervisorId}/${floatVal}`;
+
+			// agora pode navegar
+			window.location.href = link.href;
+		});
+
+		// aplica máscara enquanto digita
+		input.addEventListener("input", (e) => {
+			let valor = e.target.value.replace(/\D/g, "");
+			if (valor === "") {
+				e.target.value = "";
+				return;
+			}
+			e.target.value = formatBRL(valor);
+		});
+
+		// formata valor inicial vindo do banco
+		if (input.value.trim() !== "") {
+			input.value = formatBRLfromDatabase(input.value);
+		}
+	});
 </script>

@@ -702,10 +702,20 @@ class Insight extends BaseController
         return $this->loadPage('insight/insight_proposta', $dados);
     }
 
-    public function atualizarMetas($idSupervisor, $valor)
+    public function atualizarMetas($idSupervisor, $valor = 1)
     {
+
+        $quantidadeEquipe = $this->m_insight->quantidadeEquipe($idSupervisor)['countAll'];
+
+        if ($quantidadeEquipe < 0) {
+            $metaMensal = 1;
+        } else {
+            $metaMensal = (float) $valor * $quantidadeEquipe;
+        }
+
         $fieldUpdate = [
-            "meta" => $valor
+            "meta" => $valor,
+            "meta_mensal" => $metaMensal
         ];
 
         $whereArrayUpdt = [

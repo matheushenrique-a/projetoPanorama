@@ -290,15 +290,23 @@ class M_insight extends Model
         return $this->dbMasterDefault->select('equipes', ['supervisor' => $supervisor]);
     }
 
-    public function exportarDbCsv() {
+    public function exportarDbCsv()
+    {
         return $this->dbMasterDefault->exportCSV('quid_propostas');
     }
 
-    public function anexarArquivoProposta($data){
+    public function anexarArquivoProposta($data)
+    {
         return $this->dbMasterDefault->insert('arquivos', $data);
     }
 
-    public function buscarArquivoAnexado($idProposta){
+    public function buscarArquivoAnexado($idProposta)
+    {
         return $this->dbMasterDefault->select('arquivos', ['id_proposta' => $idProposta]);
+    }
+
+    public function quantidadeEquipe($idSupervisor)
+    {
+        return $this->dbMasterDefault->select('user_account', ['report_to' => $idSupervisor]);
     }
 }

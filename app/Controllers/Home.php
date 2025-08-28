@@ -78,66 +78,55 @@ class Home extends BaseController
         $dados['labels'] = $labels;
         $dados['dados'] = $valores;
 
-        if ($this->session->role == "SUPERVISOR" || $this->session->role == "AUDITOR") {
-            $usuarioSupervisor = $this->session->userId;
+        if ($this->session->role == "SUPERVISOR") {
             $totalMensal = $this->m_bmg->totalMensal();
 
-            if ($usuarioSupervisor == "165004") { //paula
-                $meta = 230000;
-            } else if ($usuarioSupervisor == "165006") { //jessica
-                $meta = 200000;
-            } else if ($usuarioSupervisor == "165005") { //ana karla
-                $meta = 200000;
-            } else {
-                $meta = 50000;
-            }
+            $buscarMeta = $this->m_insight->buscarMetaIndividual()['firstRow'] ?? "";
+            $meta = $buscarMeta->meta ?? 0;
+            $metaMensal = $buscarMeta->meta_mensal ?? 0;
 
             $dados['meta'] = $meta;
+            $dados['metaMensal'] = $metaMensal;
             $dados['totalMensal'] = $totalMensal;
 
-            $progresso = ($totalMensal / $meta) * 100;
-            $progresso = round($progresso, 2);
 
-            $dados['progressoSupervisor'] = $progresso;
-
-            $dados['metaManualSupervisor'] = $this->m_insight->buscarMetaIndividual()['firstRow']->meta ?? "";
+            if ($meta !== 0) {
+                $progresso = ($totalMensal / $metaMensal) * 100;
+                $progresso = round($progresso, 2);
+                $dados['progressoSupervisor'] = $progresso;
+            } else {
+                $dados['progressoSupervisor'] = 0;
+            }
         }
 
 
-        // USUARIO JESSICA
-        if ($this->session->userId == "165058") {
-            $metaJessica = 588000;
-            $metaPaula = 462000;
-            $metaAnaKarla = 630000;
+        if ($this->my_security->checkPermission("GERENTE") || $this->my_security->checkPermission("ADMIN")) {
+            $buscarInfoMetas = $this->dbMasterDefault->buscarInfoMetas();
 
-            $dados['metaJessica'] = $metaJessica;
-            $dados['metaPaula'] = $metaPaula;
-            $dados['metaAnaKarla'] = $metaAnaKarla;
+            $equipes = [];
 
-            $totalJessica = $this->m_bmg->totalMensal('165006');
-            $totalPaula = $this->m_bmg->totalMensal('165004');
-            $totalAnaKarla = $this->m_bmg->totalMensal('165005');
+            foreach ($buscarInfoMetas as $individual) {
+                $obj = new \stdClass();
 
-            $dados['totalJessica'] = $totalJessica;
-            $dados['totalPaula'] = $totalPaula;
-            $dados['totalAnaKarla'] = $totalAnaKarla;
+                $idSupervisor = $individual->supervisor;
+                $meta = $individual->meta;
+                $metaMensal = $individual->meta_mensal;
+                $totalMensal = $this->m_bmg->totalMensal($idSupervisor);
 
-            $dados['totalMensalGerente'] = $this->m_bmg->totalMensalGerente();
+                $progresso = ($totalMensal / $metaMensal) * 100;
+                $progresso = round($progresso, 2);
 
-            $progressoPaula = ($totalPaula / $metaPaula) * 100;
-            $progressoPaula = round($progressoPaula, 2);
+                $obj->nome = $individual->nome;
+                $obj->supervisor = $idSupervisor;
+                $obj->meta = $meta;
+                $obj->metaMensal = $metaMensal;
+                $obj->totalMensal = $totalMensal;
+                $obj->progresso = $progresso;
 
-            $dados['progressoPaula'] = $progressoPaula;
+                $equipes[] = $obj;
+            }
 
-            $progressoJessica = ($totalJessica / $metaJessica) * 100;
-            $progressoJessica = round($progressoJessica, 2);
-
-            $dados['progressoJessica'] = $progressoJessica;
-
-            $progressoAnaKarla = ($totalAnaKarla / $metaAnaKarla) * 100;
-            $progressoAnaKarla = round($progressoAnaKarla, 2);
-
-            $dados['progressoAnaKarla'] = $progressoAnaKarla;
+            $dados['equipesGerente'] = $equipes;
         }
 
         $dados['labelsEquipe'] = $labelsEquipe;
