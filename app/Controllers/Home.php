@@ -89,6 +89,7 @@ class Home extends BaseController
             $dados['metaMensal'] = $metaMensal;
             $dados['totalMensal'] = $totalMensal;
 
+            $dados['quantidadeAssessoresIndividual'] = $this->m_insight->quantidadeEquipe($this->session->userId)['countAll'];
 
             if ($meta !== 0) {
                 $progresso = ($totalMensal / $metaMensal) * 100;
@@ -112,6 +113,7 @@ class Home extends BaseController
                 $meta = $individual->meta;
                 $metaMensal = $individual->meta_mensal;
                 $totalMensal = $this->m_bmg->totalMensal($idSupervisor);
+                $quantidadeAssessor = $this->m_insight->quantidadeEquipe($idSupervisor)['countAll'];
 
                 $progresso = ($totalMensal / $metaMensal) * 100;
                 $progresso = round($progresso, 2);
@@ -122,6 +124,7 @@ class Home extends BaseController
                 $obj->metaMensal = $metaMensal;
                 $obj->totalMensal = $totalMensal;
                 $obj->progresso = $progresso;
+                $obj->quantidadeAssessor = $quantidadeAssessor;
 
                 $equipes[] = $obj;
             }
