@@ -33,8 +33,9 @@ class Perfil extends \App\Controllers\BaseController
             $dados['cargo'] = "Gerente";
         }
 
-        $dados['vendas'] = $this->m_bmg->barraProgressoAssessor();
-
+        if ($this->session->role == "OPERADOR") {
+            $dados['vendas'] = $this->m_bmg->barraProgressoAssessor();
+        }
 
         return $this->loadPage('seguranca/perfil', $dados);
     }

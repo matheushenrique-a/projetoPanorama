@@ -40,7 +40,7 @@
                                     <div class="card-title">
                                         <div class="mb-0 mx-3">
                                             <div class="d-flex align-items-center position-relative my-1 mt-0 mb-0">
-                                                <a href="<?php echo assetfolder; ?>clientes/upload/0" class="mt-4 ms-3 btn btn-info"><i class="bi bi-file-earmark-arrow-up"></i></a>
+                                                <a href="<?php echo assetfolder; ?>clientes/upload/0" class="mt-4"><i class="bi fs-2 text-gray-800 bi-file-earmark-arrow-up"></i></a>
                                             </div>
                                         </div>
                                     </div>
