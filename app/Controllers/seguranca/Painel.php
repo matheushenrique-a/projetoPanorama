@@ -21,14 +21,17 @@ class Painel extends BaseController
             $nickname = $this->getpost('content', false);
             $role = $this->getpost('role', false);
             $quantidade = $this->getpost('quantidade', false);
+            $report_to = $this->getpost('report_to', false);
 
             Services::response()->setCookie('nickname', $nickname);
             Services::response()->setCookie('role', $role);
             Services::response()->setCookie('quantidade', $quantidade);
+            Services::response()->setCookie('report_to', $report_to);
         } else {
             $nickname = $this->getpost('nickname', true);
             $role = $this->getpost('role', true);
             $quantidade = $this->getpost('quantidade', true);
+            $report_to = $this->getpost('report_to', true);
         }
 
         $whereCheck = [];
@@ -42,6 +45,7 @@ class Painel extends BaseController
 
         if (!empty($role)) $whereCheck['role'] = $role;
         if (!empty($nickname)) $likeCheck['nickname'] = $nickname;
+        if (!empty($report_to)) $likeCheck['report_to'] = $report_to;
 
         $parametros = [];
         if (!empty($likeCheck)) $parametros['likeCheck'] = $likeCheck;
@@ -50,13 +54,15 @@ class Painel extends BaseController
         $this->dbMaster->setOrderBy(['userId', 'DESC']);
 
         $usuarios = $this->dbMaster->select('user_account', $whereCheck, $parametros);
+        $countUsers = $usuarios['countAll'];
 
         $dados = [
             'pageTitle' => 'Painel de Usuários',
             'usuarios' => $usuarios['result']->getResult(),
             'nickname' => $nickname,
             'role' => $role,
-            'quantidade' => $quantidade
+            'quantidade' => $quantidade,
+            'countUsers' => $countUsers
         ];
 
         return $this->loadpage('seguranca/painel', $dados);

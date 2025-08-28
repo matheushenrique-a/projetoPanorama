@@ -63,6 +63,22 @@
 										</div>
 									</div>
 								</div>
+								<div class="card-title">
+									<div class="d-flex align-items-center position-relative my-1">
+										<div class="mb-3  mx-3">
+											<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Supervisor:</label>
+											<div class="d-flex align-items-center position-relative my-1">
+												<select class="form-select form-control-solid" aria-label="" name="report_to">
+													<option value="">TODOS</option>
+													<option value="165006" <?= ($report_to ?? '') === '165006' ? 'selected' : '' ?>>Jéssica Laís</option>
+													<option value="165005" <?= ($report_to ?? '') === '165005' ? 'selected' : '' ?>>Ana Karla</option>
+													<option value="165001" <?= ($report_to ?? '') === '165001' ? 'selected' : '' ?>>Anna Paula</option>
+													<option value="164979" <?= ($report_to ?? '') === '164979' ? 'selected' : '' ?>>Amanda</option>
+												</select>
+											</div>
+										</div>
+									</div>
+								</div>
 							<?php endif; ?>
 							<div class="card-title">
 								<div class="d-flex align-items-center position-relative my-1">
@@ -74,7 +90,12 @@
 									</div>
 								</div>
 							</div>
-						</div>
+							<div class="card-title">
+								<div class="d-flex bg-gray-200 justify-content-center rounded gap-2 position-relative mt-4 px-4 mb-0">
+									<p class="mt-4 text-gray-900 fs-4"><?= $countUsers ?></p>
+									<p class="mt-5 fs-6 text-gray-700">Usuários</p>
+								</div>
+							</div>
 					</form>
 					<div class="card-body p-10 table-responsive">
 						<script>
