@@ -7,10 +7,7 @@ use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use App\Libraries\dbMaster;
-use App\Models\M_telegram;
-use App\Models\M_twilio;
 use Config\Services;
-use App\Models\M_integraall;
 use App\Models\M_argus;
 use App\Models\M_insight;
 use App\Models\M_seguranca;
@@ -37,9 +34,6 @@ class Insight extends BaseController
         //o dbMasterDefault vai apontar para o banco do InsightSuite
         $this->dbMasterDefault = new dbMaster();
         $this->session = session();
-        $this->telegram =  new M_telegram();
-        $this->twilio =  new M_twilio();
-        $this->m_integraall =  new M_integraall();
         $this->m_argus =  new M_argus();
         $this->m_security = new M_seguranca();
         $this->m_insight = new M_insight();

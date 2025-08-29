@@ -7,10 +7,7 @@ use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use App\Libraries\dbMaster;
-use App\Models\M_telegram;
-use App\Models\M_twilio;
 use Config\Services;
-use App\Models\M_integraall;
 use App\Models\M_argus;
 use App\Models\M_seguranca;
 use App\Models\M_insight;
@@ -38,21 +35,12 @@ class Bmg extends BaseController
         //o dbMasterDefault vai apontar para o banco do InsightSuite
         $this->dbMasterDefault = new dbMaster();
         $this->session = session();
-        $this->telegram =  new M_telegram();
-        $this->twilio =  new M_twilio();
-        $this->m_integraall =  new M_integraall();
         $this->m_argus =  new M_argus();
         $this->m_security = new M_seguranca();
         $this->m_insight = new M_insight();
         $this->m_bmg = new M_bmg();
     }
 
-
-
-
-
-    //http://localhost/InsightSuite/public/bmg-gravar-proposta
-    //https://insightsuite.pravoce.io/bmg-gravar-proposta
     public function bmg_gravar_proposta()
     {
         $request = file_get_contents('php://input');
@@ -63,45 +51,6 @@ class Bmg extends BaseController
         $response = json_decode($request, true);
 
         $returnData = [];
-
-        //DEBUG ONLY
-        // $response = [
-        //     'plano' => '123',
-        //     'codigoTipoPagamento' => '2',
-        //     'conta' => '456789',
-
-        //     // Dados do cliente
-        //     'cidadeNascimento' => 'São Paulo',
-        //     'cpf' => '12345678900',
-        //     'dataNascimento' => '10/05/1980',
-        //     'nome' => 'João da Silva',
-        //     'mae' => 'Maria da Silva',
-        //     'sexo' => '1', // 1 = Masculino
-        //     'ufNascimento' => 'SP',
-        //     'estadoCivil' => 'C', // C = Casado
-        //     'nacionalidade' => 'Brasileira',
-        //     'telefone' => '11987654321',
-
-        //     // Endereço
-        //     'bairro' => 'Centro',
-        //     'cep' => '01001-000',
-        //     'cidade' => 'São Paulo',
-        //     'logradouro' => 'Rua Exemplo',
-        //     'uf' => 'SP',
-
-        //     // Identidade
-        //     'docIdentidade' => '12345678',
-        //     'orgaoEmissor' => 'SSP',
-        //     'ufRg' => 'SP',
-        //     'dataEmissaoRg' => '01/01/2015',
-
-        //     // Outros dados
-        //     'plano' => '110', // Exemplo de plano
-        //     'produto' => BMG_CODIGO_PRODUTO_MED, // Exemplo de produto
-        //     'codigoTipoPagamento' => '2', // Exemplo de código de tipo de pagamento
-        //     'conta' => '123456789', // Exemplo de conta
-
-        // ];
 
         $params = [
             'codigoPlano'  => $response['plano'],
@@ -174,51 +123,9 @@ class Bmg extends BaseController
         $returnData["proposta"] = "";
         $returnData["mensagem"] = "";
 
-        // sleep(1);
-        // $returnData["mensagem"] = "[EM CONSTRUÇÃO]<br>Proposta Gravada com Sucesso PANORAMA!<br>Número Contrato: 00000";
-        // echo json_encode($returnData);
-        // return $returnData; exit;
-
         $request = file_get_contents('php://input');
 
-        //$request = '{"produto":"MED","cpf":"90216296072","conta":"123444","plano":"110","codigoTipoPagamento":"2","nome":"MATHEUS ","estadoCivil":"S","sexo":"1","mae":"SEBATIANA ROCHA DUARTE","pai":"","nacionalidade":"","tipoDocumento":"","rg":"","cidadeNascimento":"","dataNascimento":"27/06/1957","ufNascimento":"","dataEmissaoRg":"","orgaoEmissor":"","ufRg":"","email":"","logradouro":"","bairro":"","cep":"","cidade":"","uf":"","numero":"","complemento":"","docIdentidade":"","telefone":"(31)99578-1355"}';
         $response = json_decode($request, true);
-        // $cliData = json_encode($response['dados']);
-
-        //$this->telegram->notifyTelegramGroup("DADOS: " . $request, telegramQuid);
-        // exit;
-
-
-        // $data = [
-        //     'CONTRATO' => '123457',
-        //     'STATUS' => 'ADESÃO',
-        //     'NOME_CLIENTE' => 'IVANILDO GIMENES GOMES',
-        //     'ASSESSOR' => 'MATHEUS RYAN PIERRE DE LIMA',
-        //     'CPF' => '90216296072',
-        //     'ESTADO_CIVIL' => 'SOLTEIRO',
-        //     'SEXO' => 'MASCULINO',
-        //     'NOMEMAE' => 'LUCILA MERCEDES GOMES II',
-        //     'EMAIL' => 'nao_tem@teste.com',
-        //     'TELEFONE' => '11960799453',
-        //     'LOGRADOURO' => 'Rua Exemplo',
-        //     'BAIRRO' => 'Centro',
-        //     'CEP' => '01001-000',
-        //     'CIDADE' => 'São Paulo',
-        //     'UF' => 'SP',
-        //     'COMPLEMENTO' => 'Apto 12',
-        //     'ENDNUMERO' => '100',
-        //     'DATANASCIMENTO' => '12/02/1956',
-        //     'MATRICULA' => '10987654321',
-        //     'RG' => '1234567',
-        //     'TABELA' => 'SEGURO BMG MED',
-        //     'DATA_CADASTRO' => '05/05/2025',
-        //     'BANCO' => 'BMG',
-        //     'PRODUTO' => 'INSS',
-        //     'PRAZO' => '1',
-        //     'PARCELA' => '1',
-        //     'EMPRESTIMO' => '1',
-        //     'SEGURO' => '29,9'
-        // ];
 
         $planoName = '';
         $valorPlano = '';
@@ -388,27 +295,6 @@ class Bmg extends BaseController
     //http://localhost/InsightSuite/public/bmg_receptivo
     public function bmg_receptivo($cpf = null)
     {
-
-
-        // $cpf = '10789022320';
-        // $conta = '8658088';
-        // $plano = 111;
-        // $codigoTipoPagamento = 4;
-        // $this->m_bmg->geraScriptVenda($cpf, $conta, $plano, $codigoTipoPagamento);
-        // exit;
-
-        // stdClass Object
-        // (
-        //     [login] => 
-        //     [senha] => 
-        //     [excecaoDeRegraDeNegocio] => 
-        //     [excecaoGenerica] => 
-        //     [executadoComSucessso] => 1
-        //     [mensagemDeErro] => 
-        //     [script] => SCRIPT DE AUDITORIA BMG MED INDIVIDUAL Conforme estávamos falando Senhor(a) JOAO FERREIRA LUCAS , meu nome é _________, sou correspondente bancário/a do banco BMG e vamos concluir sua adesão do seguro. Informo que a ligação está sendo gravada. Por favor, poderia me confirmar se este é seu número de celular: (85)987805621? {Pausa resposta}. (Caso o número do telefone esteja incorreto ou não seja um número de celular, fazer a atualização do cadastro) Positivação  Opção 1 Positivação  Opção 2 Ótimo! Agora me confirme os 3 primeiros (ou os 3 últimos) números do seu CPF? {Pausa para a resposta do cliente} CPF: 107.890.223-20 Excelente! Por último me confirme o mês do seu aniversário ?{Pausa para a resposta do cliente} Data Nascimento: 23/04/1957 Ótimo! Agora me confirme sua data de nascimento (Mês/Ano) {Pausa para a resposta do cliente} Data Nascimento: 23/04/1957 Excelente! Por último me confirme o Nome completo da sua Mãe?(Acatar minimamente o nome e sobrenome, não sendo necessário nome completo){Pausa para a resposta do cliente}. Nome da Mãe: LUCIMAR FERREIRA LUCAS O Seguro Bmg MED INDIVIDUAL que você está contratando te dará cobertura em caso de Morte Acidental no valor de R$ 1.000,00, além disso você ainda terá vários outros benefícios que virão incluídos, como: Obs.: Obrigatório citar ao menos um dos benefícios. Consultas ilimitadas de telemedicina com Clínico Geral. Consultas presenciais e exames de baixo custo, pagos pelo segurado. Remédios genéricos com no mínimo 30% de desconto e de marca com mínimo 15%, em rede de farmácias credenciadas Sorteios no valor de R$ 5.000,00 (cinco mil reais) todo mês pela loteria federal Interação Livre Perguntar se o cliente já teve que pagar por consultas particulares. Perguntar se o cliente já teve gastos com compra de medicamento. Perguntar se o cliente já participou de sorteios ou o que faria se ganhasse em algum sorteio. Orientamos que o cliente fale algumas palavras, (evitar respostas sim ou não) Para usufruir de todas as coberturas e benefícios do seguro, pelo período de 12 meses, o Sr(a) pagará o valor de R$ 21,90, que poderá ser mensal (R$ 21,90 cobrado em cada mês) ou parcelado (12 parcelas de R$ 21,90) de acordo com sua escolha. Os benefícios estarão disponíveis em até 24h após aprovação do pagamento em seu cartão. A renovação do seguro será anual, sendo a primeira realizada de forma automática e as demais serão feitas através da corretora de seguros, mediante o seu consentimento. Caso tenha dúvidas, basta entrar em contato com a Central BMG no telefone 4002-7007 Sr(a) JOAO FERREIRA LUCAS , confirma a contratação do seguro BMG MED INDIVIDUAL nesta data 13/05/2025 no valor de R$ 21,90 por mês, por 12 meses de cobertura, que será lançado na fatura do seu cartão consignado BMG? {Pausa para a resposta do cliente} Informamos que o BMG MED INDIVIDUAL é uma parceria entre a Generali Brasil Seguros S.A e a BMG SEGURADORA, e as condições contratuais do seguro serão enviadas para o Sr(a) por SMS e as informações da corretagem estão disponíveis no site do Banco Bmg. Lembramos que o produto não é um seguro saúde, os serviços de assistência são complementares ao seguro de morte acidental. Agradecemos a confiança, bom dia/tarde/noite.
-        // )
-
-
         $data['pageTitle'] = "BMG - Receptivo Seguros";
 
         $btnSalvar = $this->getpost('btnSalvar');
@@ -475,23 +361,11 @@ class Bmg extends BaseController
         $celularWaId = "";
         $celularWaId = "";
 
-        // $cidadeNascimento = "";
-        // $ufNascimento = "";
-        // $paisNascimento = "";
-        // $email = "";
-        // $tipoDocumento = "";
-        // $numeroDocumento = "";
-        // $dataEmissao = "";
-        // $orgaoEmissor = "";
-        // $ufEmissor = "";
-
         $cpf = numberOnly($cpf);
         if ((empty($cpf)) or ($cpf == "0")) {
             $cpf = numberOnly($this->getpost('cpf'));
         }
 
-
-        //CENÁRIO 01: SALVAR PROPOSTA
         if (!empty($btnSalvar)) {
             $dataProposta = [
                 "nomeCliente" => $nomeCliente,
@@ -666,9 +540,6 @@ class Bmg extends BaseController
             $celularWaId = celularToWaId($ultimaLigacao['firstRow']->celular);
         }
 
-        //$telefone = "31995781355";
-        $data['chat'] = $this->m_insight->getChat(celularToWaId($telefone));
-        $data['journey'] = $this->m_insight->getJourney(celularToWaId($telefone));
 
         $data['nomeCompleto'] = $nomeCompleto;
         $data['celular'] = $celular;

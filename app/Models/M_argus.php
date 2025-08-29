@@ -4,9 +4,7 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 use App\Libraries\dbMaster;
-use App\Models\M_telegram;
 use App\Models\M_http;
-use Symfony\Component\Panther\Client;
 
 class M_argus extends Model
 {
@@ -19,7 +17,6 @@ class M_argus extends Model
     {
         $this->dbMasterDefault = new dbMaster();
         $this->session = session();
-        $this->telegram =  new M_telegram();
         $this->m_http =  new M_http();
     }
 

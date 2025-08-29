@@ -10,19 +10,8 @@ use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use App\Libraries\dbMaster;
 use Config\Services;
-use App\Models\m_telegram;
 use App\Models\M_seguranca;
 
-/**
- * Class BaseController
- *
- * BaseController provides a convenient place for loading components
- * and performing functions that are needed by all your controllers.
- * Extend this class in any new controllers:
- *     class Home extends BaseController
- *
- * For security be sure to declare any new methods as protected or private.
- */
 abstract class BaseController extends Controller
 {
     /**
@@ -44,36 +33,19 @@ abstract class BaseController extends Controller
      * @var array
      */
     protected $helpers = ["hUtil", "hMetronic"];
-
-    /**
-     * Constructor.
-     */
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
     {
-        // $DBConfig = new \Config\Database;
         parent::initController($request, $response, $logger);
 
-        // Preload any models, libraries, etc, here.
         $this->dbMaster = new dbMaster($this->dbProfile); // create an instance of Library class
         $this->dbMaster->runQueryGeneric("SET time_zone='-3:00'");
         $this->my_session = session();
         $this->my_security = new M_seguranca();
     }
 
-    //permite escolher uma configuração de banco diferente no arquivo Confi/Database
     public function setDB($dbProfile)
     {
         $this->dbProfile = $dbProfile;
-        //echo "xx" . $this->dbProfile;exit;
-    }
-
-    public function loadpageads($page, $dados)
-    {
-        $globals = ["my_security" => $this->my_security];
-
-        return view('ads/home-header', $dados + $globals)
-            . view($page, $dados)
-            . view('ads/home-footer', $dados);
     }
 
     public function loadpage($page, $dados)

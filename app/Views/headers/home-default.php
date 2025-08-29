@@ -12,16 +12,6 @@
 						</li>
 					</ul>
 				</div>
-				<?php if ($my_security->checkPermission("ADMIN")): ?>
-					<div class="d-flex align-items-center gap-2 gap-lg-3">
-						<!--begin::Secondary button-->
-						<a href="<?php echo assetfolder; ?>aaspa-zapsms" class="btn btn-sm fw-bold bg-body btn-color-gray-700 btn-active-color-primary">ZapSMS</a>
-						<!--end::Secondary button-->
-						<!--begin::Primary button-->
-						<a href="<?php echo (!isset($session->parameters["google-meeting"])  ? 'http://meet.google.com/' : $session->parameters["google-meeting"]); ?>" target="_blank" class="btn btn-sm fw-bold btn-primary">Google Meeting</a>
-						<!--end::Primary button-->
-					</div>
-				<?php endif; ?>
 			</div>
 		</div>
 
@@ -102,7 +92,7 @@
 											<span class="card-label fw-bold text-dark fs-4">Tarefas</span>
 											<span class="text-muted mt-2 fw-semibold fs-6">Fila de propostas</span>
 										</h3>
-										
+
 										<div class="card-toolbar">
 											<a href="<?php echo assetfolder; ?>" class="btn btn-sm btn-light" title="">Atualizar</a>
 										</div>
@@ -235,9 +225,7 @@
 										<span class="text-gray-500 opacity-75-hover fs-6 fw-semibold">| </span>
 										<a href="<?php echo assetfolder; ?>bmg-saque/0" class="text-primary opacity-75-hover fs-6 fw-semibold">Criar nova proposta</a>
 									</div>
-									<!--end::Body-->
 								</div>
-								<!--end::List widget 11-->
 							</div>
 
 							<div class="w-50">
@@ -331,35 +319,23 @@
 													</table>
 
 												</div>
-												<!--end::Table-->
 											</div>
-											<!--end: Card Body-->
 										</div>
-										<!--end::Tables widget 14-->
 									</div>
 								<?php endif; ?>
-								<!--begin::List widget 11-->
 								<div class="card">
-
 									<div class="card-header pt-5 pb-8">
-										<!--begin::Title-->
 										<h3 class="card-title align-items-start flex-column">
 											<span class="card-label fw-bold text-dark">Suas Averbações por Dia</span>
 											<span class="text-gray-400 mt-1 fw-semibold fs-6">Últimos 10 dias</span>
 										</h3>
-										<!--end::Title-->
 									</div>
-									<!--begin::Header-->
 									<div class="card pt-7 mb-3 pb-3">
-
-										<!--begin::Header-->
 										<div class="mx-5 mt-2">
 											<canvas id="graficoPropostas" width="600" height="400"></canvas>
 										</div>
 									</div>
-
 								</div>
-
 							</div>
 
 							<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -726,7 +702,6 @@
 		const input = editBtn.closest(".d-flex").querySelector(".metaInput");
 		const link = editBtn.closest(".d-flex").querySelector(".metaLink");
 
-		// clicar no lápis -> habilita só este input
 		editBtn.addEventListener("click", () => {
 			input.removeAttribute("readonly");
 			input.value = "";
@@ -734,27 +709,21 @@
 			input.focus();
 		});
 
-		// clicar no check -> pega valor do input correspondente e monta URL
 		link.addEventListener("click", (e) => {
 			e.preventDefault(); // evita navegar imediatamente
 
 			let valor = input.value.trim();
 
-			// remove máscara R$ e pontos, troca vírgula por ponto
 			valor = valor.replace("R$", "").replace(/\./g, "").replace(",", ".");
 
-			// converte para float
 			let floatVal = parseFloat(valor).toFixed(2);
 
-			// monta href usando o supervisor do link
 			const supervisorId = link.getAttribute("href").split("/").slice(-2, -1)[0];
 			link.href = `<?php echo assetfolder ?>atualizar-meta/${supervisorId}/${floatVal}`;
 
-			// agora pode navegar
 			window.location.href = link.href;
 		});
 
-		// aplica máscara enquanto digita
 		input.addEventListener("input", (e) => {
 			let valor = e.target.value.replace(/\D/g, "");
 			if (valor === "") {
@@ -764,7 +733,6 @@
 			e.target.value = formatBRL(valor);
 		});
 
-		// formata valor inicial vindo do banco
 		if (input.value.trim() !== "") {
 			input.value = formatBRLfromDatabase(input.value);
 		}

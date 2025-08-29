@@ -4,22 +4,18 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 use App\Libraries\dbMaster;
-use App\Models\M_telegram;
 use App\Models\M_http;
-use Symfony\Component\Panther\Client;
 
 class M_insight extends Model
 {
     protected $dbMasterDefault;
     protected $session;
-    protected $telegram;
     protected $m_http;
 
     public function __construct()
     {
         $this->dbMasterDefault = new dbMaster();
         $this->session = session();
-        $this->telegram =  new M_telegram();
         $this->m_http =  new M_http();
     }
 
@@ -30,47 +26,6 @@ class M_insight extends Model
         $notificacoes = null;
 
         return $notificacoes;
-    }
-
-    function gerarTimelineNotificacoes($limit = 7)
-    {
-        $html = '<div class="timeline">';
-        $tituloInicial = "";
-        $i = 0;
-
-        $notificacoes = $this->load_notifications($limit);
-    }
-
-    public function getChat($telefoneWaId)
-    {
-        $chat = null;
-        if ((!empty($telefoneWaId)) and (strlen($telefoneWaId) == 13)) {
-            $db =  $this->dbMasterDefault->getDB();
-            $builder = $db->table('whatsapp_log');
-            $builder->Like('whatsapp_log.To', $telefoneWaId); //bug do número 9 no whatsapp
-            $builder->orLike('whatsapp_log.From', $telefoneWaId);
-            $builder->orderBy('id', 'DESC');
-            $builder->select('*');
-            //echo $builder->getCompiledSelect();exit;
-            $chat = $this->dbMasterDefault->resultfy($builder->get());
-        }
-        return $chat;
-    }
-
-    public function getJourney($telefoneWaId)
-    {
-        $journey = null;
-        if ((!empty($telefoneWaId)) and (strlen($telefoneWaId) == 13)) {
-            //JOURNEY
-            $db =  $this->dbMasterDefault->getDB();
-            $builder = $db->table('customer_journey');
-            $builder->Where('verificador', $telefoneWaId);
-            $builder->orderBy('id_interaction', 'DESC');
-            $builder->select('*');
-            //echo $builder->getCompiledSelect();exit;
-            $journey = $this->dbMasterDefault->resultfy($builder->get());
-        }
-        return  $journey;
     }
 
     public function atualizar_propostas()

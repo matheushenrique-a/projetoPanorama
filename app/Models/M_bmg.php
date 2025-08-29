@@ -5,7 +5,6 @@ namespace App\Models;
 use SoapFault;
 use CodeIgniter\Model;
 use App\Libraries\dbMaster;
-use App\Models\M_telegram;
 use App\Models\M_http;
 use App\Models\M_seguranca;
 use App\Models\M_insight;
@@ -16,7 +15,6 @@ class M_bmg extends Model
 {
     protected $dbMasterDefault;
     protected $session;
-    protected $telegram;
     protected $m_http;
     protected $m_security;
     protected $m_insight;
@@ -25,7 +23,6 @@ class M_bmg extends Model
     {
         $this->dbMasterDefault = new dbMaster();
         $this->session = session();
-        $this->telegram =  new M_telegram();
         $this->m_http =  new M_http();
         $this->m_security = new M_seguranca();
         $this->m_insight = new M_insight();
@@ -153,43 +150,6 @@ class M_bmg extends Model
 
 
             $response = $client->__soapCall('listaPlanosRating', [$params]);
-
-
-            //exit;
-            // echo "===== PLANOS COM COBERTURAS =====<br>";
-
-            // if (isset($response->planos) && is_array($response->planos)) {
-            //     foreach ($response->planos as $plano) {
-            //         echo "<strong>Plano: {$plano->nomePlano} (Código: {$plano->codigoPlano})</strong><br>";
-            //         echo " - Produto: {$plano->codigoSeguro}<br>";
-            //         echo " - Valor Segurado: R$ " . number_format($plano->valorCapitalSegurado, 2, ',', '.') . "<br>";
-            //         echo " - Prêmio: R$ " . number_format($plano->valorPremio, 2, ',', '.') . "<br>";
-            //         // echo " - Vigência: {$plano->quantidadeMesVigente} meses<br>";
-            //         // echo " - Tipo Pagamento: {$plano->tipoPagamento}<br>";
-
-            //         // if (isset($plano->coberturas) && is_array($plano->coberturas)) {
-            //         // 	echo "Coberturas:<br>";
-            //         // 	foreach ($plano->coberturas as $cobertura) {
-            //         // 		echo " &bull; {$cobertura->nomeCobertura} (Código: {$cobertura->codigoCobertura}) - ";
-            //         // 		echo "Benefício: R$ " . number_format($cobertura->valorBeneficio, 2, ',', '.') . "<br>";
-            //         // 	}
-            //         // } else {
-            //         // 	echo "Nenhuma cobertura disponível para este plano.<br>";
-            //         // }
-
-            //         echo str_repeat('-', 40) . "<br>";
-            //     }
-            // } else {
-            //     echo "Nenhum plano retornado.<br>";
-            // }
-
-
-
-
-            // echo "<pre>";
-            // print_r($response);
-            // echo "</pre>";exit;
-
         } catch (SoapFault $fault) {
             echo "Erro: {$fault->faultcode} - {$fault->faultstring}";
         }
@@ -218,10 +178,6 @@ class M_bmg extends Model
             ];
 
             $response = $client->__soapCall('obterCartoesDisponiveis', [$params]);
-
-            // echo "<pre>";
-            // print_r($response);
-            // echo "</pre>";exit;
 
             if (((isset($response->mensagemDeErro))) and ((!empty($response->mensagemDeErro)))) {
                 $returnData["mensagem"] = "Cliente Inválido: <br>" . $response->mensagemDeErro;
@@ -253,32 +209,10 @@ class M_bmg extends Model
                                 //'prestamista' => $this->listaPlanosRating(BMG_CODIGO_PRODUTO_PRESTAMISTA, $cartao->numeroInternoConta, $cartao->limiteCartao),
                             ]
                         ];
-                        // echo "<h3>" . $cartao->nomeCliente . "<br>" . $cartao->numeroCartao . "</h3>";
-                        // echo "Limite: R$ " . number_format($cartao->limiteCartao, 2, ',', '.') . "<br>";
-                        // echo "Cidade: " . $cartao->cidade . "<br>";
-                        // echo "Número Conta Interna: <a href=" . assetfolder . 'index.php/lab/listaPlanosRating/' . $cartao->numeroInternoConta . '/' . $cartao->limiteCartao . ">"  . $cartao->numeroInternoConta  . "</a><br>";
-                        // echo "<b><br>MED: </b><br><br>";
-                        // $this->listaPlanosRating(BMG_CODIGO_PRODUTO_MED, $cartao->numeroInternoConta, $cartao->limiteCartao);
-
-                        // echo "<b><br>PAPCARD: </b><br><br>";
-                        // $this->listaPlanosRating(BMG_CODIGO_PRODUTO_PAP, $cartao->numeroInternoConta, $cartao->limiteCartao);
-
-                        // echo "<b><br>PRESTAMISTA: </b><br><br>";
-                        // $this->listaPlanosRating(BMG_CODIGO_PRODUTO_PRESTAMISTA, $cartao->numeroInternoConta, $cartao->limiteCartao);
-
-                        // echo "<b><br>VIDA: </b><br><br>";
-                        // $this->listaPlanosRating(BMG_CODIGO_PRODUTO_VIDA, $cartao->numeroInternoConta, $cartao->limiteCartao);
-
                     }
                 } else {
                     $returnData["mensagem"] = "Nenhum cartão disponível ou retorno inesperado.<br>";
                 }
-                //echo $response->cartaoClienteAtivoVendaSeguro[0]->numeroInternoConta;exit;
-
-                //$this->listaPlanosRating($response->cartaoClienteAtivoVendaSeguro[0]);
-                // echo "<pre>";
-                // print_r($response);
-                // echo "</pre>";	exit;
             }
         } catch (SoapFault $fault) {
             $returnData["mensagem"] = "Erro: {$fault->faultcode} - {$fault->faultstring}";
@@ -327,13 +261,6 @@ class M_bmg extends Model
             ];
 
             $response = $client->__soapCall('geraScriptVenda', [$params]);
-
-
-
-            // echo "<pre>";
-            // print_r($response);
-            // echo "</pre>";
-
         } catch (SoapFault $fault) {
             echo "Erro: {$fault->faultcode} - {$fault->faultstring}";
         }
@@ -360,9 +287,6 @@ class M_bmg extends Model
                 'codLoja' => BMG_LOJA_QUID,             // Código da loja fornecido pelo BMG
             ];
 
-            //$response = $client->__soapCall('gravaPropostaSeguro', [$paramsLogin + $params]);
-
-            //DEBUG SUCESSO
             $returnData["status"] = true;
             $returnData["adesao"] = '12345';
             $returnData["mensagem"] = "[EM CONSTRUÇÃO]<br>Proposta Gravada com Sucesso BMG!<br>Número da Adesão: 00000";
@@ -380,28 +304,6 @@ class M_bmg extends Model
                     $returnData["mensagem"] = "Erro ao Recuperar Número da Adesão.";
                 }
             }
-
-            // echo "<pre>";
-            // print_r($response);
-            // echo "</pre>"; exit;
-            // (
-            //     [login] => 
-            //     [senha] => 
-            //     [excecaoDeRegraDeNegocio] => 1
-            //     [excecaoGenerica] => 
-            //     [executadoComSucessso] => 
-            //     [mensagemDeErro] => Cartão informado de numero interno 12807205 não é elegivel ao seguro codigo 54. Motivo: [5009] Cliente possui outra apólice vigente e condição de venda não permite múltiplas propostas. Verificação por CPF [65386922572]. Sequencial da condição venda: [65505207]..
-            //     [numero] => 
-            // )
-            // (
-            //     [login] => 
-            //     [senha] => 
-            //     [excecaoDeRegraDeNegocio] => 
-            //     [excecaoGenerica] => 
-            //     [executadoComSucessso] => 1
-            //     [mensagemDeErro] => 
-            //     [numero] => 97829252
-            // )
         } catch (SoapFault $fault) {
             $returnData["mensagem"] = "Erro: {$fault->faultcode} - {$fault->faultstring}";
         }
