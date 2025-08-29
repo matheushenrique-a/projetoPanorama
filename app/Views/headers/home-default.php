@@ -102,6 +102,7 @@
 											<span class="card-label fw-bold text-dark fs-4">Tarefas</span>
 											<span class="text-muted mt-2 fw-semibold fs-6">Fila de propostas</span>
 										</h3>
+										
 										<div class="card-toolbar">
 											<a href="<?php echo assetfolder; ?>" class="btn btn-sm btn-light" title="">Atualizar</a>
 										</div>
