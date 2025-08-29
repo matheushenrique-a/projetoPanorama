@@ -17,11 +17,48 @@ class Arquivos extends \App\Controllers\BaseController
         return $this->loadpage('insight/insight_upload_propostas', $dados);
     }
 
-    public function exportPropostas()
+    public function exportPropostas($action)
     {
+        $this->dbMasterDefault = new dbMaster();
         $dados['pageTitle'] = 'Exportação';
 
-        return $this->loadpage('insight/insight_upload_propostas', $dados);
+        if ($action == '1') {
+            $dataInicio = $this->getpost('dataInicial');
+            $dataFim = $this->getpost('dataFinal');
+            $status = $this->getpost('status');
+            $report_to = $this->getpost('report_to');
+            $produto = $this->getpost('produto');
+            $assessor = $this->getpost('assessor');
+
+            $columns = $this->getPostArray('columns') ?? [];
+
+            $where = [];
+
+            if (!empty($dataInicio) && !empty($dataFim)) {
+                $where['DATE(data_criacao) >='] = $dataInicio;
+                $where['DATE(data_criacao) <='] = $dataFim;
+            }
+
+            if (!empty($status)) {
+                $where['status'] = $status;
+            }
+
+            if (!empty($report_to)) {
+                $where['report_to'] = $report_to;
+            }
+
+            if (!empty($produto)) {
+                $where['produto'] = $produto;
+            }
+
+            if (!empty($assessor)) {
+                $where['assessor'] = $assessor;
+            }
+
+            $this->dbMasterDefault->exportCSV('quid_propostas', $columns, $where);
+        }
+
+        return $this->loadpage('insight/insight_export_propostas', $dados);
     }
 
     public function anexarArquivos($idProposta)

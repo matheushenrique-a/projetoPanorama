@@ -87,6 +87,7 @@ $routes->match(['get', 'post'], '/atualizar-meta/(:any)/(:any)', 'Insight\Insigh
 $routes->match(['get', 'post'], '/insight-anexar-arquivo/(:any)', 'Insight\Arquivos::anexarArquivos/$1');
 $routes->match(['get', 'post'], '/insight/download/(:any)', 'Insight\Arquivos::download/$1/$2');
 $routes->match(['get', 'post'], '/insight/excluir/(:any)', 'Insight\Arquivos::excluir/$1/$2');
+$routes->match(['get', 'post'], '/export-propostas/(:any)', 'Insight\Arquivos::exportPropostas/$1');
 
 //THEONE
 $routes->match(['get', 'post'], '/extrairdados', 'Theone\ExtrairDados::extrair');

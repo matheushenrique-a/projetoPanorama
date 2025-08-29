@@ -220,10 +220,12 @@
 										</div>
 									</div>
 								</div>
+							<?php endif; ?>
+							<?php if ($my_security->checkPermission("FORMALIZACAO") || $my_security->checkPermission("ADMIN") || $my_security->checkPermission("SUPERVISOR")): ?>
 								<div class="card-title">
 									<div class="mb-0 mx-3">
 										<div class="d-flex align-items-center position-relative my-1 mt-0 mb-0">
-											<a href="<?php echo assetfolder; ?>insight-listar-propostas/0/export" class="mt-4 ms-3 btn btn-secondary">Exportar <i class="bi fs-3 bi-file-earmark-arrow-down"></i></a>
+											<a href="<?php echo assetfolder; ?>export-propostas/0" class="mt-4 ms-3 btn btn-secondary">Exportar <i class="bi fs-3 bi-file-earmark-arrow-down"></i></a>
 										</div>
 									</div>
 								</div>

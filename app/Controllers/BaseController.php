@@ -61,74 +61,114 @@ abstract class BaseController extends Controller
     }
 
     //permite escolher uma configuração de banco diferente no arquivo Confi/Database
-    public function setDB($dbProfile){
+    public function setDB($dbProfile)
+    {
         $this->dbProfile = $dbProfile;
         //echo "xx" . $this->dbProfile;exit;
-	}
+    }
 
-    public function loadpageads($page, $dados){
+    public function loadpageads($page, $dados)
+    {
         $globals = ["my_security" => $this->my_security];
-        
+
         return view('ads/home-header', $dados + $globals)
             . view($page, $dados)
             . view('ads/home-footer', $dados);
-	}
+    }
 
-	public function loadpage($page, $dados){
+    public function loadpage($page, $dados)
+    {
         $globals = ["my_security" => $this->my_security];
-        
+
         return view('headers/home-header', $dados + $globals)
             . view($page, $dados)
             . view('headers/home-footer', $dados);
-	}
+    }
 
-	public function loadSinglePage($page, $dados){
-        
+    public function loadSinglePage($page, $dados)
+    {
+
         return view($page, $dados);
-	}    
+    }
 
-    function checkSession(){
+    function checkSession()
+    {
 
-        if (!$this->my_session->has('userId')){
+        if (!$this->my_session->has('userId')) {
             helper('cookie');
             $email = get_cookie('insight');
 
-            if (!empty($email)){
+            if (!empty($email)) {
                 $this->my_security->auth($email);
             } else {
                 redirectHelper('sign-in');
             }
-        }        
+        }
     }
 
-    function getpost($valor, $cookie_persist = false) {
-	   
-		$aux = "";
+    function getpost($valor, $cookie_persist = false)
+    {
 
-		if (array_key_exists  ( $valor  , $_POST)) {
-			$aux = trim($_POST[$valor]);
-		} else {
-			$aux =   '';
-		}
+        $aux = "";
 
-		if ($aux=="") {
-			if (array_key_exists  ( $valor  , $_GET)) {
+        if (array_key_exists($valor, $_POST)) {
+            $aux = trim($_POST[$valor]);
+        } else {
+            $aux =   '';
+        }
+
+        if ($aux == "") {
+            if (array_key_exists($valor, $_GET)) {
                 $aux = trim($_GET[$valor]);
-			} else {
-				$aux =   '';
-			}
-		}
+            } else {
+                $aux =   '';
+            }
+        }
 
-		//Depois tenta pegar via Cookie
-		if ($cookie_persist) {
+        //Depois tenta pegar via Cookie
+        if ($cookie_persist) {
             helper('cookie');
-			if ($aux=="") {
-                $aux = Services::request()->getCookie($valor);	
-			} else {
+            if ($aux == "") {
+                $aux = Services::request()->getCookie($valor);
+            } else {
                 Services::response()->setCookie($valor, $aux);
-			}
-		}        
-        		
-		return htmlspecialchars((is_null($aux)  ? '' : $aux), ENT_QUOTES);
-	}
+            }
+        }
+
+        return htmlspecialchars((is_null($aux)  ? '' : $aux), ENT_QUOTES);
+    }
+
+    public function getPostArray($valor, $cookie_persist = false)
+    {
+        $aux = '';
+
+        if (array_key_exists($valor, $_POST)) {
+            $aux = $_POST[$valor];
+            if (!is_array($aux)) {
+                $aux = trim($aux);
+            }
+        }
+
+        if ($aux === "") {
+            if (array_key_exists($valor, $_GET)) {
+                $aux = $_GET[$valor];
+                if (!is_array($aux)) {
+                    $aux = trim($aux);
+                }
+            } else {
+                $aux = '';
+            }
+        }
+
+        if ($cookie_persist) {
+            helper('cookie');
+            if ($aux == "") {
+                $aux = Services::request()->getCookie($valor);
+            } else {
+                Services::response()->setCookie($valor, $aux);
+            }
+        }
+
+        return $aux;
+    }
 }
