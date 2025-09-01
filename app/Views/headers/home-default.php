@@ -93,67 +93,110 @@
 											<span class="text-muted mt-2 fw-semibold fs-6">Fila de propostas</span>
 										</h3>
 
+										<div>
+											<select class="form-control" name="selectAuditor" id="selectAuditor">
+												<option value="todas">Minhas tarefas</option>
+												<option value="suas">Todas as tarefas</option>
+											</select>
+										</div>
+
 										<div class="card-toolbar">
 											<a href="<?php echo assetfolder; ?>" class="btn btn-sm btn-light" title="">Atualizar</a>
 										</div>
 									</div>
-									<div class="card-body pt-4">
+									<div id="tarefasContainer" class="card-body pt-4">
+									</div>
+								</div>
 
-										<?php
+								<script>
+									const minhasTarefas = <?= json_encode($ultimasPropostasAuditor["result"]->getResult()); ?>;
+									const tarefasEquipe = <?= json_encode($ultimasPropostasAuditorTotal["result"]->getResult()); ?>;
 
-										foreach ($ultimasPropostasAuditor["result"]->getResult() as $row) {
+									const selectAuditor = document.getElementById("selectAuditor");
+									const container = document.getElementById("tarefasContainer");
 
-											// Ignorar se status for Aprovada ou Cancelada
-											if (in_array($row->status, ['Aprovada', 'Cancelada'])) {
-												continue;
-											}
+									function renderTarefas(lista) {
+										container.innerHTML = "";
 
-											$nomeCliente = $row->nome;
-											$cpf = $row->cpf;
-											$adesao = $row->adesao;
-											$valor = $row->valor;
-											$data_criacao = $row->data_criacao;
-											$telefone = formatarTelefone($row->telefone);
-											$panorama_id = $row->panorama_id;
-											$assessor = $row->assessor;
-											$idProposta = $row->idquid_propostas;
+										lista.forEach(row => {
+											if (["Aprovada", "Cancelada"].includes(row.status)) return;
 
-											$status = match ($row->status) {
-												"Análise"   => "info",
-												"Aprovada"  => "success",
-												"Cancelada" => "danger",
-												"Pendente"  => "warning",
-												"Adesão"   => "dark",
-												"Auditoria" => "warning",
-												"TED Devolvida" => "warning",
-												default     => "secondary"
-											};
+											const statusClass = {
+												"Análise": "info",
+												"Aprovada": "success",
+												"Cancelada": "danger",
+												"Pendente": "warning",
+												"Adesão": "dark",
+												"Auditoria": "warning",
+												"TED Devolvida": "warning"
+											} [row.status] || "secondary";
 
-										?>
+											container.innerHTML += `
 											<div class="d-flex flex-stack">
 												<div class="d-flex align-items-center me-5">
-													<a href="<?php echo assetfolder ?>insight-proposta/<?php echo $idProposta ?>" class="symbol symbol-40px me-4"><span class="symbol-label bg-info"><i class="las la-file-invoice fs-1 p-0 text-white"></i></span></a>
+													<a href="<?= assetfolder ?>insight-proposta/${row.idquid_propostas}" 
+													class="symbol symbol-40px me-4">
+													<span class="symbol-label bg-info">
+														<i class="las la-file-invoice fs-1 p-0 text-white"></i>
+													</span>
+													</a>
 													<div class="me-5">
 														<div class="d-flex flex-column">
-															<span class="text-gray-800 fw-bolder fs-6"><?php echo substr($assessor, 0, 30); ?></span>
-															<span class="text-gray-600 fw-bolder fs-6"><?php echo substr($nomeCliente, 0, 30); ?></span>
+															<span class="text-gray-800 fw-bolder fs-6">${row.assessor.substring(0,30)}</span>
+															<span class="text-gray-600 fw-bolder fs-6">${row.nome.substring(0,30)}</span>
 														</div>
-														<span class="text-success fw-bolder fs-6"><?php echo 'R$ ' . number_format((float)$valor, 2, ',', '.') ?></span>
+														<span class="text-success fw-bolder fs-6">R$ ${parseFloat(row.valor).toLocaleString('pt-BR', {minimumFractionDigits:2})}</span>
 													</div>
 												</div>
 												<div class="text-gray-400 fw-bolder fs-7 text-end">
-													<span class="text-gray-800 fw-bold fs-6 d-block text-end ps-0"><?php echo $adesao; ?></span>
-													<span class="text-gray-400 fw-bold fs-7 d-block text-start ps-0"><?php echo time_elapsed_string($data_criacao); ?></span>
-													<span class="badge badge-light-<?php echo $status ?> fs-6 mt-2"><?= $row->status ?></span>
+													<span class="text-gray-800 fw-bold fs-6 d-block">${row.adesao}</span>
+													<span class="text-gray-400 fw-bold fs-7 d-block">${timeElapsedString(row.data_criacao)}</span>
+													<span class="badge badge-light-${statusClass} fs-6 mt-2">${row.status}</span>
 												</div>
 											</div>
-											<div class="d-flex flex-stack">
-											</div>
 											<div class="separator separator-dashed my-3"></div>
-										<?php }; ?>
+										`;
+										});
+									}
 
-									</div>
-								</div>
+									renderTarefas(minhasTarefas);
+
+									selectAuditor.addEventListener("change", () => {
+										if (selectAuditor.value === "todas") {
+											renderTarefas(minhasTarefas);
+										} else {
+											renderTarefas(tarefasEquipe);
+										}
+									});
+
+									function timeElapsedString(dateString) {
+										const now = new Date();
+										const past = new Date(dateString.replace(" ", "T")); 
+										const seconds = Math.floor((now - past) / 1000);
+
+										let interval = Math.floor(seconds / 31536000);
+										if (interval > 1) return `${interval} anos atrás`;
+										if (interval === 1) return "1 ano atrás";
+
+										interval = Math.floor(seconds / 2592000);
+										if (interval > 1) return `${interval} meses atrás`;
+										if (interval === 1) return "1 mês atrás";
+
+										interval = Math.floor(seconds / 86400);
+										if (interval > 1) return `${interval} dias atrás`;
+										if (interval === 1) return "1 dia atrás";
+
+										interval = Math.floor(seconds / 3600);
+										if (interval > 1) return `${interval} horas atrás`;
+										if (interval === 1) return "1 hora atrás";
+
+										interval = Math.floor(seconds / 60);
+										if (interval > 1) return `${interval} minutos atrás`;
+										if (interval === 1) return "1 minuto atrás";
+
+										return "Agora mesmo";
+									}
+								</script>
 							</div>
 						<?php endif; ?>
 

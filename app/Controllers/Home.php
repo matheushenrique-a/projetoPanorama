@@ -175,11 +175,14 @@ class Home extends BaseController
             }
         }
 
-        $ultimasPropostasAuditor = $this->m_bmg->ultimasPropostasAuditor(8);
+        if ($this->session->role == "AUDITOR") {
+            $ultimasPropostasAuditor = $this->m_bmg->ultimasPropostasAuditor(8);
 
-        $dados['ultimasPropostasAuditor'] = $ultimasPropostasAuditor;
+            $ultimasPropostasAuditorTotal = $this->m_bmg->ultimasPropostasAuditorTotal(8);
 
-        // $this->m_insight->exportarDbCsv();
+            $dados['ultimasPropostasAuditor'] = $ultimasPropostasAuditor;
+            $dados['ultimasPropostasAuditorTotal'] = $ultimasPropostasAuditorTotal;
+        }
 
         return $this->loadpage('headers/home-default', $dados);
     }

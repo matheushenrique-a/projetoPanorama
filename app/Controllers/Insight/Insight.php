@@ -438,6 +438,7 @@ class Insight extends BaseController
                     'dataNascimento'   => $row[14],
                     'ultimo_status'    => $row[15]
                 ];
+
                 $linha++;
             }
             fclose($handle);
