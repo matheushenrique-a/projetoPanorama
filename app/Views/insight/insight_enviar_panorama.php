@@ -73,11 +73,9 @@
                                                         <span class="input-group-text" style="width: 100px">Número</span>
                                                         <input type="text" class="form-control fs-3 fw-bold" value="" style="color:rgb(188, 188, 188); width: 250px" name="telefone" id="telefone" required />
                                                     </div>
-                                                    <div class="alert alert-primary d-flex align-items-center p-2 mt-5">
-                                                        <div class="d-flex flex-column ms-4">
-                                                            <h4 class="mb-1 text-primary">Atenção</h4>
-                                                            <span>Propostas criadas aqui são enviadas apenas para o Panorama e Insight!</span>
-                                                        </div>
+                                                    <div class="input-group mt-6 d-flex">
+                                                        <textarea class="form-control fs-8" id="entrada" placeholder="Cole aqui o Ctrl+A do Vanguard"></textarea>
+                                                        <button class="btn btn-info" id="extratorDados">Extrair Dados</button>
                                                     </div>
                                                 </div>
                                                 <div class="w-50">
@@ -99,14 +97,30 @@
                                                             <textarea class="form-control fs-4 fw-bold " placeholder="..." name="observacao" id="observacao"></textarea>
                                                         </div>
                                                     </div>
-                                                    <div class="input-group mt-6 d-flex">
-                                                        <textarea class="form-control fs-8" id="entrada" placeholder="Cole aqui o Ctrl+A do Vanguard"></textarea>
-                                                        <button class="btn btn-info" id="extratorDados">Extrair Dados</button>
+                                                    <div class="d-flex gap-5">
+                                                        <div class="d-flex flex-column align-items-center mt-6 mb-0 gap-4">
+                                                            <span class="text-center fw-semibold fs-6">Enviar para Insight?</span>
+                                                            <div class="btn-group" role="group" aria-label="Sim ou Não">
+                                                                <input type="radio" class="btn-check" name="resposta_insight" id="btn-sim-insight" value="sim" autocomplete="off" checked>
+                                                                <label class="btn btn-outline-success" for="btn-sim-insight">Sim</label>
+
+                                                                <input type="radio" class="btn-check" name="resposta_insight" id="btn-nao-insight" value="nao" autocomplete="off">
+                                                                <label class="btn btn-outline-danger" for="btn-nao-insight">Não</label>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="d-flex flex-column align-items-center mt-6 mb-0 gap-4">
+                                                            <span class="text-center fw-semibold fs-6">Enviar para Panorama?</span>
+                                                            <div class="btn-group" role="group" aria-label="Sim ou Não">
+                                                                <input type="radio" class="btn-check" name="resposta_panorama" id="btn-sim-panorama" value="sim" autocomplete="off" checked>
+                                                                <label class="btn btn-outline-success" for="btn-sim-panorama">Sim</label>
+
+                                                                <input type="radio" class="btn-check" name="resposta_panorama" id="btn-nao-panorama" value="nao" autocomplete="off">
+                                                                <label class="btn btn-outline-danger" for="btn-nao-panorama">Não</label>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                    <div class="d-flex align-items-center mt-6 mb-0 gap-4">
-                                                        <span class="text-center fw-semibold fs-6">Incluir proposta Insight?</span>
-                                                        <input type="checkbox" class="form-check-input" id="checkInsight" name="checkInsight" value="1" checked>
-                                                    </div>
+
                                                     <div class="d-flex align-items-center position-relative mt-10 mb-0">
                                                         <button type="submit" class="btn btn-success" name="btnIncluirProposta" id="btnIncluirProposta" value="salvar">Enviar Proposta</button>
                                                     </div>
@@ -149,6 +163,16 @@
     const telefone = document.getElementById('telefone')
 
     const extratorDados = document.getElementById('extratorDados')
+
+    form.addEventListener("submit", function(event) {
+        const insight = document.querySelector('input[name="resposta_insight"]:checked')?.value;
+        const panorama = document.querySelector('input[name="resposta_panorama"]:checked')?.value;
+
+        if (insight === "nao" && panorama === "nao") {
+            event.preventDefault(); // impede envio
+            alert("Você precisa selecionar pelo menos um 'Sim'.");
+        }
+    });
 
     if (extratorDados) {
         extratorDados.addEventListener('click', (e) => {

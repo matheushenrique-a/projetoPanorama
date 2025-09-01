@@ -107,33 +107,36 @@ class Insight extends BaseController
                 $quantidadeParcelas = $this->getpost('parcelas');
                 $observacao = $this->getpost('observacao') ?? "";
 
-                $checkInsight = $this->request->getPost('checkInsight');
+                $respostaInsight = $this->getpost('resposta_insight');
+                $respostaPanorama = $this->getpost('resposta_panorama');
 
-                $checkInsightBool = !empty($checkInsight);
+                $returnData = [];
 
-                $returnData = $this->panorama_gravar_proposta_saque($params = [
-                    'assessor' => $assessor,
-                    'codigoEntidade' => $codigoEntidade,
-                    'cpf' => $cpf,
-                    'dataNascimento' => $dataNascimento,
-                    'matricula' => $matricula,
-                    'nomeCliente' => $nomeCliente,
-                    'celular1' => ['ddd' => $ddd, 'numero' => $telefone],
-                    'adesao' => $adesao,
-                    'valorSaque' => $valorSaque,
-                    'valorParcela' => $valorParcela,
-                    'quantidadeParcelas' => $quantidadeParcelas,
-                    'observacao' => $observacao
-                ]);
+                if ($respostaPanorama == "sim") {
+                    $returnData = $this->panorama_gravar_proposta_saque($params = [
+                        'assessor' => $assessor,
+                        'codigoEntidade' => $codigoEntidade,
+                        'cpf' => $cpf,
+                        'dataNascimento' => $dataNascimento,
+                        'matricula' => $matricula,
+                        'nomeCliente' => $nomeCliente,
+                        'celular1' => ['ddd' => $ddd, 'numero' => $telefone],
+                        'adesao' => $adesao,
+                        'valorSaque' => $valorSaque,
+                        'valorParcela' => $valorParcela,
+                        'quantidadeParcelas' => $quantidadeParcelas,
+                        'observacao' => $observacao
+                    ]);
+                }
 
-                if ($checkInsightBool) {
+                if ($respostaInsight == "sim") {
                     $this->m_bmg->gravar_proposta_bmg_database([
                         'assessor' => $assessor,
                         'report_to' => $this->session->report_to,
                         'codigo_entidade' => $codigoEntidade,
                         'cpf' => $cpf,
                         'dataNascimento' => $dataNascimento,
-                        'panorama_id' => $returnData["proposta"],
+                        'panorama_id' => $returnData["proposta"] ?? "",
                         'matricula' => $matricula,
                         'nomeCliente' => $nomeCliente,
                         'telefone' => $ddd . $telefone,
@@ -271,7 +274,6 @@ class Insight extends BaseController
             $horaAtual = date('H:i:s');
 
             $dataCriacaoMySQL = $dataCriacao->format('Y-m-d') . ' ' . $horaAtual;
-
 
             $report_to = $this->session->userId;
 
