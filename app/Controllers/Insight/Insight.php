@@ -113,7 +113,7 @@ class Insight extends BaseController
                 $returnData = [];
 
                 if ($respostaPanorama == "sim") {
-                    $returnData = $this->panorama_gravar_proposta_saque($params = [
+                    $returnData = $this->panorama_gravar_proposta_saque([
                         'assessor' => $assessor,
                         'codigoEntidade' => $codigoEntidade,
                         'cpf' => $cpf,
