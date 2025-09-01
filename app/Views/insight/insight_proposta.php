@@ -176,6 +176,44 @@ $movimentation = match ($row->status) {
                                                     </div>
                                                 </div>
                                             </div>
+                                            <?php if ($row->status == "TED Devolvida" && !$my_security->checkPermission("FORMALIZACAO")): ?>
+                                                <div class="mt-5 alert alert-info">
+                                                    <div class="d-flex gap-2 align-items-center">
+                                                        <i class="bi bi-exclamation-circle text-info"></i>
+                                                        <p class="fw-semibold fs-3 mb-0">Informe nova conta:</p>
+                                                    </div>
+                                                    <div class="d-flex mt-4 gap-4">
+                                                        <div class="mb-2">
+                                                            <span class="fw-bold mb-1">Banco:</span>
+                                                            <input type="text" class="form-control form-control-solid" name="bancoFix" required />
+                                                        </div>
+                                                        <div class="mb-2">
+                                                            <span class="fw-bold mb-1">Agência:</span>
+                                                            <input type="text" class="form-control form-control-solid" name="agenciaFix" required/>
+                                                        </div>
+                                                        <div class="mb-2">
+                                                            <span class="fw-bold mb-1">Conta:</span>
+                                                            <input type="text" class="form-control form-control-solid" name="contaFix" required/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            <?php endif; ?>
+                                            <?php if (isset($ultimaLinha->status_anterior) && $ultimaLinha->status_anterior == "TED Devolvida"): ?>
+                                                <div class="d-flex mt-4 gap-4">
+                                                    <div class="mb-2">
+                                                        <span class="fw-bold mb-1">Banco:</span>
+                                                        <input type="text" value="<?php echo $row->banco ?>" class="form-control form-control-solid" readonly />
+                                                    </div>
+                                                    <div class="mb-2">
+                                                        <span class="fw-bold mb-1">Agência:</span>
+                                                        <input type="text" value="<?php echo $row->agencia ?>" class="form-control form-control-solid" readonly />
+                                                    </div>
+                                                    <div class="mb-2">
+                                                        <span class="fw-bold mb-1">Conta:</span>
+                                                        <input type="text" value="<?php echo $row->conta ?>" class="form-control form-control-solid" readonly />
+                                                    </div>
+                                                </div>
+                                            <?php endif; ?>
                                         </div>
                                         <?php if ($my_security->checkPermission("SUPERVISOR") || $my_security->checkPermission("FORMALIZACAO")): ?>
 
@@ -220,44 +258,6 @@ $movimentation = match ($row->status) {
                                             </div>
                                         <?php endif; ?>
                                     </div>
-                                    <?php if ($row->status == "TED Devolvida"): ?>
-                                        <div class="mt-5 alert alert-info">
-                                            <div class="d-flex gap-2 align-items-center">
-                                                <i class="bi bi-exclamation-circle text-info"></i>
-                                                <p class="fw-semibold fs-3 mb-0">Informe nova conta:</p>
-                                            </div>
-                                            <div class="d-flex mt-4 gap-4">
-                                                <div class="mb-2">
-                                                    <span class="fw-bold mb-1">Banco:</span>
-                                                    <input type="text" class="form-control form-control-solid" name="bancoFix" />
-                                                </div>
-                                                <div class="mb-2">
-                                                    <span class="fw-bold mb-1">Agência:</span>
-                                                    <input type="text" class="form-control form-control-solid" name="agenciaFix" />
-                                                </div>
-                                                <div class="mb-2">
-                                                    <span class="fw-bold mb-1">Conta:</span>
-                                                    <input type="text" class="form-control form-control-solid" name="contaFix" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    <?php endif; ?>
-                                    <?php if (isset($ultimaLinha->status_anterior) && $ultimaLinha->status_anterior == "TED Devolvida"): ?>
-                                        <div class="d-flex mt-4 gap-4">
-                                            <div class="mb-2">
-                                                <span class="fw-bold mb-1">Banco:</span>
-                                                <input type="text" value="<?php echo $row->banco ?>" class="form-control form-control-solid" readonly />
-                                            </div>
-                                            <div class="mb-2">
-                                                <span class="fw-bold mb-1">Agência:</span>
-                                                <input type="text" value="<?php echo $row->agencia ?>" class="form-control form-control-solid" readonly />
-                                            </div>
-                                            <div class="mb-2">
-                                                <span class="fw-bold mb-1">Conta:</span>
-                                                <input type="text" value="<?php echo $row->conta ?>" class="form-control form-control-solid" readonly />
-                                            </div>
-                                        </div>
-                                    <?php endif; ?>
 
                                     <div class="tab-pane fade" id="kt_tab_pane_2" role="tabpanel">
 
@@ -346,31 +346,31 @@ $movimentation = match ($row->status) {
                                         
                                     </div>
                                     <div class=" mb-10 tab-pane fade show" id="kt_tab_pane_3" role="tabpanel">
-                                        <div class="mb-10">
-                                            <h3 class="text-gray-700"><?= $qtdArquivos ?> Arquivos anexados</h3>
-                                            <div class="mt-5 d-flex flex-column gap-4">
-                                                <?php foreach ($arquivos as $arquivo): ?>
-                                                    <div style="width: 330px;" class="d-flex gap-3 p-2 border rounded align-items-center">
+                                                                        <div class="mb-10">
+                                                                            <h3 class="text-gray-700"><?= $qtdArquivos ?> Arquivos anexados</h3>
+                                                                            <div class="mt-5 d-flex flex-column gap-4">
+                                                                                <?php foreach ($arquivos as $arquivo): ?>
+                                                                                    <div style="width: 330px;" class="d-flex gap-3 p-2 border rounded align-items-center">
 
-                                                        <a href="<?= assetfolder ?>insight/download/<?= $arquivo->id ?>/<?= $arquivo->id_proposta ?>">
-                                                            <i class="bi ms-1 fs-6 px-2 rounded p-1 text-primary bi-download"></i>
-                                                        </a>
+                                                                                        <a href="<?= assetfolder ?>insight/download/<?= $arquivo->id ?>/<?= $arquivo->id_proposta ?>">
+                                                                                            <i class="bi ms-1 fs-6 px-2 rounded p-1 text-primary bi-download"></i>
+                                                                                        </a>
 
-                                                        <p class="my-auto fw-semibold text-gray-700"><i class="bi bi-file-earmark"></i> <?= esc($arquivo->nome_original) ?></p>
+                                                                                        <p class="my-auto fw-semibold text-gray-700"><i class="bi bi-file-earmark"></i> <?= esc($arquivo->nome_original) ?></p>
 
-                                                        <div class="d-flex gap-3 ms-auto justify-content-end">
-                                                            <p class="my-auto text-gray-700"><?= date('d/m/Y', strtotime($arquivo->created_at)) ?></p>
+                                                                                        <div class="d-flex gap-3 ms-auto justify-content-end">
+                                                                                            <p class="my-auto text-gray-700"><?= date('d/m/Y', strtotime($arquivo->created_at)) ?></p>
 
-                                                            <a href="<?= assetfolder ?>insight/excluir/<?= $arquivo->id ?>/<?= $arquivo->id_proposta ?>">
-                                                                <i class="bi text-danger bi-trash me-3"></i>
-                                                            </a>
-                                                        </div>
-                                                    </div>
-                                                <?php endforeach; ?>
+                                                                                            <a href="<?= assetfolder ?>insight/excluir/<?= $arquivo->id ?>/<?= $arquivo->id_proposta ?>">
+                                                                                                <i class="bi text-danger bi-trash me-3"></i>
+                                                                                            </a>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                <?php endforeach; ?>
+                                                                            </div>
+                                                                        </div>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
                             </form>
                             <?php if ($my_security->checkPermission("ADMIN") || $my_security->checkPermission("FORMALIZACAO")): ?>
                                 <div id="form-upload" class="p-8 border-top d-none">
