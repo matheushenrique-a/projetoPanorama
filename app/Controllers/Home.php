@@ -139,6 +139,9 @@ class Home extends BaseController
         $ultimasPropostasBMG = $this->m_bmg->ultimasPropostasBMG(10);
         $dados['ultimasPropostasBMG'] = $ultimasPropostasBMG;
 
+        $mensalPropostasBMG = $this->m_bmg->mensalPropostasBMG();
+        $dados['mensalPropostasBMG'] = $mensalPropostasBMG;
+
         $countPropostasBMG = $this->m_bmg->countPropostasBMG();
         $dados['countPropostasBMG'] = $countPropostasBMG;
 

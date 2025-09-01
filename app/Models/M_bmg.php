@@ -520,6 +520,19 @@ class M_bmg extends Model
         return $this->dbMasterDefault->runQuery($sql);
     }
 
+    public function mensalPropostasBMG()
+    {
+        $sql = "
+        SELECT *
+        FROM quid_propostas
+        WHERE assessor = '" . $this->session->nickname . "'
+        AND MONTH(data_criacao) = MONTH(CURRENT_DATE())
+          AND YEAR(data_criacao) = YEAR(CURRENT_DATE())
+    ";
+
+        return $this->dbMasterDefault->runQuery($sql);
+    }
+
     public function countPropostasBMG()
     {
         $sql = "select * from quid_propostas where assessor = '" . $this->session->nickname . "' ";

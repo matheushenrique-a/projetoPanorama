@@ -41,46 +41,7 @@
 
 							<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 							<script>
-								const ctx4 = document.getElementById('progressChart').getContext('2d');
 
-								new Chart(ctx4, {
-									type: 'bar',
-									data: {
-										labels: ['<?= explode(' ', trim($nickname))[0] ?>'],
-										datasets: [{
-											label: 'Progresso da Meta (%)',
-											data: [<?php if (isset($progresso->percentual)): echo $progresso->percentual;
-													else: echo 0;
-													endif; ?>],
-											backgroundColor: 'rgba(48, 221, 149, 0.6)',
-											borderColor: 'rgba(44, 230, 121, 1)',
-											borderWidth: 1
-										}]
-									},
-									options: {
-										indexAxis: 'y', // horizontal
-										responsive: true,
-										plugins: {
-											legend: {
-												display: false
-											},
-											tooltip: {
-												callbacks: {
-													label: ctx => ctx.parsed.x + '%'
-												}
-											}
-										},
-										scales: {
-											x: {
-												min: 0,
-												max: 100,
-												ticks: {
-													callback: value => value + '%'
-												}
-											}
-										}
-									}
-								});
 							</script>
 						<?php endif; ?>
 
@@ -119,7 +80,21 @@
 										container.innerHTML = "";
 
 										lista.forEach(row => {
-											if (["Aprovada", "Cancelada"].includes(row.status)) return;
+											if (["Aprovada", "Cancelada", "Análise", "Adesão"].includes(row.status)) return;
+
+											let nomeAuditor = '';
+
+											if (row.id_owner == "165022") {
+												nomeAuditor = "Taline"
+											} else if (row.id_owner == "165021") {
+												nomeAuditor = "Nayara"
+											} else if (row.id_owner == "165020") {
+												nomeAuditor = "Marcos"
+											} else if (row.id_owner == "165019") {
+												nomeAuditor = "Gabriela"
+											} else if (row.id_owner == "165017") {
+												nomeAuditor = "Amanda"
+											}
 
 											const statusClass = {
 												"Análise": "info",
@@ -132,14 +107,17 @@
 											} [row.status] || "secondary";
 
 											container.innerHTML += `
-											<div class="d-flex flex-stack">
+											<div class="d-flex justify-content-between">
 												<div class="d-flex align-items-center me-5">
+												<div class="d-flex flex-column gap-2">
 													<a href="<?= assetfolder ?>insight-proposta/${row.idquid_propostas}" 
-													class="symbol symbol-40px me-4">
-													<span class="symbol-label bg-info">
+													class="symbol symbol-40px me-10">
+													<span class="symbol-label bg-${statusClass}">
 														<i class="las la-file-invoice fs-1 p-0 text-white"></i>
 													</span>
 													</a>
+													<span class="text-warning fw-bold">${nomeAuditor}</span>
+												</div>	
 													<div class="me-5">
 														<div class="d-flex flex-column">
 															<span class="text-gray-800 fw-bolder fs-6">${row.assessor.substring(0,30)}</span>
@@ -159,19 +137,21 @@
 										});
 									}
 
-									renderTarefas(minhasTarefas);
+									if (container) {
+										renderTarefas(minhasTarefas);
 
-									selectAuditor.addEventListener("change", () => {
-										if (selectAuditor.value === "todas") {
-											renderTarefas(minhasTarefas);
-										} else {
-											renderTarefas(tarefasEquipe);
-										}
-									});
+										selectAuditor.addEventListener("change", () => {
+											if (selectAuditor.value === "todas") {
+												renderTarefas(minhasTarefas);
+											} else {
+												renderTarefas(tarefasEquipe);
+											}
+										});
+									}
 
 									function timeElapsedString(dateString) {
 										const now = new Date();
-										const past = new Date(dateString.replace(" ", "T")); 
+										const past = new Date(dateString.replace(" ", "T"));
 										const seconds = Math.floor((now - past) / 1000);
 
 										let interval = Math.floor(seconds / 31536000);
@@ -213,7 +193,62 @@
 											<a href="<?php echo assetfolder; ?>" class="btn btn-sm btn-light" title="">Atualizar</a>
 										</div>
 									</div>
-									<div class="card-body pt-4">
+									<div class="d-flex gap-5 ms-4 pt-3 mb-3 pb-3 flex-wrap">
+										<?php
+										// Inicializa os contadores
+										$contadores = [
+											"Análise"    => 0,
+											"Pendente"   => 0,
+											"Aprovada"   => 0,
+											"Cancelada"  => 0,
+											"Auditoria"  => 0,
+										];
+
+										// Percorre todas as propostas
+										foreach ($mensalPropostasBMG["result"]->getResult() as $row) {
+											if (isset($contadores[$row->status])) {
+												$contadores[$row->status]++;
+											}
+										}
+										?>
+
+
+										<div class="fw-bold cursor-pointer filter-btn " data-filter="Análise">
+											<div class="d-flex gap-2 bg-info text-black rounded p-2" style="height: 32px;">
+												<span class="bg-light rounded px-2 text-white"><?= $contadores["Análise"] ?></span>
+												<p>Análise</p>
+											</div>
+										</div>
+										<div class="fw-bold cursor-pointer filter-btn " data-filter="Pendente">
+											<div class="d-flex gap-2 bg-warning text-black rounded p-2" style="height: 32px;">
+												<span class="bg-light rounded px-2 text-white"><?= $contadores["Pendente"] ?></span>
+												<p>Pendente</p>
+											</div>
+										</div>
+										<div class="fw-bold cursor-pointer filter-btn " data-filter="Aprovada">
+											<div class="d-flex gap-2 bg-success text-black rounded p-2" style="height: 32px;">
+												<span class="bg-light rounded px-2 text-white"><?= $contadores["Aprovada"] ?></span>
+												<p>Aprovada</p>
+											</div>
+										</div>
+										<div class="fw-bold cursor-pointer filter-btn " data-filter="Cancelada">
+											<div class="d-flex gap-2 bg-gray-400 text-black rounded p-2" style="height: 32px;">
+												<span class="bg-light rounded px-2 text-white"><?= $contadores["Cancelada"] ?></span>
+												<p>Cancelada</p>
+											</div>
+										</div>
+										<div class="fw-bold cursor-pointer filter-btn " data-filter="Auditoria">
+											<div class="d-flex gap-2 bg-warning text-black rounded p-2" style="height: 32px;">
+												<span class="bg-light rounded px-2 text-white"><?= $contadores["Auditoria"] ?></span>
+												<p>Auditoria</p>
+											</div>
+										</div>
+										<div class="d-flex  cursor-pointer filter-btn gap-2 bg-secondary text-white rounded p-2 filter-btn" data-filter="all" style="height: 32px;">
+											<span class="px-2">Todos</span>
+										</div>
+
+									</div>
+									<div class="card-body pt-1">
 
 										<?php
 
@@ -239,26 +274,29 @@
 
 										?>
 
-											<!--begin::Item-->
-											<div class="d-flex flex-stack">
-												<div class="d-flex align-items-center me-5">
-													<a target="_blank" href="https://grupoquid.panoramaemprestimos.com.br/emprestimoInterno.do?action=exibir&codigo=<?php echo $row->panorama_id ?>" class="symbol symbol-40px me-4"><span class="symbol-label bg-info"><i class="las la-file-invoice fs-1 p-0 text-white"></i></span></a>
-													<div class="me-5">
-														<span class="text-gray-800 fw-bolder fs-6"><?php echo substr($nomeCliente, 0, 30); ?></span>
-														<span class="text-gray-400 fw-bold fs-7 d-block text-start ps-0"><?php echo $adesao . " | " . $cpf; ?></span>
-														<span class="text-success fw-bolder fs-6"><?php echo 'R$ ' . number_format((float)$valor, 2, ',', '.') ?></span>
+											<div class="proposta-item" data-status="<?= $row->status ?>">
+												<!--begin::Item-->
+												<div class="d-flex flex-stack">
+													<div class="d-flex align-items-center me-5">
+														<a target="_blank" href="https://grupoquid.panoramaemprestimos.com.br/emprestimoInterno.do?action=exibir&codigo=<?= $row->panorama_id ?>" class="symbol symbol-40px me-4">
+															<span class="symbol-label bg-info"><i class="las la-file-invoice fs-1 p-0 text-white"></i></span>
+														</a>
+														<div class="me-5">
+															<span class="text-gray-800 fw-bolder fs-6"><?= substr($nomeCliente, 0, 30) ?></span>
+															<span class="text-gray-400 fw-bold fs-7 d-block text-start ps-0"><?= $adesao . " | " . $cpf ?></span>
+															<span class="text-success fw-bolder fs-6"><?= 'R$ ' . number_format((float)$valor, 2, ',', '.') ?></span>
+														</div>
+													</div>
+													<div class="text-gray-400 fw-bolder fs-7 text-end">
+														<span class="text-gray-800 fw-bolder fs-6 d-block text-hover-info"><?= $telefone ?></span>
+														<span class="text-gray-400 fw-bold fs-7 d-block text-start ps-0"><?= time_elapsed_string($data_criacao) ?></span>
+														<span class="badge badge-light-<?= $status ?> fs-6 mt-2"><?= $row->status ?></span>
 													</div>
 												</div>
-												<div class="text-gray-400 fw-bolder fs-7 text-end">
-													<span class="text-gray-800 fw-bolder fs-6 d-block text-hover-info"><?php echo $telefone; ?></span>
-													<span class="text-gray-400 fw-bold fs-7 d-block text-start ps-0"><?php echo time_elapsed_string($data_criacao); ?></span>
-													<span class="badge badge-light-<?php echo $status ?> fs-6 mt-2"><?= $row->status ?></span>
-												</div>
+												<div class="separator separator-dashed my-3"></div>
+												<!--end::Item-->
 											</div>
-											<div class="d-flex flex-stack">
-											</div>
-											<div class="separator separator-dashed my-3"></div>
-											<!--end::Item-->
+
 
 										<?php }; ?>
 
@@ -530,66 +568,6 @@
 
 						<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
 
-						<script>
-							const ctx = document.getElementById('graficoPropostas').getContext('2d');
-							const grafico = new Chart(ctx, {
-								type: 'bar',
-								data: {
-									labels: <?= json_encode($labels); ?>,
-									datasets: [{
-										label: 'Propostas',
-										data: <?= json_encode($dados); ?>,
-										backgroundColor: 'rgba(48, 221, 149, 0.6)',
-										borderColor: 'rgba(44, 230, 121, 1)',
-										borderWidth: 1,
-										borderRadius: 4,
-										barThickness: 40,
-									}]
-								},
-								options: {
-									responsive: true,
-									scales: {
-										y: {
-											beginAtZero: true,
-											ticks: {
-												precision: 0
-											}
-										}
-									}
-								}
-							});
-						</script>
-
-						<script>
-							const ctx2 = document.getElementById('graficoPropostasEquipe').getContext('2d');
-							const grafico2 = new Chart(ctx2, {
-								type: 'bar',
-								data: {
-									labels: <?= json_encode($labelsEquipe); ?>,
-									datasets: [{
-										label: 'Propostas',
-										data: <?= json_encode($dadosEquipe); ?>,
-										backgroundColor: 'rgba(48, 186, 221, 0.6)',
-										borderColor: 'rgba(44, 187, 230, 1)',
-										borderWidth: 1,
-										borderRadius: 4,
-										barThickness: 40,
-									}]
-								},
-								options: {
-									responsive: true,
-									scales: {
-										y: {
-											beginAtZero: true,
-											ticks: {
-												precision: 0
-											}
-										}
-									}
-								}
-							});
-						</script>
-
 						<?php if ($my_security->checkPermission("SUPERVISOR") || $my_security->checkPermission("FORMALIZACAO")): ?>
 
 							<div class="col-xl-4 w-50">
@@ -688,6 +666,143 @@
 <?php endif; ?>
 
 <script>
+	document.addEventListener("DOMContentLoaded", () => {
+		const filterBtns = document.querySelectorAll(".filter-btn");
+		const propostas = document.querySelectorAll(".proposta-item");
+
+		filterBtns.forEach(btn => {
+			btn.addEventListener("click", () => {
+				const status = btn.getAttribute("data-filter");
+
+				propostas.forEach(item => {
+					if (status === "all" || item.getAttribute("data-status") === status) {
+						item.style.display = "";
+					} else {
+						item.style.display = "none";
+					}
+				});
+			});
+		});
+
+		let ctx = document.getElementById('graficoPropostas');
+
+		if (ctx) {
+			let ctx = document.getElementById('graficoPropostas').getContext('2d');
+		}
+
+		if (ctx) {
+			const grafico = new Chart(ctx, {
+				type: 'bar',
+				data: {
+					labels: <?= json_encode($labels); ?>,
+					datasets: [{
+						label: 'Propostas',
+						data: <?= json_encode($dados); ?>,
+						backgroundColor: 'rgba(48, 221, 149, 0.6)',
+						borderColor: 'rgba(44, 230, 121, 1)',
+						borderWidth: 1,
+						borderRadius: 4,
+						barThickness: 40,
+					}]
+				},
+				options: {
+					responsive: true,
+					scales: {
+						y: {
+							beginAtZero: true,
+							ticks: {
+								precision: 0
+							}
+						}
+					}
+				}
+			});
+		}
+
+		let ctx4 = document.getElementById('progressChart');
+
+		if (ctx4) {
+			let ctx4 = document.getElementById('progressChart').getContext('2d');
+		}
+
+		if (ctx4) {
+			new Chart(ctx4, {
+				type: 'bar',
+				data: {
+					labels: ['<?= explode(' ', trim($nickname))[0] ?>'],
+					datasets: [{
+						label: 'Progresso da Meta (%)',
+						data: [<?php if (isset($progresso->percentual)): echo $progresso->percentual;
+								else: echo 0;
+								endif; ?>],
+						backgroundColor: 'rgba(48, 221, 149, 0.6)',
+						borderColor: 'rgba(44, 230, 121, 1)',
+						borderWidth: 1
+					}]
+				},
+				options: {
+					indexAxis: 'y', // horizontal
+					responsive: true,
+					plugins: {
+						legend: {
+							display: false
+						},
+						tooltip: {
+							callbacks: {
+								label: ctx => ctx.parsed.x + '%'
+							}
+						}
+					},
+					scales: {
+						x: {
+							min: 0,
+							max: 100,
+							ticks: {
+								callback: value => value + '%'
+							}
+						}
+					}
+				}
+			});
+		}
+
+		let ctx2 = document.getElementById('graficoPropostasEquipe');
+
+		if (ctx2) {
+			let ctx2 = document.getElementById('graficoPropostasEquipe').getContext('2d');
+		}
+
+		if (ctx2) {
+			const grafico2 = new Chart(ctx2, {
+				type: 'bar',
+				data: {
+					labels: <?= json_encode($labelsEquipe); ?>,
+					datasets: [{
+						label: 'Propostas',
+						data: <?= json_encode($dadosEquipe); ?>,
+						backgroundColor: 'rgba(48, 186, 221, 0.6)',
+						borderColor: 'rgba(44, 187, 230, 1)',
+						borderWidth: 1,
+						borderRadius: 4,
+						barThickness: 40,
+					}]
+				},
+				options: {
+					responsive: true,
+					scales: {
+						y: {
+							beginAtZero: true,
+							ticks: {
+								precision: 0
+							}
+						}
+					}
+				}
+			});
+		}
+	});
+
+
 	const metaEdit = document.getElementById("metaEdit")
 	const metaInput = document.getElementById("metaInput")
 	const metaLink = document.getElementById("metaLink")
@@ -741,43 +856,47 @@
 		}
 	}
 
-	document.querySelectorAll(".metaEdit").forEach((editBtn) => {
-		const input = editBtn.closest(".d-flex").querySelector(".metaInput");
-		const link = editBtn.closest(".d-flex").querySelector(".metaLink");
+	const metaEditAll = document.querySelectorAll('.metaEdit');
 
-		editBtn.addEventListener("click", () => {
-			input.removeAttribute("readonly");
-			input.value = "";
-			link.classList.remove("d-none");
-			input.focus();
-		});
+	if (metaEditAll) {
+		metaEditAll.forEach((editBtn) => {
+			const input = editBtn.closest(".d-flex").querySelector(".metaInput");
+			const link = editBtn.closest(".d-flex").querySelector(".metaLink");
 
-		link.addEventListener("click", (e) => {
-			e.preventDefault(); // evita navegar imediatamente
+			editBtn.addEventListener("click", () => {
+				input.removeAttribute("readonly");
+				input.value = "";
+				link.classList.remove("d-none");
+				input.focus();
+			});
 
-			let valor = input.value.trim();
+			link.addEventListener("click", (e) => {
+				e.preventDefault(); // evita navegar imediatamente
 
-			valor = valor.replace("R$", "").replace(/\./g, "").replace(",", ".");
+				let valor = input.value.trim();
 
-			let floatVal = parseFloat(valor).toFixed(2);
+				valor = valor.replace("R$", "").replace(/\./g, "").replace(",", ".");
 
-			const supervisorId = link.getAttribute("href").split("/").slice(-2, -1)[0];
-			link.href = `<?php echo assetfolder ?>atualizar-meta/${supervisorId}/${floatVal}`;
+				let floatVal = parseFloat(valor).toFixed(2);
 
-			window.location.href = link.href;
-		});
+				const supervisorId = link.getAttribute("href").split("/").slice(-2, -1)[0];
+				link.href = `<?php echo assetfolder ?>atualizar-meta/${supervisorId}/${floatVal}`;
 
-		input.addEventListener("input", (e) => {
-			let valor = e.target.value.replace(/\D/g, "");
-			if (valor === "") {
-				e.target.value = "";
-				return;
+				window.location.href = link.href;
+			});
+
+			input.addEventListener("input", (e) => {
+				let valor = e.target.value.replace(/\D/g, "");
+				if (valor === "") {
+					e.target.value = "";
+					return;
+				}
+				e.target.value = formatBRL(valor);
+			});
+
+			if (input.value.trim() !== "") {
+				input.value = formatBRLfromDatabase(input.value);
 			}
-			e.target.value = formatBRL(valor);
 		});
-
-		if (input.value.trim() !== "") {
-			input.value = formatBRLfromDatabase(input.value);
-		}
-	});
+	}
 </script>
