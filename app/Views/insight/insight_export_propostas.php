@@ -23,12 +23,12 @@
             </div>
         </div>
 
-        <div class="app-container mt-10">
+        <div class="app-container mt-5">
             <div class="row">
-                <form class="d-flex justify-content-center" action="<?php echo assetfolder ?>export-propostas/1">
-                    <div class="d-flex col-xl-6">
-                        <div class="card p-6">
-                            <div class="d-flex gap-4 mb-8">
+                <form class="d-flex gap-6 mb-20 justify-content-center" action="<?php echo assetfolder ?>export-propostas/1">
+                    <div class="d-flex">
+                        <div class="card px-20 py-8">
+                            <div class="d-flex gap-8 mb-4">
                                 <div class="d-flex flex-column gap-2">
                                     <div class="d-flex flex-column gap-3">
                                         <span>Data Início:</span>
@@ -54,30 +54,46 @@
                                             <option value="Análise">Análise</option>
                                         </select>
                                     </div>
-                                    <div class="d-flex flex-column gap-2">
-                                        <span>Supervisor:</span>
-                                        <select class="form-select input-group-solid " aria-label="" name="report_to">
-                                            <option value="">TODOS</option>
-                                            <option value="165005">Ana Karla</option>
-                                            <option value="165006">Jéssica Laís</option>
-                                            <option value="164979">Amanda</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="d-flex flex-column gap-4">
-                                    <div class="d-flex flex-column gap-2">
-                                        <span>Produto:</span>
-                                        <select class="form-select input-group-solid " aria-label="" name="produto">
-                                            <option value="">TODOS</option>
-                                            <option value="Saque">Saque</option>
-                                        </select>
-                                    </div>
-                                    <div class="d-flex flex-column gap-2">
-                                        <span>Assessor:</span>
-                                        <div class="input-group input-group-solid">
-                                            <input type="text" class="form-control" name="assessor" />
+                                    <div class="d-flex flex-column gap-4">
+                                        <div class="d-flex flex-column gap-2">
+                                            <span>Produto:</span>
+                                            <select class="form-select input-group-solid " aria-label="" name="produto">
+                                                <option value="">TODOS</option>
+                                                <option value="Saque">Saque</option>
+                                            </select>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+                            <?php if ($my_security->checkPermission("ADMIN") || $my_security->checkPermission("FORMALIZACAO")): ?>
+                                <div class="d-flex flex-column gap-2">
+                                    <span>Supervisor:</span>
+                                    <select class="form-select input-group-solid " aria-label="" name="report_to">
+                                        <option value="">TODOS</option>
+                                        <option value="165005">Ana Karla</option>
+                                        <option value="165006">Jéssica Laís</option>
+                                        <option value="164979">Amanda</option>
+                                    </select>
+                                </div>
+                            <?php else: ?>
+                                <div class="d-flex flex-column gap-2">
+                                    <span>Supervisor:</span>
+                                    <select class="form-select input-group-solid " aria-label="" name="report_to">
+                                        <option value="<?= $session->userId ?>"><?= $session->nickname ?></option>
+                                    </select>
+                                </div>
+                            <?php endif; ?>
+                            <div class="d-flex flex-column gap-2 mt-2">
+                                <span>Assessor:</span>
+                                <div class="input-group input-group-solid">
+                                    <select class="form-control" name="assessor">
+                                        <option value="">Selecione um assessor</option>
+                                        <?php foreach ($assessores as $assessor): ?>
+                                            <option value="<?= esc($assessor->nickname) ?>">
+                                                <?= esc($assessor->nickname) ?>
+                                            </option>
+                                        <?php endforeach; ?>
+                                    </select>
                                 </div>
                             </div>
                             <div class="d-flex w-100 mt-15 justify-content-end">
@@ -85,8 +101,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="card p-6 d-flex flex-row gap-4">
-                        <div class="d-flex flex-column gap-4">
+                    <div class="card p-6 px-8 d-flex flex-row gap-8">
+                        <div class="d-flex flex-column gap-6">
                             <div class="form-check">
                                 <input class="form-check-input" name="columns[]" type="checkbox" value="adesao" id="col_adesao" checked />
                                 <label class="form-check-lgiabel text-muted" for="col_adesao">
@@ -136,7 +152,7 @@
                                 </label>
                             </div>
                         </div>
-                        <div class="d-flex flex-column gap-4">
+                        <div class="d-flex flex-column gap-6">
                             <div class="form-check">
                                 <input class="form-check-input" name="columns[]" type="checkbox" value="data_criacao" id="col_data" checked />
                                 <label class="form-check-label text-muted" for="col_data">

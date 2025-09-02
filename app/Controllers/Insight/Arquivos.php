@@ -4,11 +4,14 @@ namespace App\Controllers\Insight;
 
 use App\Models\M_insight;
 use App\Libraries\dbMaster;
+use App\Models\M_seguranca;
 
 class Arquivos extends \App\Controllers\BaseController
 {
     protected $m_insight;
     protected $dbMasterDefault;
+    protected $m_security;
+    protected $session;
 
     public function uploadPropostas()
     {
@@ -19,8 +22,19 @@ class Arquivos extends \App\Controllers\BaseController
 
     public function exportPropostas($action)
     {
+        $this->session = session();
+        $this->m_security = new M_seguranca();
         $this->dbMasterDefault = new dbMaster();
         $dados['pageTitle'] = 'Exportação';
+        $dados['session'] = $this->session;
+
+        if ($this->m_security->checkPermission("ADMIN") || $this->m_security->checkPermission("FORMALIZACAO")) {
+            $dados['assessores'] = $this->dbMasterDefault->select('user_account', ['role' => "OPERADOR"]);
+        } else {
+            $dados['assessores'] = $this->dbMasterDefault->select('user_account', ['report_to' => $this->session->userId]);
+        }
+
+        $dados['assessores'] = $dados['assessores']['result']->getResult();
 
         if ($action == '1') {
             $dataInicio = $this->getpost('dataInicial');

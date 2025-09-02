@@ -20,7 +20,7 @@
 				<div id="kt_app_content_container" class="app-container container-fluid">
 					<div class="row g-5 g-xl-10 mb-5">
 
-						<?php if (!$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("FORMALIZACAO") && $report_to !== "164979"): ?>
+						<?php if (!$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("FORMALIZACAO")): ?>
 
 							<div>
 								<div class="card">
@@ -442,13 +442,13 @@
 												<a id="metaLink" href="<?php echo assetfolder ?>atualizar-meta/<?php echo $session->userId ?>/" class="d-none mt-3"><i class="bi text-primary bi-check fs-1"></i></a>
 											</div>
 										</div>
-										<div class="p-4 gap-2 fs-5 d-flex justify-content-center">
+										<div class="p-4 gap-1 fs-5 d-flex justify-content-center">
 											<h2 class="d-flex align-items-center fs-5 px-2 py-1 rounded">
 												<?= $quantidadeAssessoresIndividual ?>
 											</h2>
 											<h3 class="text-gray-600">assessores</h3>
 										</div>
-										<div class="d-flex justify-content-center gap-6 flex-wrap mt-3">
+										<div class="d-flex justify-content-center gap-6 flex-wrap mt-2">
 
 											<!-- Progresso -->
 											<div class="d-flex flex-column align-items-center text-center">
