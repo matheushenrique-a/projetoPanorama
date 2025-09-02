@@ -606,12 +606,12 @@ class M_bmg extends Model
             if ($this->session->role == "OPERADOR") {
                 $meta = $this->m_insight->buscarMetaSuaEquipe()['firstRow']->meta ?? "";
             } else if ($this->session->role == "SUPERVISOR") {
-                $meta = $this->m_insight->buscarMetaIndividual()['firstRow']->meta ?? 15000;
+                $meta = $this->m_insight->buscarMetaIndividual()['firstRow']->meta ?? 22000;
             } else {
-                $meta = 20000;
+                $meta = 22000;
             }
         } else {
-            $meta = 20000;
+            $meta = 22000;
         }
 
         $supervisor = $this->session->userId;

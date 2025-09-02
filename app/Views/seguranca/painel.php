@@ -67,14 +67,14 @@
 									<div class="mb-0 mx-3">
 										<div class="d-flex align-items-center position-relative my-1 mt-0 mb-0">
 											<button type="submit" class="btn btn-primary mt-4" name="buscarProp" value="buscarProp">Buscar Usuário</button>
-											<a href="<?php echo assetfolder; ?>painel/0/add" class="btn btn-primary mt-4 ms-3">+</a>
+											<a href="<?php echo assetfolder; ?>painel-criacao/0/add" class="btn btn-primary mt-4 ms-3">+</a>
 										</div>
 									</div>
 								</div>
 							</div>
 							<div class="card-title">
-								<div class="d-flex bg-gray-200 justify-content-center rounded gap-2 position-relative mt-4 px-4 mb-0">
-									<p class="mt-4 text-gray-900 fs-4"><?= $countUsers ?></p>
+								<div class="d-flex bg-gray-200 justify-content-center rounded gap-2 position-relative mt-4 px-4 mb-0" style="height: 50px;">
+									<p class="mt-4 fw-bold text-gray-900 fs-3"><?= $countUsers ?></p>
 									<p class="mt-5 fs-6 text-gray-700">Usuários</p>
 								</div>
 							</div>

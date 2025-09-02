@@ -1,47 +1,26 @@
 <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
-    <!--begin::Content wrapper-->
     <div class="d-flex flex-column flex-column-fluid">
-        <!--begin::Toolbar-->
         <div id="kt_app_toolbar" class="app-toolbar py-3 py-lg-6">
-            <!--begin::Toolbar container-->
             <div id="kt_app_toolbar_container" class="app-container container-xxl d-flex flex-stack">
-                <!--begin::Page title-->
                 <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
-                    <!--begin::Title-->
                     <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">Painel - Cadastrar Usuário</h1>
-                    <!--end::Title-->
-                    <!--begin::Breadcrumb-->
                     <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
-                        <!--begin::Item-->
                         <li class="breadcrumb-item text-muted">
                             <a href="<?php echo assetfolder ?>" class="text-muted text-hover-primary">Home</a>
                         </li>
-                        <!--end::Item-->
-                        <!--begin::Item-->
                         <li class="breadcrumb-item">
                             <span class="bullet bg-gray-800 w-5px h-2px"></span>
                         </li>
-                        <!--end::Item-->
-                        <!--begin::Item-->
                         <li class="breadcrumb-item text-muted">
-                            <a href="<?php echo assetfolder ?>painel" class="text-muted text-hover-primary">Painel</a>
+                            <a href="<?php echo assetfolder ?>painel/1" class="text-muted text-hover-primary">Painel</a>
                         </li>
-                        <!--end::Item-->
-                        <!--begin::Item-->
                         <li class="breadcrumb-item">
                             <span class="bullet bg-gray-800 w-5px h-2px"></span>
                         </li>
-                        <!--end::Item-->
-                        <!--begin::Item-->
                         <li class="breadcrumb-item text-muted">Edição de Usuário</li>
-                        <!--end::Item-->
                     </ul>
-                    <!--end::Breadcrumb-->
                 </div>
-                <!--end::Page title-->
-
             </div>
-            <!--end::Toolbar container-->
         </div>
         <div style="width: 100%" class="d-flex justify-content-around mb-15">
             <div class="card">
@@ -49,7 +28,7 @@
                     <h2 class="fs-2 fw-semibold mb-0 text-center">Edição de Usuário</h2>
                 </div>
                 <div class="card-body" style="width: 600px">
-                    <form action="<?php echo assetfolder; ?>painel/<?php echo $userId; ?>/create" class="m-3 d-flex content-center flex-column gap-2">
+                    <form action="<?php echo assetfolder; ?>painel-criacao/<?php echo $userId; ?>/create" class="m-3 d-flex content-center flex-column gap-2">
                         <div class="input-group mb-2">
                             <span class="input-group-text" id="inputGroup-sizing-default">Nome</span>
                             <input type="text" required name="nickname" value="<?= esc($nome) ?>" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" />
@@ -98,6 +77,10 @@
             </div>
             <div>
                 <div class="card" style="width: 450px; height: 480px">
+                    <form action="<?= base_url('painel/uploadProfile/' . $userId) ?>" method="post" enctype="multipart/form-data">
+                        <input type="file" name="profile_image" accept="image/*">
+                        <button type="submit">Enviar</button>
+                    </form>
                 </div>
             </div>
         </div>

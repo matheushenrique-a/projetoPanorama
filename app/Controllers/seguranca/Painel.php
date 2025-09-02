@@ -151,7 +151,7 @@ class Painel extends BaseController
                 $this->dbMaster->insert('user_account', $dados);
             }
 
-            return redirect()->to(urlInstitucional . 'painel');
+            return redirect()->to(urlInstitucional . 'painel/1');
         }
 
         $dados['pageTitle'] = "Cadastro";
@@ -205,7 +205,7 @@ class Painel extends BaseController
 
         if ($action == "remove") {
             $this->dbMaster->delete('user_account', ['userId' => $userId]);
-            return redirect()->to(urlInstitucional . '/painel');
+            return redirect()->to(urlInstitucional . 'painel/1');
         }
 
         $whereCheck['role'] = 'SUPERVISOR';

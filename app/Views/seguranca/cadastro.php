@@ -12,7 +12,7 @@
                             <span class="bullet bg-gray-800 w-5px h-2px"></span>
                         </li>
                         <li class="breadcrumb-item text-muted">
-                            <a href="<?php echo assetfolder ?>painel" class="text-muted text-hover-primary">Painel</a>
+                            <a href="<?php echo assetfolder ?>painel/1" class="text-muted text-hover-primary">Painel</a>
                         </li>
                         <li class="breadcrumb-item">
                             <span class="bullet bg-gray-800 w-5px h-2px"></span>
@@ -28,7 +28,7 @@
                     <h2 class="fs-2 fw-semibold mb-0 text-center">Cadastro de Usuário</h2>
                 </div>
                 <div class="card-body" style="width: 600px">
-                    <form action="<?php echo assetfolder; ?>painel/0/create" class="m-3 d-flex content-center flex-column gap-2">
+                    <form action="<?php echo assetfolder; ?>painel-criacao/0/create" class="m-3 d-flex content-center flex-column gap-2">
                         <div class="input-group mb-2">
                             <span class="input-group-text" id="inputGroup-sizing-default">Nome</span>
                             <input type="text" required name="nickname" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" />
@@ -120,6 +120,13 @@
             </div>
             <div>
                 <div class="card" style="width: 450px; height: 480px">
+                    <form class="d-flex flex-column justify-content-center mx-auto" action="<?= base_url('painel/uploadProfile/') ?>" method="post" enctype="multipart/form-data">
+                        <div class="border rounded m-10" style="width: 300px; height:  300px;">
+
+                        </div>
+                        <input class="form-control mb-4" type="file" name="profile_image" accept="image/*">
+                        <button class="btn btn-secondary" type="submit">Enviar</button>
+                    </form>
                 </div>
             </div>
         </div>
