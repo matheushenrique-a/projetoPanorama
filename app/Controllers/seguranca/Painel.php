@@ -11,31 +11,28 @@ class Painel extends BaseController
     protected $session;
     protected $my_security;
 
-    public function listar_usuarios()
+    public function listar_usuarios($page = 1)
     {
         $buscarProp = $this->getpost('buscarProp');
         $this->session = session();
 
         if (!empty($buscarProp)) {
             helper('cookie');
-            $nickname = $this->getpost('content', false);
-            $role = $this->getpost('role', false);
-            $quantidade = $this->getpost('quantidade', false);
-            $report_to = $this->getpost('report_to', false);
+            $nickname   = $this->getpost('content', false);
+            $role       = $this->getpost('role', false);
+            $report_to  = $this->getpost('report_to', false);
 
             Services::response()->setCookie('nickname', $nickname);
             Services::response()->setCookie('role', $role);
-            Services::response()->setCookie('quantidade', $quantidade);
             Services::response()->setCookie('report_to', $report_to);
         } else {
-            $nickname = $this->getpost('nickname', true);
-            $role = $this->getpost('role', true);
-            $quantidade = $this->getpost('quantidade', true);
-            $report_to = $this->getpost('report_to', true);
+            $nickname   = $this->getpost('nickname', true);
+            $role       = $this->getpost('role', true);
+            $report_to  = $this->getpost('report_to', true);
         }
 
         $whereCheck = [];
-        $likeCheck = [];
+        $likeCheck  = [];
 
         $whereCheck['empresa'] = EMPRESA;
 
@@ -50,23 +47,35 @@ class Painel extends BaseController
         $parametros = [];
         if (!empty($likeCheck)) $parametros['likeCheck'] = $likeCheck;
 
-        $this->dbMaster->setLimit((int) $quantidade);
+        // 🔹 define paginação
+        $perPage = 10;
+        $offset  = ($page - 1) * $perPage;
+
+        $this->dbMaster->setLimitPage($perPage, $offset); // sua lib aceita limit/offset aqui
         $this->dbMaster->setOrderBy(['userId', 'DESC']);
 
-        $usuarios = $this->dbMaster->select('user_account', $whereCheck, $parametros);
-        $countUsers = $usuarios['countAll'];
+        // 🔹 selectPage já traz os dados + count
+        $usuarios = $this->dbMaster->selectPage('user_account', $whereCheck, $parametros);
+
+        $countUsers = $this->dbMaster->countOnly('user_account', $whereCheck, $parametros);
+        $totalPages = ceil($countUsers / $perPage);
+
+        $totalPages = ceil($countUsers / $perPage);
 
         $dados = [
-            'pageTitle' => 'Painel de Usuários',
-            'usuarios' => $usuarios['result']->getResult(),
-            'nickname' => $nickname,
-            'role' => $role,
-            'quantidade' => $quantidade,
-            'countUsers' => $countUsers
+            'pageTitle'   => 'Painel de Usuários',
+            'usuarios'    => $usuarios['result']->getResult(), // resultados da página
+            'nickname'    => $nickname,
+            'role'        => $role,
+            'countUsers'  => $countUsers,        // total de registros
+            'quantidade'  => $perPage,           // registros por página
+            'currentPage' => $page,
+            'totalPages'  => $totalPages
         ];
 
         return $this->loadpage('seguranca/painel', $dados);
     }
+
 
     public function criar_usuarios($userId, $action)
     {

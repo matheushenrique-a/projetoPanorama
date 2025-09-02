@@ -5,8 +5,9 @@ namespace App\Libraries;
 class dbMaster
 {
 	protected $db;
-	protected $orderby;
-	protected $limit = 250;
+	protected $limit = null;
+	protected $offset = null;
+	protected $orderby = null;
 
 	public function setOrderBy($value)
 	{
@@ -63,6 +64,61 @@ class dbMaster
 		$builder->limit($this->limit);
 		return $this->resultfy($builder->get());
 	}
+
+	public function selectPage($table, $whereCheck, $parameters = null)
+	{
+		$builder = $this->db->table($table);
+
+		if (!is_null($this->orderby)) {
+			$builder->orderBy($this->orderby[0], $this->orderby[1]);
+		}
+
+		if (!is_null($parameters)) {
+			if (array_key_exists('whereNotIn', $parameters)) {
+				$builder->whereNotIn($parameters['whereNotIn'][0], $parameters['whereNotIn'][1]);
+			}
+			if (array_key_exists('likeCheck', $parameters)) {
+				$builder->like($parameters['likeCheck']);
+			}
+			if (array_key_exists('whereIn', $parameters)) {
+				$builder->whereIn($parameters['whereIn'][0], $parameters['whereIn'][1]);
+			}
+		}
+
+		if (!is_null($whereCheck)) {
+			$builder->where($whereCheck);
+		}
+
+		if (!is_null($this->limit)) {
+			$builder->limit($this->limit, $this->offset ?? 0);
+		}
+
+		return $this->resultfy($builder->get());
+	}
+
+	public function setLimitPage($limit, $offset = 0)
+	{
+		$this->limit  = $limit;
+		$this->offset = $offset;
+	}
+
+	public function countOnly($table, $where = [], $parametros = [])
+	{
+		$builder = $this->db->table($table);
+
+		if (!empty($where)) {
+			$builder->where($where);
+		}
+
+		if (!empty($parametros['likeCheck'])) {
+			foreach ($parametros['likeCheck'] as $campo => $valor) {
+				$builder->like($campo, $valor);
+			}
+		}
+
+		return $builder->countAllResults();
+	}
+
 
 	public function selectArquivos($id)
 	{

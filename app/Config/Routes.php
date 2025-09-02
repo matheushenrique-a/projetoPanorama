@@ -30,8 +30,8 @@ $routes->get('/', 'Home::index');
 
 //SEGURANCA
 $routes->match(['get', 'post'], '/sign-in', 'Seguranca\Login::autenticar');
-$routes->match(['get', 'post'], '/painel', 'Seguranca\Painel::listar_usuarios');
-$routes->match(['get', 'post'], '/painel/(:any)/(:any)', 'Seguranca\Painel::criar_usuarios/$1/$2');
+$routes->match(['get', 'post'], '/painel/(:any)', 'Seguranca\Painel::listar_usuarios/$1');
+$routes->match(['get', 'post'], '/painel-criacao/(:any)/(:any)', 'Seguranca\Painel::criar_usuarios/$1/$2');
 
 //Bradesco
 $routes->match(['get', 'post'], '/bradesco-receptivo/(:any)', 'Bradesco\Bradesco::index');

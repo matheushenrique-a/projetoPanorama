@@ -6,16 +6,12 @@
 					<h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">Painel de Usuários</h1>
 					<ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
 						<li class="breadcrumb-item text-muted">
-							<a href="#" class="text-muted text-hover-primary">Home</a>
+							<a href="<?php echo assetfolder ?>" class="text-muted text-hover-primary">Home</a>
 						</li>
 						<li class="breadcrumb-item">
 							<span class="bullet bg-gray-800 w-5px h-2px"></span>
 						</li>
 						<li class="breadcrumb-item text-muted">Painel</li>
-						<li class="breadcrumb-item">
-							<span class="bullet bg-gray-800 w-5px h-2px"></span>
-						</li>
-						<li class="breadcrumb-item text-muted">Usuários</li>
 					</ul>
 				</div>
 			</div>
@@ -30,20 +26,6 @@
 									<div class="mb-3">
 										<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Busca:</label>
 										<input type="text" class="form-control" placeholder="Usuário" name="content" value="" />
-									</div>
-								</div>
-							</div>
-							<div class="card-title">
-								<div class="d-flex align-items-center position-relative my-1 mx-3">
-									<div class="mb-3">
-										<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Quantidade:</label>
-										<div class="d-flex align-items-center position-relative my-1">
-											<select class="form-select form-control-solid" aria-label="" name="quantidade">
-												<option value="20" <?= ($quantidade ?? '') === '20' ? 'selected' : '' ?>>20</option>
-												<option value="50" <?= ($quantidade ?? '') === '50' ? 'selected' : '' ?>>50</option>
-												<option value="100" <?= ($quantidade ?? '') === '100' ? 'selected' : '' ?>>100</option>
-											</select>
-										</div>
 									</div>
 								</div>
 							</div>
@@ -150,14 +132,35 @@
 										<?php else: ?>
 											<td>-</td>
 										<?php endif; ?>
-										<td><a href="<?php echo assetfolder; ?>painel/<?php echo $row->userId; ?>/edit"><i class="text-muted bi bi-pencil-square"></i></a></td>
-										<td><a href="<?php echo assetfolder; ?>painel/<?php echo $row->userId; ?>/remove"><i class="text-danger bi bi-trash"></i></a></td>
+										<td><a href="<?php echo assetfolder; ?>painel-criacao/<?php echo $row->userId; ?>/edit"><i class="text-muted bi bi-pencil-square"></i></a></td>
+										<td><a href="<?php echo assetfolder; ?>painel-criacao/<?php echo $row->userId; ?>/remove"><i class="text-danger bi bi-trash"></i></a></td>
 									</tr>
 								<?php
 								}
 								?>
 							</tbody>
 						</table>
+						<nav class="mt-4">
+							<ul class="pagination">
+								<?php if ($currentPage > 1): ?>
+									<li class="page-item">
+										<a class="page-link" href="<?= assetfolder . 'painel/' . ($currentPage - 1) ?>">Anterior</a>
+									</li>
+								<?php endif; ?>
+
+								<?php for ($i = 1; $i <= $totalPages; $i++): ?>
+									<li class="page-item <?= ($i == $currentPage) ? 'active' : '' ?>">
+										<a class="page-link" href="<?= assetfolder . 'painel/' . $i ?>"><?= $i ?></a>
+									</li>
+								<?php endfor; ?>
+
+								<?php if ($currentPage < $totalPages): ?>
+									<li class="page-item">
+										<a class="page-link" href="<?= assetfolder . 'painel/' . ($currentPage + 1) ?>">Próximo</a>
+									</li>
+								<?php endif; ?>
+							</ul>
+						</nav>
 					</div>
 				</div>
 			</div>
