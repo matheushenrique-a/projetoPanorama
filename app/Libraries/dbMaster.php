@@ -39,6 +39,17 @@ class dbMaster
 		}
 	}
 
+	public function listarNotificacoes($userId)
+	{
+		$builder = $this->db->table('quid_notificacoes');
+		$builder->where('userId', $userId);
+		$builder->orderBy('created_at', 'DESC');
+		$query = $builder->get();
+
+		return $query->getResult(); 
+	}
+
+
 	public function select($table, $whereCheck, $parameters = null)
 	{
 		$builder = $this->db->table($table);

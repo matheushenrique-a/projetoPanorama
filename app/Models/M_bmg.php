@@ -439,12 +439,13 @@ class M_bmg extends Model
         $produto = "Saque";
         $valor = (float) $data['valorSaque'];
         $status = "Adesão";
-        $panorama_id = $data['panorama_id'];
+        $panorama_id = $data['panorama_id'] ?? "";
         $codigo_entidade = $data['codigo_entidade'];
         $valor_parcela = (float) $data['valor_parcela'];
         $numero_parcela = $data['numero_parcela'];
         $matricula = $data['matricula'];
         $dataNascimento = $data['dataNascimento'];
+        $userId = $data['userId'];
 
         $auditores = [
             "1" => "165022",
@@ -497,6 +498,7 @@ class M_bmg extends Model
             "matricula" => $matricula,
             "dataNascimento" => $dataNascimento,
             "id_owner" => $auditoriaId,
+            "userId" => $userId
         ]);
 
         $movimentacao = [

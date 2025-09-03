@@ -125,9 +125,9 @@ class Home extends BaseController
         $dados['ranking'] = $this->m_bmg->tabelaAssessores();
 
         if ($this->session->role == "OPERADOR") {
-            if ($this->session->report_to !== "164979") {
-                $dados['progresso'] = $this->m_bmg->barraProgressoAssessor();
-            }
+            // if ($this->session->report_to !== "164979") {
+            // }
+            $dados['progresso'] = $this->m_bmg->barraProgressoAssessor();
             $dados['metaEquipe'] = $this->m_insight->buscarMetaSuaEquipe()['firstRow']->meta ?? "";
         }
 
@@ -186,6 +186,11 @@ class Home extends BaseController
             $dados['ultimasPropostasAuditor'] = $ultimasPropostasAuditor;
             $dados['ultimasPropostasAuditorTotal'] = $ultimasPropostasAuditorTotal;
         }
+
+        // $notificacoes = $this->m_insight->listarNotificacoes($this->session->userId);
+
+        // // $notificacoes já é o array que você quer
+        // $dados['notificacoes'] = $notificacoes;
 
         return $this->loadpage('headers/home-default', $dados);
     }

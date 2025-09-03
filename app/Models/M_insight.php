@@ -14,6 +14,8 @@ class M_insight extends Model
 
     public function __construct()
     {
+        parent::__construct();
+        $this->db = \Config\Database::connect();
         $this->dbMasterDefault = new dbMaster();
         $this->session = session();
         $this->m_http =  new M_http();
@@ -263,5 +265,20 @@ class M_insight extends Model
     public function quantidadeEquipe($idSupervisor)
     {
         return $this->dbMasterDefault->select('user_account', ['report_to' => $idSupervisor]);
+    }
+
+    public function registrarNotificacao($dados)
+    {
+        return $this->dbMasterDefault->insert('quid_notificacoes', $dados);
+    }
+
+    public function listarNotificacoes($userId)
+    {
+        $builder = $this->db->table('quid_notificacoes');
+        $builder->where('userId', $userId);
+        $builder->orderBy('created_at', 'DESC');
+        $query = $builder->get();
+
+        return $query->getResult();
     }
 }

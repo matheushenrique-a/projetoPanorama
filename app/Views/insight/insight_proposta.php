@@ -174,6 +174,7 @@ $movimentation = match ($row->status) {
                                                                 endif; ?> />
                                                         </div>
                                                     </div>
+                                                        <input type="hidden" name="userId" value="<?= $row->userId ?>" />
                                                 </div>
                                             </div>
                                             <?php if ($row->status == "TED Devolvida" && !$my_security->checkPermission("FORMALIZACAO")): ?>
@@ -189,12 +190,13 @@ $movimentation = match ($row->status) {
                                                         </div>
                                                         <div class="mb-2">
                                                             <span class="fw-bold mb-1">Agência:</span>
-                                                            <input type="text" class="form-control form-control-solid" name="agenciaFix" required/>
+                                                            <input type="text" class="form-control form-control-solid" name="agenciaFix" required />
                                                         </div>
                                                         <div class="mb-2">
                                                             <span class="fw-bold mb-1">Conta:</span>
-                                                            <input type="text" class="form-control form-control-solid" name="contaFix" required/>
+                                                            <input type="text" class="form-control form-control-solid" name="contaFix" required />
                                                         </div>
+
                                                     </div>
                                                 </div>
                                             <?php endif; ?>
@@ -369,8 +371,11 @@ $movimentation = match ($row->status) {
                                                                                 <?php endforeach; ?>
                                                                             </div>
                                                                         </div>
+
+
                                                 </div>
                                             </div>
+
                             </form>
                             <?php if ($my_security->checkPermission("ADMIN") || $my_security->checkPermission("FORMALIZACAO")): ?>
                                 <div id="form-upload" class="p-8 border-top d-none">

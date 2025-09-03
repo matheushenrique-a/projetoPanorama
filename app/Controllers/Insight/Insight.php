@@ -144,7 +144,8 @@ class Insight extends BaseController
                         'valorSaque' => $valorSaque,
                         'valor_parcela' => $valorParcela,
                         'numero_parcela' => $quantidadeParcelas,
-                        'data_criacao' => date('Y-m-d H:i:s')
+                        'data_criacao' => date('Y-m-d H:i:s'),
+                        'userId' => $this->session->userId
                     ]);
                 }
 
@@ -196,6 +197,18 @@ class Insight extends BaseController
                 }
 
                 $novoStatus = "Auditoria";
+            }
+
+            $userId = $this->getpost('userId');
+
+            if ($novoStatus == "Pendente") {
+                $dados = [
+                    'userId' => $userId,
+                    'message' => $resumo ?? "",
+                    'link' => $id,
+                ];
+
+                $this->m_insight->registrarNotificacao($dados);
             }
 
 
@@ -291,6 +304,7 @@ class Insight extends BaseController
             $data['dataNascimento'] = $dataNascimento;
             $data['telefone'] = $ddd . $telefone;
             $data['data_criacao'] = $dataCriacaoMySQL;
+            $data['userId'] = $this->session->userId;
 
             $this->m_bmg->gravar_proposta_bmg_database($data);
 
