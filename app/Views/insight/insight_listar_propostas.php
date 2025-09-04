@@ -253,7 +253,7 @@
 									<tr>
 										<td class="align-middle text-center">
 											<span class="badge badge-light-<?= $status ?> fs-6"><?= $row->status ?></span>
-											<p class="text-<?= $status ?> fw-bold fst-italic fs-6 pt-2"><?php if ($row->status == "Cancelada"): echo $row->motivoCancelamento;
+											<p class="text-<?= $status ?> fw-bold fst-italic fs-7 pt-2"><?php if ($row->status == "Cancelada"): echo $row->motivoCancelamento;
 																										else: echo $row->resumo ?? "";
 																										endif; ?></p>
 										</td>
