@@ -251,9 +251,11 @@
 									};
 								?>
 									<tr>
-										<td class="align-middle">
+										<td class="align-middle text-center">
 											<span class="badge badge-light-<?= $status ?> fs-6"><?= $row->status ?></span>
-											<p class="text-gray-800 fw-bold fst-italic fs-6 text-center pt-1"><?= $row->resumo ?? "" ?></p>
+											<p class="text-<?= $status ?> fw-bold fst-italic fs-6 pt-2"><?php if ($row->status == "Cancelada"): echo $row->motivoCancelamento;
+																										else: echo $row->resumo ?? "";
+																										endif; ?></p>
 										</td>
 										<td class="align-middle"><?= date('d/m/Y', strtotime($row->data_criacao)); ?></td>
 										<td class="align-middle text-gray-800">

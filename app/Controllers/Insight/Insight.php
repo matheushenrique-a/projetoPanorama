@@ -143,6 +143,10 @@ class Insight extends BaseController
             $id = $this->request->getPost('id');
             $novoStatus = $this->request->getPost('status');
 
+            if ($novoStatus == "Cancelada") {
+                $motivoCancelamento = $this->request->getpost('motivoCancelamento');
+            }
+
             $nome = $this->request->getPost('nome');
             $cpf = $this->request->getPost('cpf');
             $telefone = $this->request->getPost('telefone');
@@ -234,7 +238,8 @@ class Insight extends BaseController
                     'assessor' => $assessor,
                     'banco' => $banco ?? null,
                     'agencia' => $agencia ?? null,
-                    'conta' => $conta ?? null
+                    'conta' => $conta ?? null,
+                    'motivoCancelamento' => $motivoCancelamento ?? "",
                 ];
                 $condicao = ['idquid_propostas' => $id];
 

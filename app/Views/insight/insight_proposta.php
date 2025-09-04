@@ -174,7 +174,7 @@ $movimentation = match ($row->status) {
                                                                 endif; ?> />
                                                         </div>
                                                     </div>
-                                                        <input type="hidden" name="userId" value="<?= $row->userId ?>" />
+                                                    <input type="hidden" name="userId" value="<?= $row->userId ?>" />
                                                 </div>
                                             </div>
                                             <?php if ($row->status == "TED Devolvida" && !$my_security->checkPermission("FORMALIZACAO")): ?>
@@ -234,8 +234,21 @@ $movimentation = match ($row->status) {
                                                                 <option value="Análise" <?= $row->status == 'Análise' ? 'selected' : '' ?>>Análise</option>
                                                                 <option value="Cancelada" <?= $row->status == 'Cancelada' ? 'selected' : '' ?>>Cancelada</option>
                                                             </select>
-                                                            <label class="form-label mt-2" for="desc">Resumo</label>
-                                                            <input id="resumo" name="resumo" type="text" class="form-control" maxlength="27">
+                                                            <div id="resumoDiv">
+                                                                <label class="form-label mt-2" for="desc">Resumo</label>
+                                                                <input id="resumo" name="resumo" type="text" class="form-control" maxlength="27">
+                                                            </div>
+                                                            <div id="motivoDiv" style="display: none;" class="mt-2">
+                                                                <label for="status_<?= $row->idquid_propostas ?>" class="form-label">Motivo</label>
+                                                                <select class="form-select" id="status_<?= $row->idquid_propostas ?>" name="motivoCancelamento" required>
+                                                                    <option value="Cliente" <?= $row->motivoCancelamento == 'Cliente' ? 'selected' : '' ?>>Cliente</option>
+                                                                    <option value="Dados Cadastrais" <?= $row->motivoCancelamento == 'Dados cadastrais' ? 'selected' : '' ?>>Dados cadastrais</option>
+                                                                    <option value="Decurso de prazo" <?= $row->motivoCancelamento == 'Decurso de prazo' ? 'selected' : '' ?>>Descurso de prazo</option>
+                                                                    <option value="Dados bancários" <?= $row->motivoCancelamento == 'Dados bancários' ? 'selected' : '' ?>>Dados bancários</option>
+                                                                    <option value="Por limite" <?= $row->motivoCancelamento == 'Por limite' ? 'selected' : '' ?>>Por limite</option>
+                                                                    <option value="Pelo banco" <?= $row->motivoCancelamento == 'Pelo banco' ? 'selected' : '' ?>>Pelo banco</option>
+                                                                </select>
+                                                            </div>
                                                         </div>
                                                         <div class="flex-grow-1">
                                                             <label class="form-label">Observação:</label>
@@ -601,5 +614,28 @@ $movimentation = match ($row->status) {
                 }
             });
         });
+
+        const statusSelect = document.querySelector("select[name='status']")
+        const resumo = document.getElementById("resumoDiv")
+        const motivo = document.getElementById("motivoDiv")
+
+        if (statusSelect) {
+            toggleComponente(statusSelect.value);
+
+            statusSelect.addEventListener("change", function() {
+                toggleComponente(this.value);
+            });
+        }
+
+        function toggleComponente(valor) {
+            if (valor === "Cancelada") {
+                resumo.style.display = "none";
+                motivo.style.display = "block";
+            } else {
+                resumo.style.display = "block";
+                motivo.style.display = "none";
+            }
+        }
+
     });
 </script>
