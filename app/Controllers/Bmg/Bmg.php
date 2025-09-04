@@ -44,7 +44,6 @@ class Bmg extends BaseController
     public function bmg_gravar_proposta()
     {
         $request = file_get_contents('php://input');
-        $this->telegram->notifyTelegramGroup($request, telegramQuid);
 
         //DEBUG ONLY
         $request = '{"produto":"MED","cpf":"27265170300","conta":"21345340","plano":"110","codigoTipoPagamento":"2","nome":"NEIDE ROCHA DUARTE ","estadoCivil":"S","sexo":"1","mae":"SEBATIANA ROCHA DUARTE","pai":"","nacionalidade":"","tipoDocumento":"","rg":"","cidadeNascimento":"","dataNascimento":"27/06/1957","ufNascimento":"","dataEmissaoRg":"","orgaoEmissor":"","ufRg":"","email":"","logradouro":"","bairro":"","cep":"","cidade":"","uf":"","numero":"","complemento":"","docIdentidade":"","telefone":"(31)99578-1355"}';
@@ -870,7 +869,8 @@ class Bmg extends BaseController
                     'valor_parcela' => $valorParcela,
                     'numero_parcela' => $numeroParcelas,
                     'matricula' => $matricula,
-                    'dataNascimento' => $this->getpost('dataNascimento')
+                    'dataNascimento' => $this->getpost('dataNascimento'),
+                    'userId' => $this->session->userId
                 ];
 
                 $this->m_bmg->gravar_proposta_bmg_database($database);

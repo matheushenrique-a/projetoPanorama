@@ -173,53 +173,55 @@
 							</div>
 						</div>
 						<div class="app-navbar flex-shrink-0">
-							<div class="app-navbar-item ms-lg-3">
-								<a href="#" class="btn btn-icon btn-custom btn-icon-muted btn-active-light btn-active-color-primary w-35px h-35px w-md-40px h-md-40px" data-kt-menu-trigger="{default:'click', lg: 'hover'}" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
-									<span class="svg-icon svg-icon-2">
-										<svg class="w-6 h-6 text-gray-500 dark:text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-											<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5.365V3m0 2.365a5.338 5.338 0 0 1 5.133 5.368v1.8c0 2.386 1.867 2.982 1.867 4.175 0 .593 0 1.193-.538 1.193H5.538c-.538 0-.538-.6-.538-1.193 0-1.193 1.867-1.789 1.867-4.175v-1.8A5.338 5.338 0 0 1 12 5.365Zm-8.134 5.368a8.458 8.458 0 0 1 2.252-5.714m14.016 5.714a8.458 8.458 0 0 0-2.252-5.714M8.54 17.901a3.48 3.48 0 0 0 6.92 0H8.54Z" />
-										</svg>
-									</span>
-								</a>
-								<div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-title-gray-700 menu-icon-muted menu-active-bg menu-state-color fw-semibold py-4 fs-base w-300px" data-kt-menu="true" data-kt-element="theme-mode-menu">
-									<div class="menu-item px-1 my-0">
-										<div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-title-gray-700 menu-icon-muted menu-active-bg menu-state-color fw-semibold py-4 fs-base w-300px" data-kt-menu="true" data-kt-element="theme-mode-menu">
-											<div class="menu-item px-1 my-0">
-												<h3 class="text-center fs-5 text-gray-800 border-bottom pb-2">Notificações</h3>
-												<?php if (!empty($notificacoes)): ?>
-													<?php foreach ($notificacoes as $notificacao): ?>
-														<div class="border-bottom">
-															<div class="alert mt-3 alert-warning d-flex justify-content-between align-items-center">
-																<div class="d-flex flex-column gap-3">
-																	<div>
-																		<svg class="w-5 h-5 text-warning" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor">
-																			<path fill-rule="evenodd" d="M2 12C2 6.477..." />
-																		</svg>
-																		<span class="text-warning fs-6">Pendente</span>
+							<?php if ($my_security->checkPermission("ADMIN")): ?>
+								<div class="app-navbar-item ms-lg-3">
+									<a href="#" class="btn btn-icon btn-custom btn-icon-muted btn-active-light btn-active-color-primary w-35px h-35px w-md-40px h-md-40px" data-kt-menu-trigger="{default:'click', lg: 'hover'}" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
+										<span class="svg-icon svg-icon-2">
+											<svg class="w-6 h-6 text-gray-500 dark:text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+												<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5.365V3m0 2.365a5.338 5.338 0 0 1 5.133 5.368v1.8c0 2.386 1.867 2.982 1.867 4.175 0 .593 0 1.193-.538 1.193H5.538c-.538 0-.538-.6-.538-1.193 0-1.193 1.867-1.789 1.867-4.175v-1.8A5.338 5.338 0 0 1 12 5.365Zm-8.134 5.368a8.458 8.458 0 0 1 2.252-5.714m14.016 5.714a8.458 8.458 0 0 0-2.252-5.714M8.54 17.901a3.48 3.48 0 0 0 6.92 0H8.54Z" />
+											</svg>
+										</span>
+									</a>
+									<div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-title-gray-700 menu-icon-muted menu-active-bg menu-state-color fw-semibold py-4 fs-base w-300px" data-kt-menu="true" data-kt-element="theme-mode-menu">
+										<div class="menu-item px-1 my-0">
+											<div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-title-gray-700 menu-icon-muted menu-active-bg menu-state-color fw-semibold py-4 fs-base w-300px" data-kt-menu="true" data-kt-element="theme-mode-menu">
+												<div class="menu-item px-1 my-0">
+													<h3 class="text-center fs-5 text-gray-800 border-bottom pb-2">Notificações</h3>
+													<?php if (!empty($notificacoes)): ?>
+														<?php foreach ($notificacoes as $notificacao): ?>
+															<div class="border-bottom">
+																<div class="alert mt-3 alert-warning d-flex justify-content-between align-items-center">
+																	<div class="d-flex flex-column gap-3">
+																		<div>
+																			<svg class="w-5 h-5 text-warning" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor">
+																				<path fill-rule="evenodd" d="M2 12C2 6.477..." />
+																			</svg>
+																			<span class="text-warning fs-6">Pendente</span>
+																		</div>
+																		<span class="text-gray-900 fs-4"><?= esc($notificacao->message ?: 'Sem mensagem') ?></span>
 																	</div>
-																	<span class="text-gray-900 fs-4"><?= esc($notificacao->message ?: 'Sem mensagem') ?></span>
-																</div>
-																<div class="d-flex flex-end align-items-start">
-																	<button
-																		type="button"
-																		class="btn btn-sm btn-icon btn-light ms-2 marcar-lido"
-																		data-id="<?= esc($notificacao->idquid_notificacoes) ?>">
-																		✖
-																	</button>
+																	<div class="d-flex flex-end align-items-start">
+																		<button
+																			type="button"
+																			class="btn btn-sm btn-icon btn-light ms-2 marcar-lido"
+																			data-id="<?= esc($notificacao->idquid_notificacoes) ?>">
+																			✖
+																		</button>
+																	</div>
 																</div>
 															</div>
+														<?php endforeach; ?>
+													<?php else: ?>
+														<div class="p-3 text-center text-gray-600">
+															Nenhuma notificação
 														</div>
-													<?php endforeach; ?>
-												<?php else: ?>
-													<div class="p-3 text-center text-gray-600">
-														Nenhuma notificação
-													</div>
-												<?php endif; ?>
+													<?php endif; ?>
+												</div>
 											</div>
 										</div>
 									</div>
 								</div>
-							</div>
+							<?php endif; ?>
 							<?php if ($my_security->checkPermission("ADMIN")): ?>
 								<div class="app-navbar-item ms-1 ms-lg-3">
 									<div class="btn btn-icon btn-custom btn-icon-muted btn-active-light btn-active-color-primary w-35px h-35px w-md-40px h-md-40px position-relative" id="kt_drawer_chat_toggle">
@@ -665,7 +667,7 @@
 									</div>
 								<?php endif; ?>
 
-								<?php if ($my_security->checkPermission("SUPERVISOR")): ?>
+								<?php if ($my_security->checkPermission("SUPERVISOR") || $my_security->checkPermission("FORMALIZACAO")): ?>
 									<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
 										<span class="menu-link">
 											<span class="menu-icon">

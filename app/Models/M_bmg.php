@@ -445,6 +445,7 @@ class M_bmg extends Model
         $numero_parcela = $data['numero_parcela'];
         $matricula = $data['matricula'];
         $dataNascimento = $data['dataNascimento'];
+
         $userId = $data['userId'];
 
         $auditores = [

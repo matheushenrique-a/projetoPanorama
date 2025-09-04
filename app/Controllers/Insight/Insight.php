@@ -72,22 +72,6 @@ class Insight extends BaseController
             return redirect()->to(urlInstitucional . 'insight-listar-propostas/0/0');
         }
 
-        if ($action == "add") {
-            $dados['pageTitle'] = 'Adicionar proposta';
-
-            $nomes = [];
-
-            $assessores = $this->m_bmg->listarAssessor();
-
-            foreach ($assessores as $assessor) {
-                $nomes[] = $assessor->nickname;
-            }
-
-            $dados['assessores'] = $assessores;
-
-            return $this->loadpage('insight/insight_incluir_proposta', $dados);
-        }
-
         if ($action == "enviar-panorama") {
             $dados['pageTitle'] = 'Adicionar proposta';
             $dados['nomeAssessor'] = $this->session->nickname;
