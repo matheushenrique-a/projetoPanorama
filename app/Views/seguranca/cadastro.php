@@ -114,10 +114,10 @@
                 </div>
                 <div class="card" style="width: 450px; height: 480px">
                     <div class="d-flex flex-column justify-content-center mx-auto">
-                        <div class=" border rounded m-10" style="width: 300px; height:  300px;">
+                        <div id="preview" class="border rounded-3 m-10" style="width: 300px; height:  300px;">
 
                         </div>
-                        <input class="form-control mb-4" type="file" name="profile_image" accept="image/*">
+                        <input id="profile_image_input" class="form-control mb-4" type="file" name="profile_image" accept="image/*">
                     </div>
                 </div>
             </form>
@@ -144,3 +144,26 @@
         </ul>
     </div>
 </div>
+
+<script>
+    const input = document.getElementById('profile_image_input');
+    const preview = document.getElementById('preview');
+
+    input.addEventListener('change', function() {
+        const file = this.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.innerHTML = ''; // limpa conteúdo anterior
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            img.classList.add('rounded-3'); // aplica borda arredondada
+            img.style.width = '100%';
+            img.style.height = '100%';
+            img.style.objectFit = 'cover';
+            preview.appendChild(img);
+        }
+        reader.readAsDataURL(file);
+    });
+</script>

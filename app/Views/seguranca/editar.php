@@ -73,13 +73,16 @@
                         <button type="submit" class="btn btn-primary" name="btnConsultar" value="btnConsultar">Atualizar</button>
                     </div>
                 </div>
-                <div>
-                    <div class="card" style="width: 450px; height: 480px">
-                        <div class="d-flex flex-column justify-content-center mx-auto">
-                            <div class=" border rounded m-10" style="width: 300px; height:  300px;">
+                <div class="card" style="width: 450px; height: 480px">
+                    <div class="d-flex flex-column justify-content-center mx-auto">
+                        <?php if (!empty($profile_image)): ?>
+                            <div id="preview" class="border rounded-3 m-10" style="width: 300px; height:  300px;">
+                                <img style="width: 100%; height: 100%; object-fit:cover;" class="rounded-3" src="<?= base_url($profile_image) ?>" alt="foto de perfil">
                             </div>
-                            <input class="form-control mb-4" type="file" name="profile_image" accept="image/*">
-                        </div>
+                        <?php else: ?>
+                            <div id="preview" class="border rounded-3 m-10" style="width: 300px; height:  300px;"></div>
+                        <?php endif; ?>
+                        <input id="profile_image_input" class="form-control mb-4" type="file" name="profile_image" accept="image/*">
                     </div>
                 </div>
             </form>
@@ -106,7 +109,27 @@
     </div>
 </div>
 <script>
-    // Lista de supervisores passada do PHP para o JS
+    const input = document.getElementById('profile_image_input');
+    const preview = document.getElementById('preview');
+
+    input.addEventListener('change', function() {
+        const file = this.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.innerHTML = ''; // limpa conteúdo anterior
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            img.classList.add('rounded-3'); // aplica borda arredondada
+            img.style.width = '100%';
+            img.style.height = '100%';
+            img.style.objectFit = 'cover';
+            preview.appendChild(img);
+        }
+        reader.readAsDataURL(file);
+    });
+
     const supervisorList = <?= json_encode($supervisorlist) ?>;
     const gerenteList = <?= json_encode($gerentelist) ?>;
     const supervisorId = <?= json_encode($supervisor) ?>;

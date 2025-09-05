@@ -179,6 +179,7 @@ class Painel extends BaseController
             $dados['cargo'] = $usuarioDados->role;
             $dados['supervisor'] = $usuarioDados->report_to;
             $dados['perfil_acesso'] = $usuarioDados->perfil_acesso;
+            $dados['profile_image'] = $usuarioDados->profile_image;
 
             $perfilAcesso = json_decode($dados['perfil_acesso'], true);
 
