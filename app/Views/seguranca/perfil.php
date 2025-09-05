@@ -21,7 +21,11 @@
                 <div class="col-xl-12 card">
                     <div class="h-25 p-10 d-flex gap-5">
                         <div class="symbol symbol-150px me-5">
-                            <div style="font-size: 4rem;" class="symbol-label fw-semibold bg-info text-inverse-info"><?php echo substr($nickname, 0, 1); ?></div>
+                            <?php if (!empty($profile_image)): ?>
+                                <img src="<?= $profile_image ?>" alt="foto de perfil">
+                            <?php else: ?>
+                                <div style="font-size: 4rem;" class="symbol-label fw-semibold bg-info text-inverse-info"><?php echo substr($nickname, 0, 1); ?></div>
+                            <?php endif; ?>
                         </div>
                         <div class="d-flex justify-content-between w-100">
                             <div>

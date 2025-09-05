@@ -56,6 +56,7 @@ class M_seguranca extends Model
             $this->my_session->set('equipe', $login['firstRow']->equipe);
             $this->my_session->set('perfil', $login['firstRow']->perfil_acesso);
             $this->my_session->set('observacao', $login['firstRow']->observacao);
+            $this->my_session->set('profile_image', $login['firstRow']->profile_image);
             $this->my_session->set('parameters', json_decode($login['firstRow']->parameters ?? "", true));
 
             helper('cookie');

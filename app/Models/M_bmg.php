@@ -470,7 +470,12 @@ class M_bmg extends Model
         $this->m_insight->atualizarOwner($nextIndex);
 
         if (isset($data['assessor'])) {
-            $report_to = $data['report_to'];
+            if ($this->session->role == "SUPERVISOR") {
+                $report_to = $this->session->userId;
+            } else {
+                $report_to = $data['report_to'];
+            }
+
             $assessor = $data['assessor'];
             $telefone = $data['telefone'];
             $data_criacao = $data['data_criacao'];

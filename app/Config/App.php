@@ -24,7 +24,7 @@ class App extends BaseConfig
      *
      * @var string
      */
-    public $baseURL = 'http://localhost/InsightSuite/public/';
+    public $baseURL = 'https://quid.pravoce.io/';
   
 
     /**

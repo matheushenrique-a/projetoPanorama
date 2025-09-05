@@ -22,6 +22,7 @@ class Perfil extends \App\Controllers\BaseController
         $dados['pageTitle'] = 'Clientes';
         $dados['nickname'] = $this->session->nickname;
         $dados['email'] = $this->session->email;
+        $dados['profile_image'] = $this->session->profile_image;
 
         if ($this->session->role == "SUPERVISOR") {
             $dados['cargo'] = "Supervisor";

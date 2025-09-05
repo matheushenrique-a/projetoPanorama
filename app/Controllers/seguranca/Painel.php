@@ -88,6 +88,15 @@ class Painel extends BaseController
             $cargo = $this->getpost('role');
             $supervisor = $this->getpost('report_to');
 
+            $file = $this->request->getFile('profile_image');
+
+            if ($file) {
+                $newName = $file->getRandomName();
+
+                $file->move(FCPATH . 'uploads/profile_images', $newName);
+                $imgPath = 'uploads/profile_images/' . $newName;
+            }
+
             $permissions = [];
 
             if ($this->getpost('bmg')) {
@@ -142,7 +151,8 @@ class Painel extends BaseController
                 'report_to' => $supervisor,
                 'perfil_acesso' => json_encode($permissions),
                 'parameters' => $parameters,
-                'status' => $status
+                'status' => $status,
+                'profile_image' => $imgPath
             ];
 
             if ($userId != 0) {

@@ -95,6 +95,7 @@
 						<table class="table align-middle table-row-dashed table-hover fs-6 gy-5" id="kt_widget_table_3" data-kt-table-widget-3="all">
 							<thead>
 								<tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
+									<th data-sortable="false" class="w-10px">Foto</th>
 									<th class="min-w-25px">ID</th>
 									<th data-sortable="false" class="min-w-25px">Nome</th>
 									<th data-sortable="false" class="min-w-25px">E-mail</th>
@@ -109,6 +110,11 @@
 								foreach ($usuarios as $row) {
 								?>
 									<tr>
+										<?php if (!empty($row->profile_image)): ?>
+											<td><img style="width:50px" class="rounded" src="<?= base_url($row->profile_image) ?>" alt="foto de perfil"></td>
+										<?php else: ?>
+											<td>-</td>
+										<?php endif; ?>
 										<td><?= esc($row->userId) ?></td>
 										<td><?= esc($row->nickname) ?></td>
 										<td><?= esc($row->email) ?></td>

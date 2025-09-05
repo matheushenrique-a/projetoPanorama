@@ -20,7 +20,7 @@ define('BMG_SAQUE_CALCULO_WSDL', 'https://ws1.bmgconsig.com.br/webservices/Simul
 define('BMG_SEGURO_LOGIN', 'robo.54577');
 define('BMG_SEGURO_SENHA', 'robo@2025');
 define('BMG_SEGURO_LOGIN_CONSIG', 'UY.COORD2632');
-define('BMG_SEGURO_SENHA_CONSIG', 'coord@2025');
+define('BMG_SEGURO_SENHA_CONSIG', 'Coord@2026');
 // define('BMG_SEGURO_LOGIN', 'robo.55009');
 // define('BMG_SEGURO_SENHA', 'Quid@robo102030');
 // define('BMG_SEGURO_LOGIN_CONSIG', 'coord2632.smile2'); 

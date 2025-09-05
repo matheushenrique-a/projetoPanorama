@@ -23,12 +23,12 @@
             </div>
         </div>
         <div style="width: 100%" class="d-flex justify-content-around mb-15">
-            <div class="card">
-                <div class="card-header bg-light border-bottom d-flex justify-content-center align-items-center">
-                    <h2 class="fs-2 fw-semibold mb-0 text-center">Edição de Usuário</h2>
-                </div>
-                <div class="card-body" style="width: 600px">
-                    <form action="<?php echo assetfolder; ?>painel-criacao/<?php echo $userId; ?>/create" class="m-3 d-flex content-center flex-column gap-2">
+            <form method="post" enctype="multipart/form-data" action="<?php echo assetfolder; ?>painel-criacao/<?php echo $userId; ?>/create" class="m-3 d-flex content-center gap-10">
+                <div class="card">
+                    <div class="card-header bg-light border-bottom d-flex justify-content-center align-items-center">
+                        <h2 class="fs-2 fw-semibold mb-0 text-center">Edição de Usuário</h2>
+                    </div>
+                    <div class="card-body" style="width: 600px">
                         <div class="input-group mb-2">
                             <span class="input-group-text" id="inputGroup-sizing-default">Nome</span>
                             <input type="text" required name="nickname" value="<?= esc($nome) ?>" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" />
@@ -70,47 +70,39 @@
                             <select name="report_to" id="report_to" class="form-select form-select-lg text-dark" data-placeholder="Responsável">
                             </select>
                         </div>
-
                         <button type="submit" class="btn btn-primary" name="btnConsultar" value="btnConsultar">Atualizar</button>
-                    </form>
+                    </div>
                 </div>
-            </div>
-            <div>
-                <div class="card" style="width: 450px; height: 480px">
-                    <form action="<?= base_url('painel/uploadProfile/' . $userId) ?>" method="post" enctype="multipart/form-data">
-                        <input type="file" name="profile_image" accept="image/*">
-                        <button type="submit">Enviar</button>
-                    </form>
+                <div>
+                    <div class="card" style="width: 450px; height: 480px">
+                        <div class="d-flex flex-column justify-content-center mx-auto">
+                            <div class=" border rounded m-10" style="width: 300px; height:  300px;">
+                            </div>
+                            <input class="form-control mb-4" type="file" name="profile_image" accept="image/*">
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </form>
         </div>
-        <!--begin::Footer-->
-        <div id="kt_app_footer" class="app-footer">
-            <!--begin::Footer container-->
-            <div class="app-container container-fluid d-flex flex-column flex-md-row flex-center flex-md-stack py-3">
-                <!--begin::Copyright-->
-                <div class="text-dark order-2 order-md-1">
-                    <span class="text-muted fw-semibold me-1">2025&copy;</span>
-                    <a href="https://keenthemes.com" target="_blank" class="text-gray-800 text-hover-primary">Insight</a>
-                </div>
-                <!--end::Copyright-->
-                <!--begin::Menu-->
-                <ul class="menu menu-gray-600 menu-hover-primary fw-semibold order-1">
-                    <li class="menu-item">
-                        <a href="https://keenthemes.com" target="_blank" class="menu-link px-2">About</a>
-                    </li>
-                    <li class="menu-item">
-                        <a href="https://devs.keenthemes.com" target="_blank" class="menu-link px-2">Support</a>
-                    </li>
-                    <li class="menu-item">
-                        <a href="https://1.envato.market/EA4JP" target="_blank" class="menu-link px-2">Purchase</a>
-                    </li>
-                </ul>
-                <!--end::Menu-->
-            </div>
-            <!--end::Footer container-->
+    </div>
+</div>
+<div id="kt_app_footer" class="app-footer">
+    <div class="app-container container-fluid d-flex flex-column flex-md-row flex-center flex-md-stack py-3">
+        <div class="text-dark order-2 order-md-1">
+            <span class="text-muted fw-semibold me-1">2025&copy;</span>
+            <a href="https://keenthemes.com" target="_blank" class="text-gray-800 text-hover-primary">Insight</a>
         </div>
-        <!--end::Footer-->
+        <ul class="menu menu-gray-600 menu-hover-primary fw-semibold order-1">
+            <li class="menu-item">
+                <a href="https://keenthemes.com" target="_blank" class="menu-link px-2">About</a>
+            </li>
+            <li class="menu-item">
+                <a href="https://devs.keenthemes.com" target="_blank" class="menu-link px-2">Support</a>
+            </li>
+            <li class="menu-item">
+                <a href="https://1.envato.market/EA4JP" target="_blank" class="menu-link px-2">Purchase</a>
+            </li>
+        </ul>
     </div>
 </div>
 <script>
