@@ -25,8 +25,8 @@
         <div style="width: 100%" class="d-flex justify-content-around mb-15">
             <form method="post" enctype="multipart/form-data" action="<?php echo assetfolder; ?>painel-criacao/<?php echo $userId; ?>/create" class="m-3 d-flex content-center gap-10">
                 <div class="card">
-                    <div class="card-header bg-light border-bottom d-flex justify-content-center align-items-center">
-                        <h2 class="fs-2 fw-semibold mb-0 text-center">Edição de Usuário</h2>
+                    <div class="card-header bg-gray-200 border-bottom d-flex justify-content-center align-items-center">
+                        <h2 class="fs-3 fw-semibold mb-0 text-center">Edição de Usuário</h2>
                     </div>
                     <div class="card-body" style="width: 600px">
                         <div class="input-group mb-2">
@@ -50,27 +50,33 @@
                                 <option value="AUDITOR" <?= ($cargo == 'AUDITOR') ? 'selected' : '' ?>>Auditor</option>
                             </select>
                         </div>
-                        <span>Permissões:</span>
-                        <div class="d-flex gap-6 mt-2 mb-4">
-                            <div class="form-check">
-                                <input class="form-check-input" name="bmg" type="checkbox" value="1" id="bmg" <?= $bmg ? 'checked' : '' ?> />
-                                <label class="form-check-label" for="flexCheckChecked">
-                                    BMG
-                                </label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" name="bradesco" type="checkbox" value="1" id="bradesco" <?= $bradesco ? 'checked' : '' ?> />
-                                <label class="form-check-label" for="flexCheckChecked">
-                                    Bradesco
-                                </label>
-                            </div>
-                        </div>
                         <div class="input-group mb-2">
                             <span class="input-group-text" id="inputGroup-sizing-default">Supervisor</span>
                             <select name="report_to" id="report_to" class="form-select form-select-lg text-dark" data-placeholder="Responsável">
                             </select>
                         </div>
-                        <button type="submit" class="btn btn-primary" name="btnConsultar" value="btnConsultar">Atualizar</button>
+                        <div class="ms-2 mt-4 d-flex justify-content-between">
+                            <div>
+                                <span>Permissões:</span>
+                                <div class="d-flex gap-6 mt-4 mb-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" name="bmg" type="checkbox" value="1" id="bmg" checked />
+                                        <label class="form-check-label" for="flexCheckChecked">
+                                            BMG
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" name="bradesco" type="checkbox" value="1" id="bradesco" />
+                                        <label class="form-check-label" for="flexCheckChecked">
+                                            Bradesco
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <button type="submit" class="btn btn-primary mt-4" name="btnConsultar" value="btnConsultar">Atualizar</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="card" style="width: 450px; height: 480px">

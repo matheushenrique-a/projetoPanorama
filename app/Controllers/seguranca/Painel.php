@@ -90,7 +90,7 @@ class Painel extends BaseController
 
             $file = $this->request->getFile('profile_image');
 
-            if ($file) {
+            if ($file && $file->isValid() && !$file->hasMoved()) {
                 $newName = $file->getRandomName();
 
                 $file->move(FCPATH . 'uploads/profile_images', $newName);
@@ -152,7 +152,7 @@ class Painel extends BaseController
                 'perfil_acesso' => json_encode($permissions),
                 'parameters' => $parameters,
                 'status' => $status,
-                'profile_image' => $imgPath
+                'profile_image' => $imgPath ?? ""
             ];
 
             if ($userId != 0) {
