@@ -234,10 +234,6 @@ $movimentation = match ($row->status) {
                                                                 <option value="Análise" <?= $row->status == 'Análise' ? 'selected' : '' ?>>Análise</option>
                                                                 <option value="Cancelada" <?= $row->status == 'Cancelada' ? 'selected' : '' ?>>Cancelada</option>
                                                             </select>
-                                                            <div id="resumoDiv">
-                                                                <label class="form-label mt-2" for="desc">Resumo</label>
-                                                                <input id="resumo" name="resumo" type="text" class="form-control" maxlength="27">
-                                                            </div>
                                                             <div id="motivoDiv" style="display: none;" class="mt-2">
                                                                 <label for="status_<?= $row->idquid_propostas ?>" class="form-label">Motivo</label>
                                                                 <select class="form-select" id="status_<?= $row->idquid_propostas ?>" name="motivoCancelamento" required>
@@ -247,6 +243,13 @@ $movimentation = match ($row->status) {
                                                                     <option value="Dados bancários" <?= $row->motivoCancelamento == 'Dados bancários' ? 'selected' : '' ?>>Dados bancários</option>
                                                                     <option value="Por limite" <?= $row->motivoCancelamento == 'Por limite' ? 'selected' : '' ?>>Por limite</option>
                                                                     <option value="Pelo banco" <?= $row->motivoCancelamento == 'Pelo banco' ? 'selected' : '' ?>>Pelo banco</option>
+                                                                </select>
+                                                            </div>
+                                                            <div id="resumoDiv" style="display: none;" class="mt-2">
+                                                                <label for="status_<?= $row->idquid_propostas ?>" class="form-label">Pendência</label>
+                                                                <select class="form-select" id="status_<?= $row->resumo ?>" name="resumo" required>
+                                                                    <option value="Falta documentação" <?= $row->resumo == 'Cliente' ? 'selected' : '' ?>>Falta documentação</option>
+                                                                    <option value="Formalização não realizada" <?= $row->resumo == 'Dados cadastrais' ? 'selected' : '' ?>>Formalização não realizada</option>
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -631,8 +634,11 @@ $movimentation = match ($row->status) {
             if (valor === "Cancelada") {
                 resumo.style.display = "none";
                 motivo.style.display = "block";
-            } else {
+            } else if (valor == "Pendente") {
                 resumo.style.display = "block";
+                motivo.style.display = "none";
+            } else {
+                resumo.style.display = "none";
                 motivo.style.display = "none";
             }
         }

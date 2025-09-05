@@ -178,7 +178,7 @@ class Home extends BaseController
             }
         }
 
-        if ($this->session->role == "AUDITOR") {
+        if ($this->session->role == "AUDITOR" || $this->session->userId == "165001") {
             $ultimasPropostasAuditor = $this->m_bmg->ultimasPropostasAuditor(8);
 
             $ultimasPropostasAuditorTotal = $this->m_bmg->ultimasPropostasAuditorTotal(8);
