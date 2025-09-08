@@ -189,7 +189,9 @@ class Home extends BaseController
 
         $dados['profile_image'] = $this->session->profile_image;
 
-        // $notificacoes = $this->m_insight->listarNotificacoes($this->session->userId);
+        $userId = $this->session->userId;
+
+        // $notificacoes = $this->dbMasterDefault->listarNotificacoes($userId);
 
         // // $notificacoes já é o array que você quer
         // $dados['notificacoes'] = $notificacoes;

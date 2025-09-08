@@ -271,14 +271,4 @@ class M_insight extends Model
     {
         return $this->dbMasterDefault->insert('quid_notificacoes', $dados);
     }
-
-    public function listarNotificacoes($userId)
-    {
-        $builder = $this->db->table('quid_notificacoes');
-        $builder->where('userId', $userId);
-        $builder->orderBy('created_at', 'DESC');
-        $query = $builder->get();
-
-        return $query->getResult();
-    }
 }

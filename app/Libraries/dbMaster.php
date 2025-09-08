@@ -46,9 +46,8 @@ class dbMaster
 		$builder->orderBy('created_at', 'DESC');
 		$query = $builder->get();
 
-		return $query->getResult(); 
+		return $query->getResult();
 	}
-
 
 	public function select($table, $whereCheck, $parameters = null)
 	{

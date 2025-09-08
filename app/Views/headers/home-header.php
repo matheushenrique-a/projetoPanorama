@@ -198,13 +198,13 @@
 																			</svg>
 																			<span class="text-warning fs-6">Pendente</span>
 																		</div>
-																		<span class="text-gray-900 fs-4"><?= esc($notificacao->message ?: 'Sem mensagem') ?></span>
+																		<span class="text-gray-900 fs-4"><?= $notificacao['message'] ?: 'Sem mensagem' ?></span>
 																	</div>
 																	<div class="d-flex flex-end align-items-start">
 																		<button
 																			type="button"
 																			class="btn btn-sm btn-icon btn-light ms-2 marcar-lido"
-																			data-id="<?= esc($notificacao->idquid_notificacoes) ?>">
+																			data-id="<?= $notificacao['idquid_notificacoes'] ?>">
 																			✖
 																		</button>
 																	</div>
