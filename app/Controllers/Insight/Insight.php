@@ -90,6 +90,7 @@ class Insight extends BaseController
                 $valorParcela = $this->getpost('valorParcela');
                 $quantidadeParcelas = $this->getpost('parcelas');
                 $observacao = $this->getpost('observacao') ?? "";
+                $produto = $this->getpost('produto');
 
                 $respostaInsight = $this->getpost('resposta_insight');
                 $respostaPanorama = $this->getpost('resposta_panorama');
@@ -99,6 +100,7 @@ class Insight extends BaseController
                 if ($respostaPanorama == "sim") {
                     $returnData = $this->panorama_gravar_proposta_saque([
                         'assessor' => $assessor,
+                        'produto' => $produto,
                         'codigoEntidade' => $codigoEntidade,
                         'cpf' => $cpf,
                         'dataNascimento' => $dataNascimento,
@@ -106,9 +108,9 @@ class Insight extends BaseController
                         'nomeCliente' => $nomeCliente,
                         'celular1' => ['ddd' => $ddd, 'numero' => $telefone],
                         'adesao' => $adesao,
-                        'valorSaque' => $valorSaque,
-                        'valorParcela' => $valorParcela,
-                        'quantidadeParcelas' => $quantidadeParcelas,
+                        'valorSaque' => $valorSaque ?? '1',
+                        'valorParcela' => $valorParcela ?? '1',
+                        'quantidadeParcelas' => $quantidadeParcelas ?? '1',
                         'observacao' => $observacao
                     ]);
                 }
@@ -116,6 +118,7 @@ class Insight extends BaseController
                 if ($respostaInsight == "sim") {
                     $this->m_bmg->gravar_proposta_bmg_database([
                         'assessor' => $assessor,
+                        'produto' => $produto,
                         'report_to' => $this->session->report_to,
                         'codigo_entidade' => $codigoEntidade,
                         'cpf' => $cpf,
@@ -251,51 +254,6 @@ class Insight extends BaseController
                     return redirect()->to(urlInstitucional . 'insight-listar-propostas/0/0');
                 }
             }
-
-            return redirect()->to(urlInstitucional . 'insight-listar-propostas/0/0');
-        }
-
-        if ($action == "incluir") {
-            $assessor = $this->getpost("assessor");
-            $cpf = $this->getpost("cpf");
-            $adesao = $this->getpost("adesao");
-            $idPanorama = $this->getpost("idPanorama");
-            $codigoEntidade = $this->getpost("codigoEntidade");
-            $matricula = $this->getpost("matricula");
-            $nomeCliente = $this->getpost("nomeCliente");
-            $dataNascimento = $this->getpost("dataNascimento");
-            $ddd = $this->getpost("ddd") ?? '';
-            $telefone = $this->getpost("telefone") ?? '';
-            $valorSaque = $this->getpost("valorSaque");
-            $valorParcela = $this->getpost("valorParcela");
-            $parcelas = $this->getpost("parcelas");
-            $dataCriacao = $this->getpost("dataProposta");
-
-            $dataCriacao = \DateTime::createFromFormat('d/m/Y', $dataCriacao);
-
-            $horaAtual = date('H:i:s');
-
-            $dataCriacaoMySQL = $dataCriacao->format('Y-m-d') . ' ' . $horaAtual;
-
-            $report_to = $this->session->userId;
-
-            $data['adesao'] = $adesao;
-            $data['cpf'] = $cpf;
-            $data['assessor'] = $assessor;
-            $data['valorSaque'] = $valorSaque;
-            $data['panorama_id'] = $idPanorama;
-            $data['codigo_entidade'] = $codigoEntidade;
-            $data['matricula'] = $matricula;
-            $data['valor_parcela'] = $valorParcela;
-            $data['numero_parcela'] = $parcelas;
-            $data['report_to'] = $report_to;
-            $data['nomeCliente'] = $nomeCliente;
-            $data['dataNascimento'] = $dataNascimento;
-            $data['telefone'] = $ddd . $telefone;
-            $data['data_criacao'] = $dataCriacaoMySQL;
-            $data['userId'] = $this->session->userId;
-
-            $this->m_bmg->gravar_proposta_bmg_database($data);
 
             return redirect()->to(urlInstitucional . 'insight-listar-propostas/0/0');
         }
@@ -489,10 +447,24 @@ class Insight extends BaseController
             "mensagem" => ""
         ];
 
-        $planoName = 'SAQUE ELETRONICO';
-        $valorPlano = $params['valorSaque'] ?? '';
-        $parcelas = $params['valorParcela'] ?? '';
-        $prazo = $params['quantidadeParcelas'] ?? "96";
+        if ($params['codigoEntidade'] == "1581" && $params['produto'] == 2) {
+            $planoName = 'BMG CARD';
+        } else if ($params['codigoEntidade'] == "4277" && $params['produto'] == 2) {
+            $planoName = 'BMG BENEFICIO CARD';
+        } else {
+            $planoName = 'SAQUE ELETRONICO';
+        }
+
+        if ($params['produto'] == 2) {
+            $valorPlano = '1';
+            $parcelas = '1';
+            $prazo = '1';
+        } else {
+            $valorPlano = $params['valorSaque'] ?? '1';
+            $parcelas = $params['valorParcela'] ?? '1';
+            $prazo = $params['quantidadeParcelas'] ?? '1';
+        }
+
         $cpf = $params['cpf'] ?? '';
         $adesao = $params['adesao'] ?? '';
         $matricula = $params['matricula'] ?? '';
@@ -512,8 +484,6 @@ class Insight extends BaseController
         $numero = $params['celular1']['numero'];
 
         $numeroFormat = $ddd . $numero;
-
-        // var_dump($this->session->nickname);
 
         $data = [
             'CONTRATO' => $adesao,

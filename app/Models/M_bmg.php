@@ -437,6 +437,15 @@ class M_bmg extends Model
         $cpf = $data['cpf'];
         $nome = $data['nomeCliente'];
         $produto = "Saque";
+
+        if ($data['produto'] == 2) {
+            $produto = "Cartão BMG";
+        }
+
+        if ($data['produto'] == 1) {
+            $produto = "Saque";
+        }
+
         $valor = (float) $data['valorSaque'];
         $status = "Adesão";
         $panorama_id = $data['panorama_id'] ?? "";

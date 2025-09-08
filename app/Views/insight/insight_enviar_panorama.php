@@ -30,13 +30,12 @@
                             <div class="accordion" id="kt_accordion_1 ms-lg-7 ms-xl-10">
                                 <div class="accordion-item">
                                     <h2 class="" id="kt_accordion_1_header_1">
-                                        <button class="accordion-button fs-4 fw-semibold" type="button">SAQUE COMPLEMENTAR</button>
+                                        <button class="accordion-button fs-4 fw-semibold" type="button">ENVIAR PROPOSTA</button>
                                     </h2>
                                     <div id="kt_accordion_1_body_133" class="accordion-collapse collapse show" aria-labelledby="kt_accordion_1_header_1" data-bs-parent="#kt_accordion_1">
                                         <div id="kt_accordion_1_body_133" class="accordion-collapse collapse show" aria-labelledby="kt_accordion_1_header_1" data-bs-parent="#kt_accordion_1">
-                                            <div class="accordion-body d-flex gap-5">
-
-                                                <div class="w-50">
+                                            <div class="px-15 py-8 justify-content-center d-flex gap-4">
+                                                <div class="w-50 px-3">
                                                     <div class="input-group">
                                                         <span class="input-group-text" style="width: 160px">Assessor</span>
                                                         <input type="text" value="<?php echo $nomeAssessor ?>" class="form-control fs-5W fw-bold" name="assessor" id="assessor" required readonly />
@@ -69,8 +68,8 @@
                                                     </div>
                                                     <div class="input-group">
                                                         <span class="input-group-text" style="width: 55px">DDD</span>
-                                                        <input type="text" style="width: 60px" maxlength="2" class="form-control fs-3 fw-bold" value="" style="color:rgb(188, 188, 188)" name="ddd" id="ddd" required />
-                                                        <span class="input-group-text" style="width: 100px">Número</span>
+                                                        <input type="text" maxlength="2" class="form-control fs-3 fw-bold" value="" style="color:rgb(188, 188, 188)" name="ddd" id="ddd" required />
+                                                        <span class="input-group-text" style="width: 80px">Número</span>
                                                         <input type="text" class="form-control fs-3 fw-bold" value="" style="color:rgb(188, 188, 188); width: 250px" name="telefone" id="telefone" required />
                                                     </div>
                                                     <div class="input-group mt-6 d-flex">
@@ -78,26 +77,37 @@
                                                         <button class="btn btn-info" id="extratorDados">Extrair Dados</button>
                                                     </div>
                                                 </div>
-                                                <div class="w-50">
-                                                    <div class="input-group w-50">
-                                                        <span class="input-group-text" style="width: 80px">Adesão</span>
-                                                        <input maxlength="10" type="text" value="" class="form-control fs-3 fw-bold" placeholder="" name="adesao" id="adesao" required />
-                                                    </div>
-                                                    <div class="input-group mt-4" style="width: 400px;">
-                                                        <span class="input-group-text" style="width: 130px">Valor do Saque</span>
-                                                        <input type="text" value="" class="form-control fs-3 fw-bold" name="valorSaque" id="valorSaque" style="width: 100px" required />
-                                                    </div>
-                                                    <div class="input-group" style="width: 400px;">
-                                                        <span class="input-group-text">Parcela</span>
-                                                        <input type="text" class="form-control fs-3 fw-bold" value="" name="valorParcela" id="valorParcela" required />
-                                                        <span class="input-group-text">Quantidade</span>
-                                                        <input type="text" class="form-control fs-3 fw-bold" value="96" name="parcelas" id="parcelas" readonly />
-                                                        <div class="input-group ">
-                                                            <span class="input-group-text" style="width: 120px">Observação:</span>
-                                                            <textarea class="form-control fs-4 fw-bold " placeholder="..." name="observacao" id="observacao"></textarea>
+
+                                                <div class="w-50 px-3">
+                                                    <div id="valores">
+                                                        <div class="input-group mb-6" style="width: 260px">
+                                                            <span class="input-group-text" style="width: 130px">Valor do Saque</span>
+                                                            <input type="text" value="" class="form-control fs-3 fw-bold" name="valorSaque" id="valorSaque" />
+                                                        </div>
+                                                        <div class="input-group">
+                                                            <span class="input-group-text">Parcela</span>
+                                                            <input type="text" class="form-control fs-3 fw-bold" name="valorParcela" id="valorParcela" />
+                                                            <span class="input-group-text">Quantidade</span>
+                                                            <input type="text" class="form-control fs-3 fw-bold" name="parcelas" id="parcelas" />
                                                         </div>
                                                     </div>
+                                                    <div class="input-group">
+                                                        <span class="input-group-text" style="width: 80px">Adesão</span>
+                                                        <input maxlength="10" type="text" value="" class="form-control fs-3 fw-bold" placeholder="" name="adesao" id="adesao" required />
+                                                        <span class="input-group-text" style="width: 80px">Produto</span>
+                                                        <select class="form-select fs-5 fw-bold" id="produto" name="produto">
+                                                            <option value="1">Saque Complementar</option>
+                                                            <option value="2">Cartão BMG</option>
+                                                        </select>
+                                                    </div>
+
+                                                    <div class="input-group ">
+                                                        <span class="input-group-text" style="width: 120px">Observação:</span>
+                                                        <textarea class="form-control fs-4 fw-bold " placeholder="..." name="observacao" id="observacao"></textarea>
+                                                    </div>
+
                                                     <div class="d-flex gap-5">
+
                                                         <div class="d-flex flex-column align-items-center mt-6 mb-0 gap-4">
                                                             <span class="text-center fw-semibold fs-6">Enviar para Insight?</span>
                                                             <div class="btn-group" role="group" aria-label="Sim ou Não">
@@ -108,7 +118,6 @@
                                                                 <label class="btn btn-outline-danger" for="btn-nao-insight">Não</label>
                                                             </div>
                                                         </div>
-
                                                         <div class="d-flex flex-column align-items-center mt-6 mb-0 gap-4">
                                                             <span class="text-center fw-semibold fs-6">Enviar para Panorama?</span>
                                                             <div class="btn-group" role="group" aria-label="Sim ou Não">
@@ -120,7 +129,6 @@
                                                             </div>
                                                         </div>
                                                     </div>
-
                                                     <div class="d-flex align-items-center position-relative mt-10 mb-0">
                                                         <button type="submit" class="btn btn-success" name="btnIncluirProposta" id="btnIncluirProposta" value="salvar">Enviar Proposta</button>
                                                     </div>
@@ -152,6 +160,7 @@
     const nbInput = document.getElementById('matricula');
     const valorSaqueInput = document.getElementById('valorSaque');
     const valorParcelaInput = document.getElementById('valorParcela')
+    const quantidadeParcelasInput = document.getElementById('parcelas')
 
     const nomeCliente = document.getElementById('nomeCliente');
     const dddInput = document.getElementById('ddd');
@@ -164,12 +173,32 @@
 
     const extratorDados = document.getElementById('extratorDados')
 
+    const produto = document.getElementById('produto')
+
+    produto.addEventListener('change', toggleValores);
+
+    function toggleValores() {
+        if (produto.value == "1") {
+            document.getElementById('valores').style.display = 'block';
+            valorSaqueInput.required = true; 
+            valorParcelaInput.required = true;
+            quantidadeParcelasInput.required = true;
+            quantidadeParcelasInput.value = '96';
+        } else {
+            document.getElementById('valores').style.display = 'none';
+            valorSaqueInput.required = false;
+            valorParcelaInput.required = false;
+            quantidadeParcelasInput.required = false;
+            quantidadeParcelasInput.value = '';
+        }
+    }
+
     form.addEventListener("submit", function(event) {
         const insight = document.querySelector('input[name="resposta_insight"]:checked')?.value;
         const panorama = document.querySelector('input[name="resposta_panorama"]:checked')?.value;
 
         if (insight === "nao" && panorama === "nao") {
-            event.preventDefault(); // impede envio
+            event.preventDefault();
             alert("Você precisa selecionar pelo menos um 'Sim'.");
         }
     });
@@ -218,32 +247,37 @@
             telefone.focus();
         }
 
-        const valorParcela = parseFloat(valorParcelaInput.value) || 0;
-        const valorSaque = parseFloat(valorSaqueInput.value) || 0;
+        if (produto.value == "1") {
+            const valorParcela = parseFloat(valorParcelaInput.value) || 0;
+            const valorSaque = parseFloat(valorSaqueInput.value) || 0;
 
-        if (valorParcela > valorSaque) {
-            e.preventDefault();
-            alert('O valor da parcela não pode ser maior que o valor do saque.');
-            valorParcelaInput.focus();
-            console.log(valorParcelaInput.value)
-            console.log(valorSaqueInput.value)
+            if (valorParcela > valorSaque) {
+                e.preventDefault();
+                alert('O valor da parcela não pode ser maior que o valor do saque.');
+                valorParcelaInput.focus();
+                console.log(valorParcelaInput.value)
+                console.log(valorSaqueInput.value)
+            }
+
         }
+
     });
 
+    if (produto.value == "1") {
+        valorSaqueInput.addEventListener('input', () => {
+            let value = valorSaqueInput.value.replace(/\D/g, '');
+            valorSaqueInput.value = value.length > 2 ?
+                (parseFloat(value) / 100).toFixed(2).replace(',', '.') :
+                value;
+        });
 
-    valorSaqueInput.addEventListener('input', () => {
-        let value = valorSaqueInput.value.replace(/\D/g, '');
-        valorSaqueInput.value = value.length > 2 ?
-            (parseFloat(value) / 100).toFixed(2).replace(',', '.') :
-            value;
-    });
-
-    valorParcela.addEventListener('input', () => {
-        let value = valorParcela.value.replace(/\D/g, '');
-        valorParcela.value = value.length > 2 ?
-            (parseFloat(value) / 100).toFixed(2).replace(',', '.') :
-            value;
-    });
+        valorParcela.addEventListener('input', () => {
+            let value = valorParcela.value.replace(/\D/g, '');
+            valorParcela.value = value.length > 2 ?
+                (parseFloat(value) / 100).toFixed(2).replace(',', '.') :
+                value;
+        });
+    }
 
     function extrairDados() {
         let texto = document.getElementById("entrada").value;
@@ -268,11 +302,10 @@
         }
 
         function formatarCPF(cpf) {
-            cpf = cpf.replace(/\D/g, '');
-
-            return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+            if (!cpf) return ""; // se não tiver valor, retorna vazio
+            cpf = cpf.replace(/\D/g, ""); // tira tudo que não é dígito
+            return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
         }
-
 
 
         let dados = {

@@ -819,6 +819,7 @@ class Bmg extends BaseController
                     'ddd' => $dddPost,
                     'numero' => $telefonePost,
                 ],
+                "produto" => 1,
                 "valorSaque" => $valorSaque,
                 'matricula' => $matricula,
                 'valorParcela' => $valorParcela,
@@ -861,6 +862,7 @@ class Bmg extends BaseController
                         'numero' => $telefonePost,
                     ],
                     "valorSaque" => $valorSaque,
+                    'produto' => 1,
                     'valorParcela' => $valorParcela,
                     'quantidadeParcelas' => $numeroParcelas,
                     'nomeCliente' => $this->getpost('nomeCliente'),
@@ -1074,5 +1076,77 @@ class Bmg extends BaseController
         //$indicadores['top_indicacao'] = $this->dbMaster->runQuery("select chave_origem, count(*) total from aaspa_propostas where DATE(data_criacao) = CURDATE() and chave_origem is not null group by chave_origem order by total desc")['firstRow'];
 
         return $indicadores;
+    }
+
+    public function bmg_cartao($action)
+    {
+        $dados['pageTitle'] = "BMG Cartão";
+
+        if ($action == "add") {
+            $fixParams = [
+                'codigoEntidade' => '1581-',
+                'codigoServico' => '060',
+                'codigoLoja' => BMG_LOJA_UNITY,
+                'codigoFormaEnvioTermo' => 15,
+                'bancoOrdemPagamento' => 0,
+                'login' => BMG_SEGURO_LOGIN,
+                'senha' => BMG_SEGURO_SENHA,
+                'loginConsig' => BMG_SEGURO_LOGIN_CONSIG,
+                'senhaConsig' => BMG_SEGURO_SENHA_CONSIG,
+                'inficativoIN100' => false,
+                'aberturaContaPagamento' => 0,
+                'tipoSaque' => 0
+            ];
+
+            $params = [
+                'cpf' => $this->getpost('cpf'),
+                'matricula' => $this->getpost('matricula'),
+                'valorRenda' => (float) str_replace(['.', ','], ['', '.'], $this->getpost('renda')),
+                'dataRenda' => $this->getpost('dataRenda'),
+                'tipoBenefício' => $this->getpost('tipoBenefício'),
+                'Margem' => (float) $this->getpost('Margem'),
+                'cliente' => [
+                    'cpf' => $this->getpost('cpf'),
+                    'nome' => $this->getpost('nomeCliente'),
+                    'dataNascimento' => $this->getpost('dataNascimento'),
+                    'sexo' => $this->getpost('sexo'),
+                    'cidadeNascimento' => $this->getpost('cidadeNascimento'),
+                    'ufNascimento' => $this->getpost('ufNascimento'),
+                    'nacionalidade' => $this->getpost('nacionalidade'),
+                    'grauInstituicao' => $this->getpost('grauInstituicao'),
+                    'nomeMae' => $this->getpost('nomeMae'),
+                    'nomePai' => $this->getpost('nomePai'),
+                    'identidade' => [
+                        'numero' => $this->getpost('numeroIdentidade'),
+                        'emissor' => $this->getpost('emissor'),
+                        'uf' => $this->getpost('ufIdentidade'),
+                        'dataEmissao' => $this->getpost('dataEmissao')
+                    ],
+                    'celular1' => [
+                        'ddd' => $this->getpost('ddd'),
+                        'telefone' => $this->getpost('telefone')
+                    ],
+                    'endereco' => [
+                        'cep' => $this->getpost('cep'),
+                        'logradouro' => $this->getpost('logradouro'),
+                        'endNumero' => $this->getpost('endNumero'),
+                        'complemento' => $this->getpost('complemento') ?? "",
+                        'bairro' => $this->getpost('bairro'),
+                        'cidade' => $this->getpost('cidade'),
+                        'uf' => $this->getpost('ufEnd')
+                    ],
+                    'banco' => [
+                        'numero' => (int) $this->getpost('idBanco')
+                    ],
+                    'tipoDomicilio' => (int) $this->getpost('tipoDomicilio'),
+                ]
+            ] + $fixParams;
+
+            return print_r($params);
+        }
+
+        if ($action == "0") {
+            return $this->loadpage('bmg/cartao', $dados);
+        }
     }
 }
