@@ -60,6 +60,7 @@
                                             <select class="form-select input-group-solid " aria-label="" name="produto">
                                                 <option value="">TODOS</option>
                                                 <option value="Saque">Saque</option>
+                                                <option value="Cartão BMG">Cartão BMG</option>
                                             </select>
                                         </div>
                                     </div>

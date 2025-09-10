@@ -29,6 +29,7 @@
 </head>
 
 <body id="kt_app_body" data-kt-app-layout="dark-sidebar" data-kt-app-sidebar-minimize="on" data-kt-app-header-fixed="true" data-kt-app-sidebar-enabled="true" data-kt-app-sidebar-fixed="true" data-kt-app-sidebar-hoverable="true" data-kt-app-sidebar-push-header="true" data-kt-app-sidebar-push-toolbar="true" data-kt-app-sidebar-push-footer="true" data-kt-app-toolbar-enabled="true" class="app-default">
+
 	<script>
 		var defaultThemeMode = "light";
 		var themeMode;
@@ -48,6 +49,25 @@
 			}
 			document.documentElement.setAttribute("data-theme", themeMode);
 		}
+
+		document.addEventListener("DOMContentLoaded", function() {
+			const modos = document.querySelectorAll('[data-kt-element="mode"]');
+
+			modos.forEach((el) => {
+				el.addEventListener("click", function(e) {
+					e.preventDefault();
+
+					let valor = el.getAttribute("data-kt-value");
+
+					if (valor === "system") {
+						valor = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+					}
+
+					document.documentElement.setAttribute("data-theme", valor);
+					localStorage.setItem("data-theme", valor);
+				});
+			});
+		});
 	</script>
 	<div class="d-flex flex-column flex-root app-root" id="kt_app_root">
 		<!--begin::Page-->
@@ -357,7 +377,7 @@
 													</svg>
 												</span>
 											</span>
-											<span class="menu-title">Light</span>
+											<span class="menu-title">Claro</span>
 										</a>
 									</div>
 									<div class="menu-item px-3 my-0">
@@ -372,7 +392,7 @@
 													</svg>
 												</span>
 											</span>
-											<span class="menu-title">Dark</span>
+											<span class="menu-title">Escuro</span>
 										</a>
 									</div>
 									<div class="menu-item px-3 my-0">
@@ -384,7 +404,7 @@
 													</svg>
 												</span>
 											</span>
-											<span class="menu-title">System</span>
+											<span class="menu-title">Sistema</span>
 										</a>
 									</div>
 								</div>
@@ -501,13 +521,34 @@
 										<span class="menu-title">Acesso rápido</span>
 										<span class="menu-arrow"></span>
 									</span>
+									<script>
+										const currentPath = window.location.pathname;
+										document.addEventListener('DOMContentLoaded', () => {
+											const homeLink = document.getElementById('homeLink');
+											const propostasLink = document.getElementById('propostasLink');
+
+											if (currentPath === '<?php echo assetfolder; ?>') {
+												homeLink.classList.add('active');
+											} else if (currentPath.startsWith('<?php echo assetfolder; ?>insight-listar-propostas')) {
+												propostasLink.classList.add('active');
+											}
+										});
+									</script>
 									<div class="menu-sub menu-sub-accordion">
 										<div class="menu-item">
-											<a class="menu-link active" href="<?php echo assetfolder; ?>">
+											<a class="menu-link" id="homeLink" href="<?php echo assetfolder; ?>">
 												<span class="menu-bullet">
 													<span class="bullet bullet-dot"></span>
 												</span>
 												<span class="menu-title">Home</span>
+											</a>
+										</div>
+										<div class="menu-item">
+											<a class="menu-link" id="propostasLink" href="<?php echo assetfolder; ?>insight-listar-propostas/0/0">
+												<span class="menu-bullet">
+													<span class="bullet bullet-dot"></span>
+												</span>
+												<span class="menu-title">Propostas</span>
 											</a>
 										</div>
 										<div class="menu-item">

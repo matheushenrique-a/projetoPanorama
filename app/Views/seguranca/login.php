@@ -20,6 +20,61 @@
 	<link href="<?php echo assetfolder ?>assets/css/style.bundle.css" rel="stylesheet" type="text/css" />
 </head>
 
+<style>
+	body {
+		background-image: url('<?php echo assetfolder ?>assets/media/auth/bg9.jpg');
+	}
+
+	[data-theme="dark"] body {
+		background-image: url('<?php echo assetfolder ?>assets/media/auth/bg1-dark.jpg');
+	}
+
+	.indicator-progress {
+		display: none;
+	}
+
+	[data-theme="light"] .form-control.bg-transparent:-webkit-autofill,
+	[data-theme="light"] .form-control.bg-transparent:-webkit-autofill:hover,
+	[data-theme="light"] .form-control.bg-transparent:-webkit-autofill:focus,
+	[data-theme="light"] .form-control.bg-transparent:-webkit-autofill:active {
+		-webkit-box-shadow: 0 0 0px 1000px #fff inset !important;
+		-webkit-text-fill-color: #000 !important;
+		caret-color: #000;
+		transition: background-color 9999s ease-in-out 0s;
+	}
+
+	[data-theme="light"] .form-floating label {
+		color: #555 !important;
+	}
+
+	[data-theme="dark"] .form-control.bg-transparent:-webkit-autofill,
+	[data-theme="dark"] .form-control.bg-transparent:-webkit-autofill:hover,
+	[data-theme="dark"] .form-control.bg-transparent:-webkit-autofill:focus,
+	[data-theme="dark"] .form-control.bg-transparent:-webkit-autofill:active {
+		-webkit-box-shadow: 0 0 0px 1000px #1e1e2d inset !important;
+		-webkit-text-fill-color: #ddd !important;
+		caret-color: #fff;
+		transition: background-color 9999s ease-in-out 0s;
+	}
+
+	[data-theme="dark"] .form-floating label {
+		color: #aaa !important;
+	}
+
+	.form-floating input:-webkit-autofill,
+	.form-floating input:-webkit-autofill:focus,
+	.form-floating input:-webkit-autofill:hover,
+	.form-floating input:-webkit-autofill:active {
+		font-size: 1rem !important;
+		line-height: 1.5 !important;
+	}
+
+	.form-floating input:-webkit-autofill~label {
+		opacity: 1;
+		transform: scale(.85) translateY(-0.5rem) translateX(0.15rem);
+	}
+</style>
+
 <body id="kt_body" class="app-blank app-blank bgi-size-cover bgi-position-center bgi-no-repeat">
 	<script>
 		var defaultThemeMode = "light";
@@ -35,128 +90,108 @@
 					themeMode = defaultThemeMode;
 				}
 			}
+
 			if (themeMode === "system") {
 				themeMode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 			}
+
 			document.documentElement.setAttribute("data-theme", themeMode);
+		}
+
+		// Função para atualizar o logo
+		function updateLogoByTheme() {
+			const logo = document.getElementById("logoImg");
+			if (!logo) return;
+
+			if (themeMode === "dark") {
+				logo.src = "<?php echo assetfolder ?>assets/empresas/<?php echo EMPRESA ?>/logos/QUID ONE_nomarge_BRANCO.png";
+			} else {
+				logo.src = "<?php echo assetfolder ?>assets/empresas/<?php echo EMPRESA ?>/logos/QUID ONE_nomarge_PRETO.png";
+			}
+		}
+
+		// Espera o DOM carregar
+		document.addEventListener("DOMContentLoaded", () => {
+			updateLogoByTheme();
+		});
+
+		function togglePassword() {
+			const input = document.getElementById("floatingPassword");
+			const icon = document.getElementById("passwordIcon");
+
+			icon.style.transform = "rotateY(90deg)";
+
+			setTimeout(() => {
+				if (input.type === "password") {
+					input.type = "text";
+					icon.classList.remove("bi-eye");
+					icon.classList.add("bi-eye-slash");
+				} else {
+					input.type = "password";
+					icon.classList.remove("bi-eye-slash");
+					icon.classList.add("bi-eye");
+				}
+				icon.style.transform = "rotateY(0deg)";
+			}, 50);
 		}
 	</script>
 	<div class="d-flex flex-column flex-root" id="kt_app_root">
-		<style>
-			body {
-				background-image: url('<?php echo assetfolder ?>assets/media/auth/bg10.jpeg');
-			}
-
-			[data-theme="dark"] body {
-				background-image: url('<?php echo assetfolder ?>assets/media/auth/bg10-dark.jpeg');
-			}
-		</style>
-		<div class="d-flex flex-column flex-lg-row flex-column-fluid">
-			<div class="d-flex flex-lg-row-fluid">
-				<div class="d-flex flex-column flex-center pb-0 pb-lg-10 p-10 w-100">
-					<img class="mw-300px w-sm-450px mb-10 mb-lg-20 mt-20" src="<?php echo assetfolder ?>assets/empresas/<?php echo EMPRESA ?>/logos/home-logo.png" />
-					<?= EMPRESA == 'quid' ? '<h1 class="text-gray-800 fs-1qx fw-bold text-center mb-7">Quid | Corban Inteligente</h1>' : '' ?>
-					<?= EMPRESA == 'theone' ? '<h1 class="text-gray-800 fs-1qx fw-bold text-center mb-7">The One | Operações</h1>' : '' ?>
-					<?= EMPRESA == 'pravoce' ? '<h1 class="text-gray-800 fs-1qx fw-bold text-center mb-7">Pra Você | Sistema Financeiro</h1>' : '' ?>
-					<div class="text-gray-600 fs-base text-center fw-semibold">Você mais produtivo com o Insight. Antes de acessá-lo você precisar estar autorizado pela nossa equipe administrativa. Qualquer dúvida entre em contato através de contato@pravoce.io</div>
-				</div>
-				<div class="d-flex flex-column-fluid flex-lg-row-auto justify-content-center justify-content-lg-end p-12">
-					<div class="bg-body d-flex flex-center rounded-4 w-md-600px p-10">
-						<div class="w-md-400px">
-							<form class="form w-100" id="kt_sign_in_form" action="<?php echo assetfolder; ?>sign-in" method="post">
-								<div class="text-center mb-11">
-									<img class="mw-200px w-sm-350px mb-5" src="<?php echo assetfolder ?>assets/empresas/<?php echo EMPRESA ?>/logos/logo.png" alt="logo">
-									<h1 class="text-dark fs-2 fw-bolder mb-3">Seja Bem-Vindo!</h1>
-									<div class="text-gray-500 fw-semibold fs-6">Entre no Insight</div>
+		<div class="d-flex flex-lg-row flex-column-fluid">
+			<div class="d-flex justify-content-center flex-lg-row-fluid">
+				<div class="d-flex flex-column-fluid flex-lg-row-auto justify-content-center justify-content-lg-end p-16">
+					<div class="bg-body d-flex flex-center rounded-4" style="width: 470px; max-width: 100%;">
+						<div class="w-md-350px">
+							<form class=" d-flex flex-column justify-content-between" id="kt_sign_in_form" action="<?php echo assetfolder; ?>sign-in" method="post">
+								<div class="text-center mb-15 mt-6 position-relative">
+									<img
+										id="logoImg"
+										class="mw-550px w-sm-350px"
+										alt="logo" />
+									<h1 class="bg-gray-300 bg-body-tertiary fs-6 position-absolute py-1 px-3 rounded-4 fw-bolder text-gray-800 top-75 end-0 mt-6 shadow-md translate-middle-y">CRM</h1>
 								</div>
-								<div class="separator separator-content my-14">
-									<span class="w-300px text-gray-500 fw-semibold fs-6">Informe E-mail e Senha</span>
-								</div>
-								<div class="fv-row mb-8">
-									<div class="form-floating mb-7">
-										<input type="email" name="email" autocomplete="off" class="form-control bg-transparent" value="<?php echo $email; ?>" class="form-control" id="floatingInput" placeholder="name@example.com" />
-										<label for="floatingInput">Endereço de E-mail</label>
+								<div>
+									<h1 class="text-dark fs-2 text-gray-700 fw-bolder text-center">Seja Bem-Vindo!</h1>
+									<div class="separator separator-content text-black my-10">
+										<span class="w-300px text-muted fw-semibold fs-7">Informe E-mail e Senha</span>
 									</div>
-								</div>
-								<div class="fv-row mb-3">
-									<div class="form-floating mb-7">
-										<input name="password" autocomplete="off" class="form-control bg-transparent" value="<?php echo $password; ?>" type="password" class="form-control" id="floatingPassword" placeholder="Password" />
-										<label for="floatingPassword">Senha</label>
+									<div class="fv-row mb-8">
+										<div class="form-floating mb-7">
+											<input type="email" name="email" autocomplete="off" class="form-control bg-transparent" value="<?php echo $email; ?>" class="form-control" id="floatingInput" placeholder="nome@exemplo.com" />
+											<label for="floatingInput">Endereço de E-mail</label>
+										</div>
 									</div>
-								</div>
-								<style>
-									.indicator-progress {
-										display: none;
-										/* só aparece quando clicar */
-									}
-
-									[data-theme="light"] .form-control.bg-transparent:-webkit-autofill,
-									[data-theme="light"] .form-control.bg-transparent:-webkit-autofill:hover,
-									[data-theme="light"] .form-control.bg-transparent:-webkit-autofill:focus,
-									[data-theme="light"] .form-control.bg-transparent:-webkit-autofill:active {
-										-webkit-box-shadow: 0 0 0px 1000px #fff inset !important;
-										/* fundo branco */
-										-webkit-text-fill-color: #000 !important;
-										/* texto preto */
-										caret-color: #000;
-										/* cursor preto */
-										transition: background-color 9999s ease-in-out 0s;
-									}
-
-									/* Labels no tema LIGHT */
-									[data-theme="light"] .form-floating label {
-										color: #555 !important;
-										/* cinza suave */
-									}
-
-									[data-theme="dark"] .form-control.bg-transparent:-webkit-autofill,
-									[data-theme="dark"] .form-control.bg-transparent:-webkit-autofill:hover,
-									[data-theme="dark"] .form-control.bg-transparent:-webkit-autofill:focus,
-									[data-theme="dark"] .form-control.bg-transparent:-webkit-autofill:active {
-										-webkit-box-shadow: 0 0 0px 1000px #1e1e2d inset !important;
-										/* fundo escuro */
-										-webkit-text-fill-color: #ddd !important;
-										/* texto cinza claro (não branco puro) */
-										caret-color: #fff;
-										/* cursor branco */
-										transition: background-color 9999s ease-in-out 0s;
-									}
-
-									/* Labels no tema DARK */
-									[data-theme="dark"] .form-floating label {
-										color: #aaa !important;
-										/* cinza claro para contraste */
-									}
-
-									.form-floating input:-webkit-autofill,
-									.form-floating input:-webkit-autofill:focus,
-									.form-floating input:-webkit-autofill:hover,
-									.form-floating input:-webkit-autofill:active {
-										font-size: 1rem !important;
-										/* mesmo tamanho do input normal */
-										line-height: 1.5 !important;
-										/* alinhamento consistente */
-									}
-
-									/* Mantém o label flutuante no topo quando há autofill */
-									.form-floating input:-webkit-autofill~label {
-										opacity: 1;
-										transform: scale(.85) translateY(-0.5rem) translateX(0.15rem);
-									}
-								</style>
-								<div class="d-flex flex-stack flex-wrap gap-3 fs-base fw-semibold mb-8">
-									<div class="text-danger">
-										<?php
-										if (isset($error)) {
-											echo $error;
-										}; ?></div>
-								</div>
-								<div class="d-grid mb-10">
-									<button type="submit" id="kt_sign_in_submit" class="btn btn-primary">
-										<span class="indicator-label">Entrar</span>
-										<span class="indicator-progress">
-											<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
-									</button>
+									<div class="fv-row mb-3">
+										<div class="form-floating mb-7 position-relative">
+											<input
+												name="password"
+												autocomplete="off"
+												class="form-control bg-transparent"
+												value="<?php echo $password; ?>"
+												type="password"
+												id="floatingPassword" />
+											<label for="floatingPassword">Senha</label>
+											<span
+												class="position-absolute top-50 end-0 translate-middle-y me-5 mt-1"
+												style="cursor: pointer;"
+												onclick="togglePassword()">
+												<i id="passwordIcon" class="bi bi-eye" style="font-size: 1.4rem; transition: transform 0.4s ease;"></i>
+											</span>
+										</div>
+									</div>
+									<div class="d-flex flex-stack flex-wrap gap-3 fs-base fw-semibold mb-8">
+										<div class="text-danger">
+											<?php
+											if (isset($error)) {
+												echo $error;
+											}; ?></div>
+									</div>
+									<div class="d-grid mb-10">
+										<button type="submit" id="kt_sign_in_submit" class="btn btn-primary">
+											<span class="indicator-label">Entrar</span>
+											<span class="indicator-progress">
+												<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+										</button>
+									</div>
 								</div>
 							</form>
 						</div>
@@ -218,7 +253,6 @@
 
 		<script src="<?php echo assetfolder ?>assets/plugins/global/plugins.bundle.js"></script>
 		<script src="<?php echo assetfolder ?>assets/js/scripts.bundle.js"></script>
-
 </body>
 
 </html>

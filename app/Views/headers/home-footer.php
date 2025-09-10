@@ -3587,7 +3587,6 @@
 			<!--end::Modal dialog-->
 		</div>
 		<!--end::Modal - Users Search-->
-		
 		<!--end::Modals-->
 		<!--begin::Javascript-->
 		<script>var hostUrl = "<?php echo assetfolder ?>assets/";</script>

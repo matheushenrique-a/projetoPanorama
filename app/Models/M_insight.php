@@ -69,7 +69,13 @@ class M_insight extends Model
             "FORMALIZAÇÃO NÃO REALIZADA" => "Pendente",
             "PENDENTE FORMALIZAÇÃO" => "Pendente",
             "TED DEVOLVIDA" => "Pendente",
-            "CONTA CORRIGIDA" => "Análise"
+            "CONTA CORRIGIDA" => "Análise",
+            "BLOQUEADO" => "Bloqueado",
+            "CANCELADA MARGEM EXCEDIDA" => "Cancelada",
+            "CARTÃO EMITIDO S/ SAQUE" => "Aprovada",
+            "CARTÃO EMITIDO C/ SAQUE" => "Aprovada",
+            "CANCELADA" => "Cancelada",
+            "CANCELADA: POLITICA DE CRÉDITO" => "Cancelada",
         ];
 
         $atualizados = 0;

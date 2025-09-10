@@ -247,7 +247,8 @@ $movimentation = match ($row->status) {
                                                             </div>
                                                             <div id="resumoDiv" style="display: none;" class="mt-2">
                                                                 <label for="status_<?= $row->idquid_propostas ?>" class="form-label">Pendência</label>
-                                                                <select class="form-select" id="status_<?= $row->resumo ?>" name="resumo" required>
+                                                                <select class="form-select" id="status_<?= $row->resumo ?>" name="resumo">
+                                                                    <option value="" <?= $row->resumo == '' ? 'selected' : '' ?>></option>
                                                                     <option value="Falta documentação" <?= $row->resumo == 'Cliente' ? 'selected' : '' ?>>Falta documentação</option>
                                                                     <option value="Formalização não realizada" <?= $row->resumo == 'Dados cadastrais' ? 'selected' : '' ?>>Formalização não realizada</option>
                                                                 </select>

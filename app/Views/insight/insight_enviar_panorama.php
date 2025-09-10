@@ -96,8 +96,8 @@
                                                         <input maxlength="10" type="text" value="" class="form-control fs-3 fw-bold" placeholder="" name="adesao" id="adesao" required />
                                                         <span class="input-group-text" style="width: 80px">Produto</span>
                                                         <select class="form-select fs-5 fw-bold" id="produto" name="produto">
-                                                            <option value="1">Saque Complementar</option>
                                                             <option value="2">Cartão BMG</option>
+                                                            <option value="1">Saque Complementar</option>
                                                         </select>
                                                     </div>
 
@@ -176,6 +176,8 @@
     const produto = document.getElementById('produto')
 
     produto.addEventListener('change', toggleValores);
+
+    document.addEventListener('DOMContentLoaded', toggleValores);
 
     function toggleValores() {
         if (produto.value == "1") {
