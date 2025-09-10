@@ -265,7 +265,7 @@
 
     });
 
-    if (produto.value == "1") {
+    if (valorSaqueInput && valorParcela) {
         valorSaqueInput.addEventListener('input', () => {
             let value = valorSaqueInput.value.replace(/\D/g, '');
             valorSaqueInput.value = value.length > 2 ?

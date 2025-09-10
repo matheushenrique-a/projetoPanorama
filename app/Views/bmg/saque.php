@@ -42,10 +42,6 @@
                         <li class="breadcrumb-item">
                             <span class="bullet bg-gray-800 w-5px h-2px"></span>
                         </li>
-                        <li class="breadcrumb-item text-muted">BMG</li>
-                        <li class="breadcrumb-item">
-                            <span class="bullet bg-gray-800 w-5px h-2px"></span>
-                        </li>
                         <li class="breadcrumb-item text-muted">Saque Complementar
                     </ul>
                 </div>

@@ -34,6 +34,22 @@
 		var defaultThemeMode = "light";
 		var themeMode;
 
+		(function() {
+			const storageKey = 'sidebar-minimized';
+			const minimized = localStorage.getItem(storageKey) === 'true';
+			const body = document.body;
+			const sidebar = document.getElementById('kt_app_sidebar');
+
+			if (minimized) {
+				body.classList.add('app-sidebar-minimize');
+
+				// Caso o template use data-kt-drawer para controlar o estado
+				if (sidebar) {
+					sidebar.setAttribute('data-kt-drawer-minimized', 'true');
+				}
+			}
+		})();
+
 		if (document.documentElement) {
 			if (document.documentElement.hasAttribute("data-theme-mode")) {
 				themeMode = document.documentElement.getAttribute("data-theme-mode");
@@ -521,45 +537,33 @@
 										<span class="menu-title">Acesso rápido</span>
 										<span class="menu-arrow"></span>
 									</span>
-									<script>
-										const currentPath = window.location.pathname;
-										document.addEventListener('DOMContentLoaded', () => {
-											const homeLink = document.getElementById('homeLink');
-											const propostasLink = document.getElementById('propostasLink');
-
-											if (currentPath === '<?php echo assetfolder; ?>') {
-												homeLink.classList.add('active');
-											} else if (currentPath.startsWith('<?php echo assetfolder; ?>insight-listar-propostas')) {
-												propostasLink.classList.add('active');
-											}
-										});
-									</script>
 									<div class="menu-sub menu-sub-accordion">
 										<div class="menu-item">
-											<a class="menu-link" id="homeLink" href="<?php echo assetfolder; ?>">
-												<span class="menu-bullet">
-													<span class="bullet bullet-dot"></span>
-												</span>
+											<a class="menu-link menu-href-link" href="<?php echo assetfolder; ?>">
+												<span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
 												<span class="menu-title">Home</span>
 											</a>
 										</div>
 										<div class="menu-item">
-											<a class="menu-link" id="propostasLink" href="<?php echo assetfolder; ?>insight-listar-propostas/0/0">
-												<span class="menu-bullet">
-													<span class="bullet bullet-dot"></span>
-												</span>
+											<a class="menu-link menu-href-link" href="<?php echo assetfolder; ?>insight-listar-propostas/0/0">
+												<span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
 												<span class="menu-title">Propostas</span>
 											</a>
 										</div>
 										<div class="menu-item">
-											<a class="menu-link" href="<?php echo assetfolder ?>sign-in">
-												<span class="menu-bullet">
-													<span class="bullet bullet-dot"></span>
-												</span>
+											<a class="menu-link menu-href-link" href="<?php echo assetfolder; ?>insight-listar-propostas/0/enviar-panorama">
+												<span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
+												<span class="menu-title">Criar proposta</span>
+											</a>
+										</div>
+										<div class="menu-item">
+											<a class="menu-link menu-href-link" href="<?php echo assetfolder ?>sign-in">
+												<span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
 												<span class="menu-title">Sair</span>
 											</a>
 										</div>
 									</div>
+
 								</div>
 								<div class="menu-item pt-5">
 									<div class="menu-content">
@@ -582,16 +586,6 @@
 										</span>
 										<div class="menu-sub menu-sub-accordion">
 											<div class="menu-item">
-												<a class="menu-link" href="<?php echo assetfolder; ?>bmg-receptivo/0">
-													<span class="menu-bullet">
-														<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-															<path fill-rule="evenodd" d="M10.271 5.575C8.967 4.501 7 5.43 7 7.12v9.762c0 1.69 1.967 2.618 3.271 1.544l5.927-4.881a2 2 0 0 0 0-3.088l-5.927-4.88Z" clip-rule="evenodd" />
-														</svg>
-													</span>
-													<span class="menu-title">Receptivo Seguros</span>
-												</a>
-											</div>
-											<div class="menu-item">
 												<a class="menu-link" href="<?php echo assetfolder; ?>bmg-saque/0">
 													<span class="menu-bullet">
 														<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
@@ -603,7 +597,18 @@
 												</a>
 											</div>
 											<div class="menu-item">
-												<a class="menu-link" href="<?php echo assetfolder; ?>bmg-cartao/0">
+												<a class="menu-link" href="<?php echo assetfolder; ?>bmg-receptivo/0" style="pointer-events: none; opacity: 0.5;">
+													<span class="menu-bullet">
+														<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+															<path fill-rule="evenodd" d="M10.271 5.575C8.967 4.501 7 5.43 7 7.12v9.762c0 1.69 1.967 2.618 3.271 1.544l5.927-4.881a2 2 0 0 0 0-3.088l-5.927-4.88Z" clip-rule="evenodd" />
+														</svg>
+													</span>
+													<span class="menu-title">Seguro de Vida</span>
+												</a>
+											</div>
+
+											<div class="menu-item">
+												<a class="menu-link" href="<?php echo assetfolder; ?>bmg-cartao/0" style="pointer-events: none; opacity: 0.5;">
 													<span class="menu-bullet">
 														<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
 															<path fill-rule="evenodd" d="M10.271 5.575C8.967 4.501 7 5.43 7 7.12v9.762c0 1.69 1.967 2.618 3.271 1.544l5.927-4.881a2 2 0 0 0 0-3.088l-5.927-4.88Z" clip-rule="evenodd" />
@@ -774,3 +779,63 @@
 						</div>
 					</div>
 				</div>
+				<script>
+					document.addEventListener('DOMContentLoaded', function() {
+						const currentPath = window.location.pathname.replace(/\/+$/, '');
+						const assetFolder = "<?php echo assetfolder; ?>".replace(/\/+$/, '');
+
+						const body = document.body;
+						const toggleButton = document.getElementById('kt_app_sidebar_toggle');
+						const storageKey = 'sidebar-minimized';
+
+						// 1️⃣ Aplica estado salvo ao carregar a página
+						if (localStorage.getItem(storageKey) === 'true') {
+							body.classList.add('app-sidebar-minimize');
+						}
+
+						// 2️⃣ Hook no clique do toggle
+						toggleButton.addEventListener('click', function() {
+							// Delay para esperar o script interno do Metronic aplicar a classe
+							setTimeout(() => {
+								const isMinimized = body.classList.contains('app-sidebar-minimize');
+								localStorage.setItem(storageKey, isMinimized ? 'true' : 'false');
+							}, 100);
+						});
+
+						// 3️⃣ Opcional: se o template usar transições ou animações
+						// você pode usar MutationObserver para detectar mudanças na classe
+						const observer = new MutationObserver(() => {
+							const isMinimized = body.classList.contains('app-sidebar-minimize');
+							localStorage.setItem(storageKey, isMinimized ? 'true' : 'false');
+						});
+
+						observer.observe(body, {
+							attributes: true,
+							attributeFilter: ['class']
+						});
+
+						document.querySelectorAll('.menu-link').forEach(function(link) {
+							const href = link.getAttribute('href');
+							if (!href) return;
+
+							// Normaliza o link
+							let linkPath = href.replace(/\/+$/, '');
+
+							// Home (igual ao assetFolder) só ativo se currentPath for exatamente igual
+							if (linkPath === assetFolder) {
+								if (currentPath === assetFolder) {
+									link.classList.add('active');
+								} else {
+									link.classList.remove('active');
+								}
+							} else {
+								// Outros links ativos se currentPath começa com linkPath
+								if (currentPath.startsWith(linkPath)) {
+									link.classList.add('active');
+								} else {
+									link.classList.remove('active');
+								}
+							}
+						});
+					});
+				</script>
