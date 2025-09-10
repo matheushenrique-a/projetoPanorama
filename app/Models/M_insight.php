@@ -76,6 +76,7 @@ class M_insight extends Model
             "CARTÃO EMITIDO C/ SAQUE" => "Aprovada",
             "CANCELADA" => "Cancelada",
             "CANCELADA: POLITICA DE CRÉDITO" => "Cancelada",
+            "DECURSO DE PRAZO: CORREÇÃO" => "Decurso de Prazo",
         ];
 
         $atualizados = 0;

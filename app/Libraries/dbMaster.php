@@ -68,6 +68,19 @@ class dbMaster
 			if (array_key_exists('whereIn', $parameters)) {
 				$builder->whereIn($parameters['whereIn'][0], $parameters['whereIn'][1]);
 			}
+
+			if (array_key_exists('betweenCheck', $parameters)) {
+				$campo = $parameters['betweenCheck'][0];
+				$de = $parameters['betweenCheck'][1];
+				$ate = $parameters['betweenCheck'][2];
+
+				if (!empty($de)) {
+					$builder->where($campo . ' >=', $de);
+				}
+				if (!empty($ate)) {
+					$builder->where($campo . ' <=', $ate . ' 23:59:59');
+				}
+			}
 		}
 
 		if (!is_null($whereCheck)) $builder->where($whereCheck);

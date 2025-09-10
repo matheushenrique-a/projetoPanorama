@@ -266,14 +266,16 @@ class Insight extends BaseController
             $nomeAssessor = $this->getpost('nomeAssessor', false);
             $statusPropostaFiltro = $this->getpost('statusPropostaFiltro', false);
             $paginas = $this->getpost('paginas', false);
-            $date = $this->getpost('date', false);
+            $dateDe = $this->getpost('dateDe', false);
+            $dateAte = $this->getpost('dateAte', false);
             $adesao = $this->getpost('numeroAdesao', false);
             $equipe = $this->getpost('equipe', false);
             $status = $this->getpost('status', false);
             $auditorMove = $this->getpost('auditorMove', false);
 
             Services::response()->setCookie('cpf', $cpf);
-            Services::response()->setCookie('date', $date);
+            Services::response()->setCookie('dateDe', $dateDe);
+            Services::response()->setCookie('dateAte', $dateAte);
             Services::response()->setCookie('celular', $celular);
             Services::response()->setCookie('nome', $nome);
             Services::response()->setCookie('nomeAssessor', $nomeAssessor);
@@ -290,7 +292,8 @@ class Insight extends BaseController
             $nomeAssessor = $this->getpost('nomeAssessor', true);
             $statusPropostaFiltro = $this->getpost('statusPropostaFiltro', true);
             $paginas = $this->getpost('paginas', true);
-            $date = $this->getpost('date', true);
+            $dateDe = $this->getpost('dateDe', true);
+            $dateAte = $this->getpost('dateAte', true);
             $adesao = $this->getpost('numeroAdesao', true);
             $equipe = $this->getpost('equipe', true);
             $status = $this->getpost('status', true);
@@ -301,16 +304,26 @@ class Insight extends BaseController
         $likeCheck = [];
         $whereNotIn = [];
         $whereIn = [];
+        $betweenCheck = [];
 
         if (!empty($cpf)) $likeCheck['cpf'] = $cpf;
         if (!empty($celular)) $likeCheck['telefone'] = $celular;
         if (!empty($nome)) $likeCheck['nome'] = $nome;
         if (!empty($nomeAssessor)) $likeCheck['assessor'] = $nomeAssessor;
-        if (!empty($date)) $likeCheck['DATE(data_criacao)'] = $date;
         if (!empty($adesao)) $likeCheck['adesao'] = $adesao;
         if (!empty($equipe)) $likeCheck['report_to'] = $equipe;
         if (!empty($status)) $likeCheck['status'] = $status;
         if (!empty($auditorMove)) $likeCheck['id_owner'] = $this->session->userId;
+
+        if (!empty($dateDe) && !empty($dateAte)) {
+            $betweenCheck = ["betweenCheck" => ['data_criacao', $dateDe, $dateAte]];
+        } elseif (!empty($dateDe)) {
+            $betweenCheck = ["betweenCheck" => ['data_criacao', $dateDe, $dateDe]];
+        } elseif (!empty($dateAte)) {
+            $betweenCheck = ["betweenCheck" => ['data_criacao', $dateAte, $dateAte]];
+        } else {
+            $betweenCheck = [];
+        }
 
         if ($this->session->role == "OPERADOR") {
             $whereCheck["assessor"] = $this->session->nickname;
@@ -325,7 +338,7 @@ class Insight extends BaseController
         $paginas = (empty($paginas)  ? 10 : $paginas);
         $this->dbMasterDefault->setLimit($paginas);
         $this->dbMasterDefault->setOrderBy(array('idquid_propostas', 'DESC'));
-        $propostas = $this->dbMasterDefault->select('quid_propostas', $whereCheck, $whereNotIn + $likeCheck + $whereIn);
+        $propostas = $this->dbMasterDefault->select('quid_propostas', $whereCheck, $whereNotIn + $likeCheck + $whereIn + $betweenCheck);
 
         $dados['indicadores'] = $this->indicadores();
 
