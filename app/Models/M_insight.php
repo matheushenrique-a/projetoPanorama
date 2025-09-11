@@ -278,4 +278,13 @@ class M_insight extends Model
     {
         return $this->dbMasterDefault->insert('quid_notificacoes', $dados);
     }
+
+    public function insertProduto($data)
+    {
+        return $this->dbMasterDefault->insert('quid_produtos', $data);
+    }
+
+    public function getProduto($idProduto){
+        return $this->dbMasterDefault->select('quid_produtos', ['id' => $idProduto])['firstRow'];
+    }
 }

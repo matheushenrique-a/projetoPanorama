@@ -41,6 +41,10 @@
                                                         <input type="text" value="<?php echo $nomeAssessor ?>" class="form-control fs-5W fw-bold" name="assessor" id="assessor" required readonly />
                                                     </div>
                                                     <div class="input-group">
+                                                        <span class="input-group-text" style="width: 160px">Produto</span>
+                                                        <input type="text" value="<?php echo $produto->nomeProduto ?>" class="form-control fs-5W fw-bold" name="assessor" id="assessor" required readonly />
+                                                    </div>
+                                                    <div class="input-group">
                                                         <span class="input-group-text" style="width: 160px">Cod. Entidade</span>
                                                         <select class="form-select fs-5 fw-bold" id="codigoEntidade" name="codigoEntidade">
                                                             <option value="1581">INSS - 1581</option>
@@ -79,26 +83,23 @@
                                                 </div>
 
                                                 <div class="w-50 px-3">
-                                                    <div id="valores">
-                                                        <div class="input-group mb-6" style="width: 260px">
-                                                            <span class="input-group-text" style="width: 130px">Valor do Saque</span>
-                                                            <input type="text" value="" class="form-control fs-3 fw-bold" name="valorSaque" id="valorSaque" />
+                                                    <?php if ($produto->temValor == "1"): ?>
+                                                        <div id="valores">
+                                                            <div class="input-group mb-6" style="width: 260px">
+                                                                <span class="input-group-text" style="width: 130px">Valor do Saque</span>
+                                                                <input type="text" value="" class="form-control fs-3 fw-bold" name="valorSaque" id="valorSaque" />
+                                                            </div>
+                                                            <div class="input-group">
+                                                                <span class="input-group-text">Parcela</span>
+                                                                <input type="text" class="form-control fs-3 fw-bold" name="valorParcela" id="valorParcela" />
+                                                                <span class="input-group-text">Quantidade</span>
+                                                                <input type="text" class="form-control fs-3 fw-bold" name="parcelas" id="parcelas" />
+                                                            </div>
                                                         </div>
-                                                        <div class="input-group">
-                                                            <span class="input-group-text">Parcela</span>
-                                                            <input type="text" class="form-control fs-3 fw-bold" name="valorParcela" id="valorParcela" />
-                                                            <span class="input-group-text">Quantidade</span>
-                                                            <input type="text" class="form-control fs-3 fw-bold" name="parcelas" id="parcelas" />
-                                                        </div>
-                                                    </div>
+                                                    <?php endif; ?>
                                                     <div class="input-group">
                                                         <span class="input-group-text" style="width: 80px">Adesão</span>
                                                         <input maxlength="10" type="text" value="" class="form-control fs-3 fw-bold" placeholder="" name="adesao" id="adesao" required />
-                                                        <span class="input-group-text" style="width: 80px">Produto</span>
-                                                        <select class="form-select fs-5 fw-bold" id="produto" name="produto">
-                                                            <option value="2">Cartão BMG</option>
-                                                            <option value="1">Saque Complementar</option>
-                                                        </select>
                                                     </div>
 
                                                     <div class="input-group ">
@@ -174,26 +175,6 @@
     const extratorDados = document.getElementById('extratorDados')
 
     const produto = document.getElementById('produto')
-
-    produto.addEventListener('change', toggleValores);
-
-    document.addEventListener('DOMContentLoaded', toggleValores);
-
-    function toggleValores() {
-        if (produto.value == "1") {
-            document.getElementById('valores').style.display = 'block';
-            valorSaqueInput.required = true; 
-            valorParcelaInput.required = true;
-            quantidadeParcelasInput.required = true;
-            quantidadeParcelasInput.value = '96';
-        } else {
-            document.getElementById('valores').style.display = 'none';
-            valorSaqueInput.required = false;
-            valorParcelaInput.required = false;
-            quantidadeParcelasInput.required = false;
-            quantidadeParcelasInput.value = '';
-        }
-    }
 
     form.addEventListener("submit", function(event) {
         const insight = document.querySelector('input[name="resposta_insight"]:checked')?.value;

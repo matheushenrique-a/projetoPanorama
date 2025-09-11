@@ -202,7 +202,6 @@ class Insight extends BaseController
                 $this->m_insight->registrarNotificacao($dados);
             }
 
-
             if ($statusAnterior !== $novoStatus) {
                 $obs = $this->getpost('conteudo');
 
@@ -708,5 +707,80 @@ class Insight extends BaseController
         $this->dbMasterDefault->update("equipes", $fieldUpdate, $whereArrayUpdt);
 
         return redirect()->to(urlInstitucional);
+    }
+
+    public function criarProposta($idproduto, $action)
+    {
+        $dados['pageTitle'] = 'Adicionar proposta';
+        $dados['nomeAssessor'] = $this->session->nickname;
+
+        if ($action == "salvar") {
+            $assessor = $this->getpost('assessor');
+            $codigoEntidade = $this->getpost('codigoEntidade');
+            $cpf = $this->getpost('cpf');
+            $dataNascimento = $this->getpost('dataNascimento');
+            $matricula = $this->getpost('matricula');
+            $nomeCliente = $this->getpost('nomeCliente');
+            $ddd = $this->getpost('ddd');
+            $telefone = $this->getpost('telefone');
+            $adesao = $this->getpost('adesao');
+            $valorSaque = $this->getpost('valorSaque');
+            $valorParcela = $this->getpost('valorParcela');
+            $quantidadeParcelas = $this->getpost('parcelas');
+            $observacao = $this->getpost('observacao') ?? "";
+            $produto = $this->getpost('produto');
+
+            $respostaInsight = $this->getpost('resposta_insight');
+            $respostaPanorama = $this->getpost('resposta_panorama');
+
+            $returnData = [];
+
+            if ($respostaPanorama == "sim") {
+                $returnData = $this->panorama_gravar_proposta_saque([
+                    'assessor' => $assessor,
+                    'produto' => $produto,
+                    'codigoEntidade' => $codigoEntidade,
+                    'cpf' => $cpf,
+                    'dataNascimento' => $dataNascimento,
+                    'matricula' => $matricula,
+                    'nomeCliente' => $nomeCliente,
+                    'celular1' => ['ddd' => $ddd, 'numero' => $telefone],
+                    'adesao' => $adesao,
+                    'valorSaque' => $valorSaque ?? '1',
+                    'valorParcela' => $valorParcela ?? '1',
+                    'quantidadeParcelas' => $quantidadeParcelas ?? '1',
+                    'observacao' => $observacao
+                ]);
+            }
+
+            if ($respostaInsight == "sim") {
+                $this->m_bmg->gravar_proposta_bmg_database([
+                    'assessor' => $assessor,
+                    'produto' => $produto,
+                    'report_to' => $this->session->report_to,
+                    'codigo_entidade' => $codigoEntidade,
+                    'cpf' => $cpf,
+                    'dataNascimento' => $dataNascimento,
+                    'panorama_id' => $returnData["proposta"] ?? "",
+                    'matricula' => $matricula,
+                    'nomeCliente' => $nomeCliente,
+                    'telefone' => $ddd . $telefone,
+                    'adesao' => $adesao,
+                    'valorSaque' => $valorSaque,
+                    'valor_parcela' => $valorParcela,
+                    'numero_parcela' => $quantidadeParcelas,
+                    'data_criacao' => date('Y-m-d H:i:s'),
+                    'userId' => $this->session->userId
+                ]);
+            }
+
+            return redirect()->to(urlInstitucional);
+        }
+
+        $produto = $this->m_insight->getProduto($idproduto);
+
+        $dados['produto'] = $produto;
+
+        return $this->loadpage('insight/insight_registrar_proposta', $dados);
     }
 }

@@ -49,6 +49,11 @@ class dbMaster
 		return $query->getResult();
 	}
 
+	public function listarProdutos()
+	{
+		return $this->db->table('quid_produtos')->get()->getResult();
+	}
+
 	public function select($table, $whereCheck, $parameters = null)
 	{
 		$builder = $this->db->table($table);

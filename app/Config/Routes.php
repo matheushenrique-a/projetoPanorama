@@ -63,6 +63,9 @@ $routes->match(['get', 'post'], '/insight-anexar-arquivo/(:any)', 'Insight\Arqui
 $routes->match(['get', 'post'], '/insight/download/(:any)', 'Insight\Arquivos::download/$1/$2');
 $routes->match(['get', 'post'], '/insight/excluir/(:any)', 'Insight\Arquivos::excluir/$1/$2');
 $routes->match(['get', 'post'], '/export-propostas/(:any)', 'Insight\Arquivos::exportPropostas/$1');
+$routes->match(['get', 'post'], '/listar-produtos', 'Insight\Produtos::index');
+$routes->match(['get', 'post'], '/registrar-produtos/(:any)', 'Insight\Produtos::registrarProduto/$1');
+$routes->match(['get', 'post'], '/criar-proposta/(:any)/(:any)', 'Insight\Insight::criarProposta/$1/$2');
 
 //THEONE
 $routes->match(['get', 'post'], '/extrairdados', 'Theone\ExtrairDados::extrair');

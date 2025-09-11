@@ -43,7 +43,6 @@
 			if (minimized) {
 				body.classList.add('app-sidebar-minimize');
 
-				// Caso o template use data-kt-drawer para controlar o estado
 				if (sidebar) {
 					sidebar.setAttribute('data-kt-drawer-minimized', 'true');
 				}
@@ -86,23 +85,17 @@
 		});
 	</script>
 	<div class="d-flex flex-column flex-root app-root" id="kt_app_root">
-		<!--begin::Page-->
 		<div class="app-page flex-column flex-column-fluid" id="kt_app_page">
-			<!--begin::Header-->
 			<div id="kt_app_header" class="app-header">
-				<!--begin::Header container-->
 				<div class="app-container container-fluid d-flex align-items-stretch justify-content-between" id="kt_app_header_container">
-					<!--begin::sidebar mobile toggle-->
 					<div class="d-flex align-items-center d-lg-none ms-n2 me-2" title="Show sidebar menu">
 						<div class="btn btn-icon btn-active-color-primary w-35px h-35px" id="kt_app_sidebar_mobile_toggle">
-							<!--begin::Svg Icon | path: icons/duotune/abstract/abs015.svg-->
 							<span class="svg-icon svg-icon-1">
 								<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 									<path d="M21 7H3C2.4 7 2 6.6 2 6V4C2 3.4 2.4 3 3 3H21C21.6 3 22 3.4 22 4V6C22 6.6 21.6 7 21 7Z" fill="currentColor" />
 									<path opacity="0.3" d="M21 14H3C2.4 14 2 13.6 2 13V11C2 10.4 2.4 10 3 10H21C21.6 10 22 10.4 22 11V13C22 13.6 21.6 14 21 14ZM22 20V18C22 17.4 21.6 17 21 17H3C2.4 17 2 17.4 2 18V20C2 20.6 2.4 21 3 21H21C21.6 21 22 20.6 22 20Z" fill="currentColor" />
 								</svg>
 							</span>
-							<!--end::Svg Icon-->
 						</div>
 					</div>
 					<div class="d-flex align-items-center flex-grow-1 flex-lg-grow-0">
@@ -551,7 +544,7 @@
 											</a>
 										</div>
 										<div class="menu-item">
-											<a class="menu-link menu-href-link" href="<?php echo assetfolder; ?>insight-listar-propostas/0/enviar-panorama">
+											<a class="menu-link menu-href-link" href="<?php echo assetfolder; ?>listar-produtos">
 												<span class="menu-bullet"><span class="bullet bullet-dot"></span></span>
 												<span class="menu-title">Criar proposta</span>
 											</a>
@@ -772,6 +765,16 @@
 											<span class="menu-arrow"></span>
 										</span>
 										<div class="menu-sub menu-sub-accordion">
+											<div class="menu-item">
+												<a class="menu-link" href="<?php echo assetfolder; ?>registrar-produtos/0">
+													<span class="menu-bullet">
+														<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+															<path fill-rule="evenodd" d="M10.271 5.575C8.967 4.501 7 5.43 7 7.12v9.762c0 1.69 1.967 2.618 3.271 1.544l5.927-4.881a2 2 0 0 0 0-3.088l-5.927-4.88Z" clip-rule="evenodd" />
+														</svg>
+													</span>
+													<span class="menu-title">Registrar produto</span>
+												</a>
+											</div>
 										</div>
 									</div>
 								<?php endif; ?>
