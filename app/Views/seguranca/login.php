@@ -22,7 +22,7 @@
 
 <style>
 	body {
-		background-image: url('<?php echo assetfolder ?>assets/media/auth/bg9.jpg');
+		background-image: url('<?php echo assetfolder ?>assets/media/auth/bg1-dark.jpg');
 	}
 
 	[data-theme="dark"] body {

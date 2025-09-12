@@ -11,7 +11,9 @@
                         <li class="breadcrumb-item">
                             <span class="bullet bg-gray-800 w-5px h-2px"></span>
                         </li>
-                        <li class="breadcrumb-item text-muted">Insight</li>
+                        <li class="breadcrumb-item text-muted">
+                            <a href="<?php assetfolder ?>insight-listar-propostas/0/0" class="text-muted text-hover-primary">Propostas</a>
+                        </li>
                         <li class="breadcrumb-item">
                             <span class="bullet bg-gray-800 w-5px h-2px"></span>
                         </li>
