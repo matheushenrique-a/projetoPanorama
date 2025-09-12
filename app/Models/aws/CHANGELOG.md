@@ -10335,7 +10335,7 @@ See https://httpoxy.org for more details on the vulnerability.
 ## 3.18.5 - 2016-05-03
 
 * `Aws\Api` - Fixed serialization of booleans in querystrings
- * `Aws\OpsWorks` - Added support for default tenancy selection
+* `Aws\OpsWorks` - Added support for default tenancy selection
 
 ## 3.18.4 - 2016-04-28
 

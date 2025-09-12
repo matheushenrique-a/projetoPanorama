@@ -12,7 +12,7 @@
                             <span class="bullet bg-gray-800 w-5px h-2px"></span>
                         </li>
                         <li class="breadcrumb-item text-muted">
-                            <a href="<?php echo assetfolder ?>insight-listar-propostas/0/0" class="text-muted text-hover-primary">Propostas</a>
+                            <a href="<?php echo assetfolder ?>listar-produtos" class="text-muted text-hover-primary">Produtos</a>
                         </li>
                         <li class="breadcrumb-item">
                             <span class="bullet bg-gray-800 w-5px h-2px"></span>
@@ -24,120 +24,159 @@
         </div>
         <div id="kt_app_content" class="app-content flex-column-fluid">
             <div id="kt_app_content_container" class="app-container container-xxl">
-                <form id="frmDataLake" class="form" action="<?php echo assetfolder; ?>insight-listar-propostas/1/enviar-panorama" method="POST">
-                    <div class="flex-lg-row-fluid">
+                <form id="frmDataLake" class="form" action="<?php echo assetfolder; ?>criar-proposta/0/salvar" method="POST">
+                    <div class="flex-lg-row-fluid px-15 py-3">
                         <div class="card" id="kt_chat_messenger">
                             <div class="accordion" id="kt_accordion_1 ms-lg-7 ms-xl-10">
                                 <div class="accordion-item">
-                                    <h2 class="" id="kt_accordion_1_header_1">
-                                        <button class="accordion-button fs-4 fw-semibold" type="button">ENVIAR PROPOSTA</button>
+                                    <h2 class="accordion-header" id="kt_accordion_1_header_1">
+                                        <button class="accordion-button fs-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#kt_accordion_1_body_133" aria-expanded="true" aria-controls="kt_accordion_abordagem_body_1">CLIENTE</button>
                                     </h2>
                                     <div id="kt_accordion_1_body_133" class="accordion-collapse collapse show" aria-labelledby="kt_accordion_1_header_1" data-bs-parent="#kt_accordion_1">
                                         <div id="kt_accordion_1_body_133" class="accordion-collapse collapse show" aria-labelledby="kt_accordion_1_header_1" data-bs-parent="#kt_accordion_1">
-                                            <div class="px-15 py-8 justify-content-center d-flex gap-4">
-                                                <div class="w-50 px-3">
-                                                    <div class="input-group">
-                                                        <span class="input-group-text" style="width: 160px">Assessor</span>
-                                                        <input type="text" value="<?php echo $nomeAssessor ?>" class="form-control fs-5W fw-bold" name="assessor" id="assessor" required readonly />
-                                                    </div>
-                                                    <div class="input-group">
-                                                        <span class="input-group-text" style="width: 160px">Produto</span>
-                                                        <input type="text" value="<?php echo $produto->nomeProduto ?>" class="form-control fs-5W fw-bold" name="assessor" id="assessor" required readonly />
-                                                    </div>
-                                                    <div class="input-group">
-                                                        <span class="input-group-text" style="width: 160px">Cod. Entidade</span>
-                                                        <select class="form-select fs-5 fw-bold" id="codigoEntidade" name="codigoEntidade">
-                                                            <option value="1581">INSS - 1581</option>
-                                                            <option value="4277">INSS BENEFÍCIO - 4277</option>
-                                                            <option value="164">SIAPE - 164</option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="d-flex">
-                                                        <div class="input-group" style="width: 440px;">
-                                                            <span class="input-group-text" style="width: 60px">CPF</span>
-                                                            <input maxlength="14" type="text" value="" class="form-control fs-3 fw-bold" placeholder="000.000.000-00" name="cpf" id="cpf" required />
+                                            <div class="px-15 py-8 justify-content-center d-flex flex-column gap-4">
+                                                <div class="d-flex gap-5">
+                                                    <div class="w-50 d-flex flex-column gap-4">
+                                                        <div class="input-group">
+                                                            <span class="input-group-text" style="width: 160px">Nome do Cliente</span>
+                                                            <input type="text" class="form-control fs-4 fw-bold" value="" name="nomeCliente" id="nomeCliente" required />
                                                         </div>
                                                         <div class="input-group">
-                                                            <span class="input-group-text" style="width: 160px">Data de Nascimento</span>
-                                                            <input maxlength="10" type="text" class="form-control fs-3 fw-bold" placeholder="00/00/0000" name="dataNascimento" id="dataNascimento" required />
+                                                            <span class="input-group-text" style="width: 160px">Cod. Entidade</span>
+                                                            <select class="form-select fs-4 fw-bold" id="codigoEntidade" name="codigoEntidade">
+                                                                <option value="1581">INSS - 1581</option>
+                                                                <option value="4277">INSS BENEFÍCIO - 4277</option>
+                                                                <option value="164">SIAPE - 164</option>
+                                                            </select>
                                                         </div>
                                                     </div>
-                                                    <div class="input-group">
-                                                        <span class="input-group-text" style="width: 160px">Número Benefício</span>
-                                                        <input type="text" value="" class="form-control fs-3 fw-bold" placeholder="" name="matricula" id="matricula" />
-                                                    </div>
-                                                    <div class="input-group">
-                                                        <span class="input-group-text" style="width: 160px">Nome do Cliente</span>
-                                                        <input type="text" class="form-control fs-3 fw-bold" value="" name="nomeCliente" id="nomeCliente" required />
-                                                    </div>
-                                                    <div class="input-group">
-                                                        <span class="input-group-text" style="width: 55px">DDD</span>
-                                                        <input type="text" maxlength="2" class="form-control fs-3 fw-bold" value="" style="color:rgb(188, 188, 188)" name="ddd" id="ddd" required />
-                                                        <span class="input-group-text" style="width: 80px">Número</span>
-                                                        <input type="text" class="form-control fs-3 fw-bold" value="" style="color:rgb(188, 188, 188); width: 250px" name="telefone" id="telefone" required />
-                                                    </div>
-                                                    <div class="input-group mt-6 d-flex">
-                                                        <textarea class="form-control fs-8" id="entrada" placeholder="Cole aqui o Ctrl+A do Vanguard"></textarea>
-                                                        <button class="btn btn-info" id="extratorDados">Extrair Dados</button>
-                                                    </div>
-                                                </div>
-
-                                                <div class="w-50 px-3">
-                                                    <?php if ($produto->temValor == "1"): ?>
-                                                        <div id="valores">
-                                                            <div class="input-group mb-6" style="width: 260px">
-                                                                <span class="input-group-text" style="width: 130px">Valor do Saque</span>
-                                                                <input type="text" value="" class="form-control fs-3 fw-bold" name="valorSaque" id="valorSaque" />
+                                                    <div class="w-50 d-flex flex-column gap-4">
+                                                        <div class="d-flex">
+                                                            <div class="input-group" style="width: 440px;">
+                                                                <span class="input-group-text" style="width: 60px">CPF</span>
+                                                                <input maxlength="14" type="text" value="" class="form-control fs-4 fw-bold" placeholder="000.000.000-00" name="cpf" id="cpf" required />
                                                             </div>
                                                             <div class="input-group">
-                                                                <span class="input-group-text">Parcela</span>
-                                                                <input type="text" class="form-control fs-3 fw-bold" name="valorParcela" id="valorParcela" />
-                                                                <span class="input-group-text">Quantidade</span>
-                                                                <input type="text" class="form-control fs-3 fw-bold" name="parcelas" id="parcelas" />
+                                                                <span class="input-group-text" style="width: 160px">Data de Nascimento</span>
+                                                                <input maxlength="10" type="text" class="form-control fs-4 fw-bold" placeholder="00/00/0000" name="dataNascimento" id="dataNascimento" required />
                                                             </div>
                                                         </div>
-                                                    <?php endif; ?>
-                                                    <div class="input-group">
-                                                        <span class="input-group-text" style="width: 80px">Adesão</span>
-                                                        <input maxlength="10" type="text" value="" class="form-control fs-3 fw-bold" placeholder="" name="adesao" id="adesao" required />
-                                                    </div>
-
-                                                    <div class="input-group ">
-                                                        <span class="input-group-text" style="width: 120px">Observação:</span>
-                                                        <textarea class="form-control fs-4 fw-bold " placeholder="..." name="observacao" id="observacao"></textarea>
-                                                    </div>
-
-                                                    <div class="d-flex gap-5">
-
-                                                        <div class="d-flex flex-column align-items-center mt-6 mb-0 gap-4">
-                                                            <span class="text-center fw-semibold fs-6">Enviar para Insight?</span>
-                                                            <div class="btn-group" role="group" aria-label="Sim ou Não">
-                                                                <input type="radio" class="btn-check" name="resposta_insight" id="btn-sim-insight" value="sim" autocomplete="off" checked>
-                                                                <label class="btn btn-outline-success" for="btn-sim-insight">Sim</label>
-
-                                                                <input type="radio" class="btn-check" name="resposta_insight" id="btn-nao-insight" value="nao" autocomplete="off">
-                                                                <label class="btn btn-outline-danger" for="btn-nao-insight">Não</label>
-                                                            </div>
+                                                        <div class="input-group">
+                                                            <span class="input-group-text" style="width: 156px">Número Benefício</span>
+                                                            <input type="text" value="" class="form-control fs-3 fw-bold" placeholder="" name="matricula" id="matricula" />
                                                         </div>
-                                                        <div class="d-flex flex-column align-items-center mt-6 mb-0 gap-4">
-                                                            <span class="text-center fw-semibold fs-6">Enviar para Panorama?</span>
-                                                            <div class="btn-group" role="group" aria-label="Sim ou Não">
-                                                                <input type="radio" class="btn-check" name="resposta_panorama" id="btn-sim-panorama" value="sim" autocomplete="off" checked>
-                                                                <label class="btn btn-outline-success" for="btn-sim-panorama">Sim</label>
-
-                                                                <input type="radio" class="btn-check" name="resposta_panorama" id="btn-nao-panorama" value="nao" autocomplete="off">
-                                                                <label class="btn btn-outline-danger" for="btn-nao-panorama">Não</label>
-                                                            </div>
+                                                        <div class="input-group">
+                                                            <span class="input-group-text" style="width: 55px">DDD</span>
+                                                            <input type="text" maxlength="2" class="form-control fs-3 fw-bold" value="" style="color:rgb(188, 188, 188)" name="ddd" id="ddd" required />
+                                                            <span class="input-group-text" style="width: 80px">Número</span>
+                                                            <input type="text" class="form-control fs-3 fw-bold" value="" style="color:rgb(188, 188, 188); width: 250px" name="telefone" id="telefone" required />
                                                         </div>
-                                                    </div>
-                                                    <div class="d-flex align-items-center position-relative mt-10 mb-0">
-                                                        <button type="submit" class="btn btn-success" name="btnIncluirProposta" id="btnIncluirProposta" value="salvar">Enviar Proposta</button>
+                                                        <div class="input-group mt-2 d-flex">
+                                                            <textarea class="form-control fs-8" id="entrada" placeholder="Cole aqui o Ctrl+A do Vanguard"></textarea>
+                                                            <button class="btn btn-info" id="extratorDados">Extrair Dados</button>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+
+
+                        <div class="card" id="kt_chat_messenger">
+                            <div class="accordion" id="kt_accordion_1 ms-lg-7 ms-xl-10">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="kt_accordion_1_header_1">
+                                        <button class="accordion-button fs-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#kt_accordion_1_body_14" aria-expanded="true" aria-controls="kt_accordion_abordagem_body_1">PRODUTO</button>
+                                    </h2>
+                                    <div id="kt_accordion_1_body_14" class="accordion-collapse collapse show" aria-labelledby="kt_accordion_1_header_1" data-bs-parent="#kt_accordion_1">
+                                        <div id="kt_accordion_1_body_14" class="accordion-collapse collapse show" aria-labelledby="kt_accordion_1_header_1" data-bs-parent="#kt_accordion_1">
+                                            <div class="px-15 py-8 justify-content-center d-flex flex-column gap-4">
+                                                <div class="d-flex gap-5">
+                                                    <div class="d-flex gap-4 justify-content-around w-100 mx-10">
+
+                                                        <div class="input-group" style="width: 220px;">
+                                                            <span class="input-group-text" style="width: 80px">Adesão</span>
+                                                            <input maxlength="10" type="text" value="" class="form-control fs-4 fw-bold" placeholder="" name="adesao" id="adesao" required />
+                                                        </div>
+                                                        <div class="input-group" style="width: 300px;">
+                                                            <span class="input-group-text">Produto</span>
+                                                            <input type="text" class="form-control fs-4 fw-bold" placeholder="" name="produto" id="produto" value="<?= $produto->nomeProduto ?>" readonly />
+                                                        </div>
+                                                        <div class="input-group" style="width: 500px;">
+                                                            <span class="input-group-text">Assessor</span>
+                                                            <input type="text" class="form-control fs-4 fw-bold" placeholder="" name="assessor" id="assessor" value="<?= $nomeAssessor ?>" readonly />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <?php if ($produto->temValor == "1"): ?>
+                            <div class="card" id="kt_chat_messenger">
+                                <div class="accordion" id="kt_accordion_1 ms-lg-7 ms-xl-10">
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="kt_accordion_1_header_1">
+                                            <button class="accordion-button fs-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#kt_accordion_1_body_13" aria-expanded="true" aria-controls="kt_accordion_abordagem_body_1">VALORES</button>
+                                        </h2>
+                                        <div id="kt_accordion_1_body_13" class="accordion-collapse collapse show" aria-labelledby="kt_accordion_1_header_1" data-bs-parent="#kt_accordion_1">
+                                            <div id="kt_accordion_1_body_13" class="accordion-collapse collapse show" aria-labelledby="kt_accordion_1_header_1" data-bs-parent="#kt_accordion_1">
+                                                <div class="px-15 py-8 justify-content-center d-flex flex-column gap-4">
+                                                    <div class="d-flex gap-5">
+                                                        <div class="d-flex gap-4 justify-content-around w-100 mx-10">
+
+                                                            <div class="input-group" style="width: 220px;">
+                                                                <span class="input-group-text">Valor</span>
+                                                                <input type="text" value="" placeholder="R$ -" class="form-control fs-3 fw-bold" name="valorSaque" id="valorSaque" />
+                                                            </div>
+                                                            <div class="input-group" style="width: 280px;">
+                                                                <span class="input-group-text">Valor da parcela</span>
+                                                                <input type="text" class="form-control fs-3 fw-bold" placeholder="R$ -" name="valorParcela" id="valorParcela" />
+                                                            </div>
+                                                            <div class="input-group" style="width: 260px;">
+                                                                <span class="input-group-text">Quantidade de parcelas</span>
+                                                                <input type="text" class="form-control fs-3 fw-bold" name="parcelas" id="parcelas" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endif; ?>
+
+                        <div class="d-flex gap-5 mt-2 flex-end">
+                            <div class="d-flex flex-column align-items-center mt-6 mb-0 gap-4">
+                                <span class="text-center fw-semibold fs-6">Enviar para Insight?</span>
+                                <div class="btn-group" role="group" aria-label="Sim ou Não">
+                                    <input type="radio" class="btn-check" name="resposta_insight" id="btn-sim-insight" value="sim" autocomplete="off" checked>
+                                    <label class="btn btn-outline-success" for="btn-sim-insight">Sim</label>
+
+                                    <input type="radio" class="btn-check" name="resposta_insight" id="btn-nao-insight" value="nao" autocomplete="off">
+                                    <label class="btn btn-outline-danger" for="btn-nao-insight">Não</label>
+                                </div>
+                            </div>
+                            <div class="d-flex flex-column align-items-center mt-6 mb-0 gap-4">
+                                <span class="text-center fw-semibold fs-6">Enviar para Panorama?</span>
+                                <div class="btn-group" role="group" aria-label="Sim ou Não">
+                                    <input type="radio" class="btn-check" name="resposta_panorama" id="btn-sim-panorama" value="sim" autocomplete="off" checked>
+                                    <label class="btn btn-outline-success" for="btn-sim-panorama">Sim</label>
+
+                                    <input type="radio" class="btn-check" name="resposta_panorama" id="btn-nao-panorama" value="nao" autocomplete="off">
+                                    <label class="btn btn-outline-danger" for="btn-nao-panorama">Não</label>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center position-relative mt-10 mb-0">
+                                <button type="submit" class="btn btn-success" name="btnIncluirProposta" id="btnIncluirProposta" value="salvar">Enviar Proposta</button>
                             </div>
                         </div>
                     </div>
@@ -149,7 +188,7 @@
         <div class="app-container container-fluid d-flex flex-column flex-md-row flex-center flex-md-stack py-3">
             <div class="text-dark order-2 order-md-1">
                 <span class="text-muted fw-semibold me-1">2025&copy;</span>
-                <a href="#" target="_blank" class="text-gray-800 text-hover-primary">Insight</a>
+                <a href="<?= assetfolder ?>" target="_blank" class="text-gray-800 text-hover-primary">Insight</a>
             </div>
         </div>
     </div>
@@ -254,9 +293,9 @@
                 value;
         });
 
-        valorParcela.addEventListener('input', () => {
-            let value = valorParcela.value.replace(/\D/g, '');
-            valorParcela.value = value.length > 2 ?
+        valorParcelaInput.addEventListener('input', () => {
+            let value = valorParcelaInput.value.replace(/\D/g, '');
+            valorParcelaInput.value = value.length > 2 ?
                 (parseFloat(value) / 100).toFixed(2).replace(',', '.') :
                 value;
         });

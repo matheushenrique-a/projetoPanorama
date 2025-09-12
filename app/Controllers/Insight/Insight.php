@@ -72,76 +72,6 @@ class Insight extends BaseController
             return redirect()->to(urlInstitucional . 'insight-listar-propostas/0/0');
         }
 
-        if ($action == "enviar-panorama") {
-            $dados['pageTitle'] = 'Adicionar proposta';
-            $dados['nomeAssessor'] = $this->session->nickname;
-
-            if ($idProposta == "1") {
-                $assessor = $this->getpost('assessor');
-                $codigoEntidade = $this->getpost('codigoEntidade');
-                $cpf = $this->getpost('cpf');
-                $dataNascimento = $this->getpost('dataNascimento');
-                $matricula = $this->getpost('matricula');
-                $nomeCliente = $this->getpost('nomeCliente');
-                $ddd = $this->getpost('ddd');
-                $telefone = $this->getpost('telefone');
-                $adesao = $this->getpost('adesao');
-                $valorSaque = $this->getpost('valorSaque');
-                $valorParcela = $this->getpost('valorParcela');
-                $quantidadeParcelas = $this->getpost('parcelas');
-                $observacao = $this->getpost('observacao') ?? "";
-                $produto = $this->getpost('produto');
-
-                $respostaInsight = $this->getpost('resposta_insight');
-                $respostaPanorama = $this->getpost('resposta_panorama');
-
-                $returnData = [];
-
-                if ($respostaPanorama == "sim") {
-                    $returnData = $this->panorama_gravar_proposta_saque([
-                        'assessor' => $assessor,
-                        'produto' => $produto,
-                        'codigoEntidade' => $codigoEntidade,
-                        'cpf' => $cpf,
-                        'dataNascimento' => $dataNascimento,
-                        'matricula' => $matricula,
-                        'nomeCliente' => $nomeCliente,
-                        'celular1' => ['ddd' => $ddd, 'numero' => $telefone],
-                        'adesao' => $adesao,
-                        'valorSaque' => $valorSaque ?? '1',
-                        'valorParcela' => $valorParcela ?? '1',
-                        'quantidadeParcelas' => $quantidadeParcelas ?? '1',
-                        'observacao' => $observacao
-                    ]);
-                }
-
-                if ($respostaInsight == "sim") {
-                    $this->m_bmg->gravar_proposta_bmg_database([
-                        'assessor' => $assessor,
-                        'produto' => $produto,
-                        'report_to' => $this->session->report_to,
-                        'codigo_entidade' => $codigoEntidade,
-                        'cpf' => $cpf,
-                        'dataNascimento' => $dataNascimento,
-                        'panorama_id' => $returnData["proposta"] ?? "",
-                        'matricula' => $matricula,
-                        'nomeCliente' => $nomeCliente,
-                        'telefone' => $ddd . $telefone,
-                        'adesao' => $adesao,
-                        'valorSaque' => $valorSaque,
-                        'valor_parcela' => $valorParcela,
-                        'numero_parcela' => $quantidadeParcelas,
-                        'data_criacao' => date('Y-m-d H:i:s'),
-                        'userId' => $this->session->userId
-                    ]);
-                }
-
-                return redirect()->to(urlInstitucional . 'insight-listar-propostas/0/0');
-            }
-
-            return $this->loadpage('insight/insight_enviar_panorama', $dados);
-        }
-
         if ($action == "alterar-status") {
             $id = $this->request->getPost('id');
             $novoStatus = $this->request->getPost('status');
@@ -459,15 +389,15 @@ class Insight extends BaseController
             "mensagem" => ""
         ];
 
-        if ($params['codigoEntidade'] == "1581" && $params['produto'] == 2) {
+        if ($params['codigoEntidade'] == "1581" && $params['produto'] == "Cartão BMG") {
             $planoName = 'BMG CARD';
-        } else if ($params['codigoEntidade'] == "4277" && $params['produto'] == 2) {
+        } else if ($params['codigoEntidade'] == "4277" && $params['produto'] == "Cartão BMG") {
             $planoName = 'BMG BENEFICIO CARD';
         } else {
             $planoName = 'SAQUE ELETRONICO';
         }
 
-        if ($params['produto'] == 2) {
+        if ($params['produto'] == "Cartão BMG") {
             $valorPlano = '1';
             $parcelas = '1';
             $prazo = '1';
@@ -774,7 +704,7 @@ class Insight extends BaseController
                 ]);
             }
 
-            return redirect()->to(urlInstitucional);
+            return redirect()->to(urlInstitucional . 'insight-listar-propostas/0/0');
         }
 
         $produto = $this->m_insight->getProduto($idproduto);

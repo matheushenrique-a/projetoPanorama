@@ -98,19 +98,17 @@
 			document.documentElement.setAttribute("data-theme", themeMode);
 		}
 
-		// Função para atualizar o logo
 		function updateLogoByTheme() {
 			const logo = document.getElementById("logoImg");
 			if (!logo) return;
 
 			if (themeMode === "dark") {
-				logo.src = "<?php echo assetfolder ?>assets/empresas/<?php echo EMPRESA ?>/logos/QUID ONE_nomarge_BRANCO.png";
+				logo.src = "<?php echo assetfolder ?>assets/logos/QUID ONE_nomarge_BRANCO.png";
 			} else {
-				logo.src = "<?php echo assetfolder ?>assets/empresas/<?php echo EMPRESA ?>/logos/QUID ONE_nomarge_PRETO.png";
+				logo.src = "<?php echo assetfolder ?>assets/logos/QUID ONE_nomarge_PRETO.png";
 			}
 		}
 
-		// Espera o DOM carregar
 		document.addEventListener("DOMContentLoaded", () => {
 			updateLogoByTheme();
 		});

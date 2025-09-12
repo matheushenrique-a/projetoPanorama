@@ -20,7 +20,7 @@
 	<meta property="og:url" content="https://keenthemes.com/metronic" />
 	<meta property="og:site_name" content="Keenthemes | Metronic" />
 	<link rel="canonical" href="https://preview.keenthemes.com/metronic8" />
-	<link rel="shortcut icon" href="<?php echo assetfolder ?>assets/media/logos/favicon.ico" />
+	<link rel="shortcut icon" href="<?php echo assetfolder ?>assets/logos/favicon-32x32.png" />
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />
 	<link href="<?php echo assetfolder ?>assets/plugins/custom/fullcalendar/fullcalendar.bundle.css" rel="stylesheet" type="text/css" />
 	<link href="<?php echo assetfolder ?>assets/plugins/custom/datatables/datatables.bundle.css" rel="stylesheet" type="text/css" />
@@ -29,7 +29,6 @@
 </head>
 
 <body id="kt_app_body" data-kt-app-layout="dark-sidebar" data-kt-app-sidebar-minimize="on" data-kt-app-header-fixed="true" data-kt-app-sidebar-enabled="true" data-kt-app-sidebar-fixed="true" data-kt-app-sidebar-hoverable="true" data-kt-app-sidebar-push-header="true" data-kt-app-sidebar-push-toolbar="true" data-kt-app-sidebar-push-footer="true" data-kt-app-toolbar-enabled="true" class="app-default">
-
 	<script>
 		var defaultThemeMode = "light";
 		var themeMode;
@@ -99,8 +98,8 @@
 						</div>
 					</div>
 					<div class="d-flex align-items-center flex-grow-1 flex-lg-grow-0">
-						<a href="../../demo1/dist/index.html" class="d-lg-none">
-							<img alt="Logo" src="<?php echo assetfolder ?>assets/media/logos/default-small.svg" class="h-30px" />
+						<a href="<?php echo assetfolder ?>" class="d-lg-none">
+							<img alt="Logo" src="<?php echo assetfolder ?>assets/logos/favicon-32x32.png" class="h-30px" />
 						</a>
 					</div>
 					<div class="d-flex align-items-stretch justify-content-between flex-lg-grow-1" id="kt_app_header_wrapper">
@@ -500,8 +499,8 @@
 				<div id="kt_app_sidebar" class="app-sidebar flex-column" data-kt-drawer="true" data-kt-drawer-name="app-sidebar" data-kt-drawer-activate="{default: true, lg: false}" data-kt-drawer-overlay="true" data-kt-drawer-width="225px" data-kt-drawer-direction="start" data-kt-drawer-toggle="#kt_app_sidebar_mobile_toggle">
 					<div class="app-sidebar-logo px-6" id="kt_app_sidebar_logo">
 						<a href="<?php echo assetfolder ?>">
-							<img alt="Logo" src="<?php echo assetfolder ?>assets/empresas/<?php echo EMPRESA ?>/logos/logo.png" class="h-25px app-sidebar-logo-default" />
-							<img alt="Logo" src="<?php echo assetfolder ?>assets/empresas/<?php echo EMPRESA ?>/logos/small-logo.png" class="h-20px app-sidebar-logo-minimize" />
+							<img alt="Logo" src="<?php echo assetfolder ?>assets/logos/QUID ONE_nomarge_BRANCO.png" class="h-35px app-sidebar-logo-default" />
+							<img alt="Logo" src="<?php echo assetfolder ?>assets/logos/favicon-32x32.png" class="h-35px app-sidebar-logo-minimize" />
 						</a>
 						<div id="kt_app_sidebar_toggle" class="app-sidebar-toggle btn btn-icon btn-shadow btn-sm btn-color-muted btn-active-color-primary body-bg h-30px w-30px position-absolute top-50 start-100 translate-middle rotate" data-kt-toggle="true" data-kt-toggle-state="active" data-kt-toggle-target="body" data-kt-toggle-name="app-sidebar-minimize">
 							<span class="svg-icon svg-icon-2 rotate-180">

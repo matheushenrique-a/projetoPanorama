@@ -419,6 +419,8 @@
 
 						<?php endif; ?>
 
+						<!-- QUANTIDADE DE PROPOSTAS COM BASE EM VALOR -->
+
 						<?php if (!$my_security->checkPermission("GERENTE") && !$my_security->checkPermission("ADMIN")): ?>
 							<?php if ($my_security->checkPermission("SUPERVISOR") && $session->userId !== "165001"): ?>
 								<div class="col-xl-4 w-50 d-flex flex-column gap-10">
@@ -430,6 +432,82 @@
 											</h3>
 										</div>
 
+										<div class="p-3 mt-1 justify-content-center border-bottom gap-4 d-flex">
+											<h3 class="mt-3 text-gray-600">Meta individual:</h3>
+											<div class="d-flex gap-2 rounded shadow-sm">
+												<input id="metaInput" readonly value="<?= $meta ?>" style="width: 150px;" class="form-control fw-bold fs-5 text-success"></input>
+												<i id="metaEdit" class="cursor-pointer bi mt-4 bi-pencil-square fs-3"></i>
+												<a id="metaLink" href="<?php echo assetfolder ?>atualizar-meta/<?php echo $session->userId ?>/" class="d-none mt-3"><i class="bi text-primary bi-check fs-1"></i></a>
+											</div>
+										</div>
+										<div class="p-4 gap-1 fs-5 d-flex justify-content-center">
+											<h2 class="d-flex align-items-center fs-5 px-2 py-1 rounded">
+												<?= $quantidadeAssessoresIndividual ?>
+											</h2>
+											<h3 class="text-gray-600">assessores</h3>
+										</div>
+										<div class="d-flex justify-content-center gap-6 flex-wrap mt-2">
+
+											<!-- Progresso -->
+											<div class="d-flex flex-column align-items-center text-center">
+												<h2 class="fs-5 text-muted mb-2">Progresso <i class="bi bi-arrow-up-right"></i></h2>
+												<div class="bg-light rounded shadow-sm px-5 py-4 w-100" style="max-width: 200px;">
+													<span class="fw-bold fs-5 text-success"><?= $progressoSupervisor ?>%</span>
+												</div>
+											</div>
+
+											<!-- Meta -->
+											<div class="d-flex flex-column align-items-center text-center">
+												<h2 class="fs-5 text-muted mb-2">Meta <i class="bi bi-flag"></i></h2>
+												<div class="bg-light rounded px-5 py-4 w-100 shadow-sm text-center" style="max-width: 200px;">
+													<span class="fw-bold fs-5 text-success">R$ <?= number_format($metaMensal, 2, ',', '.') ?></span>
+												</div>
+											</div>
+										</div>
+
+										<!-- Total Mensal -->
+										<div class="d-flex flex-column align-items-center mt-8 mb-15 w-100">
+											<h2 class="fs-4 mb-3 text-muted">Total Mensal</h2>
+											<div class="bg-light text-gray-800 rounded px-5 py-5 fs-1 fw-bold d-flex flex-column align-items-center shadow-sm w-100" style="max-width: 400px;">
+												R$ <?= number_format($totalMensal, 2, ',', '.') ?>
+												<div class="progress mt-4 w-100" style="height: 16px;">
+													<div class="progress-bar bg-success" role="progressbar"
+														style="width: <?= $progressoSupervisor ?>%;"
+														aria-valuenow="<?= $progressoSupervisor ?>" aria-valuemin="0" aria-valuemax="100">
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="card h-xl-45">
+										<div class="card-header pt-6 pb-3">
+											<h3 class="card-title align-items-start flex-column">
+												<span class="card-label fw-bold text-dark">Quantidade Averbada P/dia</span>
+												<span class="text-gray-400 mt-1 fw-semibold fs-6">Últimos 10 dias</span>
+											</h3>
+										</div>
+										<div class="card pt-7 mb-3 pb-3">
+											<div class="mx-5 mt-10">
+												<canvas id="graficoPropostasEquipe" width="600" height="400"></canvas>
+											</div>
+										</div>
+									</div>
+								</div>
+							<?php endif; ?>
+						<?php endif; ?>
+
+						<!-- INSERIR QUANTIDADE DE PROPOSTAS -->
+
+						<?php if (!$my_security->checkPermission("GERENTE") && !$my_security->checkPermission("ADMIN")): ?>
+							<?php if ($my_security->checkPermission("SUPERVISOR") && $session->userId !== "165001"): ?>
+								<div class="col-xl-4 w-50 d-flex flex-column gap-10">
+									<div class="card h-xl-45">
+										<div class="card-header pt-6 pb-2 d-flex flex-column">
+											<h3 class="card-title align-items-start flex-column">
+												<span class="card-label fw-bold text-dark">Total por Equipe</span>
+												<span class="text-gray-400 mt-1 fw-semibold fs-6">Este Mês</span>
+											</h3>
+										</div>
 										<div class="p-3 mt-1 justify-content-center border-bottom gap-4 d-flex">
 											<h3 class="mt-3 text-gray-600">Meta individual:</h3>
 											<div class="d-flex gap-2 rounded shadow-sm">
