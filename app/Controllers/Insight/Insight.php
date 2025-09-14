@@ -122,15 +122,15 @@ class Insight extends BaseController
 
             $userId = $this->getpost('userId');
 
-            if ($novoStatus == "Pendente") {
-                $dados = [
-                    'userId' => $userId,
-                    'message' => $resumo ?? "",
-                    'link' => $id,
-                ];
+            // if ($novoStatus == "Pendente") {
+            //     $dados = [
+            //         'userId' => $userId,
+            //         'message' => $resumo ?? "",
+            //         'link' => $id,
+            //     ];
 
-                $this->m_insight->registrarNotificacao($dados);
-            }
+            //     $this->m_insight->registrarNotificacao($dados);
+            // }
 
             if ($statusAnterior !== $novoStatus) {
                 $obs = $this->getpost('conteudo');
