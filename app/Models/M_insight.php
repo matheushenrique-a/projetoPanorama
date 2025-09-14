@@ -18,7 +18,7 @@ class M_insight extends Model
         $this->db = \Config\Database::connect();
         $this->dbMasterDefault = new dbMaster();
         $this->session = session();
-        $this->m_http =  new M_http();
+        $this->m_http = new M_http();
     }
 
     public function load_notifications($limit = 7)
@@ -127,7 +127,7 @@ class M_insight extends Model
     {
         if (empty($data)) {
             return redirect()
-                ->to(urlInstitucional . 'insight-listar-propostas/0/upload')
+                ->to(urlInstitucional . 'listar-propostas/0/upload')
                 ->with('error', 'Nenhum dado para importar.');
         }
 
@@ -284,7 +284,23 @@ class M_insight extends Model
         return $this->dbMasterDefault->insert('quid_produtos', $data);
     }
 
-    public function getProduto($idProduto){
+    public function getProduto($idProduto)
+    {
         return $this->dbMasterDefault->select('quid_produtos', ['id' => $idProduto])['firstRow'];
+    }
+
+    public function metaQuantidade()
+    {
+        $supervisorId = $this->session->userId;
+
+        $inicio = date('Y-m-01');
+        $fim = date('Y-m-t');
+
+        $parameters = [
+            'betweenCheck' => ['data_criacao', $inicio, $fim],
+            'whereIn' => ['produto', ['Cartão BMG']] 
+        ];
+
+        return $this->dbMasterDefault->select('quid_propostas', ['report_to' => $supervisorId], $parameters)['countAll'];
     }
 }

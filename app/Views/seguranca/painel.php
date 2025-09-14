@@ -3,7 +3,8 @@
 		<div id="kt_app_toolbar" class="app-toolbar py-3 py-lg-6">
 			<div id="kt_app_toolbar_container" class="app-container container-xxl d-flex flex-stack">
 				<div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
-					<h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">Painel de Usuários</h1>
+					<h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">
+						Painel de Usuários</h1>
 					<ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
 						<li class="breadcrumb-item text-muted">
 							<a href="<?php echo assetfolder ?>" class="text-muted text-hover-primary">Home</a>
@@ -24,8 +25,10 @@
 							<div class="card-title">
 								<div class="d-flex align-items-center position-relative my-1 mx-3">
 									<div class="mb-3">
-										<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Busca:</label>
-										<input type="text" class="form-control" placeholder="Usuário" name="content" value="" />
+										<label for="exampleFormControlInput1"
+											class="form-label text-gray-800 mb-0">Busca:</label>
+										<input type="text" class="form-control" placeholder="Usuário" name="content"
+											value="" />
 									</div>
 								</div>
 							</div>
@@ -33,7 +36,8 @@
 								<div class="card-title">
 									<div class="d-flex align-items-center position-relative my-1">
 										<div class="mb-3  mx-3">
-											<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Cargo:</label>
+											<label for="exampleFormControlInput1"
+												class="form-label text-gray-800 mb-0">Cargo:</label>
 											<div class="d-flex align-items-center position-relative my-1">
 												<select class="form-select form-control-solid" aria-label="" name="role">
 													<option value="">TODOS</option>
@@ -48,9 +52,11 @@
 								<div class="card-title">
 									<div class="d-flex align-items-center position-relative my-1">
 										<div class="mb-3  mx-3">
-											<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Supervisor:</label>
+											<label for="exampleFormControlInput1"
+												class="form-label text-gray-800 mb-0">Supervisor:</label>
 											<div class="d-flex align-items-center position-relative my-1">
-												<select class="form-select form-control-solid" aria-label="" name="report_to">
+												<select class="form-select form-control-solid" aria-label=""
+													name="report_to">
 													<option value="">TODOS</option>
 													<option value="165006" <?= ($report_to ?? '') === '165006' ? 'selected' : '' ?>>Jéssica Laís</option>
 													<option value="165005" <?= ($report_to ?? '') === '165005' ? 'selected' : '' ?>>Ana Karla</option>
@@ -66,14 +72,17 @@
 								<div class="d-flex align-items-center position-relative my-1">
 									<div class="mb-0 mx-3">
 										<div class="d-flex align-items-center position-relative my-1 mt-0 mb-0">
-											<button type="submit" class="btn btn-primary mt-4" name="buscarProp" value="buscarProp">Buscar Usuário</button>
-											<a href="<?php echo assetfolder; ?>painel-criacao/0/add" class="btn btn-primary mt-4 ms-3">+</a>
+											<button type="submit" class="btn btn-primary mt-4" name="buscarProp"
+												value="buscarProp">Buscar Usuário</button>
+											<a href="<?php echo assetfolder; ?>painel-criacao/0/add"
+												class="btn btn-primary mt-4 ms-3">+</a>
 										</div>
 									</div>
 								</div>
 							</div>
 							<div class="card-title">
-								<div class="d-flex bg-gray-200 justify-content-center rounded gap-2 position-relative mt-4 px-4 mb-0" style="height: 50px;">
+								<div class="d-flex bg-gray-200 justify-content-center rounded gap-2 position-relative mt-4 px-4 mb-0"
+									style="height: 50px;">
 									<p class="mt-4 fw-bold text-gray-900 fs-3"><?= $countUsers ?></p>
 									<p class="mt-5 fs-6 text-gray-700">Usuários</p>
 								</div>
@@ -92,7 +101,8 @@
 								}
 							}
 						</script>
-						<table class="table align-middle table-row-dashed table-hover fs-6 gy-5" id="kt_widget_table_3" data-kt-table-widget-3="all">
+						<table class="table align-middle table-row-dashed table-hover fs-6 gy-5" id="kt_widget_table_3"
+							data-kt-table-widget-3="all">
 							<thead>
 								<tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
 									<th data-sortable="false" class="w-10px">Foto</th>
@@ -108,10 +118,11 @@
 							<tbody class="text-gray-600 fw-semibold">
 								<?php
 								foreach ($usuarios as $row) {
-								?>
+									?>
 									<tr>
 										<?php if (!empty($row->profile_image)): ?>
-											<td><img style="width:50px" class="rounded" src="<?= base_url($row->profile_image) ?>" alt="foto de perfil"></td>
+											<td><img style="width:50px" class="rounded"
+													src="<?= base_url($row->profile_image) ?>" alt="foto de perfil"></td>
 										<?php else: ?>
 											<td>-</td>
 										<?php endif; ?>
@@ -138,10 +149,14 @@
 										<?php else: ?>
 											<td>-</td>
 										<?php endif; ?>
-										<td><a href="<?php echo assetfolder; ?>painel-criacao/<?php echo $row->userId; ?>/edit"><i class="text-muted bi bi-pencil-square"></i></a></td>
-										<td><a href="<?php echo assetfolder; ?>painel-criacao/<?php echo $row->userId; ?>/remove"><i class="text-danger bi bi-trash"></i></a></td>
+										<td><a
+												href="<?php echo assetfolder; ?>painel-criacao/<?php echo $row->userId; ?>/edit"><i
+													class="text-muted bi bi-pencil-square"></i></a></td>
+										<td><a
+												href="<?php echo assetfolder; ?>painel-criacao/<?php echo $row->userId; ?>/remove"><i
+													class="text-danger bi bi-trash"></i></a></td>
 									</tr>
-								<?php
+									<?php
 								}
 								?>
 							</tbody>
@@ -150,7 +165,8 @@
 							<ul class="pagination">
 								<?php if ($currentPage > 1): ?>
 									<li class="page-item">
-										<a class="page-link" href="<?= assetfolder . 'painel/' . ($currentPage - 1) ?>">Anterior</a>
+										<a class="page-link"
+											href="<?= assetfolder . 'painel/' . ($currentPage - 1) ?>">Anterior</a>
 									</li>
 								<?php endif; ?>
 
@@ -162,7 +178,8 @@
 
 								<?php if ($currentPage < $totalPages): ?>
 									<li class="page-item">
-										<a class="page-link" href="<?= assetfolder . 'painel/' . ($currentPage + 1) ?>">Próximo</a>
+										<a class="page-link"
+											href="<?= assetfolder . 'painel/' . ($currentPage + 1) ?>">Próximo</a>
 									</li>
 								<?php endif; ?>
 							</ul>
@@ -176,19 +193,8 @@
 		<div class="app-container container-fluid d-flex flex-column flex-md-row flex-center flex-md-stack py-3">
 			<div class="text-dark order-2 order-md-1">
 				<span class="text-muted fw-semibold me-1">2025&copy;</span>
-				<a href="https://keenthemes.com" target="_blank" class="text-gray-800 text-hover-primary">Insight</a>
+				<a href="<?= assetfolder ?>" class="text-gray-800 text-hover-primary">QuidOne</a>
 			</div>
-			<ul class="menu menu-gray-600 menu-hover-primary fw-semibold order-1">
-				<li class="menu-item">
-					<a href="https://keenthemes.com" target="_blank" class="menu-link px-2">About</a>
-				</li>
-				<li class="menu-item">
-					<a href="https://devs.keenthemes.com" target="_blank" class="menu-link px-2">Support</a>
-				</li>
-				<li class="menu-item">
-					<a href="https://1.envato.market/EA4JP" target="_blank" class="menu-link px-2">Purchase</a>
-				</li>
-			</ul>
 		</div>
 	</div>
 </div>

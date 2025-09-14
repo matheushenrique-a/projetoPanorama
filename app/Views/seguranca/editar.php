@@ -3,7 +3,8 @@
         <div id="kt_app_toolbar" class="app-toolbar py-3 py-lg-6">
             <div id="kt_app_toolbar_container" class="app-container container-xxl d-flex flex-stack">
                 <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
-                    <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">Painel - Cadastrar Usuário</h1>
+                    <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">
+                        Painel - Cadastrar Usuário</h1>
                     <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
                         <li class="breadcrumb-item text-muted">
                             <a href="<?php echo assetfolder ?>" class="text-muted text-hover-primary">Home</a>
@@ -23,7 +24,9 @@
             </div>
         </div>
         <div style="width: 100%" class="d-flex justify-content-around mb-15">
-            <form method="post" enctype="multipart/form-data" action="<?php echo assetfolder; ?>painel-criacao/<?php echo $userId; ?>/create" class="m-3 d-flex content-center gap-10">
+            <form method="post" enctype="multipart/form-data"
+                action="<?php echo assetfolder; ?>painel-criacao/<?php echo $userId; ?>/create"
+                class="m-3 d-flex content-center gap-10">
                 <div class="card">
                     <div class="card-header bg-gray-200 border-bottom d-flex justify-content-center align-items-center">
                         <h2 class="fs-3 fw-semibold mb-0 text-center">Edição de Usuário</h2>
@@ -31,28 +34,34 @@
                     <div class="card-body" style="width: 600px">
                         <div class="input-group mb-2">
                             <span class="input-group-text" id="inputGroup-sizing-default">Nome</span>
-                            <input type="text" required name="nickname" value="<?= esc($nome) ?>" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" />
+                            <input type="text" required name="nickname" value="<?= esc($nome) ?>" class="form-control"
+                                aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" />
                         </div>
                         <div class="input-group mb-2">
                             <span class="input-group-text" id="inputGroup-sizing-default">E-mail</span>
-                            <input type="text" required name="email" class="form-control" value="<?= esc($email) ?>" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" />
+                            <input type="text" required name="email" class="form-control" value="<?= esc($email) ?>"
+                                aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" />
                         </div>
                         <div class="input-group mb-2">
                             <span class="input-group-text" id="inputGroup-sizing-default">Senha</span>
-                            <input type="text" required name="password" class="form-control" value="<?= esc($senha) ?>" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" />
+                            <input type="text" required name="password" class="form-control" value="<?= esc($senha) ?>"
+                                aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" />
                         </div>
                         <div class="input-group mb-2">
                             <span class="input-group-text" id="inputGroup-sizing-default">Cargo</span>
-                            <select name="role" id="role" class="form-select form-select-lg text-dark" data-placeholder="Cargo">
+                            <select name="role" id="role" class="form-select form-select-lg text-dark"
+                                data-placeholder="Cargo">
                                 <option value=""></option>
                                 <option value="OPERADOR" <?= ($cargo == 'OPERADOR') ? 'selected' : '' ?>>Operador</option>
-                                <option value="SUPERVISOR" <?= ($cargo == 'SUPERVISOR') ? 'selected' : '' ?>>Supervisor</option>
+                                <option value="SUPERVISOR" <?= ($cargo == 'SUPERVISOR') ? 'selected' : '' ?>>Supervisor
+                                </option>
                                 <option value="AUDITOR" <?= ($cargo == 'AUDITOR') ? 'selected' : '' ?>>Auditor</option>
                             </select>
                         </div>
                         <div class="input-group mb-2">
                             <span class="input-group-text" id="inputGroup-sizing-default">Supervisor</span>
-                            <select name="report_to" id="report_to" class="form-select form-select-lg text-dark" data-placeholder="Responsável">
+                            <select name="report_to" id="report_to" class="form-select form-select-lg text-dark"
+                                data-placeholder="Responsável">
                             </select>
                         </div>
                         <div class="ms-2 mt-4 d-flex justify-content-between">
@@ -60,13 +69,15 @@
                                 <span>Permissões:</span>
                                 <div class="d-flex gap-6 mt-4 mb-4">
                                     <div class="form-check">
-                                        <input class="form-check-input" name="bmg" type="checkbox" value="1" id="bmg" checked />
+                                        <input class="form-check-input" name="bmg" type="checkbox" value="1" id="bmg"
+                                            checked />
                                         <label class="form-check-label" for="flexCheckChecked">
                                             BMG
                                         </label>
                                     </div>
                                     <div class="form-check">
-                                        <input class="form-check-input" name="bradesco" type="checkbox" value="1" id="bradesco" />
+                                        <input class="form-check-input" name="bradesco" type="checkbox" value="1"
+                                            id="bradesco" />
                                         <label class="form-check-label" for="flexCheckChecked">
                                             Bradesco
                                         </label>
@@ -74,7 +85,8 @@
                                 </div>
                             </div>
                             <div>
-                                <button type="submit" class="btn btn-primary mt-4" name="btnConsultar" value="btnConsultar">Atualizar</button>
+                                <button type="submit" class="btn btn-primary mt-4" name="btnConsultar"
+                                    value="btnConsultar">Atualizar</button>
                             </div>
                         </div>
                     </div>
@@ -83,12 +95,14 @@
                     <div class="d-flex flex-column justify-content-center mx-auto">
                         <?php if (!empty($profile_image)): ?>
                             <div id="preview" class="border rounded-3 m-10" style="width: 300px; height:  300px;">
-                                <img style="width: 100%; height: 100%; object-fit:cover;" class="rounded-3" src="<?= base_url($profile_image) ?>" alt="foto de perfil">
+                                <img style="width: 100%; height: 100%; object-fit:cover;" class="rounded-3"
+                                    src="<?= base_url($profile_image) ?>" alt="foto de perfil">
                             </div>
                         <?php else: ?>
                             <div id="preview" class="border rounded-3 m-10" style="width: 300px; height:  300px;"></div>
                         <?php endif; ?>
-                        <input id="profile_image_input" class="form-control mb-4" type="file" name="profile_image" accept="image/*">
+                        <input id="profile_image_input" class="form-control mb-4" type="file" name="profile_image"
+                            accept="image/*">
                     </div>
                 </div>
             </form>
@@ -99,31 +113,20 @@
     <div class="app-container container-fluid d-flex flex-column flex-md-row flex-center flex-md-stack py-3">
         <div class="text-dark order-2 order-md-1">
             <span class="text-muted fw-semibold me-1">2025&copy;</span>
-            <a href="https://keenthemes.com" target="_blank" class="text-gray-800 text-hover-primary">Insight</a>
+            <a href="<?= assetfolder ?>" class="text-gray-800 text-hover-primary">QuidOne</a>
         </div>
-        <ul class="menu menu-gray-600 menu-hover-primary fw-semibold order-1">
-            <li class="menu-item">
-                <a href="https://keenthemes.com" target="_blank" class="menu-link px-2">About</a>
-            </li>
-            <li class="menu-item">
-                <a href="https://devs.keenthemes.com" target="_blank" class="menu-link px-2">Support</a>
-            </li>
-            <li class="menu-item">
-                <a href="https://1.envato.market/EA4JP" target="_blank" class="menu-link px-2">Purchase</a>
-            </li>
-        </ul>
     </div>
 </div>
 <script>
     const input = document.getElementById('profile_image_input');
     const preview = document.getElementById('preview');
 
-    input.addEventListener('change', function() {
+    input.addEventListener('change', function () {
         const file = this.files[0];
         if (!file) return;
 
         const reader = new FileReader();
-        reader.onload = function(e) {
+        reader.onload = function (e) {
             preview.innerHTML = ''; // limpa conteúdo anterior
             const img = document.createElement('img');
             img.src = e.target.result;
@@ -171,12 +174,12 @@
     }
 
     // Detectar mudança no campo de cargo
-    document.getElementById('role').addEventListener('change', function() {
+    document.getElementById('role').addEventListener('change', function () {
         atualizarResponsaveis(this.value);
     });
 
     // Preencher automaticamente caso já haja valor selecionado
-    window.addEventListener('DOMContentLoaded', function() {
+    window.addEventListener('DOMContentLoaded', function () {
         const cargoAtual = document.getElementById('role').value;
         atualizarResponsaveis(cargoAtual);
     });

@@ -17,7 +17,7 @@
 			</div>
 		</div>
 		<div id="kt_app_content" class="app-content flex-column-fluid">
-			<form id="frmDataLake" class="form" action="<?php echo assetfolder; ?>insight-listar-propostas/0/0" method="POST">
+			<form id="frmDataLake" class="form" action="<?php echo assetfolder; ?>listar-propostas/0/0" method="POST">
 
 				<div id="kt_app_content_container" class="app-container container-xxl">
 					<div class="row g-5 g-xl-8">
@@ -265,7 +265,7 @@
 											</td>
 											<td class="align-middle"><?= date('d/m/Y', strtotime($row->data_criacao)); ?></td>
 											<td class="align-middle text-gray-800">
-												<a href="<?= assetfolder ?>insight-proposta/<?= $row->idquid_propostas ?>" class="m-0 p-0">
+												<a href="<?= assetfolder ?>proposta/<?= $row->idquid_propostas ?>" class="m-0 p-0">
 													<?= $row->adesao; ?>
 												</a>
 												<p class="text-gray-500 fw-bold fs-8"><?= $row->codigo_entidade; ?></p>
@@ -303,7 +303,7 @@
 	<div class="app-container container-fluid d-flex flex-column flex-md-row flex-center flex-md-stack py-3">
 		<div class="text-dark order-2 order-md-1">
 			<span class="text-muted fw-semibold me-1">2025&copy;</span>
-			<a href="#" target="_blank" class="text-gray-800 text-hover-primary">Insight</a>
+			<a href="<?= assetfolder?>" class="text-gray-800 text-hover-primary">QuidOne</a>
 		</div>
 	</div>
 </div>

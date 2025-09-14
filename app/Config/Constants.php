@@ -21,12 +21,6 @@ define('BMG_SEGURO_LOGIN', 'robo.54577');
 define('BMG_SEGURO_SENHA', 'robo@2025');
 define('BMG_SEGURO_LOGIN_CONSIG', 'UY.COORD2632');
 define('BMG_SEGURO_SENHA_CONSIG', 'Coord@2026');
-// define('BMG_SEGURO_LOGIN', 'robo.55009');
-// define('BMG_SEGURO_SENHA', 'Quid@robo102030');
-// define('BMG_SEGURO_LOGIN_CONSIG', 'coord2632.smile2'); 
-// define('BMG_SEGURO_LOGIN_CONSIG', 'DANTAS.PRAVOCE'); 
-// define('BMG_SEGURO_SENHA_CONSIG', 'quid@102030');
-// define('BMG_SEGURO_SENHA_CONSIG', 'GtbP!8kgDuL@');
 define('BMG_ENTIDADE', '1581');
 define('BMG_LOJA_QUID', '54577'); //Unity
 define('BMG_LOJA_UNITY', '54577'); //QUID
@@ -40,8 +34,8 @@ if (IsProduction) {
     define('rootURL', 'https://insightsuite.pravoce.io/');
     define('urlInstitucional', 'https://quid.pravoce.io/');
 } else {
-    define('assetfolder', '/InsightSuite/public/');
-    define('rootURL', 'http://localhost/InsightSuite/public/');
+    define('assetfolder', '/Insight/public/');
+    define('rootURL', 'http://localhost/Insight/public/');
     define('urlInstitucional', '/');
 }
 
@@ -54,11 +48,11 @@ defined('COMPOSER_PATH') || define('COMPOSER_PATH', ROOTPATH . 'vendor/autoload.
 
 defined('SECOND') || define('SECOND', 1);
 defined('MINUTE') || define('MINUTE', 60);
-defined('HOUR')   || define('HOUR', 3600);
-defined('DAY')    || define('DAY', 86400);
-defined('WEEK')   || define('WEEK', 604800);
-defined('MONTH')  || define('MONTH', 2_592_000);
-defined('YEAR')   || define('YEAR', 31_536_000);
+defined('HOUR') || define('HOUR', 3600);
+defined('DAY') || define('DAY', 86400);
+defined('WEEK') || define('WEEK', 604800);
+defined('MONTH') || define('MONTH', 2_592_000);
+defined('YEAR') || define('YEAR', 31_536_000);
 defined('DECADE') || define('DECADE', 315_360_000);
 
 /*
@@ -86,16 +80,16 @@ defined('DECADE') || define('DECADE', 315_360_000);
  |       http://tldp.org/LDP/abs/html/exitcodes.html
  |
  */
-defined('EXIT_SUCCESS')        || define('EXIT_SUCCESS', 0);        // no errors
-defined('EXIT_ERROR')          || define('EXIT_ERROR', 1);          // generic error
-defined('EXIT_CONFIG')         || define('EXIT_CONFIG', 3);         // configuration error
-defined('EXIT_UNKNOWN_FILE')   || define('EXIT_UNKNOWN_FILE', 4);   // file not found
-defined('EXIT_UNKNOWN_CLASS')  || define('EXIT_UNKNOWN_CLASS', 5);  // unknown class
+defined('EXIT_SUCCESS') || define('EXIT_SUCCESS', 0);        // no errors
+defined('EXIT_ERROR') || define('EXIT_ERROR', 1);          // generic error
+defined('EXIT_CONFIG') || define('EXIT_CONFIG', 3);         // configuration error
+defined('EXIT_UNKNOWN_FILE') || define('EXIT_UNKNOWN_FILE', 4);   // file not found
+defined('EXIT_UNKNOWN_CLASS') || define('EXIT_UNKNOWN_CLASS', 5);  // unknown class
 defined('EXIT_UNKNOWN_METHOD') || define('EXIT_UNKNOWN_METHOD', 6); // unknown class member
-defined('EXIT_USER_INPUT')     || define('EXIT_USER_INPUT', 7);     // invalid user input
-defined('EXIT_DATABASE')       || define('EXIT_DATABASE', 8);       // database error
-defined('EXIT__AUTO_MIN')      || define('EXIT__AUTO_MIN', 9);      // lowest automatically-assigned error code
-defined('EXIT__AUTO_MAX')      || define('EXIT__AUTO_MAX', 125);    // highest automatically-assigned error code
+defined('EXIT_USER_INPUT') || define('EXIT_USER_INPUT', 7);     // invalid user input
+defined('EXIT_DATABASE') || define('EXIT_DATABASE', 8);       // database error
+defined('EXIT__AUTO_MIN') || define('EXIT__AUTO_MIN', 9);      // lowest automatically-assigned error code
+defined('EXIT__AUTO_MAX') || define('EXIT__AUTO_MAX', 125);    // highest automatically-assigned error code
 
 /**
  * @deprecated Use \CodeIgniter\Events\Events::PRIORITY_LOW instead.

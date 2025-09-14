@@ -85,6 +85,10 @@ class Home extends BaseController
             } else {
                 $dados['progressoSupervisor'] = 0;
             }
+
+            // quantidade só do cartão BMG
+
+            $dados['metaQuantidade'] = $this->m_insight->metaQuantidade();
         }
 
 

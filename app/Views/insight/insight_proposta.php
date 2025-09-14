@@ -45,7 +45,7 @@ $movimentation = match ($row->status) {
                             <span class="bullet bg-gray-800 w-5px h-2px"></span>
                         </li>
                         <li class="breadcrumb-item text-muted">
-                            <a href="<?php echo assetfolder ?>insight-listar-propostas/0/0" class="text-muted text-hover-primary">Propostas</a>
+                            <a href="<?php echo assetfolder ?>listar-propostas/0/0" class="text-muted text-hover-primary">Propostas</a>
                         </li>
                         <li class="breadcrumb-item">
                             <span class="bullet bg-gray-800 w-5px h-2px"></span>
@@ -60,7 +60,7 @@ $movimentation = match ($row->status) {
                 <div class="row g-5 g-xl-8">
                     <div class="col-xl-12">
                         <div class="card p-2 mt-2">
-                            <form action="<?= assetfolder; ?>insight-listar-propostas/0/alterar-status" id="formEdit" method="POST">
+                            <form action="<?= assetfolder; ?>listar-propostas/0/alterar-status" id="formEdit" method="POST">
                                 <div class="mt-2 d-flex p-2 justify-content-between">
                                     <ul class="nav nav-tabs nav-line-tabs fs-6 ps-2">
                                         <li class="nav-item">
@@ -513,7 +513,7 @@ $movimentation = match ($row->status) {
                 cancelButtonText: 'Cancelar'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = "<?= assetfolder; ?>insight-listar-propostas/" + id + "/remove";
+                    window.location.href = "<?= assetfolder; ?>listar-propostas/" + id + "/remove";
                 }
             });
         };

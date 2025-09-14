@@ -2,3 +2,5 @@
 writable/
 *.zip
 .env
+/app/config/database.php
+/vendor

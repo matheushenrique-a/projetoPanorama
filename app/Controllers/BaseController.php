@@ -65,7 +65,6 @@ abstract class BaseController extends Controller
 
     function checkSession()
     {
-
         if (!$this->my_session->has('userId')) {
             helper('cookie');
             $email = get_cookie('insight');

@@ -47,7 +47,7 @@ class Database extends Config
         'compress' => false,
         'strictOn' => false,
         'failover' => [],
-        'port'     => 3307,
+        'port'     => 3306,
     ];
 
      public $fgtsDB = [
@@ -55,16 +55,7 @@ class Database extends Config
         'hostname' => 'localhost',
         'username' => 'root',
         'password' => '',
-        'database' => 'local',  
-        //producao SiteGround
-        // 'hostname' => 'c126621.sgvps.net',
-        // 'username' => 'uecqu4bzohwbb',
-        // 'password' => 'tbhvch8oczcw',
-        // 'database' => 'dbrxcsrf1hku99',
-        // 'hostname' => '35.208.178.233',
-        // 'username' => 'uecqu4bzohwbb',
-        // 'password' => 'tbhvch8oczcw',
-        // 'database' => 'dbrxcsrf1hku99',
+        'database' => 'localhost',  
         'DBDriver' => 'MySQLi',
         'DBPrefix' => '',
         'pConnect' => false,
@@ -76,7 +67,7 @@ class Database extends Config
         'compress' => false,
         'strictOn' => false,
         'failover' => [],
-        'port'     => 3307,
+        'port'     => 3306,
     ];
 
      public $vsl = [
@@ -100,7 +91,7 @@ class Database extends Config
         'compress' => false,
         'strictOn' => false,
         'failover' => [],
-        'port'     => 3307,
+        'port'     => 3306,
     ];
 
     /**

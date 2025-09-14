@@ -61,7 +61,7 @@ class Insight extends BaseController
         return $this->loadpage('insight/listar_notificacoes', $dados);
     }
 
-    public function insight_listar_propostas($idProposta, $action)
+    public function Listar_propostas($idProposta, $action)
     {
         $dados['pageTitle'] = 'Propostas';
         $buscarProp = $this->getpost('buscarProp');
@@ -69,7 +69,7 @@ class Insight extends BaseController
         if ($action == "remove") {
             $this->dbMaster->delete('quid_propostas', ['idquid_propostas' => $idProposta]);
             $this->dbMaster->delete('historico_propostas', ['id_proposta' => $idProposta]);
-            return redirect()->to(urlInstitucional . 'insight-listar-propostas/0/0');
+            return redirect()->to(urlInstitucional . 'listar-propostas/0/0');
         }
 
         if ($action == "alterar-status") {
@@ -178,13 +178,13 @@ class Insight extends BaseController
                 $retorno = $this->dbMasterDefault->update($tabela, $valores, $condicao);
 
                 if ($retorno['updated']) {
-                    return redirect()->to(urlInstitucional . 'insight-listar-propostas/0/0');
+                    return redirect()->to(urlInstitucional . 'listar-propostas/0/0');
                 } else {
-                    return redirect()->to(urlInstitucional . 'insight-listar-propostas/0/0');
+                    return redirect()->to(urlInstitucional . 'listar-propostas/0/0');
                 }
             }
 
-            return redirect()->to(urlInstitucional . 'insight-listar-propostas/0/0');
+            return redirect()->to(urlInstitucional . 'listar-propostas/0/0');
         }
 
         if (!empty($buscarProp)) {
@@ -704,7 +704,7 @@ class Insight extends BaseController
                 ]);
             }
 
-            return redirect()->to(urlInstitucional . 'insight-listar-propostas/0/0');
+            return redirect()->to(urlInstitucional . 'listar-propostas/0/0');
         }
 
         $produto = $this->m_insight->getProduto($idproduto);

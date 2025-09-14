@@ -42,7 +42,7 @@ class Arquivos extends \App\Controllers\BaseController
             $status = $this->getpost('status');
             $report_to = $this->getpost('report_to');
             $produto = $this->getpost('produto');
-            $assessor = $this->getpost('assessor');
+            $assessor = $this->getpost(valor: 'assessor');
 
             $columns = $this->getPostArray('columns') ?? [];
 
@@ -104,10 +104,10 @@ class Arquivos extends \App\Controllers\BaseController
 
             $this->m_insight->anexarArquivoProposta($data);
 
-            return redirect()->to(urlInstitucional . 'insight-proposta/' . $idProposta);
+            return redirect()->to(urlInstitucional . 'proposta/' . $idProposta);
         }
 
-        return redirect()->to(urlInstitucional . 'insight-proposta/' . $idProposta);
+        return redirect()->to(urlInstitucional . 'proposta/' . $idProposta);
     }
 
     public function download($id, $idProposta)
@@ -116,13 +116,13 @@ class Arquivos extends \App\Controllers\BaseController
         $arquivo = $this->dbMasterDefault->downloadArquivos($id);
 
         if (!$arquivo) {
-            return redirect()->to(urlInstitucional . 'insight-listar-propostas/0/0');
+            return redirect()->to(urlInstitucional . 'listar-propostas/0/0');
         }
 
         $caminho = WRITEPATH . 'uploads/' . $arquivo->id_proposta . '/' . $arquivo->nome_armazenado;
 
         if (!file_exists($caminho)) {
-            return redirect()->to(urlInstitucional . 'insight-listar-propostas/0/0');
+            return redirect()->to(urlInstitucional . 'listar-propostas/0/0');
         }
 
         return $this->response->download($caminho, null, true)
@@ -135,7 +135,7 @@ class Arquivos extends \App\Controllers\BaseController
         $arquivo = $this->dbMasterDefault->downloadArquivos($id);
 
         if (!$arquivo) {
-            return redirect()->to(urlInstitucional . 'insight-proposta/' . $idProposta);
+            return redirect()->to(urlInstitucional . 'proposta/' . $idProposta);
         }
 
         $caminho = WRITEPATH . 'uploads/' . $arquivo->id_proposta . '/' . $arquivo->nome_armazenado;
@@ -146,6 +146,6 @@ class Arquivos extends \App\Controllers\BaseController
 
         $this->dbMasterDefault->delete('arquivos', ['id' => $id]);
 
-        return redirect()->to(urlInstitucional . 'insight-proposta/' . $idProposta);
+        return redirect()->to(urlInstitucional . 'proposta/' . $idProposta);
     }
 }

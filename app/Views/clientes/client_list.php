@@ -3,10 +3,11 @@
         <div id="kt_app_toolbar" class="app-toolbar py-3 py-lg-6">
             <div id="kt_app_toolbar_container" class="app-container container-xxl d-flex flex-stack">
                 <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
-                    <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">QUID - Listar Clientes</h1>
+                    <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">QUID
+                        - Listar Clientes</h1>
                     <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
                         <li class="breadcrumb-item text-muted">
-                            <a href="<?php urlInstitucional ?>" class="text-muted text-hover-primary">Home</a>
+                            <a href="<?php echo assetfolder ?>" class="text-muted text-hover-primary">Home</a>
                         </li>
                         <li class="breadcrumb-item">
                             <span class="bullet bg-gray-800 w-5px h-2px"></span>
@@ -20,19 +21,23 @@
             <div id="kt_app_content_container" class="app-container container-xxl">
                 <div class="card" style="justify-content: start;">
 
-                    <form id="frmDataLake" class="form" action="<?php echo assetfolder; ?>clientes/pesquisa" method="POST">
+                    <form id="formPesquisaCliente" class="form" action="<?php echo assetfolder; ?>clientes/pesquisa"
+                        method="POST">
                         <div class="card-header border-0 pt-6" style="justify-content: start;">
                             <div class="card-title">
                                 <div class="d-flex align-items-center position-relative my-1 mx-3">
                                     <div class="mb-3">
-                                        <label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">CPF:</label>
-                                        <input type="text" class="form-control" placeholder="000.000.000-00" name="cpf" value="" />
+                                        <label for="exampleFormControlInput1"
+                                            class="form-label text-gray-800 mb-0">CPF:</label>
+                                        <input type="text" maxlength="14" id="cpfPesquisa" class="form-control"
+                                            placeholder="000.000.000-00" name="cpf" value="" />
                                     </div>
                                 </div>
                                 <div class="card-title">
                                     <div class="mb-0 mx-3">
                                         <div class="d-flex align-items-center position-relative my-1 mt-0 mb-0">
-                                            <button type="submit" class="btn btn-secondary mt-4 ms-3" name="pesquisaCpf" value="pesquisaCpf">Buscar Cliente</button>
+                                            <button type="submit" class="btn btn-secondary mt-4 ms-3" name="pesquisaCpf"
+                                                value="pesquisaCpf">Buscar Cliente</button>
                                         </div>
                                     </div>
                                 </div>
@@ -40,7 +45,8 @@
                                     <div class="card-title">
                                         <div class="mb-0 mx-3">
                                             <div class="d-flex align-items-center position-relative my-1 mt-0 mb-0">
-                                                <a href="<?php echo assetfolder; ?>clientes/upload/0" class="mt-4"><i class="bi fs-2 text-gray-800 bi-file-earmark-arrow-up"></i></a>
+                                                <a href="<?php echo assetfolder; ?>clientes/upload/0" class="mt-4"><i
+                                                        class="bi fs-2 text-gray-800 bi-file-earmark-arrow-up"></i></a>
                                             </div>
                                         </div>
                                     </div>
@@ -64,67 +70,105 @@
                                             <div class="mb-3 d-flex flex-row gap-2">
                                                 <div class="d-flex flex-column gap-2">
                                                     <span class="fs-6">Nome:</span>
-                                                    <input type="text" class="form-control form-control-solid" style="width: 400px;" name="nome" id="nome" value="<?= esc($clientes->nome) ?>" data-original="<?= esc($clientes->nome) ?>" readonly>
+                                                    <input type="text" class="form-control form-control-solid"
+                                                        style="width: 400px;" name="nome" id="nome"
+                                                        value="<?= esc($clientes->nome) ?>"
+                                                        data-original="<?= esc($clientes->nome) ?>" readonly>
                                                 </div>
                                                 <div class="d-flex flex-column gap-2">
                                                     <span class="fs-6">Nascimento:</span>
-                                                    <input type="text" class="form-control form-control-solid" style="width: 120px;" name="nasc" id="nasc" value="<?= esc($clientes->nasc) ?>" data-original="<?= esc($clientes->nasc) ?>" readonly>
+                                                    <input type="text" class="form-control form-control-solid"
+                                                        style="width: 120px;" name="nasc" id="nasc"
+                                                        value="<?= esc($clientes->nasc) ?>"
+                                                        data-original="<?= esc($clientes->nasc) ?>" readonly>
                                                 </div>
                                             </div>
                                             <div class="mb-3 d-flex flex-row gap-2">
                                                 <div class="d-flex flex-column gap-2">
                                                     <span class="fs-6">CPF:</span>
-                                                    <input type="text" class="form-control form-control-solid" name="cpf" id="cpf" value="<?= esc($clientes->cpf) ?>" data-original="<?= esc($clientes->cpf) ?>" readonly>
+                                                    <input type="text" class="form-control form-control-solid" name="cpf"
+                                                        id="cpf" value="<?= esc($clientes->cpf) ?>"
+                                                        data-original="<?= esc($clientes->cpf) ?>" readonly>
                                                 </div>
                                                 <div class="d-flex flex-column gap-2">
                                                     <span class="fs-6">Número benefício:</span>
-                                                    <input type="text" class="form-control form-control-solid" name="nb" id="nb" value="<?= esc($clientes->nb) ?>" data-original="<?= esc($clientes->nb) ?>" readonly>
+                                                    <input type="text" class="form-control form-control-solid" name="nb"
+                                                        id="nb" value="<?= esc($clientes->nb) ?>"
+                                                        data-original="<?= esc($clientes->nb) ?>" readonly>
                                                 </div>
                                                 <div class="d-flex flex-column gap-2">
                                                     <span class="fs-6">Esp:</span>
-                                                    <input type="text" style="width: 70px;" class="form-control form-control-solid" name="especie" id="especie" value="<?= esc($clientes->especie) ?>" data-original="<?= esc($clientes->especie) ?>" readonly>
+                                                    <input type="text" style="width: 70px;"
+                                                        class="form-control form-control-solid" name="especie" id="especie"
+                                                        value="<?= esc($clientes->especie) ?>"
+                                                        data-original="<?= esc($clientes->especie) ?>" readonly>
                                                 </div>
                                             </div>
                                             <div class="mb-3 d-flex flex-row gap-2">
                                                 <div class="d-flex flex-column gap-2">
                                                     <span class="fs-6">DIB:</span>
-                                                    <input type="text" class="form-control form-control-solid" style="width: 120px;" name="dib" id="dib" value="<?= esc($clientes->dib) ?>" data-original="<?= esc($clientes->dib) ?>" readonly>
+                                                    <input type="text" class="form-control form-control-solid"
+                                                        style="width: 120px;" name="dib" id="dib"
+                                                        value="<?= esc($clientes->dib) ?>"
+                                                        data-original="<?= esc($clientes->dib) ?>" readonly>
                                                 </div>
                                                 <div class="d-flex flex-column gap-2">
                                                     <span class="fs-6">Sexo:</span>
-                                                    <input type="text" class="form-control form-control-solid" style="width: 65px;" name="sexo" id="sexo" value="<?= esc($clientes->sexo) ?>" data-original="<?= esc($clientes->sexo) ?>" readonly>
+                                                    <input type="text" class="form-control form-control-solid"
+                                                        style="width: 65px;" name="sexo" id="sexo"
+                                                        value="<?= esc($clientes->sexo) ?>"
+                                                        data-original="<?= esc($clientes->sexo) ?>" readonly>
                                                 </div>
                                                 <div class="d-flex flex-column gap-2">
                                                     <span class="fs-6">Salário:</span>
-                                                    <input type="text" class="form-control form-control-solid" style="width: 120px;" name="salario" id="salario" value="<?= esc($clientes->salario) ?>" data-original="<?= esc($clientes->salario) ?>" readonly>
+                                                    <input type="text" class="form-control form-control-solid"
+                                                        style="width: 120px;" name="salario" id="salario"
+                                                        value="<?= esc($clientes->salario) ?>"
+                                                        data-original="<?= esc($clientes->salario) ?>" readonly>
                                                 </div>
                                                 <div class="d-flex flex-column gap-2">
                                                     <span class="fs-6">Meio Pgto:</span>
-                                                    <input type="text" class="form-control form-control-solid" style="width: 200px;" name="meioPgto" id="meioPgto" value="<?= esc($clientes->meio_pgto) ?>" data-original="<?= esc($clientes->meio_pgto) ?>" readonly>
+                                                    <input type="text" class="form-control form-control-solid"
+                                                        style="width: 200px;" name="meioPgto" id="meioPgto"
+                                                        value="<?= esc($clientes->meio_pgto) ?>"
+                                                        data-original="<?= esc($clientes->meio_pgto) ?>" readonly>
                                                 </div>
                                             </div>
                                             <div class="mb-3 d-flex flex-row gap-2">
                                                 <div class="d-flex flex-column gap-2">
                                                     <span class="fs-6">CEP:</span>
-                                                    <input type="text" class="form-control form-control-solid" style="width: 120px;" name="cep" id="cep" value="<?= esc($clientes->cep) ?>" data-original="<?= esc($clientes->cep) ?>" readonly>
+                                                    <input type="text" class="form-control form-control-solid"
+                                                        style="width: 120px;" name="cep" id="cep"
+                                                        value="<?= esc($clientes->cep) ?>"
+                                                        data-original="<?= esc($clientes->cep) ?>" readonly>
                                                 </div>
                                                 <div class="d-flex flex-column gap-2">
                                                     <span class="fs-6">Endereço:</span>
-                                                    <input type="text" style="width: 400px;" class="form-control form-control-solid" name="endereco" id="endereco" value="<?= esc($clientes->endereco) ?>" data-original="<?= esc($clientes->endereco) ?>" readonly>
+                                                    <input type="text" style="width: 400px;"
+                                                        class="form-control form-control-solid" name="endereco"
+                                                        id="endereco" value="<?= esc($clientes->endereco) ?>"
+                                                        data-original="<?= esc($clientes->endereco) ?>" readonly>
                                                 </div>
                                             </div>
                                             <div class="mb-3 d-flex flex-row gap-2">
                                                 <div class="d-flex flex-column gap-2">
                                                     <span class="fs-6">Bairro:</span>
-                                                    <input type="text" class="form-control form-control-solid" name="bairro" id="bairro" value="<?= esc($clientes->bairro) ?>" data-original="<?= esc($clientes->bairro) ?>" readonly>
+                                                    <input type="text" class="form-control form-control-solid" name="bairro"
+                                                        id="bairro" value="<?= esc($clientes->bairro) ?>"
+                                                        data-original="<?= esc($clientes->bairro) ?>" readonly>
                                                 </div>
                                                 <div class="d-flex flex-column gap-2">
                                                     <span class="fs-6">Cidade:</span>
-                                                    <input type="text" class="form-control form-control-solid" name="cidade" id="cidade" value="<?= esc($clientes->cidade) ?>" data-original="<?= esc($clientes->cidade) ?>" readonly>
+                                                    <input type="text" class="form-control form-control-solid" name="cidade"
+                                                        id="cidade" value="<?= esc($clientes->cidade) ?>"
+                                                        data-original="<?= esc($clientes->cidade) ?>" readonly>
                                                 </div>
                                                 <div class="d-flex flex-column gap-2">
                                                     <span class="fs-6">UF:</span>
-                                                    <input type="text" class="form-control form-control-solid" style="width: 70px;" name="uf" id="uf" value="<?= esc($clientes->uf) ?>" data-original="<?= esc($clientes->uf) ?>" readonly>
+                                                    <input type="text" class="form-control form-control-solid"
+                                                        style="width: 70px;" name="uf" id="uf"
+                                                        value="<?= esc($clientes->uf) ?>"
+                                                        data-original="<?= esc($clientes->uf) ?>" readonly>
                                                 </div>
                                             </div>
                                         </div>
@@ -133,34 +177,53 @@
                                             <div class="mb-3 d-flex flex-row gap-2">
                                                 <div class="d-flex flex-column gap-2">
                                                     <span class="fs-6">Nome:</span>
-                                                    <input type="text" class="form-control form-control-solid" name="nomeBanco" id="nomeBanco" value="<?= esc($clientes->nome_banco) ?>" data-original="<?= esc($clientes->nome_banco) ?>" readonly>
+                                                    <input type="text" class="form-control form-control-solid"
+                                                        name="nomeBanco" id="nomeBanco"
+                                                        value="<?= esc($clientes->nome_banco) ?>"
+                                                        data-original="<?= esc($clientes->nome_banco) ?>" readonly>
                                                 </div>
                                                 <div class="d-flex flex-column gap-2">
                                                     <span class="fs-6">Código:</span>
-                                                    <input type="text" class="form-control form-control-solid" name="banco" id="banco" value="<?= esc($clientes->banco) ?>" data-original="<?= esc($clientes->banco) ?>" readonly>
+                                                    <input type="text" class="form-control form-control-solid" name="banco"
+                                                        id="banco" value="<?= esc($clientes->banco) ?>"
+                                                        data-original="<?= esc($clientes->banco) ?>" readonly>
                                                 </div>
                                             </div>
                                             <div class="mb-3 d-flex flex-row gap-2">
                                                 <div class="d-flex flex-column gap-2">
                                                     <span class="fs-6">Conta:</span>
-                                                    <input type="text" class="form-control form-control-solid" name="conta" id="conta" value="<?= esc($clientes->cc) ?>" data-original="<?= esc($clientes->cc) ?>" readonly>
+                                                    <input type="text" class="form-control form-control-solid" name="conta"
+                                                        id="conta" value="<?= esc($clientes->cc) ?>"
+                                                        data-original="<?= esc($clientes->cc) ?>" readonly>
                                                 </div>
                                                 <div class="d-flex flex-column gap-2">
                                                     <span class="fs-6">Agência:</span>
-                                                    <input type="text" class="form-control form-control-solid" name="agencia" id="agencia" value="<?= esc($clientes->agencia) ?>" data-original="<?= esc($clientes->agencia) ?>" readonly>
+                                                    <input type="text" class="form-control form-control-solid"
+                                                        name="agencia" id="agencia" value="<?= esc($clientes->agencia) ?>"
+                                                        data-original="<?= esc($clientes->agencia) ?>" readonly>
                                                 </div>
                                             </div>
                                             <h2 class="mb-5 mt-16">Telefones</h2>
                                             <div class="mb-3 d-flex flex-row gap-2">
                                                 <div class="d-flex flex-column gap-2">
                                                     <span class="fs-6">Celular 1:</span>
-                                                    <input type="text" class="form-control form-control-solid" name="celular1" id="celular1" value="<?= esc(formatarTelefone($clientes->telefone1)) ?>" data-original="<?= esc(formatarTelefone($clientes->telefone1)) ?>" readonly>
+                                                    <input type="text" class="form-control form-control-solid"
+                                                        name="celular1" id="celular1"
+                                                        value="<?= esc(formatarTelefone($clientes->telefone1)) ?>"
+                                                        data-original="<?= esc(formatarTelefone($clientes->telefone1)) ?>"
+                                                        readonly>
                                                 </div>
                                                 <div class="d-flex flex-column gap-2">
                                                     <span class="fs-6">Celular 2:</span>
-                                                    <input type="text" class="form-control form-control-solid" name="celular2" id="celular2" value="<?= esc(formatarTelefone($clientes->telefone2)) ?>" data-original="<?= esc(formatarTelefone($clientes->telefone2)) ?>" readonly>
+                                                    <input type="text" class="form-control form-control-solid"
+                                                        name="celular2" id="celular2"
+                                                        value="<?= esc(formatarTelefone($clientes->telefone2)) ?>"
+                                                        data-original="<?= esc(formatarTelefone($clientes->telefone2)) ?>"
+                                                        readonly>
                                                 </div>
-                                                <input type="hidden" class="form-control form-control-solid" name="idClientes" id="idClientes" value="<?= esc($clientes->idquid_clientes) ?>" readonly>
+                                                <input type="hidden" class="form-control form-control-solid"
+                                                    name="idClientes" id="idClientes"
+                                                    value="<?= esc($clientes->idquid_clientes) ?>" readonly>
                                             </div>
                                         </div>
                                     </div>
@@ -168,7 +231,8 @@
                                 <?php if ($my_security->checkPermission('ADMIN')): ?>
                                     <div class="card-toolbar mt-6 d-flex gap-4 justify-content-end mb-8">
                                         <button id="cancelChanges" type="button" class="btn btn-danger">Cancelar</button>
-                                        <button id="saveChanges" type="submit" class="btn btn-primary">Salvar Alterações</button>
+                                        <button id="saveChanges" type="submit" class="btn btn-primary">Salvar
+                                            Alterações</button>
                                         <button id="edit" onclick="changeReadOnly()" type="button" class="btn btn-light">
                                             <i class="bi bi-pencil-square"></i>
                                         </button>
@@ -186,7 +250,7 @@
     <div class="app-container container-fluid d-flex flex-column flex-md-row flex-center flex-md-stack py-3">
         <div class="text-dark order-2 order-md-1">
             <span class="text-muted fw-semibold me-1">2025&copy;</span>
-            <a href="#" target="_blank" class="text-gray-800 text-hover-primary">Insight</a>
+            <a href="<?= assetfolder ?>" class="text-gray-800 text-hover-primary">QuidOne</a>
         </div>
     </div>
 </div>
@@ -197,31 +261,48 @@
     const btnEdit = document.getElementById('edit')
 
     const cpfInput = document.getElementById('cpf')
+    const cpfPesquisa = document.getElementById('cpfPesquisa')
 
     const cel1Input = document.getElementById('celular1')
     const cel2Input = document.getElementById('celular2')
+
+    const formUpdateCliente = document.getElementById('formUpdateCliente')
+    const formPesquisaCliente = document.getElementById('formPesquisaCliente')
 
     if (btnSaveChanges) {
         btnSaveChanges.style.display = "none"
         btnCancelChanges.style.display = "none"
     }
 
-    if (cpfInput) {
-        const formatCPF = (value) => {
-            value = value.replace(/\D/g, '');
-            if (value.length > 3) value = value.replace(/^(\d{3})(\d)/, '$1.$2');
-            if (value.length > 6) value = value.replace(/^(\d{3})\.(\d{3})(\d)/, '$1.$2.$3');
-            if (value.length > 9) value = value.replace(/^(\d{3})\.(\d{3})\.(\d{3})(\d)/, '$1.$2.$3-$4');
-            return value;
-        };
+    function formatCPF(value) {
+        value = value.replace(/\D/g, '');
+        if (value.length > 3) value = value.replace(/^(\d{3})(\d)/, '$1.$2');
+        if (value.length > 6) value = value.replace(/^(\d{3})\.(\d{3})(\d)/, '$1.$2.$3');
+        if (value.length > 9) value = value.replace(/^(\d{3})\.(\d{3})\.(\d{3})(\d)/, '$1.$2.$3-$4');
+        return value;
+    };
 
+    if (cpfPesquisa) {
+        cpfPesquisa.addEventListener('input', () => {
+            cpfPesquisa.value = formatCPF(cpfPesquisa.value)
+        })
+
+        formPesquisaCliente.addEventListener("submit", () => {
+            cpfPesquisa.value = cpfPesquisa.value.replace(/\D/g, '');
+        });
+    }
+
+    if (cpfInput) {
         cpfInput.addEventListener('input', () => {
             cpfInput.value = formatCPF(cpfInput.value);
         });
 
         cpfInput.value = formatCPF(cpfInput.value);
-    }
 
+        formUpdateCliente.addEventListener("submit", () => {
+            cpfInput.value = cpfInput.value.replace(/\D/g, '');
+        });
+    }
 
     function formatarTelefone(valor) {
         valor = valor.replace(/\D/g, '');
@@ -234,14 +315,14 @@
 
     if (cel1Input) {
         cel1Input.value = formatarTelefone(cel1Input.value);
-        cel1Input.addEventListener('input', function() {
+        cel1Input.addEventListener('input', function () {
             this.value = formatarTelefone(this.value);
         });
     }
 
     if (cel2Input) {
         cel2Input.value = formatarTelefone(cel2Input.value);
-        cel2Input.addEventListener('input', function() {
+        cel2Input.addEventListener('input', function () {
             this.value = formatarTelefone(this.value);
         });
     }
@@ -309,8 +390,5 @@
         })
     }
 
-    document.getElementById('formUpdateCliente').addEventListener("submit", () => {
-        const cpfInput = document.getElementById("cpf");
-        cpfInput.value = cpfInput.value.replace(/\D/g, '');
-    });
+
 </script>
