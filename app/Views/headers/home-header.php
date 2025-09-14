@@ -932,42 +932,6 @@ $session = \Config\Services::session();
 												<span class="svg-icon svg-icon-2">
 													<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
 														xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-														fill="currentColor" viewBox="0 0 24 24">
-														<path fill-rule="evenodd"
-															d="M5 3a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11.5c.07 0 .14-.007.207-.021.095.014.193.021.293.021h2a2 2 0 0 0 2-2V7a1 1 0 0 0-1-1h-1a1 1 0 1 0 0 2v11h-2V5a2 2 0 0 0-2-2H5Zm7 4a1 1 0 0 1 1-1h.5a1 1 0 1 1 0 2H13a1 1 0 0 1-1-1Zm0 3a1 1 0 0 1 1-1h.5a1 1 0 1 1 0 2H13a1 1 0 0 1-1-1Zm-6 4a1 1 0 0 1 1-1h6a1 1 0 1 1 0 2H7a1 1 0 0 1-1-1Zm0 3a1 1 0 0 1 1-1h6a1 1 0 1 1 0 2H7a1 1 0 0 1-1-1ZM7 6a1 1 0 0 0-1 1v3a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H7Zm1 3V8h1v1H8Z"
-															clip-rule="evenodd" />
-													</svg>
-												</span>
-											</span>
-											<span class="menu-title">EXTRAIR APÓLICES</span>
-											<span class="menu-arrow"></span>
-										</span>
-										<div class="menu-sub menu-sub-accordion">
-											<div class="menu-item">
-												<a class="menu-link" href="<?php echo assetfolder; ?>extrairdados">
-													<span class="menu-bullet">
-														<svg class="w-6 h-6 text-gray-800 dark:text-white"
-															aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
-															height="24" fill="currentColor" viewBox="0 0 24 24">
-															<path fill-rule="evenodd"
-																d="M10.271 5.575C8.967 4.501 7 5.43 7 7.12v9.762c0 1.69 1.967 2.618 3.271 1.544l5.927-4.881a2 2 0 0 0 0-3.088l-5.927-4.88Z"
-																clip-rule="evenodd" />
-														</svg>
-													</span>
-													<span class="menu-title">Seguradoras</span>
-												</a>
-											</div>
-										</div>
-									</div>
-								<?php endif; ?>
-
-								<?php if ($my_security->checkPermission("ADMIN")): ?>
-									<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-										<span class="menu-link">
-											<span class="menu-icon">
-												<span class="svg-icon svg-icon-2">
-													<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true"
-														xmlns="http://www.w3.org/2000/svg" width="24" height="24"
 														fill="none" viewBox="0 0 24 24">
 														<path stroke="currentColor" stroke-linecap="round" stroke-width="2"
 															d="M16 19h4a1 1 0 0 0 1-1v-1a3 3 0 0 0-3-3h-2m-2.236-4a3 3 0 1 0 0-4M3 18v-1a3 3 0 0 1 3-3h4a3 3 0 0 1 3 3v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1Zm8-10a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
