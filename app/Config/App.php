@@ -24,7 +24,7 @@ class App extends BaseConfig
      *
      * @var string
      */
-    public $baseURL = 'http://localhost/insight/public/';
+    public $baseURL = 'https://grupoquid.com.br/';
   
 
     /**

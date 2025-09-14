@@ -1,6 +1,6 @@
 <?php
 
-define('IsProduction', false);
+define('IsProduction', true);
 // QUID
 define('AppName', "Quid");
 define('EMPRESA', 'quid');
@@ -31,15 +31,14 @@ define('BMG_CODIGO_PRODUTO_VIDA', 73);
 
 if (IsProduction) {
     define('assetfolder', '/');
-    define('rootURL', 'https://insightsuite.pravoce.io/');
-    define('urlInstitucional', 'https://quid.pravoce.io/');
+    define('rootURL', 'https://grupoquid.com.br/');
+    define('urlInstitucional', 'https://grupoquid.com.br/');
 } else {
     define('assetfolder', '/Insight/public/');
     define('rootURL', 'http://localhost/Insight/public/');
     define('urlInstitucional', '/');
 }
 
-//Na tela de listar propostas carrega ou nao os valores (pesado)
 define('exibir_valores_proposta', false);
 
 defined('APP_NAMESPACE') || define('APP_NAMESPACE', 'App');
