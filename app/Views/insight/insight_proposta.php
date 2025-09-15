@@ -237,20 +237,29 @@ $movimentation = match ($row->status) {
                                                             <div id="motivoDiv" style="display: none;" class="mt-2">
                                                                 <label for="status_<?= $row->idquid_propostas ?>" class="form-label">Motivo</label>
                                                                 <select class="form-select" id="status_<?= $row->idquid_propostas ?>" name="motivoCancelamento" required>
-                                                                    <option value="Cliente" <?= $row->motivoCancelamento == 'Cliente' ? 'selected' : '' ?>>Cliente</option>
-                                                                    <option value="Dados Cadastrais" <?= $row->motivoCancelamento == 'Dados cadastrais' ? 'selected' : '' ?>>Dados cadastrais</option>
-                                                                    <option value="Decurso de prazo" <?= $row->motivoCancelamento == 'Decurso de prazo' ? 'selected' : '' ?>>Descurso de prazo</option>
-                                                                    <option value="Dados bancários" <?= $row->motivoCancelamento == 'Dados bancários' ? 'selected' : '' ?>>Dados bancários</option>
-                                                                    <option value="Por limite" <?= $row->motivoCancelamento == 'Por limite' ? 'selected' : '' ?>>Por limite</option>
-                                                                    <option value="Pelo banco" <?= $row->motivoCancelamento == 'Pelo banco' ? 'selected' : '' ?>>Pelo banco</option>
+                                                                    <?php
+                                                                    $motivosCancelamento = json_decode($produto->motivosCancelamento, true) ?? [];
+                                                                    ?>
+
+                                                                    <?php foreach ($motivosCancelamento as $optionCancelamento): ?>
+                                                                        <option value="<?= htmlspecialchars($optionCancelamento) ?>" <?= $row->motivoCancelamento == $optionCancelamento ? 'selected' : '' ?>>
+                                                                            <?= htmlspecialchars($optionCancelamento) ?>
+                                                                        </option>
+                                                                    <?php endforeach; ?>
                                                                 </select>
                                                             </div>
                                                             <div id="resumoDiv" style="display: none;" class="mt-2">
                                                                 <label for="status_<?= $row->idquid_propostas ?>" class="form-label">Pendência</label>
                                                                 <select class="form-select" id="status_<?= $row->resumo ?>" name="resumo">
-                                                                    <option value="" <?= $row->resumo == '' ? 'selected' : '' ?>></option>
-                                                                    <option value="Falta documentação" <?= $row->resumo == 'Cliente' ? 'selected' : '' ?>>Falta documentação</option>
-                                                                    <option value="Formalização não realizada" <?= $row->resumo == 'Dados cadastrais' ? 'selected' : '' ?>>Formalização não realizada</option>
+                                                                    <?php
+                                                                    $motivosPendencia = json_decode($produto->motivosPendencia, true) ?? [];
+                                                                    ?>
+
+                                                                    <?php foreach ($motivosPendencia as $optionPendencias): ?>
+                                                                        <option value="<?= htmlspecialchars($optionPendencias) ?>" <?= $row->resumo == $optionPendencias ? 'selected' : '' ?>>
+                                                                            <?= htmlspecialchars($optionPendencias) ?>
+                                                                        </option>
+                                                                    <?php endforeach; ?>
                                                                 </select>
                                                             </div>
                                                         </div>

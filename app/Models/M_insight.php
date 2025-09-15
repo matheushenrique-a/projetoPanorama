@@ -318,4 +318,8 @@ class M_insight extends Model
     {
         return $this->dbMasterDefault->selectAll('quid_pendencias', ['status_link' => "Cancelada"]);
     }
+
+    public function getProdutoName($nameProduct){
+        return $this->dbMasterDefault->select('quid_produtos', ['nomeProduto' => $nameProduct]);
+    }
 }
