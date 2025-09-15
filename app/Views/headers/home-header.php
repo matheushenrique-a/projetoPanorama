@@ -1071,7 +1071,6 @@
 												</a>
 											</div>
 										</div>
-
 									</div>
 								<?php endif; ?>
 							</div>
