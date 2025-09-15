@@ -298,9 +298,14 @@ class M_insight extends Model
 
         $parameters = [
             'betweenCheck' => ['data_criacao', $inicio, $fim],
-            'whereIn' => ['produto', ['Cartão BMG']] 
+            'whereIn' => ['produto', ['Cartão BMG']]
         ];
 
         return $this->dbMasterDefault->select('quid_propostas', ['report_to' => $supervisorId], $parameters)['countAll'];
+    }
+
+    public function insertPendencia($data)
+    {
+        return $this->dbMasterDefault->insert('quid_pendencias', $data);
     }
 }

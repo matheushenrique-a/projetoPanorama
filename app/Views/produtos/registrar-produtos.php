@@ -25,40 +25,11 @@
                         </h3>
                     </div>
                     <div class="card-body p-10">
-                        <form method="post" action="<?php echo assetfolder ?>registrar-produtos/add" class="d-flex content-center px-10 gap-5">
-                            <div class="d-flex flex-column gap-5">
+                        <form method="post" action="<?php echo assetfolder ?>registrar-produtos/add" class="d-flex flex-column content-center px-10 gap-5">
+                            <div class="d-flex gap-5">
                                 <div class="input-group mb-2">
                                     <span class="input-group-text">Nome do produto</span>
                                     <input type="text" required name="nomeProduto" class="form-control" />
-                                </div>
-                                <div class="input-group mb-2">
-                                    <span class="input-group-text">Valor</span>
-                                    <input type="text" name="valor" class="form-control" />
-                                </div>
-                                <div class="d-flex gap-10">
-                                    <div class="form-check">
-                                        <input class="form-check-input" name="valorFixo" type="checkbox" value="1" id="valorFixo" />
-                                        <label class="form-check-label" for="valorFixo">
-                                            Valor fixo?
-                                        </label>
-
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" name="temValor" type="checkbox" value="1" id="temValor" />
-                                        <label class="form-check-label" for="temValor">
-                                            Registrar valor?
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="input-group mt-5">
-                                    <span class="input-group-text">Icone SVG</span>
-                                    <textarea type="text" required name="iconSvg" class="form-control"></textarea>
-                                </div>
-                            </div>
-                            <div class="d-flex flex-column gap-5">
-                                <div class="input-group mb-2">
-                                    <span class="input-group-text">Parceiro Comercial</span>
-                                    <input type="text" required name="parceiroComercial" class="form-control" />
                                 </div>
                                 <div class="input-group mb-2">
                                     <span class="input-group-text">Modalidades</span>
@@ -67,30 +38,81 @@
                                         <option value="anual">Anual</option>
                                     </select>
                                 </div>
-                                <div>
-                                    <button type="submit" class="mt-20 ms-2 btn btn-primary">Salvar</button>
+
+                                <div class="input-group mb-2">
+                                    <span class="input-group-text">Parceiro Comercial</span>
+                                    <input type="text" required name="parceiroComercial" class="form-control" />
                                 </div>
                             </div>
-                            <div>
-                                <div class="d-flex flex-column gap-6 mt-1 mb-4">
-                                    <div class="form-check">
-                                        <input class="form-check-input" name="dadosBancarios" type="checkbox" value="1" id="bmg" />
-                                        <label class="form-check-label" for="flexCheckChecked">
-                                            Necessita dados bancários?
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" name="endereco" type="checkbox" value="1" id="bmg" />
-                                        <label class="form-check-label" for="flexCheckChecked">
-                                            Necessita endereço?
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" name="inss" type="checkbox" value="1" id="bmg" />
-                                        <label class="form-check-label" for="flexCheckChecked">
-                                            Necessita dados INSS?
-                                        </label>
-                                    </div>
+                            <div class="input-group mb-2" style="width: 300px;">
+                                <span class="input-group-text">Valor</span>
+                                <input type="text" name="valor" class="form-control" />
+                            </div>
+                            <div class="d-flex gap-10">
+                                <div class="form-check">
+                                    <input class="form-check-input" name="valorFixo" type="checkbox" value="1" id="valorFixo" />
+                                    <label class="form-check-label" for="valorFixo">
+                                        Valor fixo?
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" name="temValor" type="checkbox" value="1" id="temValor" />
+                                    <label class="form-check-label" for="temValor">
+                                        Registrar valor?
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="d-flex gap-6 mt-1 mb-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" name="dadosBancarios" type="checkbox" value="1" id="bmg" />
+                                    <label class="form-check-label" for="flexCheckChecked">
+                                        Necessita dados bancários?
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" name="endereco" type="checkbox" value="1" id="bmg" />
+                                    <label class="form-check-label" for="flexCheckChecked">
+                                        Necessita endereço?
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" name="inss" type="checkbox" value="1" id="bmg" />
+                                    <label class="form-check-label" for="flexCheckChecked">
+                                        Necessita dados INSS?
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="d-flex gap-10">
+                                <div>
+                                    <span>Motivos de pendência:</span>
+                                    <select class="form-select fs-5 fw-bold" name="motivoPendenciaSelect" id="motivoPendenciaSelect">
+                                        <option value="">Selecione...</option>
+                                        <option value="documento">Falta de documento</option>
+                                        <option value="assinatura">Assinatura pendente</option>
+                                        <option value="pagamento">Pagamento não identificado</option>
+                                    </select>
+                                    <div id="pendenciasSelecionadas" class="mt-3 d-flex flex-column"></div>
+                                </div>
+
+                                <!-- Motivos de Cancelamento -->
+                                <div>
+                                    <span>Motivos de cancelamento:</span>
+                                    <select class="form-select fs-5 fw-bold" name="motivoCancelamentoSelect" id="motivoCancelamentoSelect">
+                                        <option value="">Selecione...</option>
+                                        <option value="cliente_desistiu">Cliente desistiu</option>
+                                        <option value="erro_processo">Erro no processo</option>
+                                        <option value="falta_pagamento">Falta de pagamento</option>
+                                    </select>
+                                    <div id="cancelamentosSelecionados" class="mt-3 d-flex flex-column"></div>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center" style="width: 500px;">
+                                <div class="input-group mt-5">
+                                    <span class="input-group-text">Icone SVG</span>
+                                    <textarea type="text" required name="iconSvg" class="form-control"></textarea>
+                                </div>
+                                <div class="mt-4 ms-4">
+                                    <button type="submit" class="btn btn-primary">Salvar</button>
                                 </div>
                             </div>
                         </form>
@@ -109,3 +131,49 @@
         </div>
     </div>
 </div>
+
+<script>
+    function setupSelect(selectId, containerId, inputName) {
+        const select = document.getElementById(selectId);
+        const container = document.getElementById(containerId);
+
+        select.addEventListener("change", function() {
+            const valor = this.value;
+            const texto = this.options[this.selectedIndex].text;
+
+            if (valor === "") return;
+
+            // Evita duplicados
+            if (container.querySelector(`input[value="${valor}"]`)) return;
+
+            const div = document.createElement("div");
+            div.classList.add(
+                "d-flex",
+                "align-items-center",
+                "justify-content-between",
+                "mb-2",
+                "px-3",
+                "py-1",
+                "border",
+                "rounded-pill",
+                "bg-light"
+            );
+            div.innerHTML = `
+                <span class="ms-2">${texto}</span>
+                <input type="hidden" name="${inputName}[]" value="${valor}">
+                <span class="text-danger fw-bold me-2" style="cursor:pointer;">✕</span>
+            `;
+
+            // Clique no X remove o item
+            div.querySelector("span.text-danger").addEventListener("click", () => div.remove());
+
+            container.appendChild(div);
+
+            this.value = "";
+        });
+    }
+
+    // Configura os dois selects
+    setupSelect("motivoPendenciaSelect", "pendenciasSelecionadas", "motivos_pendencia");
+    setupSelect("motivoCancelamentoSelect", "cancelamentosSelecionados", "motivos_cancelamento");
+</script>

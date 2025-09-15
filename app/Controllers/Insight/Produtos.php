@@ -38,7 +38,7 @@ class Produtos extends \App\Controllers\BaseController
                 'dadosBancarios' => $this->request->getPost('dadosBancarios') ? 1 : 0,
                 'endereco' => $this->request->getPost('endereco') ? 1 : 0,
                 'inss' => $this->request->getPost('inss') ? 1 : 0,
-                'temValor' => $this->request->getPost('temValor') ? 1 : 0, 
+                'temValor' => $this->request->getPost('temValor') ? 1 : 0,
             ];
 
             $this->m_insight->insertProduto($data);
@@ -47,5 +47,26 @@ class Produtos extends \App\Controllers\BaseController
         }
 
         return $this->loadPage('produtos/registrar-produtos', $dados);
+    }
+
+    public function registrarPendencia($action)
+    {
+        $dados['pageTitle'] = 'Registrar Pendência';
+        $dados['status'] = ['Pendente', 'Cancelada', 'Aprovada', 'Análise', 'Auditoria'];
+
+        if ($action == 'add') {
+            $this->m_insight = new M_insight();
+
+            $data = [
+                'nome_pendencia' => $this->getPost('nomePendência'),
+                'status_link' => $this->getPost('status'),
+            ];
+
+            $this->m_insight->insertPendencia($data);
+
+            return redirect()->to('/');
+        }
+
+        return $this->loadPage('produtos/registrar-pendencias', $dados);
     }
 }

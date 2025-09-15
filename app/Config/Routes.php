@@ -65,6 +65,7 @@ $routes->match(['get', 'post'], '/insight/excluir/(:any)', 'Insight\Arquivos::ex
 $routes->match(['get', 'post'], '/export-propostas/(:any)', 'Insight\Arquivos::exportPropostas/$1');
 $routes->match(['get', 'post'], '/listar-produtos', 'Insight\Produtos::index');
 $routes->match(['get', 'post'], '/registrar-produtos/(:any)', 'Insight\Produtos::registrarProduto/$1');
+$routes->match(['get', 'post'], '/registrar-pendencia/(:any)', 'Insight\Produtos::registrarPendencia/$1');
 $routes->match(['get', 'post'], '/criar-proposta/(:any)/(:any)', 'Insight\Insight::criarProposta/$1/$2');
 
 //THEONE
