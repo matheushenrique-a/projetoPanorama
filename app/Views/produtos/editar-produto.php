@@ -3,7 +3,7 @@
         <div id="kt_app_toolbar" class="app-toolbar py-3 py-lg-6">
             <div id="kt_app_toolbar_container" class="app-container container-xxl d-flex flex-stack">
                 <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
-                    <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">Registrar produto</h1>
+                    <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">Editar produto</h1>
                     <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
                         <li class="breadcrumb-item text-muted">
                             <a href="<?php echo assetfolder ?>" class="text-muted text-hover-primary">Home</a>
@@ -11,7 +11,7 @@
                         <li class="breadcrumb-item">
                             <span class="bullet bg-gray-800 w-5px h-2px"></span>
                         </li>
-                        <li class="breadcrumb-item text-muted">Registrar produto</li>
+                        <li class="breadcrumb-item text-muted">Editar produto</li>
                     </ul>
                 </div>
             </div>
@@ -21,7 +21,7 @@
                 <div class="card">
                     <div class="card-header pt-7 mb-3 pb-3">
                         <h3 class="card-title align-items-start text-gray-800 flex-column">
-                            Informe os dados do produto
+                            Dados do produto
                         </h3>
                     </div>
                     <div class="card-body p-10">

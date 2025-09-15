@@ -195,4 +195,56 @@ class Clientes extends \App\Controllers\BaseController
                 ->with('error', 'Erro ao atualizar cliente.');
         }
     }
+
+    public function criar()
+    {
+        $this->m_insight = new M_insight();
+        $dados['pageTitle'] = 'Criar Clientes';
+
+        $cpf        = $this->getpost('cpf');
+        $nome       = $this->getpost('nome');
+        $nasc       = $this->getpost('nasc');
+        $especie    = $this->getpost('especie');
+        $salario    = $this->getpost('salario');
+        $sexo       = $this->getpost('sexo');
+        $nome_banco = $this->getpost('nomeBanco');
+        $dib        = $this->getpost('dib');
+        $banco      = $this->getpost('banco');
+        $agencia    = $this->getpost('agencia');
+        $cc         = $this->getpost('conta');
+        $meio_pgto  = $this->getpost('meioPgto');
+        $cidade     = $this->getpost('cidade');
+        $uf         = $this->getpost('uf');
+        $endereco   = $this->getpost('endereco');
+        $bairro     = $this->getpost('bairro');
+        $cep        = $this->getpost('cep');
+        $celular1   = $this->getpost('celular1');
+        $celular2   = $this->getpost('celular2');
+
+        $this->m_insight->criarCliente($data = [
+            'cpf'        => $cpf,
+            'nome'       => $nome,
+            'nasc'       => $nasc,
+            'especie'    => $especie,
+            'salario'    => $salario,
+            'sexo'       => $sexo,
+            'nome_banco' => $nome_banco,
+            'dib'        => $dib,
+            'banco'      => $banco,
+            'agencia'    => $agencia,
+            'cc'         => $cc,
+            'meio_pgto'  => $meio_pgto,
+            'cidade'     => $cidade,
+            'uf'         => $uf,
+            'endereco'   => $endereco,
+            'bairro'     => $bairro,
+            'cep'        => $cep,
+            'telefone1'  => $celular1,
+            'telefone2'  => $celular2
+        ]);
+
+        return redirect()
+            ->to(urlInstitucional . 'clientes')
+            ->with('success', 'Cliente criado com sucesso.');
+    }
 }

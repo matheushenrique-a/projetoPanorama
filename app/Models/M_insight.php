@@ -348,4 +348,9 @@ class M_insight extends Model
     {
         return $this->dbMasterDefault->update('quid_produtos', $data, ['id' => $id]);
     }
+
+    public function criarCliente($data)
+    {
+        return $this->dbMasterDefault->insert('quid_clientes', $data);
+    }
 }

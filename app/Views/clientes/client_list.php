@@ -41,6 +41,13 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="card-title">
+                                    <div class="mb-0 mx-3">
+                                        <button type="button" class="btn btn-primary mt-4" onclick="abrirCadastroCliente()">
+                                            Cadastrar Cliente
+                                        </button>
+                                    </div>
+                                </div>
                                 <?php if ($my_security->checkPermission('ADMIN')): ?>
                                     <div class="card-title">
                                         <div class="mb-0 mx-3">
@@ -242,6 +249,143 @@
                         </div>
                     </div>
                 <?php endif; ?>
+
+
+                <div class="card mt-8 d-none" id="cadastroDiv" style="justify-content: start;">
+                    <div class="card-header border-0 pt-6" style="justify-content: center;">
+                        <form action="<?php echo assetfolder ?>clientes/criar" method="post" id="formUpdateCliente">
+                            <div class="card-title">
+                                <div class="d-flex flex-row gap-20 position-relative justify-content-center my-4 mx-3">
+                                    <div>
+                                        <h2 class="mb-5">Cliente</h2>
+                                        <div class="mb-3 d-flex flex-row gap-2">
+                                            <div class="d-flex flex-column gap-2">
+                                                <span class="fs-6">Nome: <strong class="text-danger">*</strong></span>
+                                                <input type="text" class="form-control form-control-solid"
+                                                    style="width: 400px;" placeholder="Nome do cliente" name="nome" id="nome" required>
+                                            </div>
+                                            <div class="d-flex flex-column gap-2">
+                                                <span class="fs-6">Nascimento: <strong class="text-danger">*</strong></span>
+                                                <input type="text" class="form-control form-control-solid"
+                                                    style="width: 120px;" name="nasc" placeholder="dd/mm/aaaa" id="nasc" required>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3 d-flex flex-row gap-2">
+                                            <div class="d-flex flex-column gap-2">
+                                                <span class="fs-6">CPF: <strong class="text-danger">*</strong></span>
+                                                <input type="text" class="form-control form-control-solid" name="cpf"
+                                                    id="cpf" maxlength="14" placeholder="000.000.000-00" required>
+                                            </div>
+                                            <div class="d-flex flex-column gap-2">
+                                                <span class="fs-6">Número benefício:</span>
+                                                <input type="text" class="form-control form-control-solid" name="nb"
+                                                    id="nb">
+                                            </div>
+                                            <div class="d-flex flex-column gap-2">
+                                                <span class="fs-6">Esp:</span>
+                                                <input type="text" style="width: 70px;"
+                                                    class="form-control form-control-solid" placeholder="00" name="especie" id="especie">
+                                            </div>
+                                        </div>
+                                        <div class="mb-3 d-flex flex-row gap-2">
+                                            <div class="d-flex flex-column gap-2">
+                                                <span class="fs-6">DIB:</span>
+                                                <input type="text" class="form-control form-control-solid"
+                                                    style="width: 120px;" name="dib" id="dib">
+                                            </div>
+                                            <div class="d-flex flex-column gap-2">
+                                                <span class="fs-6">Sexo:</span>
+                                                <input type="text" class="form-control form-control-solid"
+                                                    style="width: 65px;" name="sexo" placeholder="M | F" id="sexo">
+                                            </div>
+                                            <div class="d-flex flex-column gap-2">
+                                                <span class="fs-6">Salário:</span>
+                                                <input type="text" class="form-control form-control-solid"
+                                                    style="width: 120px;" name="salario" placeholder="R$ -" id="salario">
+                                            </div>
+                                            <div class="d-flex flex-column gap-2">
+                                                <span class="fs-6">Meio Pgto:</span>
+                                                <input type="text" class="form-control form-control-solid"
+                                                    style="width: 200px;" name="meioPgto" id="meioPgto">
+                                            </div>
+                                        </div>
+                                        <div class="mb-3 d-flex flex-row gap-2">
+                                            <div class="d-flex flex-column gap-2">
+                                                <span class="fs-6">CEP:</span>
+                                                <input type="text" class="form-control form-control-solid"
+                                                    style="width: 120px;" placeholder="00000-000" name="cep" id="cep">
+                                            </div>
+                                            <div class="d-flex flex-column gap-2">
+                                                <span class="fs-6">Endereço:</span>
+                                                <input type="text" style="width: 400px;"
+                                                    class="form-control form-control-solid" name="endereco"
+                                                    id="endereco">
+                                            </div>
+                                        </div>
+                                        <div class="mb-3 d-flex flex-row gap-2">
+                                            <div class="d-flex flex-column gap-2">
+                                                <span class="fs-6">Bairro:</span>
+                                                <input type="text" class="form-control form-control-solid" name="bairro"
+                                                    id="bairro">
+                                            </div>
+                                            <div class="d-flex flex-column gap-2">
+                                                <span class="fs-6">Cidade:</span>
+                                                <input type="text" class="form-control form-control-solid" name="cidade"
+                                                    id="cidade">
+                                            </div>
+                                            <div class="d-flex flex-column gap-2">
+                                                <span class="fs-6">UF:</span>
+                                                <input type="text" class="form-control form-control-solid"
+                                                    style="width: 70px;" maxlength="2" name="uf" id="uf">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h2 class="mb-5">Dados bancários</h2>
+                                        <div class="mb-3 d-flex flex-row gap-2">
+                                            <div class="d-flex flex-column gap-2">
+                                                <span class="fs-6">Nome:</span>
+                                                <input type="text" class="form-control form-control-solid"
+                                                    name="nomeBanco" id="nomeBanco" placeholder="Nome do banco">
+                                            </div>
+                                            <div class="d-flex flex-column gap-2">
+                                                <span class="fs-6">Código:</span>
+                                                <input type="text" class="form-control form-control-solid" name="banco"
+                                                    id="banco" placeholder="Cód. do banco">
+                                            </div>
+                                        </div>
+                                        <div class="mb-3 d-flex flex-row gap-2">
+                                            <div class="d-flex flex-column gap-2">
+                                                <span class="fs-6">Conta:</span>
+                                                <input type="text" class="form-control form-control-solid" name="conta"
+                                                    id="conta">
+                                            </div>
+                                            <div class="d-flex flex-column gap-2">
+                                                <span class="fs-6">Agência:</span>
+                                                <input type="text" class="form-control form-control-solid"
+                                                    name="agencia" id="agencia">
+                                            </div>
+                                        </div>
+                                        <h2 class="mb-5 mt-16">Telefones</h2>
+                                        <div class="mb-3 d-flex flex-row gap-2">
+                                            <div class="d-flex flex-column gap-2">
+                                                <span class="fs-6">Celular 1: <strong class="text-danger">*</strong></span>
+                                                <input type="text" class="form-control form-control-solid"
+                                                    name="celular1" id="celular1" required maxlength="15" placeholder="(00) 00000-0000">
+                                            </div>
+                                            <div class="d-flex flex-column gap-2">
+                                                <span class="fs-6">Celular 2:</span>
+                                                <input type="text" class="form-control form-control-solid"
+                                                    name="celular2" id="celular2" maxlength="15" placeholder="(00) 00000-0000">
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary mt-8">Criar cliente</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -315,14 +459,14 @@
 
     if (cel1Input) {
         cel1Input.value = formatarTelefone(cel1Input.value);
-        cel1Input.addEventListener('input', function () {
+        cel1Input.addEventListener('input', function() {
             this.value = formatarTelefone(this.value);
         });
     }
 
     if (cel2Input) {
         cel2Input.value = formatarTelefone(cel2Input.value);
-        cel2Input.addEventListener('input', function () {
+        cel2Input.addEventListener('input', function() {
             this.value = formatarTelefone(this.value);
         });
     }
@@ -390,5 +534,16 @@
         })
     }
 
+    function abrirCadastroCliente() {
+        window.location.href = window.location.pathname + "?cadastro=1";
+    }
 
+    window.addEventListener("DOMContentLoaded", () => {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get("cadastro") === "1") {
+            const div = document.getElementById("cadastroDiv");
+            div.classList.remove("d-none");
+            div.classList.add("d-flex");
+        }
+    });
 </script>
