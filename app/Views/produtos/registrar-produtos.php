@@ -175,7 +175,6 @@
         });
     }
 
-    // Configura os dois selects
     setupSelect("motivoPendenciaSelect", "pendenciasSelecionadas", "motivos_pendencia");
     setupSelect("motivoCancelamentoSelect", "cancelamentosSelecionados", "motivos_cancelamento");
 </script>

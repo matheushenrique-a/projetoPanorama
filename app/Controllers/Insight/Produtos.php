@@ -42,6 +42,8 @@ class Produtos extends \App\Controllers\BaseController
                 'endereco' => $this->request->getPost('endereco') ? 1 : 0,
                 'inss' => $this->request->getPost('inss') ? 1 : 0,
                 'temValor' => $this->request->getPost('temValor') ? 1 : 0,
+                'motivosPendencia' => json_encode($this->request->getPost('motivos_pendencia') ?? []),
+                'motivosCancelamento' => json_encode($this->request->getPost('motivos_cancelamento') ?? [])
             ];
 
             $this->m_insight->insertProduto($data);
@@ -67,7 +69,7 @@ class Produtos extends \App\Controllers\BaseController
 
             $this->m_insight->insertPendencia($data);
 
-            return redirect()->to('/');
+            return redirect()->to(assetfolder . 'registrar-pendencia/0');
         }
 
         return $this->loadPage('produtos/registrar-pendencias', $dados);

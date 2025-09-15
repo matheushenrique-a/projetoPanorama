@@ -27,10 +27,6 @@
                     <div class="card-body p-10 ">
                         <form method="post" action="<?php echo assetfolder ?>registrar-pendencia/add" class="d-flex content-center gap-5">
                             <div class="d-flex gap-5 px-auto">
-                                <div class="input-group mb-2" style="width: 500px;">
-                                    <span class="input-group-text">Nome da pendência</span>
-                                    <input type="text" required name="nomePendência" class="form-control" />
-                                </div>
                                 <div class="input-group mb-2" style="width: 400px;">
                                     <span class="input-group-text">Status</span>
                                     <select class="form-select fs-5 fw-bold" name="status" id="status">
@@ -38,6 +34,10 @@
                                             <option value="<?= $s ?>"><?= $s ?></option>
                                         <?php endforeach; ?>
                                     </select>
+                                </div>
+                                <div class="input-group mb-2" style="width: 500px;">
+                                    <span class="input-group-text">Nome da pendência</span>
+                                    <input type="text" required name="nomePendência" class="form-control" />
                                 </div>
                                 <div>
                                     <button type="submit" class="ms-2 btn btn-primary">Salvar</button>
