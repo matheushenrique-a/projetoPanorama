@@ -69,9 +69,45 @@ class Produtos extends \App\Controllers\BaseController
 
             $this->m_insight->insertPendencia($data);
 
-            return redirect()->to(assetfolder . 'registrar-pendencia/0');
+            return redirect()->to(urlInstitucional . 'registrar-pendencia/0');
         }
 
         return $this->loadPage('produtos/registrar-pendencias', $dados);
+    }
+
+    public function pendenciasEdit($action)
+    {
+        $this->m_insight = new M_insight();
+        $dados['pageTitle'] = 'Editar Pendência';
+
+        $dados['pendencias'] = $this->m_insight->getAll('quid_pendencias');
+
+        return $this->loadPage('produtos/pendencias-edit', $dados);
+    }
+
+    public function produtosEdit($action)
+    {
+        $this->m_insight = new M_insight();
+        $dados['pageTitle'] = 'Editar Produto';
+
+        $dados['produtos'] = $this->m_insight->getAll('quid_produtos');
+
+        return $this->loadPage('produtos/produtos-edit', $dados);
+    }
+
+    public function excluirPendencia($id)
+    {
+        $this->m_insight = new M_insight();
+        $this->m_insight->deletePendencia($id);
+
+        return redirect()->to(urlInstitucional . 'pendencias-edit/0');
+    }
+
+    public function excluirProduto($id)
+    {
+        $this->m_insight = new M_insight();
+        $this->m_insight->deleteProduto($id);
+
+        return redirect()->to(urlInstitucional . 'produtos-edit/0');
     }
 }
