@@ -339,4 +339,13 @@ class M_insight extends Model
         return $this->dbMasterDefault->delete('quid_produtos', ['id' => $id]);
     }
 
+    public function getProdutoById($idProduto)
+    {
+        return $this->dbMasterDefault->select('quid_produtos', ['id' => $idProduto])['firstRow'];
+    }
+
+    public function updateProduto($id, $data)
+    {
+        return $this->dbMasterDefault->update('quid_produtos', $data, ['id' => $id]);
+    }
 }

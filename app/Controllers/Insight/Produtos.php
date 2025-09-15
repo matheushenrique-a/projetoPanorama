@@ -110,4 +110,41 @@ class Produtos extends \App\Controllers\BaseController
 
         return redirect()->to(urlInstitucional . 'produtos-edit/0');
     }
+
+    public function editarProduto($action, $idProduto)
+    {
+        $dados['pageTitle'] = 'Editar Produto';
+        $this->m_insight = new M_insight();
+        $dados['produto'] = $this->m_insight->getProdutoById($idProduto);
+
+        $dados['pendencias'] = $this->m_insight->getPendencias();
+        $dados['cancelamentos'] = $this->m_insight->getCancelamentos();
+
+        $dados['produto']->motivosPendencia = json_decode($dados['produto']->motivosPendencia ?? '[]', true);
+        $dados['produto']->motivosCancelamento = json_decode($dados['produto']->motivosCancelamento ?? '[]', true);
+
+
+        if ($action == "edit") {
+            $data = [
+                'nomeProduto' => $this->request->getPost('nomeProduto'),
+                'valor' => $this->request->getPost('valor'),
+                'valorFixo' => $this->request->getPost('valorFixo') ? 1 : 0,
+                'iconSvg' => $this->request->getPost('iconSvg'),
+                'parceiroComercial' => $this->request->getPost('parceiroComercial'),
+                'modalidades' => $this->request->getPost('modalidades'),
+                'dadosBancarios' => $this->request->getPost('dadosBancarios') ? 1 : 0,
+                'endereco' => $this->request->getPost('endereco') ? 1 : 0,
+                'inss' => $this->request->getPost('inss') ? 1 : 0,
+                'temValor' => $this->request->getPost('temValor') ? 1 : 0,
+                'motivosPendencia' => json_encode($this->request->getPost('motivos_pendencia') ?? []),
+                'motivosCancelamento' => json_encode($this->request->getPost('motivos_cancelamento') ?? [])
+            ];
+
+            $this->m_insight->updateProduto($idProduto, $data);
+
+            return redirect()->to(urlInstitucional . 'editar-produto/0/' . $idProduto);
+        }
+
+        return $this->loadPage('produtos/editar-produto', $dados);
+    }
 }
