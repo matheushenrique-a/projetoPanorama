@@ -308,4 +308,14 @@ class M_insight extends Model
     {
         return $this->dbMasterDefault->insert('quid_pendencias', $data);
     }
+
+    public function getPendencias()
+    {
+        return $this->dbMasterDefault->selectAll('quid_pendencias', ['status_link' => "Pendente"]);
+    }
+
+    public function getCancelamentos()
+    {
+        return $this->dbMasterDefault->selectAll('quid_pendencias', ['status_link' => "Cancelada"]);
+    }
 }

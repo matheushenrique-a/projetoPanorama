@@ -44,9 +44,31 @@
                                     <input type="text" required name="parceiroComercial" class="form-control" />
                                 </div>
                             </div>
-                            <div class="input-group mb-2" style="width: 300px;">
-                                <span class="input-group-text">Valor</span>
-                                <input type="text" name="valor" class="form-control" />
+                            <div class="d-flex gap-15">
+                                <div class="input-group mb-2" style="width: 300px;">
+                                    <span class="input-group-text">Valor</span>
+                                    <input type="text" name="valor" class="form-control" />
+                                </div>
+                                <div class="d-flex gap-6 mt-1 mb-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" name="dadosBancarios" type="checkbox" value="1" id="bmg" />
+                                        <label class="form-check-label" for="flexCheckChecked">
+                                            Necessita dados bancários?
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" name="endereco" type="checkbox" value="1" id="bmg" />
+                                        <label class="form-check-label" for="flexCheckChecked">
+                                            Necessita endereço?
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" name="inss" type="checkbox" value="1" id="bmg" />
+                                        <label class="form-check-label" for="flexCheckChecked">
+                                            Necessita dados INSS?
+                                        </label>
+                                    </div>
+                                </div>
                             </div>
                             <div class="d-flex gap-10">
                                 <div class="form-check">
@@ -61,47 +83,27 @@
                                         Registrar valor?
                                     </label>
                                 </div>
+
                             </div>
-                            <div class="d-flex gap-6 mt-1 mb-4">
-                                <div class="form-check">
-                                    <input class="form-check-input" name="dadosBancarios" type="checkbox" value="1" id="bmg" />
-                                    <label class="form-check-label" for="flexCheckChecked">
-                                        Necessita dados bancários?
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" name="endereco" type="checkbox" value="1" id="bmg" />
-                                    <label class="form-check-label" for="flexCheckChecked">
-                                        Necessita endereço?
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" name="inss" type="checkbox" value="1" id="bmg" />
-                                    <label class="form-check-label" for="flexCheckChecked">
-                                        Necessita dados INSS?
-                                    </label>
-                                </div>
-                            </div>
+
                             <div class="d-flex gap-10">
-                                <div>
+                                <div class="d-flex flex-column gap-2">
                                     <span>Motivos de pendência:</span>
                                     <select class="form-select fs-5 fw-bold" name="motivoPendenciaSelect" id="motivoPendenciaSelect">
                                         <option value="">Selecione...</option>
-                                        <option value="documento">Falta de documento</option>
-                                        <option value="assinatura">Assinatura pendente</option>
-                                        <option value="pagamento">Pagamento não identificado</option>
+                                        <?php foreach ($pendencias as $p): ?>
+                                            <option value="<?= $p->nome_pendencia ?>"><?= $p->nome_pendencia ?></option>
+                                        <?php endforeach; ?>
                                     </select>
                                     <div id="pendenciasSelecionadas" class="mt-3 d-flex flex-column"></div>
                                 </div>
-
-                                <!-- Motivos de Cancelamento -->
-                                <div>
+                                <div class="d-flex flex-column gap-2">
                                     <span>Motivos de cancelamento:</span>
                                     <select class="form-select fs-5 fw-bold" name="motivoCancelamentoSelect" id="motivoCancelamentoSelect">
                                         <option value="">Selecione...</option>
-                                        <option value="cliente_desistiu">Cliente desistiu</option>
-                                        <option value="erro_processo">Erro no processo</option>
-                                        <option value="falta_pagamento">Falta de pagamento</option>
+                                        <?php foreach ($cancelamentos as $c): ?>
+                                            <option value="<?= $c->nome_pendencia ?>"><?= $c->nome_pendencia ?></option>
+                                        <?php endforeach; ?>
                                     </select>
                                     <div id="cancelamentosSelecionados" class="mt-3 d-flex flex-column"></div>
                                 </div>
@@ -155,13 +157,13 @@
                 "px-3",
                 "py-1",
                 "border",
-                "rounded-pill",
+                "rounded-1",
                 "bg-light"
             );
             div.innerHTML = `
-                <span class="ms-2">${texto}</span>
+                <span class="ms-1">${texto}</span>
                 <input type="hidden" name="${inputName}[]" value="${valor}">
-                <span class="text-danger fw-bold me-2" style="cursor:pointer;">✕</span>
+                <span class="text-danger fw-bold" style="cursor:pointer;">✕</span>
             `;
 
             // Clique no X remove o item

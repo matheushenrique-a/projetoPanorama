@@ -27,6 +27,9 @@ class Produtos extends \App\Controllers\BaseController
 
         $dados['pageTitle'] = 'Registrar Produto';
 
+        $dados['pendencias'] = $this->m_insight->getPendencias();
+        $dados['cancelamentos'] = $this->m_insight->getCancelamentos();
+
         if ($action == 'add') {
             $data = [
                 'nomeProduto' => $this->request->getPost('nomeProduto'),

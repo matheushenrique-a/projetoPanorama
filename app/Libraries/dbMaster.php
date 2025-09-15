@@ -93,6 +93,50 @@ class dbMaster
 		return $this->resultfy($builder->get());
 	}
 
+	public function selectAll($table, $whereCheck = null, $parameters = null)
+	{
+		$builder = $this->db->table($table);
+
+		if (!is_null($this->orderby)) {
+			$builder->orderBy($this->orderby[0], $this->orderby[1]);
+		}
+
+		if (!is_null($parameters)) {
+			if (array_key_exists('whereNotIn', $parameters)) {
+				$builder->whereNotIn($parameters['whereNotIn'][0], $parameters['whereNotIn'][1]);
+			}
+			if (array_key_exists('likeCheck', $parameters)) {
+				$builder->like($parameters['likeCheck']);
+			}
+			if (array_key_exists('whereIn', $parameters)) {
+				$builder->whereIn($parameters['whereIn'][0], $parameters['whereIn'][1]);
+			}
+			if (array_key_exists('betweenCheck', $parameters)) {
+				$campo = $parameters['betweenCheck'][0];
+				$de = $parameters['betweenCheck'][1];
+				$ate = $parameters['betweenCheck'][2];
+
+				if (!empty($de)) {
+					$builder->where($campo . ' >=', $de);
+				}
+				if (!empty($ate)) {
+					$builder->where($campo . ' <=', $ate . ' 23:59:59');
+				}
+			}
+		}
+
+		if (!is_null($whereCheck)) {
+			$builder->where($whereCheck);
+		}
+
+		// executa sem limitar
+		$query = $builder->get();
+
+		// retorna todos os registros como array de objetos
+		return $query->getResult(); // ou getResultArray() se preferir arrays
+	}
+
+
 	public function selectPage($table, $whereCheck, $parameters = null)
 	{
 		$builder = $this->db->table($table);
@@ -289,32 +333,6 @@ class dbMaster
 		$builder = $this->db->table($table);
 		$builder->delete($whereCheck);
 	}
-
-	//Evita consulta a uma tabela que foi recenemente consultada
-	// public function IsDataUpdated($table, $whereArray = null)
-	// {
-	// 	//default interval check
-	// 	$minutes = integration_delay_bancos[$table];
-	// 	//echo "13:18:37 - <h3>Dump 2</h3> <br><br>" . var_dump($table); exit;					//<-------DEBUG
-	// 	$md5 = $this->getMd5($table, $whereArray);
-
-	// 	$builder = $this->db->table('record_updates');
-	// 	$builder->limit(1);
-	// 	$builder->where(' TIMESTAMPDIFF(minute,last_updated,now())  <', $minutes);
-	// 	$builder->where('md5', $md5);
-	// 	$result = $builder->get();
-	// 	$total_rows = $this->db->affectedRows();
-
-	// 	//echo "13:17:40 - <h3>Dump 78</h3> <br><br>" . var_dump($total_rows); exit;					//<-------DEBUG 
-	// 	if ($total_rows == 1) {
-	// 		//se encontrou algum registro é porque existem linhas 
-	// 		//com menos de X minutos na tabela, logo o dado está atualizado / existente
-	// 		return true;
-	// 	} else {
-	// 		$this->UpdateControl($md5);
-	// 		return false;
-	// 	}
-	// }
 
 	public function getDB()
 	{
