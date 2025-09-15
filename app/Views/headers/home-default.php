@@ -531,7 +531,7 @@
 
 						<!-- INSERIR QUANTIDADE DE PROPOSTAS -->
 
-						<?php if (!$my_security->checkPermission("GERENTE") && $my_security->checkPermission("ADMIN")): ?>
+						<?php if ($my_security->checkPermission("GERENTE") && $my_security->checkPermission("ADMIN")): ?>
 							<?php if ($my_security->checkPermission("SUPERVISOR") && $session->userId !== "165001"): ?>
 								<div class="col-xl-4 w-50 d-flex flex-column gap-10">
 									<div class="card h-xl-45">

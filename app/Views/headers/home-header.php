@@ -1,6 +1,6 @@
 <!-- <?php
-$session = \Config\Services::session();
-?> -->
+		$session = \Config\Services::session();
+		?> -->
 <!DOCTYPE html>
 
 <html lang="pt-br">
@@ -41,7 +41,7 @@ $session = \Config\Services::session();
 		var defaultThemeMode = "light";
 		var themeMode;
 
-		(function () {
+		(function() {
 			const storageKey = 'sidebar-minimized';
 			const minimized = localStorage.getItem(storageKey) === 'true';
 			const body = document.body;
@@ -72,11 +72,11 @@ $session = \Config\Services::session();
 			document.documentElement.setAttribute("data-theme", themeMode);
 		}
 
-		document.addEventListener("DOMContentLoaded", function () {
+		document.addEventListener("DOMContentLoaded", function() {
 			const modos = document.querySelectorAll('[data-kt-element="mode"]');
 
 			modos.forEach((el) => {
-				el.addEventListener("click", function (e) {
+				el.addEventListener("click", function(e) {
 					e.preventDefault();
 
 					let valor = el.getAttribute("data-kt-value");
@@ -1028,8 +1028,6 @@ $session = \Config\Services::session();
 													<span class="menu-title">Registrar produto</span>
 												</a>
 											</div>
-										</div>
-										<div class="menu-sub menu-sub-accordion">
 											<div class="menu-item">
 												<a class="menu-link" href="<?php echo assetfolder; ?>registrar-pendencia/0">
 													<span class="menu-bullet">
@@ -1044,8 +1042,6 @@ $session = \Config\Services::session();
 													<span class="menu-title">Registrar pendência</span>
 												</a>
 											</div>
-										</div>
-										<div class="menu-sub menu-sub-accordion">
 											<div class="menu-item">
 												<a class="menu-link" href="<?php echo assetfolder; ?>produtos-edit/0">
 													<span class="menu-bullet">
@@ -1060,8 +1056,6 @@ $session = \Config\Services::session();
 													<span class="menu-title">Listar produtos</span>
 												</a>
 											</div>
-										</div>
-										<div class="menu-sub menu-sub-accordion">
 											<div class="menu-item">
 												<a class="menu-link" href="<?php echo assetfolder; ?>pendencias-edit/0">
 													<span class="menu-bullet">
@@ -1077,6 +1071,7 @@ $session = \Config\Services::session();
 												</a>
 											</div>
 										</div>
+
 									</div>
 								<?php endif; ?>
 							</div>
@@ -1084,7 +1079,7 @@ $session = \Config\Services::session();
 					</div>
 				</div>
 				<script>
-					document.addEventListener('DOMContentLoaded', function () {
+					document.addEventListener('DOMContentLoaded', function() {
 						const currentPath = window.location.pathname.replace(/\/+$/, '');
 						const assetFolder = "<?php echo assetfolder; ?>".replace(/\/+$/, '');
 
@@ -1098,7 +1093,7 @@ $session = \Config\Services::session();
 						}
 
 						// 2️⃣ Hook no clique do toggle
-						toggleButton.addEventListener('click', function () {
+						toggleButton.addEventListener('click', function() {
 							// Delay para esperar o script interno do Metronic aplicar a classe
 							setTimeout(() => {
 								const isMinimized = body.classList.contains('app-sidebar-minimize');
@@ -1118,7 +1113,7 @@ $session = \Config\Services::session();
 							attributeFilter: ['class']
 						});
 
-						document.querySelectorAll('.menu-link').forEach(function (link) {
+						document.querySelectorAll('.menu-link').forEach(function(link) {
 							const href = link.getAttribute('href');
 							if (!href) return;
 
