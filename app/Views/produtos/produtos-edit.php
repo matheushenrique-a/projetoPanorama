@@ -26,13 +26,25 @@
                                 <h2 class="mt-8 text-gray-800">Produtos:</h2>
                             </div>
                             <div class="card-body">
-                                <?php foreach ($produtos as $produto): ?>
-                                    <div class="bg-gray-200 rounded p-4 mb-3 d-flex justify-content-between align-items-center gap-10" style="width: 503px;">
+                                <?php foreach ($produtos as $produto):
+                                    $bgColor = '';
+                                    $color = '';
+
+                                    if ($produto->ativo == "0") {
+                                        $bgColor = 'gray-100';
+                                        $color = 'gray-500';
+                                    } else {
+                                        $bgColor = 'gray-200';
+                                        $color = 'gray-800';
+                                    }
+
+                                ?>
+                                    <div class="bg-<?= $bgColor ?> text-<?= $color?> rounded p-4 mb-3 d-flex justify-content-between align-items-center gap-10" style="width: 503px;">
                                         <div>
                                             <svg width="30" height="30" fill="#c0c0c0ff" viewBox="0 0 24 24">
                                                 <?= $produto->iconSvg ?>
                                             </svg>
-                                            <span class="ms-1 text-gray-800 fs-6"><?= htmlspecialchars($produto->nomeProduto) ?></span>
+                                            <span class="ms-1 text-<?= $color?> fs-6"><?= htmlspecialchars($produto->nomeProduto) ?></span>
                                         </div>
                                         <div class="d-flex align-items-center gap-6">
                                             <span class="fs-5 me-4"><?= htmlspecialchars($produto->parceiroComercial) ?></span>

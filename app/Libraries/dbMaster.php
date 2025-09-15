@@ -51,7 +51,10 @@ class dbMaster
 
 	public function listarProdutos()
 	{
-		return $this->db->table('quid_produtos')->get()->getResult();
+		return $this->db->table('quid_produtos')
+			->where('ativo', 1)
+			->get()
+			->getResult();
 	}
 
 	public function select($table, $whereCheck, $parameters = null)

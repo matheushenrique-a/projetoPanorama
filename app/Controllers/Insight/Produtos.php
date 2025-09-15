@@ -43,7 +43,8 @@ class Produtos extends \App\Controllers\BaseController
                 'inss' => $this->request->getPost('inss') ? 1 : 0,
                 'temValor' => $this->request->getPost('temValor') ? 1 : 0,
                 'motivosPendencia' => json_encode($this->request->getPost('motivos_pendencia') ?? []),
-                'motivosCancelamento' => json_encode($this->request->getPost('motivos_cancelamento') ?? [])
+                'motivosCancelamento' => json_encode($this->request->getPost('motivos_cancelamento') ?? []),
+                'ativo' => $this->getpost('ativo') ? 1 : 0
             ];
 
             $this->m_insight->insertProduto($data);
@@ -137,7 +138,8 @@ class Produtos extends \App\Controllers\BaseController
                 'inss' => $this->request->getPost('inss') ? 1 : 0,
                 'temValor' => $this->request->getPost('temValor') ? 1 : 0,
                 'motivosPendencia' => json_encode($this->request->getPost('motivos_pendencia') ?? []),
-                'motivosCancelamento' => json_encode($this->request->getPost('motivos_cancelamento') ?? [])
+                'motivosCancelamento' => json_encode($this->request->getPost('motivos_cancelamento') ?? []),
+                'ativo' => $this->getpost('ativo') ? 1 : 0
             ];
 
             $this->m_insight->updateProduto($idProduto, $data);

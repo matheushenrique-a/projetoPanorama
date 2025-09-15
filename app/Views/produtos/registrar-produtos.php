@@ -107,6 +107,12 @@
                                     </select>
                                     <div id="cancelamentosSelecionados" class="mt-3 d-flex flex-column"></div>
                                 </div>
+                                <div class="form-check form-switch form-check-custom form-check-solid">
+                                    <input class="form-check-input" type="checkbox" value="1" id="ativo" name="ativo" checked="checked" />
+                                    <label class="form-check-label" for="ativo">
+                                        Ativo?
+                                    </label>
+                                </div>
                             </div>
                             <div class="d-flex align-items-center" style="width: 500px;">
                                 <div class="input-group mt-5">
