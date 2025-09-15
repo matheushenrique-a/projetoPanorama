@@ -88,7 +88,15 @@ class Home extends BaseController
 
             // quantidade só do cartão BMG
 
-            $dados['metaQuantidade'] = $this->m_insight->metaQuantidade();
+            $dados['metaQuantidadeMensal'] = $buscarMeta->meta_quantidade_mensal ?? 0;
+
+
+            $dados['metaQuantidade'] = $buscarMeta->meta_quantidade ?? 0;
+            $dados['feitoQuantidade'] = $this->m_insight->metaQuantidade();
+
+            $dados['progressoQuantidade'] = $dados['metaQuantidade'] > 0
+                ? round(($dados['feitoQuantidade'] / $dados['metaQuantidade']) * 100, 2)
+                : 0;
         }
 
 

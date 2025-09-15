@@ -29,8 +29,8 @@
 											<span class="card-label fw-bolder text-gray-800">Barra de progresso mensal</span>
 											<span class="text-gray-600 mt-2 fw-semibold fs-6">Valor Averbado: <span
 													class="text-success">R$ <?php if (isset($progresso->total_valor)):
-														echo number_format((float) $progresso->total_valor, 2, ',', '.');
-													endif; ?></span></span>
+																				echo number_format((float) $progresso->total_valor, 2, ',', '.');
+																			endif; ?></span></span>
 											<span class="text-gray-600 mt-2 fw-semibold fs-6">Meta: <span
 													class="text-success">R$
 													<?php echo number_format((float) $metaEquipe, 2, ',', '.') ?></span></span></span>
@@ -105,7 +105,7 @@
 												"Adesão": "dark",
 												"Auditoria": "warning",
 												"TED Devolvida": "warning"
-											}[row.status] || "secondary";
+											} [row.status] || "secondary";
 
 											container.innerHTML += `
 											<div class="d-flex justify-content-between">
@@ -281,7 +281,7 @@
 												default => "secondary"
 											};
 
-											?>
+										?>
 
 											<div class="proposta-item" data-status="<?= $row->status ?>">
 												<!--begin::Item-->
@@ -316,8 +316,7 @@
 											</div>
 
 
-										<?php }
-										; ?>
+										<?php }; ?>
 
 									</div>
 									<div class="pb-5 d-flex justify-content-center gap-10">
@@ -378,10 +377,10 @@
 
 															<?php
 															foreach ($rankingExibido as $i => $row):
-																?>
+															?>
 																<tr style="<?= $row->posicao_real == 1 ? 'box-shadow: 0 0 0px rgba(111, 66, 193, 0.6); font-weight: bold;' : '' ?>"
 																	class="<?php if ($row->nome == $nickname)
-																		echo "bg-info bg-opacity-25"; ?> text-gray-600">
+																				echo "bg-info bg-opacity-25"; ?> text-gray-600">
 																	<td class="align-middle">
 																		<span class="badge fs-6 rounded-circle text-white"
 																			style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; background-color: rgba(132, 95, 180, 1); <?= $row->posicao_real == 1 ? 'box-shadow: 0 0px 6px rgba(113, 51, 228, 0.6);' : '' ?>">
@@ -532,7 +531,7 @@
 
 						<!-- INSERIR QUANTIDADE DE PROPOSTAS -->
 
-						<?php if (!$my_security->checkPermission("GERENTE") && !$my_security->checkPermission("ADMIN")): ?>
+						<?php if (!$my_security->checkPermission("GERENTE") && $my_security->checkPermission("ADMIN")): ?>
 							<?php if ($my_security->checkPermission("SUPERVISOR") && $session->userId !== "165001"): ?>
 								<div class="col-xl-4 w-50 d-flex flex-column gap-10">
 									<div class="card h-xl-45">
@@ -542,30 +541,36 @@
 												<span class="text-gray-400 mt-1 fw-semibold fs-6">Este Mês</span>
 											</h3>
 										</div>
+
 										<div class="p-3 mt-1 justify-content-center border-bottom gap-4 d-flex">
 											<h3 class="mt-3 text-gray-600">Meta individual:</h3>
 											<div class="d-flex gap-2 rounded shadow-sm">
-												<input id="" readonly value="<?= $meta ?>" style="width: 150px;"
-													class="form-control fw-bold fs-5 text-success"></input>
-												<i id="metaEdit" class="cursor-pointer bi mt-4 bi-pencil-square fs-3"></i>
-												<a id="metaLink"
-													href="<?php echo assetfolder ?>atualizar-meta/<?php echo $session->userId ?>/"
-													class="d-none mt-3"><i class="bi text-primary bi-check fs-1"></i></a>
+												<input readonly value="<?= $metaQuantidade ?>" style="width: 150px;"
+													class="form-control fw-bold fs-5 text-success metaQtdInput">
+
+												<i class="cursor-pointer bi mt-4 bi-pencil-square fs-3 metaQtdEdit"></i>
+
+												<a href="<?php echo assetfolder ?>atualizar-meta/<?php echo $session->userId ?>/"
+													class="d-none mt-3 metaQtdLink">
+													<i class="bi text-primary bi-check fs-1"></i>
+												</a>
 											</div>
 										</div>
+
 										<div class="p-4 gap-1 fs-5 d-flex justify-content-center">
 											<h2 class="d-flex align-items-center fs-5 px-2 py-1 rounded">
 												<?= $quantidadeAssessoresIndividual ?>
 											</h2>
 											<h3 class="text-gray-600">assessores</h3>
 										</div>
+
 										<div class="d-flex justify-content-center gap-6 flex-wrap mt-2">
 
 											<!-- Progresso -->
 											<div class="d-flex flex-column align-items-center text-center">
 												<h2 class="fs-5 text-muted mb-2">Progresso <i class="bi bi-arrow-up-right"></i></h2>
 												<div class="bg-light rounded shadow-sm px-5 py-4 w-100" style="max-width: 200px;">
-													<span class="fw-bold fs-5 text-success"><?= $progressoSupervisor ?>%</span>
+													<span class="fw-bold fs-5 text-success"><?= $progressoQuantidade ?>%</span>
 												</div>
 											</div>
 
@@ -574,7 +579,7 @@
 												<h2 class="fs-5 text-muted mb-2">Meta <i class="bi bi-flag"></i></h2>
 												<div class="bg-light rounded px-5 py-4 w-100 shadow-sm text-center"
 													style="max-width: 200px;">
-													<span class="fw-bold fs-5 text-success">13</span>
+													<span class="fw-bold fs-5 text-success"><?= $metaQuantidadeMensal ?></span>
 												</div>
 											</div>
 										</div>
@@ -582,13 +587,14 @@
 										<!-- Total Mensal -->
 										<div class="d-flex flex-column align-items-center mt-8 mb-15 w-100">
 											<h2 class="fs-4 mb-3 text-muted">Total Mensal</h2>
-											<a style="width: 200px" class="bg-light text-gray-800 rounded px-5 py-5 fs-1 fw-bold d-flex flex-column align-items-center shadow-sm"
+											<a style="width: 200px"
+												class="bg-light text-gray-800 rounded px-5 py-5 fs-1 fw-bold d-flex flex-column align-items-center shadow-sm"
 												href="<?php assetfolder ?>listar-propostas/0/0">
-												<?= $metaQuantidade ?>
+												<?= $feitoQuantidade ?>
 												<div class="progress mt-4 w-100" style="height: 16px;">
 													<div class="progress-bar bg-success" role="progressbar"
-														style="width: <?= $progressoSupervisor ?>%;"
-														aria-valuenow="<?= $progressoSupervisor ?>" aria-valuemin="0"
+														style="width: <?= $progressoQuantidade ?>%;"
+														aria-valuenow="<?= $progressoQuantidade ?>" aria-valuemin="0"
 														aria-valuemax="100">
 													</div>
 												</div>
@@ -598,6 +604,7 @@
 								</div>
 							<?php endif; ?>
 						<?php endif; ?>
+
 
 						<?php if ($my_security->checkPermission("GERENTE") || $my_security->checkPermission("ADMIN")): ?>
 							<div class="col-xl-4 w-50 d-flex flex-column gap-10">
@@ -680,15 +687,15 @@
 									<div class="card-header pt-7">
 										<h3 class="card-title align-items-start flex-column">
 											<span class="card-label fw-bold text-dark fs-4"><?php if ($my_security->checkPermission("FORMALIZACAO") || $my_security->checkPermission("ADMIN")):
-												echo "Progresso de Assessores";
-											else:
-												echo "Progresso de Equipe";
-											endif; ?></span>
+																								echo "Progresso de Assessores";
+																							else:
+																								echo "Progresso de Equipe";
+																							endif; ?></span>
 											<span class="text-muted mt-2 fw-semibold fs-6"><?php if ($my_security->checkPermission("FORMALIZACAO") || $my_security->checkPermission("ADMIN")):
-												echo "Progresso mensal de equipes";
-											else:
-												echo "Progresso mensal da equipe";
-											endif; ?></span>
+																								echo "Progresso mensal de equipes";
+																							else:
+																								echo "Progresso mensal da equipe";
+																							endif; ?></span>
 										</h3>
 									</div>
 
@@ -768,16 +775,16 @@
 					</div>
 				</div>
 			</div>
-		</div>
-		<div id="kt_app_footer" class="app-footer">
-			<div class="app-container container-fluid d-flex flex-column flex-md-row flex-center flex-md-stack py-3">
-				<div class="text-dark order-2 order-md-1">
-					<span class="text-muted fw-semibold me-1">2025&copy;</span>
-					<a href="<?= assetfolder?>" class="text-gray-800 text-hover-primary">QuidOne</a>
-				</div>
+	</div>
+	<div id="kt_app_footer" class="app-footer">
+		<div class="app-container container-fluid d-flex flex-column flex-md-row flex-center flex-md-stack py-3">
+			<div class="text-dark order-2 order-md-1">
+				<span class="text-muted fw-semibold me-1">2025&copy;</span>
+				<a href="<?= assetfolder ?>" class="text-gray-800 text-hover-primary">QuidOne</a>
 			</div>
 		</div>
 	</div>
+</div>
 <?php endif; ?>
 
 <script>
@@ -848,10 +855,10 @@
 					datasets: [{
 						label: 'Progresso da Meta (%)',
 						data: [<?php if (isset($progresso->percentual)):
-							echo $progresso->percentual;
-						else:
-							echo 0;
-						endif; ?>],
+									echo $progresso->percentual;
+								else:
+									echo 0;
+								endif; ?>],
 						backgroundColor: 'rgba(48, 221, 149, 0.6)',
 						borderColor: 'rgba(44, 230, 121, 1)',
 						borderWidth: 1
@@ -1014,6 +1021,39 @@
 			if (input.value.trim() !== "") {
 				input.value = formatBRLfromDatabase(input.value);
 			}
+		});
+	}
+
+	const metaQtdEditAll = document.querySelectorAll('.metaQtdEdit');
+
+	if (metaQtdEditAll) {
+		metaQtdEditAll.forEach((editBtn) => {
+			const input = editBtn.closest(".d-flex").querySelector(".metaQtdInput");
+			const link = editBtn.closest(".d-flex").querySelector(".metaQtdLink");
+
+			editBtn.addEventListener("click", () => {
+				input.removeAttribute("readonly");
+				input.value = "";
+				link.classList.remove("d-none");
+				input.focus();
+			});
+
+			link.addEventListener("click", (e) => {
+				e.preventDefault();
+
+				let valor = input.value.trim();
+				let intVal = parseInt(valor);
+
+				if (isNaN(intVal) || intVal < 0) {
+					alert("Digite uma quantidade válida!");
+					return;
+				}
+
+				const supervisorId = link.getAttribute("href").split("/").slice(-2, -1)[0];
+				link.href = `<?php echo assetfolder ?>atualizar-meta-qtd/${supervisorId}/${intVal}`;
+
+				window.location.href = link.href;
+			});
 		});
 	}
 </script>

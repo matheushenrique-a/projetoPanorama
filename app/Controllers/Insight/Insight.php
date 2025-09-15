@@ -641,6 +641,31 @@ class Insight extends BaseController
         return redirect()->to(urlInstitucional);
     }
 
+    public function atualizarMetasQTD($idSupervisor, $valor = 1)
+    {
+
+        $quantidadeEquipe = $this->m_insight->quantidadeEquipe($idSupervisor)['countAll'];
+
+        if ($quantidadeEquipe < 0) {
+            $metaMensal = 1;
+        } else {
+            $metaMensal = (float) $valor * $quantidadeEquipe;
+        }
+
+        $fieldUpdate = [
+            "meta_quantidade" => $valor,
+            "meta_quantidade_mensal" => $metaMensal
+        ];
+
+        $whereArrayUpdt = [
+            "supervisor" => $idSupervisor
+        ];
+
+        $this->dbMasterDefault->update("equipes", $fieldUpdate, $whereArrayUpdt);
+
+        return redirect()->to(urlInstitucional);
+    }
+
     public function criarProposta($idproduto, $action)
     {
         $dados['pageTitle'] = 'Adicionar proposta';
