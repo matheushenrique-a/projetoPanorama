@@ -66,7 +66,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <?php if ($my_security->checkPermission("ADMIN") || $my_security->checkPermission("FORMALIZACAO")): ?>
+                            <?php if ($my_security->checkPermission("ADMIN") || $my_security->checkPermission("FORMALIZACAO") || $my_security->checkPermission("GERENTE")): ?>
                                 <div class="d-flex flex-column gap-2">
                                     <span>Supervisor:</span>
                                     <select class="form-select input-group-solid " aria-label="" name="report_to">
