@@ -20,8 +20,7 @@
 				<div id="kt_app_content_container" class="app-container container-fluid">
 					<div class="row g-5 g-xl-10 mb-5">
 
-						<?php if (!$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("FORMALIZACAO") && $my_security->checkPermission("GERENTE")): ?>
-
+						<?php if (!$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("FORMALIZACAO")): ?>
 							<div>
 								<div class="card">
 									<div class="card-header pt-7 mb-3 pb-3">
