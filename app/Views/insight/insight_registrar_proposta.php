@@ -119,7 +119,17 @@
                         </div>
 
 
-                        <?php if ($produto->temValor == "1"): ?>
+                        <?php if ($produto->temValor == "1"):
+
+                            $valor = '';
+                            $readonly = '';
+
+                            if ($produto->valorFixo == "1") {
+                                $valor = $produto->valor;
+                                $readonly = 'readonly';
+                            }
+
+                        ?>
                             <div class="card" id="kt_chat_messenger">
                                 <div class="accordion" id="kt_accordion_1 ms-lg-7 ms-xl-10">
                                     <div class="accordion-item">
@@ -134,15 +144,15 @@
 
                                                             <div class="input-group" style="width: 220px;">
                                                                 <span class="input-group-text">Valor</span>
-                                                                <input type="text" value="" placeholder="R$ -" class="form-control fs-3 fw-bold" name="valorSaque" id="valorSaque" />
+                                                                <input type="text" value="<?= $valor ?>" placeholder="R$ -" class="form-control fs-3 fw-bold" name="valorSaque" id="valorSaque" <?= $readonly ?> />
                                                             </div>
                                                             <div class="input-group" style="width: 280px;">
                                                                 <span class="input-group-text">Valor da parcela</span>
-                                                                <input type="text" class="form-control fs-3 fw-bold" placeholder="R$ -" name="valorParcela" id="valorParcela" />
+                                                                <input type="text" class="form-control fs-3 fw-bold" value="<?= !empty($valor) ? '0' : '' ?>" placeholder="R$ -" name="valorParcela" id="valorParcela" <?= $readonly ?> />
                                                             </div>
                                                             <div class="input-group" style="width: 260px;">
                                                                 <span class="input-group-text">Quantidade de parcelas</span>
-                                                                <input type="text" class="form-control fs-3 fw-bold" name="parcelas" id="parcelas" />
+                                                                <input type="text" class="form-control fs-3 fw-bold" value="<?= !empty($valor) ? '0' : '' ?>" name="parcelas" id="parcelas" <?= $readonly ?> />
                                                             </div>
                                                         </div>
                                                     </div>

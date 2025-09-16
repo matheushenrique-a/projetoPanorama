@@ -17,7 +17,6 @@ $status = match ($row->status) {
     default     => "secondary"
 };
 
-
 $movimentation = match ($row->status) {
     "Análise"   => false,
     "Aprovada"  => false,
@@ -603,6 +602,9 @@ $movimentation = match ($row->status) {
             });
         }
 
+        formatarMoeda(inputValor);
+        formatarMoeda(inputParcela);
+
         function limparValorBrasileiro(valor) {
             if (!valor) return '';
             valor = valor.replace(/R\$|\s/g, '').replace(/\./g, '');
@@ -611,10 +613,6 @@ $movimentation = match ($row->status) {
 
             return valor;
         }
-
-
-        formatarMoeda(inputValor);
-        formatarMoeda(inputParcela);
 
         formEdit.addEventListener('submit', function() {
             [inputValor, inputParcela, inputTelefone].forEach(campo => {
