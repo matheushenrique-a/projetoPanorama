@@ -65,7 +65,7 @@ class Home extends BaseController
         $dados['labels'] = $labels;
         $dados['dados'] = $valores;
 
-        if ($this->session->role == "SUPERVISOR") {
+        if ($this->session->role == "SUPERVISOR" || $this->my_security->checkPermission("GERENTE")) {
             $totalMensal = $this->m_bmg->totalMensal();
 
             $buscarMeta = $this->m_insight->buscarMetaIndividual()['firstRow'] ?? "";
