@@ -673,19 +673,21 @@ class Insight extends BaseController
 
         if ($action == "salvar") {
             $assessor = $this->getpost('assessor');
-            $codigoEntidade = $this->getpost('codigoEntidade');
+            $codigoEntidade = $this->getpost('codigoEntidade') ?? '';
             $cpf = $this->getpost('cpf');
             $dataNascimento = $this->getpost('dataNascimento');
-            $matricula = $this->getpost('matricula');
+            $matricula = $this->getpost('matricula') ?? '';
             $nomeCliente = $this->getpost('nomeCliente');
             $ddd = $this->getpost('ddd');
             $telefone = $this->getpost('telefone');
             $adesao = $this->getpost('adesao');
-            $valorSaque = $this->getpost('valorSaque');
-            $valorParcela = $this->getpost('valorParcela');
-            $quantidadeParcelas = $this->getpost('parcelas');
+            $valorSaque = $this->getpost('valorSaque') ?? '0';
+            $valorParcela = $this->getpost('valorParcela') ?? '0';
+            $quantidadeParcelas = $this->getpost('parcelas') ?? '0';
             $observacao = $this->getpost('observacao') ?? "";
             $produto = $this->getpost('produto');
+            $valorSeguro = $this->getpost('valorSeguro') ?? '0';
+            $parcelasSeguro = $this->getpost('parcelasSeguro') ?? '0';
 
             $respostaInsight = $this->getpost('resposta_insight');
             $respostaPanorama = $this->getpost('resposta_panorama');
@@ -727,7 +729,9 @@ class Insight extends BaseController
                     'valor_parcela' => $valorParcela,
                     'numero_parcela' => $quantidadeParcelas,
                     'data_criacao' => date('Y-m-d H:i:s'),
-                    'userId' => $this->session->userId
+                    'userId' => $this->session->userId,
+                    'valorSeguro' => $valorSeguro,
+                    'parcelasSeguro' => $parcelasSeguro
                 ]);
             }
 

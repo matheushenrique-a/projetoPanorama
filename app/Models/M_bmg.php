@@ -446,6 +446,8 @@ class M_bmg extends Model
         $numero_parcela = $data['numero_parcela'];
         $matricula = $data['matricula'];
         $dataNascimento = $data['dataNascimento'];
+        $valorSeguro = $data['valorSeguro'];
+        $parcelasSeguro = $data['parcelasSeguro'];
 
         $userId = $data['userId'];
 
@@ -505,7 +507,9 @@ class M_bmg extends Model
             "matricula" => $matricula,
             "dataNascimento" => $dataNascimento,
             "id_owner" => $auditoriaId,
-            "userId" => $userId
+            "userId" => $userId,
+            'valorSeguro' => $valorSeguro,
+            'parcelasSeguro' => $parcelasSeguro
         ]);
 
         $movimentacao = [

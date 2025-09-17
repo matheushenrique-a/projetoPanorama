@@ -36,6 +36,7 @@
                                     <select class="form-control" name="modalidades" id="modalidades">
                                         <option value="mensal">Mensal</option>
                                         <option value="anual">Anual</option>
+                                        <option value="outro">Outro</option>
                                     </select>
                                 </div>
 

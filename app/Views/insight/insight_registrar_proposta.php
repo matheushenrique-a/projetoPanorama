@@ -138,6 +138,8 @@
                                 $parcelas = '1';
                             } elseif ($produto->modalidades == "anual") {
                                 $parcelas = '12';
+                            } elseif ($produto->modalidades == "outro") {
+                                $parcelas = '';
                             }
 
                             if ($produto->modalidadeSeguro == "mensal") {
