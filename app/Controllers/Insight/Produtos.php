@@ -44,7 +44,12 @@ class Produtos extends \App\Controllers\BaseController
                 'temValor' => $this->request->getPost('temValor') ? 1 : 0,
                 'motivosPendencia' => json_encode($this->request->getPost('motivos_pendencia') ?? []),
                 'motivosCancelamento' => json_encode($this->request->getPost('motivos_cancelamento') ?? []),
-                'ativo' => $this->getpost('ativo') ? 1 : 0
+                'ativo' => $this->getpost('ativo') ? 1 : 0,
+                'valorSeguro' => $this->getpost('valorSeguro') ?? '',
+                'temValorSeguro' => $this->getpost('temSeguro') ? 1 : 0,
+                'modalidadeSeguro' => $this->getpost('modalidadeSeguro') ?? '',
+                'temValorPrimario' => $this->getpost('valorPrimario') ? 1 : 0,
+
             ];
 
             $this->m_insight->insertProduto($data);

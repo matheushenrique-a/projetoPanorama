@@ -47,9 +47,55 @@
                             <div class="d-flex gap-15">
                                 <div class="input-group mb-2" style="width: 300px;">
                                     <span class="input-group-text">Valor</span>
-                                    <input type="text" name="valor" class="form-control" />
+                                    <input type="text" value="0" name="valor" class="form-control" />
                                 </div>
-                                <div class="d-flex gap-6 mt-1 mb-4">
+                                <div class="d-flex gap-10">
+                                    <div class="form-check">
+                                        <input class="form-check-input" name="valorFixo" type="checkbox" value="1" id="valorFixo" />
+                                        <label class="form-check-label" for="valorFixo">
+                                            Valor fixo?
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" name="temValor" type="checkbox" value="1" id="temValor" checked />
+                                        <label class="form-check-label" for="temValor">
+                                            Registrar valor?
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" name="valorPrimario" type="checkbox" value="1" id="valorPrimario" checked/>
+                                        <label class="form-check-label" for="valorPrimario">
+                                            Tem valor primário?
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex flex-column gap-10">
+                                <div class="d-flex gap-10 mt-10">
+                                    <div class="form-check">
+                                        <input class="form-check-input" name="temSeguro" type="checkbox" value="1" id="temSeguro" />
+                                        <label class="form-check-label" for="temSeguro">
+                                            Tem seguro?
+                                        </label>
+                                    </div>
+                                </div>
+                                <div id="valorSeguro" style="width: 600px;" class="d-flex gap-10 d-none">
+                                    <div class="input-group mb-2">
+                                        <span class="input-group-text">Modalidade seguro</span>
+                                        <select class="form-control" name="modalidadeSeguro" id="modalidadeSeguro">
+                                            <option value=""></option>
+                                            <option value="mensal">Mensal</option>
+                                            <option value="anual">Anual</option>
+                                        </select>
+                                    </div>
+                                    <div class="input-group mb-2" style="width: 400px;">
+                                        <span class="input-group-text">Valor de seguro</span>
+                                        <input type="text" name="valorSeguro" class="form-control" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex flex-column gap-10">
+                                <div class="d-flex gap-6 mt-10">
                                     <div class="form-check">
                                         <input class="form-check-input" name="dadosBancarios" type="checkbox" value="1" id="bmg" />
                                         <label class="form-check-label" for="flexCheckChecked">
@@ -69,49 +115,33 @@
                                         </label>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="d-flex gap-10">
-                                <div class="form-check">
-                                    <input class="form-check-input" name="valorFixo" type="checkbox" value="1" id="valorFixo" />
-                                    <label class="form-check-label" for="valorFixo">
-                                        Valor fixo?
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" name="temValor" type="checkbox" value="1" id="temValor" />
-                                    <label class="form-check-label" for="temValor">
-                                        Registrar valor?
-                                    </label>
-                                </div>
-
-                            </div>
-
-                            <div class="d-flex gap-10">
-                                <div class="d-flex flex-column gap-2">
-                                    <span>Motivos de pendência:</span>
-                                    <select class="form-select fs-5 fw-bold" name="motivoPendenciaSelect" id="motivoPendenciaSelect">
-                                        <option value="">Selecione...</option>
-                                        <?php foreach ($pendencias as $p): ?>
-                                            <option value="<?= $p->nome_pendencia ?>"><?= $p->nome_pendencia ?></option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                    <div id="pendenciasSelecionadas" class="mt-3 d-flex flex-column"></div>
-                                </div>
-                                <div class="d-flex flex-column gap-2">
-                                    <span>Motivos de cancelamento:</span>
-                                    <select class="form-select fs-5 fw-bold" name="motivoCancelamentoSelect" id="motivoCancelamentoSelect">
-                                        <option value="">Selecione...</option>
-                                        <?php foreach ($cancelamentos as $c): ?>
-                                            <option value="<?= $c->nome_pendencia ?>"><?= $c->nome_pendencia ?></option>
-                                        <?php endforeach; ?>
-                                    </select>
-                                    <div id="cancelamentosSelecionados" class="mt-3 d-flex flex-column"></div>
-                                </div>
-                                <div class="form-check form-switch form-check-custom form-check-solid">
-                                    <input class="form-check-input" type="checkbox" value="1" id="ativo" name="ativo" checked="checked" />
-                                    <label class="form-check-label" for="ativo">
-                                        Ativo?
-                                    </label>
+                                <div class="d-flex gap-5">
+                                    <div class="d-flex flex-column gap-2">
+                                        <span>Motivos de pendência:</span>
+                                        <select class="form-select fs-5 fw-bold" name="motivoPendenciaSelect" id="motivoPendenciaSelect">
+                                            <option value="">Selecione...</option>
+                                            <?php foreach ($pendencias as $p): ?>
+                                                <option value="<?= $p->nome_pendencia ?>"><?= $p->nome_pendencia ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                        <div id="pendenciasSelecionadas" class="mt-3 d-flex flex-column"></div>
+                                    </div>
+                                    <div class="d-flex flex-column gap-2">
+                                        <span>Motivos de cancelamento:</span>
+                                        <select class="form-select fs-5 fw-bold" name="motivoCancelamentoSelect" id="motivoCancelamentoSelect">
+                                            <option value="">Selecione...</option>
+                                            <?php foreach ($cancelamentos as $c): ?>
+                                                <option value="<?= $c->nome_pendencia ?>"><?= $c->nome_pendencia ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                        <div id="cancelamentosSelecionados" class="mt-3 d-flex flex-column"></div>
+                                    </div>
+                                    <div class="form-check form-switch form-check-custom form-check-solid">
+                                        <input class="form-check-input" type="checkbox" value="1" id="ativo" name="ativo" checked="checked" />
+                                        <label class="form-check-label" for="ativo">
+                                            Ativo?
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                             <div class="d-flex align-items-center" style="width: 500px;">
@@ -141,6 +171,19 @@
 </div>
 
 <script>
+    const temSeguro = document.getElementById('temSeguro')
+    const valorSeguro = document.getElementById('valorSeguro')
+
+    temSeguro.addEventListener('change', () => {
+        if (temSeguro.checked) {
+            valorSeguro.classList.remove('d-none')
+            valorSeguro.classList.add('d-flex')
+        } else {
+            valorSeguro.classList.remove('d-flex')
+            valorSeguro.classList.add('d-none')
+        }
+    })
+
     function setupSelect(selectId, containerId, inputName) {
         const select = document.getElementById(selectId);
         const container = document.getElementById(containerId);

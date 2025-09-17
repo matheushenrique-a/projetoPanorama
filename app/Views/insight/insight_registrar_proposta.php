@@ -119,16 +119,38 @@
                         </div>
 
 
-                        <?php if ($produto->temValor == "1"):
+                        <?php if ($produto->temValorPrimario == "1" || $produto->temValorSeguro == "1"):
 
                             $valor = '';
                             $readonly = '';
+                            $valorSeguro = '';
+                            $parcelasSeguro = '';
+
+                            if (!empty($produto->valor)) {
+                                $valor = $produto->valor;
+                            }
 
                             if ($produto->valorFixo == "1") {
-                                $valor = $produto->valor;
                                 $readonly = 'readonly';
                             }
 
+                            if ($produto->modalidades == "mensal") {
+                                $parcelas = '1';
+                            } elseif ($produto->modalidades == "anual") {
+                                $parcelas = '12';
+                            }
+
+                            if ($produto->modalidadeSeguro == "mensal") {
+                                $parcelasSeguro = '1';
+                            } elseif ($produto->modalidadeSeguro == "anual") {
+                                $parcelasSeguro = '12';
+                            } else {
+                                $parcelasSeguro = '0';
+                            }
+
+                            if (!empty($produto->valorSeguro)) {
+                                $valorSeguro = $produto->valorSeguro;
+                            }
                         ?>
                             <div class="card" id="kt_chat_messenger">
                                 <div class="accordion" id="kt_accordion_1 ms-lg-7 ms-xl-10">
@@ -139,22 +161,35 @@
                                         <div id="kt_accordion_1_body_13" class="accordion-collapse collapse show" aria-labelledby="kt_accordion_1_header_1" data-bs-parent="#kt_accordion_1">
                                             <div id="kt_accordion_1_body_13" class="accordion-collapse collapse show" aria-labelledby="kt_accordion_1_header_1" data-bs-parent="#kt_accordion_1">
                                                 <div class="px-15 py-8 justify-content-center d-flex flex-column gap-4">
-                                                    <div class="d-flex gap-5">
-                                                        <div class="d-flex gap-4 justify-content-around w-100 mx-10">
-
-                                                            <div class="input-group" style="width: 220px;">
-                                                                <span class="input-group-text">Valor</span>
-                                                                <input type="text" value="<?= $valor ?>" placeholder="R$ -" class="form-control fs-3 fw-bold" name="valorSaque" id="valorSaque" <?= $readonly ?> />
+                                                    <div class="d-flex flex-column gap-5">
+                                                        <?php if ($produto->temValorPrimario == "1"): ?>
+                                                            <div class="d-flex gap-4 justify-content-around w-100 mx-10">
+                                                                <div class="input-group" style="width: 220px;">
+                                                                    <span class="input-group-text">Valor</span>
+                                                                    <input type="text" value="<?= $valor ?>" placeholder="R$ -" class="form-control fs-3 fw-bold" name="valorSaque" id="valorSaque" <?= $readonly ?> />
+                                                                </div>
+                                                                <div class="input-group" style="width: 280px;">
+                                                                    <span class="input-group-text">Valor da parcela</span>
+                                                                    <input type="text" class="form-control fs-3 fw-bold" value="<?= !empty($valor) ? '0' : '' ?>" placeholder="R$ -" name="valorParcela" id="valorParcela" <?= $readonly ?> />
+                                                                </div>
+                                                                <div class="input-group" style="width: 260px;">
+                                                                    <span class="input-group-text">Quantidade de parcelas</span>
+                                                                    <input type="text" class="form-control fs-3 fw-bold" value="<?= $parcelas ?>" name="parcelas" id="parcelas" <?= $readonly ?> />
+                                                                </div>
                                                             </div>
-                                                            <div class="input-group" style="width: 280px;">
-                                                                <span class="input-group-text">Valor da parcela</span>
-                                                                <input type="text" class="form-control fs-3 fw-bold" value="<?= !empty($valor) ? '0' : '' ?>" placeholder="R$ -" name="valorParcela" id="valorParcela" <?= $readonly ?> />
+                                                        <?php endif; ?>
+                                                        <?php if ($produto->temValorSeguro == "1"): ?>
+                                                            <div class="d-flex gap-4 justify-content-around w-100 mx-10">
+                                                                <div class="input-group" style="width: 260px;">
+                                                                    <span class="input-group-text">Valor de Seguro</span>
+                                                                    <input type="text" class="form-control fs-3 fw-bold" placeholder="" value="<?= $valorSeguro ?>" name="valorSeguro" id="valorSeguro" />
+                                                                </div>
+                                                                <div class="input-group" style="width: 260px;">
+                                                                    <span class="input-group-text">Parcelas Seguro</span>
+                                                                    <input type="text" class="form-control fs-3 fw-bold" placeholder="" value="<?= $parcelasSeguro ?>" name="parcelasSeguro" id="parcelasSeguro" />
+                                                                </div>
                                                             </div>
-                                                            <div class="input-group" style="width: 260px;">
-                                                                <span class="input-group-text">Quantidade de parcelas</span>
-                                                                <input type="text" class="form-control fs-3 fw-bold" value="<?= !empty($valor) ? '0' : '' ?>" name="parcelas" id="parcelas" <?= $readonly ?> />
-                                                            </div>
-                                                        </div>
+                                                        <?php endif; ?>
                                                     </div>
                                                 </div>
                                             </div>
