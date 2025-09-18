@@ -37,7 +37,7 @@ class Home extends BaseController
     public function index()
     {
         $this->checkSession();
-        $dados['pageTitle'] = "Insight Home";
+        $dados['pageTitle'] = "Home";
 
         $dados['report_to'] = $this->session->report_to;
         $dados['role'] = $this->session->role;
@@ -45,7 +45,7 @@ class Home extends BaseController
 
         $resultados = $this->m_bmg->countPropostasPorDia();
         $resultadosEquipe = $this->m_bmg->countPropostasPorDiaEquipe();
-
+        
         $labels = [];
         $valores = [];
 

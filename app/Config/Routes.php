@@ -74,6 +74,8 @@ $routes->match(['get', 'post'], '/pendencias-edit/(:any)', 'Insight\Produtos::pe
 $routes->match(['get', 'post'], '/excluir-pendencia/(:any)', 'Insight\Produtos::excluirPendencia/$1');
 $routes->match(['get', 'post'], '/excluir-produto/(:any)', 'Insight\Produtos::excluirProduto/$1');
 $routes->match(['get', 'post'], '/editar-produto/(:any)/(:any)', 'Insight\Produtos::editarProduto/$1/$2');
+$routes->match(['get', 'post'], '/fila-auditoria', 'Insight\Auditoria::filaAuditoria');
+$routes->match(['get', 'post'], '/switch-ativo/(:any)', 'Insight\Auditoria::mudarStatus/$1');
 
 //THEONE
 $routes->match(['get', 'post'], '/extrairdados', 'Theone\ExtrairDados::extrair');

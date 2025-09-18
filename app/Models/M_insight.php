@@ -329,6 +329,11 @@ class M_insight extends Model
         return $this->dbMasterDefault->selectAll($table);
     }
 
+    public function getAllThat($table, $where)
+    {
+        return $this->dbMasterDefault->selectAll($table, $where);
+    }
+
     public function deletePendencia($id)
     {
         return $this->dbMasterDefault->delete('quid_pendencias', ['id' => $id]);

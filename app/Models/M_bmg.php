@@ -451,26 +451,33 @@ class M_bmg extends Model
 
         $userId = $data['userId'];
 
-        $auditores = [
-            "1" => "165022",
-            "2" => "165021",
-            "3" => "165020",
-            "4" => "165019",
-            "5" => "165017"
-        ];
+        // $auditores = [
+        //     "1" => "165022",
+        //     "2" => "165021",
+        //     "3" => "165020",
+        //     "4" => "165019",
+        //     "5" => "165017"
+        // ];
+
+        // Pegar todos os auditores ativos
+        $auditores = $this->m_insight->getAllThat('user_account', [
+            'role'   => 'AUDITOR',
+            'status' => 'ATIVO'
+        ]);
 
         $totalAuditores = count($auditores);
 
+        // Pegar o último id_owner usado
         $checkIdOwner = $this->m_insight->checkIdOwner();
         $currentIndex = (int)$checkIdOwner['firstRow']->id_owner;
 
-        $nextIndex = $currentIndex + 1;
-        if ($nextIndex > $totalAuditores) {
-            $nextIndex = 1;
-        }
-        $auditoriaId = $auditores[$nextIndex];
+        // Calcular o próximo índice (circular)
+        $nextIndex = ($currentIndex % $totalAuditores); 
 
-        $this->m_insight->atualizarOwner($nextIndex);
+        // Pegar auditor da lista
+        $auditoriaId = $auditores[$nextIndex]->id; 
+
+        $this->m_insight->atualizarOwner($nextIndex + 1); 
 
         if (isset($data['assessor'])) {
             if ($this->session->role == "SUPERVISOR") {

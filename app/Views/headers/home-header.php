@@ -925,6 +925,38 @@
 									</div>
 								<?php endif; ?>
 
+								<?php if ($my_security->checkPermission("ADMIN") || $session->userId == "165001"): ?>
+									<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
+										<span class="menu-link">
+											<span class="menu-icon">
+												<span class="svg-icon svg-icon-2">
+													<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+														<path fill-rule="evenodd" d="M12 5a7 7 0 0 0-7 7v1.17c.313-.11.65-.17 1-.17h2a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1H6a3 3 0 0 1-3-3v-6a9 9 0 0 1 18 0v6a3 3 0 0 1-3 3h-2a1 1 0 0 1-1-1v-6a1 1 0 0 1 1-1h2c.35 0 .687.06 1 .17V12a7 7 0 0 0-7-7Z" clip-rule="evenodd" />
+													</svg>
+												</span>
+											</span>
+											<span class="menu-title">FORMALIZAÇÃO</span>
+											<span class="menu-arrow"></span>
+										</span>
+										<div class="menu-sub menu-sub-accordion">
+											<div class="menu-item">
+												<a class="menu-link" href="<?php echo assetfolder; ?>fila-auditoria">
+													<span class="menu-bullet">
+														<svg class="w-6 h-6 text-gray-800 dark:text-white"
+															aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
+															height="24" fill="currentColor" viewBox="0 0 24 24">
+															<path fill-rule="evenodd"
+																d="M10.271 5.575C8.967 4.501 7 5.43 7 7.12v9.762c0 1.69 1.967 2.618 3.271 1.544l5.927-4.881a2 2 0 0 0 0-3.088l-5.927-4.88Z"
+																clip-rule="evenodd" />
+														</svg>
+													</span>
+													<span class="menu-title">Controle de Fila</span>
+												</a>
+											</div>
+										</div>
+									</div>
+								<?php endif; ?>
+
 								<?php if ($my_security->checkPermission("ADMIN")): ?>
 									<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
 										<span class="menu-link">
