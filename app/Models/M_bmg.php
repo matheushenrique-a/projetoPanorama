@@ -475,7 +475,7 @@ class M_bmg extends Model
         $nextIndex = ($currentIndex % $totalAuditores); 
 
         // Pegar auditor da lista
-        $auditoriaId = $auditores[$nextIndex]->id; 
+        $auditoriaId = $auditores[$nextIndex]->userId; 
 
         $this->m_insight->atualizarOwner($nextIndex + 1); 
 

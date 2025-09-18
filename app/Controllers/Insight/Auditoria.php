@@ -45,6 +45,6 @@ class Auditoria extends \App\Controllers\BaseController
             $this->dbMaster->update('user_account', ['status' => 'ATIVO'], ['userId' => $id]);
         }
 
-        return redirect()->to(urlInstitucional . '/fila-auditoria');
+        return redirect()->to(urlInstitucional . 'fila-auditoria');
     }
 }
