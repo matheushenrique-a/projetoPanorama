@@ -607,8 +607,9 @@ class Insight extends BaseController
 
         $dados['arquivos'] = $this->dbMasterDefault->selectArquivos($id);
 
-        $dados['produto'] = $this->m_insight->getProdutoName($propostas['firstRow']->produto)['firstRow'];
-
+        $dadosProduto = $this->m_insight->getProdutoName($propostas['firstRow']->produto)['firstRow'];
+        
+        $dados['produto'] = $dadosProduto;
         $dados['propostas'] = $propostas;
         $dados['movimento'] = $movimento;
         $dados['session'] = $this->session;
