@@ -447,17 +447,10 @@ class M_bmg extends Model
         $matricula = $data['matricula'];
         $dataNascimento = $data['dataNascimento'];
 
+        $produtoBase = $data['produtoBase'];
+
         $userId = $data['userId'];
 
-        // $auditores = [
-        //     "1" => "165022",
-        //     "2" => "165021",
-        //     "3" => "165020",
-        //     "4" => "165019",
-        //     "5" => "165017"
-        // ];
-
-        // Pegar todos os auditores ativos
         $auditores = $this->m_insight->getAllThat('user_account', [
             'role'   => 'AUDITOR',
             'status' => 'ATIVO'
@@ -513,6 +506,7 @@ class M_bmg extends Model
             "dataNascimento" => $dataNascimento,
             "id_owner" => $auditoriaId,
             "userId" => $userId,
+            "produtoBase" => $produtoBase
         ]);
 
         $movimentacao = [

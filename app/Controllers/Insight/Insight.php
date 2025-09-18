@@ -254,6 +254,8 @@ class Insight extends BaseController
             $betweenCheck = [];
         }
 
+        $whereCheck['produtoBase'] = 1;
+
         if ($this->session->role == "OPERADOR") {
             $whereCheck["assessor"] = $this->session->nickname;
         }
@@ -731,6 +733,7 @@ class Insight extends BaseController
                     'numero_parcela' => $quantidadeParcelas,
                     'data_criacao' => date('Y-m-d H:i:s'),
                     'userId' => $this->session->userId,
+                    'produtoBase' => 1
                 ]);
 
                 foreach ($produtosSelecionados as $product) {
@@ -751,6 +754,7 @@ class Insight extends BaseController
                         'numero_parcela' => $this->getpost($product['numeroParcela']),
                         'data_criacao' => date('Y-m-d H:i:s'),
                         'userId' => $this->session->userId,
+                        'produtoBase' => 0
                     ]);
                 }
             } else {
@@ -771,6 +775,7 @@ class Insight extends BaseController
                     'numero_parcela' => $quantidadeParcelas,
                     'data_criacao' => date('Y-m-d H:i:s'),
                     'userId' => $this->session->userId,
+                    'produtoBase' => 1
                 ]);
             }
 
