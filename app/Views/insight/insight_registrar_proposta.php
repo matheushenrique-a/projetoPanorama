@@ -177,16 +177,6 @@
 
                         <div class="d-flex gap-5 mt-2 flex-end">
                             <div class="d-flex flex-column align-items-center mt-6 mb-0 gap-4">
-                                <span class="text-center fw-semibold fs-6">Enviar para Insight?</span>
-                                <div class="btn-group" role="group" aria-label="Sim ou Não">
-                                    <input type="radio" class="btn-check" name="resposta_insight" id="btn-sim-insight" value="sim" autocomplete="off" checked>
-                                    <label class="btn btn-outline-success" for="btn-sim-insight">Sim</label>
-
-                                    <input type="radio" class="btn-check" name="resposta_insight" id="btn-nao-insight" value="nao" autocomplete="off">
-                                    <label class="btn btn-outline-danger" for="btn-nao-insight">Não</label>
-                                </div>
-                            </div>
-                            <div class="d-flex flex-column align-items-center mt-6 mb-0 gap-4">
                                 <span class="text-center fw-semibold fs-6">Enviar para Panorama?</span>
                                 <div class="btn-group" role="group" aria-label="Sim ou Não">
                                     <input type="radio" class="btn-check" name="resposta_panorama" id="btn-sim-panorama" value="sim" autocomplete="off" checked>

@@ -608,7 +608,7 @@ class Insight extends BaseController
         $dados['arquivos'] = $this->dbMasterDefault->selectArquivos($id);
 
         $dadosProduto = $this->m_insight->getProdutoName($propostas['firstRow']->produto)['firstRow'];
-        
+
         $dados['produto'] = $dadosProduto;
         $dados['propostas'] = $propostas;
         $dados['movimento'] = $movimento;
@@ -687,10 +687,7 @@ class Insight extends BaseController
             $quantidadeParcelas = $this->getpost('parcelas') ?? '0';
             $observacao = $this->getpost('observacao') ?? "";
             $produto = $this->getpost('produto');
-            $valorSeguro = $this->getpost('valorSeguro') ?? '0';
-            $parcelasSeguro = $this->getpost('parcelasSeguro') ?? '0';
 
-            $respostaInsight = $this->getpost('resposta_insight');
             $respostaPanorama = $this->getpost('resposta_panorama');
 
             $returnData = [];
@@ -713,28 +710,26 @@ class Insight extends BaseController
                 ]);
             }
 
-            if ($respostaInsight == "sim") {
-                $this->m_bmg->gravar_proposta_bmg_database([
-                    'assessor' => $assessor,
-                    'produto' => $produto,
-                    'report_to' => $this->session->report_to,
-                    'codigo_entidade' => $codigoEntidade,
-                    'cpf' => $cpf,
-                    'dataNascimento' => $dataNascimento,
-                    'panorama_id' => $returnData["proposta"] ?? "",
-                    'matricula' => $matricula,
-                    'nomeCliente' => $nomeCliente,
-                    'telefone' => $ddd . $telefone,
-                    'adesao' => $adesao,
-                    'valorSaque' => $valorSaque,
-                    'valor_parcela' => $valorParcela,
-                    'numero_parcela' => $quantidadeParcelas,
-                    'data_criacao' => date('Y-m-d H:i:s'),
-                    'userId' => $this->session->userId,
-                    'valorSeguro' => $valorSeguro,
-                    'parcelasSeguro' => $parcelasSeguro
-                ]);
-            }
+
+            $this->m_bmg->gravar_proposta_bmg_database([
+                'assessor' => $assessor,
+                'produto' => $produto,
+                'report_to' => $this->session->report_to,
+                'codigo_entidade' => $codigoEntidade,
+                'cpf' => $cpf,
+                'dataNascimento' => $dataNascimento,
+                'panorama_id' => $returnData["proposta"] ?? "",
+                'matricula' => $matricula,
+                'nomeCliente' => $nomeCliente,
+                'telefone' => $ddd . $telefone,
+                'adesao' => $adesao,
+                'valorSaque' => $valorSaque,
+                'valor_parcela' => $valorParcela,
+                'numero_parcela' => $quantidadeParcelas,
+                'data_criacao' => date('Y-m-d H:i:s'),
+                'userId' => $this->session->userId,
+            ]);
+
 
             return redirect()->to(urlInstitucional . 'listar-propostas/0/0');
         }

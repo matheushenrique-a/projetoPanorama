@@ -1028,7 +1028,7 @@
 									</div>
 								<?php endif; ?>
 
-								<?php if ($my_security->checkPermission("ADMIN")): ?>
+								<?php if ($my_security->checkPermission("ADMIN") || $session->userId == "165001"): ?>
 									<div data-kt-menu-trigger="click" class="menu-item menu-accordion">
 										<span class="menu-link">
 											<span class="menu-icon">
