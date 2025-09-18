@@ -145,10 +145,10 @@ $movimentation = match ($row->status) {
                                                             <?php if (!$my_security->checkPermission("FORMALIZACAO") && !$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("ADMIN")): echo "readonly";
                                                             endif; ?> />
                                                     </div>
-                                                    <?php if ($produto->temValorPrimario == "1"): ?>
+                                                    <?php if ($produto->temValor == "1"): ?>
                                                         <div class="d-flex gap-4">
                                                             <div class="mb-2">
-                                                                <span class="fw-bold mb-1">Valor saque:</span>
+                                                                <span class="fw-bold mb-1">Valor:</span>
                                                                 <input type="text" class="form-control form-control-solid valorSaque" name="valorSaque" value="<?= $row->valor ?>" data-original="<?= $row->valor ?>"
                                                                     <?php if (!$my_security->checkPermission("FORMALIZACAO") && !$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("ADMIN")): echo "readonly";
                                                                     endif; ?> />
@@ -162,22 +162,6 @@ $movimentation = match ($row->status) {
                                                             <div class="mb-2">
                                                                 <span class="fw-bold mb-1">Quantidade parcelas:</span>
                                                                 <input type="text" class="form-control form-control-solid parcelas" name="parcelas" value="<?= $row->numero_parcela ?>" data-original="<?= $row->numero_parcela ?>"
-                                                                    <?php if (!$my_security->checkPermission("FORMALIZACAO") && !$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("ADMIN")): echo "readonly";
-                                                                    endif; ?> />
-                                                            </div>
-                                                        </div>
-                                                    <?php endif; ?>
-                                                    <?php if ($produto->temValorSeguro == "1"): ?>
-                                                        <div class="d-flex gap-4">
-                                                            <div class="mb-2">
-                                                                <span class="fw-bold mb-1">Valor seguro:</span>
-                                                                <input type="text" class="form-control form-control-solid valorSeguro" name="valorSeguro" value="<?= $row->valorSeguro ?>" data-original="<?= $row->valorSeguro ?>"
-                                                                    <?php if (!$my_security->checkPermission("FORMALIZACAO") && !$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("ADMIN")): echo "readonly";
-                                                                    endif; ?> />
-                                                            </div>
-                                                            <div class="mb-2">
-                                                                <span class="fw-bold mb-1">Parcelas seguro:</span>
-                                                                <input type="text" class="form-control form-control-solid parcelasSeguro" name="parcelasSeguro" value="<?= $row->parcelasSeguro ?>" data-original="<?= $row->parcelasSeguro ?>"
                                                                     <?php if (!$my_security->checkPermission("FORMALIZACAO") && !$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("ADMIN")): echo "readonly";
                                                                     endif; ?> />
                                                             </div>
@@ -428,7 +412,7 @@ $movimentation = match ($row->status) {
 
     formEdit.addEventListener('submit', function() {
         inputConteudo.value = pasteArea.innerHTML;
-        console.log("form enviado"); 
+        console.log("form enviado");
     });
 
     document.addEventListener('DOMContentLoaded', function() {

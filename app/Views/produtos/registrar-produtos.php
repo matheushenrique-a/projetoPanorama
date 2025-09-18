@@ -63,36 +63,6 @@
                                             Registrar valor?
                                         </label>
                                     </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" name="valorPrimario" type="checkbox" value="1" id="valorPrimario" checked/>
-                                        <label class="form-check-label" for="valorPrimario">
-                                            Tem valor primário?
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="d-flex flex-column gap-10">
-                                <div class="d-flex gap-10 mt-10">
-                                    <div class="form-check">
-                                        <input class="form-check-input" name="temSeguro" type="checkbox" value="1" id="temSeguro" />
-                                        <label class="form-check-label" for="temSeguro">
-                                            Tem seguro?
-                                        </label>
-                                    </div>
-                                </div>
-                                <div id="valorSeguro" style="width: 600px;" class="d-flex gap-10 d-none">
-                                    <div class="input-group mb-2">
-                                        <span class="input-group-text">Modalidade seguro</span>
-                                        <select class="form-control" name="modalidadeSeguro" id="modalidadeSeguro">
-                                            <option value=""></option>
-                                            <option value="mensal">Mensal</option>
-                                            <option value="anual">Anual</option>
-                                        </select>
-                                    </div>
-                                    <div class="input-group mb-2" style="width: 400px;">
-                                        <span class="input-group-text">Valor de seguro</span>
-                                        <input type="text" name="valorSeguro" class="form-control" />
-                                    </div>
                                 </div>
                             </div>
                             <div class="d-flex flex-column gap-10">
