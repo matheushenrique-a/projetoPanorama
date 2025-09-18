@@ -254,6 +254,7 @@ class Insight extends BaseController
             $betweenCheck = [];
         }
 
+        // alterar para admin caso necessário
         $whereCheck['produtoBase'] = 1;
 
         if ($this->session->role == "OPERADOR") {
@@ -607,11 +608,14 @@ class Insight extends BaseController
         $propostas = $this->dbMasterDefault->select('quid_propostas', ['idquid_propostas' => $id]);
         $movimento = $this->dbMasterDefault->select('historico_propostas', ['id_proposta' => $id]);
 
+        $propostasAgregadas = $this->dbMasterDefault->selectAll('quid_propostas', ['adesao' => $propostas['firstRow']->adesao]);
+
         $dados['arquivos'] = $this->dbMasterDefault->selectArquivos($id);
 
         $dadosProduto = $this->m_insight->getProdutoName($propostas['firstRow']->produto)['firstRow'];
 
         $dados['produto'] = $dadosProduto;
+        $dados['propostasAgregadas'] = $propostasAgregadas;
         $dados['propostas'] = $propostas;
         $dados['movimento'] = $movimento;
         $dados['session'] = $this->session;

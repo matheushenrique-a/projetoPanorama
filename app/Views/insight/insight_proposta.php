@@ -77,27 +77,37 @@ $movimentation = match ($row->status) {
                                         <li class="nav-item">
                                             <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_3">Arquivos</a>
                                         </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" data-bs-toggle="tab" href="#kt_tab_pane_4">Propostas vinculadas</a>
+                                        </li>
                                     </ul>
                                 </div>
+
                                 <div class="tab-content p-6" id="myTabContent">
                                     <div class="tab-pane fade show active" id="kt_tab_pane_1" role="tabpanel">
                                         <div>
                                             <?php if (isset($ultimaLinha) && $ultimaLinha->observacao !== null && $ultimaLinha->observacao !== ""): ?>
                                                 <div class="alert alert-dark text-gray-800 mb-6">
-                                                    <p class="fs-6 text-gray-800 fw-bold border-bottom border-gray-800 p-2 fst-italic"><i class="fs-3 text-gray-800 bi bi-clipboard2-x"></i> <?= $row->resumo ?></p>
+                                                    <p class="fs-6 text-gray-800 fw-bold border-bottom border-gray-800 p-2 fst-italic">
+                                                        <i class="fs-3 text-gray-800 bi bi-clipboard2-x"></i> <?= $row->resumo ?>
+                                                    </p>
                                                     <h4 class="text-dark">Observação:</h4>
                                                     <?= html_entity_decode($ultimaLinha->observacao) ?>
                                                 </div>
                                             <?php endif; ?>
+
                                             <div class="d-flex justify-content-between">
                                                 <span class="fw-bold badge badge-<?= $status ?> text-black fs-5 mb-4"><?= $row->status ?></span>
                                                 <div>
                                                     <td class="observacao"><?= html_entity_decode($linha->observacao ?? '') ?> </td>
                                                 </div>
                                                 <?php if ($movimentation && $session->role !== "AUDITOR"): ?>
-                                                    <button type="submit" value="statusAudit" name="auditoria" class="btn btn-warning text-black">Enviar Auditoria <i class="bi text-black bi-arrow-up-right"></i></button>
+                                                    <button type="submit" value="statusAudit" name="auditoria" class="btn btn-warning text-black">
+                                                        Enviar Auditoria <i class="bi text-black bi-arrow-up-right"></i>
+                                                    </button>
                                                 <?php endif; ?>
                                             </div>
+
                                             <div class="modal-body d-flex mt-4 gap-8">
                                                 <div class="w-50">
                                                     <div class="mb-2">
@@ -106,12 +116,14 @@ $movimentation = match ($row->status) {
                                                             <?php if (!$my_security->checkPermission("FORMALIZACAO") && !$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("ADMIN")): echo "readonly";
                                                             endif; ?> />
                                                     </div>
+
                                                     <div class="mb-2">
                                                         <span class="fw-bold mb-1">Nome Cliente:</span>
                                                         <input type="text" class="form-control form-control-solid nome" name="nome" value="<?= $row->nome ?>" data-original="<?= $row->nome ?>"
                                                             <?php if (!$my_security->checkPermission("FORMALIZACAO") && !$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("ADMIN")): echo "readonly";
                                                             endif; ?> />
                                                     </div>
+
                                                     <div class="d-flex gap-4">
                                                         <div class="mb-2">
                                                             <span class="fw-bold mb-1">CPF:</span>
@@ -121,9 +133,7 @@ $movimentation = match ($row->status) {
                                                         </div>
                                                         <div>
                                                             <span class="fw-bold mb-1">Celular:</span>
-                                                            <?php
-                                                            $telFormatado = formatarTelefone($row->telefone);
-                                                            ?>
+                                                            <?php $telFormatado = formatarTelefone($row->telefone); ?>
                                                             <input type="text" class="form-control form-control-solid telefone" name="telefone" id="telefone" value="<?= $telFormatado ?>" data-original="<?= $telFormatado ?>"
                                                                 <?php if (!$my_security->checkPermission("FORMALIZACAO") && !$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("ADMIN")): echo "readonly";
                                                                 endif; ?> />
@@ -138,6 +148,7 @@ $movimentation = match ($row->status) {
 
                                                     <input type="hidden" name="id" value="<?= $row->idquid_propostas ?>">
                                                 </div>
+
                                                 <div class="w-50">
                                                     <div class="mb-2">
                                                         <span class="fw-bold mb-1">Produto:</span>
@@ -145,6 +156,7 @@ $movimentation = match ($row->status) {
                                                             <?php if (!$my_security->checkPermission("FORMALIZACAO") && !$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("ADMIN")): echo "readonly";
                                                             endif; ?> />
                                                     </div>
+
                                                     <?php if ($produto->temValor == "1"): ?>
                                                         <div class="d-flex gap-4">
                                                             <div class="mb-2">
@@ -167,6 +179,7 @@ $movimentation = match ($row->status) {
                                                             </div>
                                                         </div>
                                                     <?php endif; ?>
+
                                                     <div class="d-flex gap-4">
                                                         <div class="mb-2">
                                                             <span class="fw-bold mb-1">Código Panorama:</span>
@@ -181,14 +194,14 @@ $movimentation = match ($row->status) {
                                                                 endif; ?> />
                                                         </div>
                                                     </div>
+
                                                     <input type="hidden" name="userId" value="<?= $row->userId ?>" />
                                                 </div>
                                             </div>
                                         </div>
+
                                         <?php if ($my_security->checkPermission("SUPERVISOR") || $my_security->checkPermission("FORMALIZACAO")): ?>
-
-                                            <div class=" modal-footer d-flex gap-4 justify-content-between px-6 pb-4 mt-6">
-
+                                            <div class="modal-footer d-flex gap-4 justify-content-between px-6 pb-4 mt-6">
                                                 <?php if ($my_security->checkPermission("ADMIN") || $my_security->checkPermission("FORMALIZACAO")): ?>
                                                     <div class="d-flex gap-4">
                                                         <div style="width: 200px;">
@@ -201,28 +214,28 @@ $movimentation = match ($row->status) {
                                                                 <option value="Análise" <?= $row->status == 'Análise' ? 'selected' : '' ?>>Análise</option>
                                                                 <option value="Cancelada" <?= $row->status == 'Cancelada' ? 'selected' : '' ?>>Cancelada</option>
                                                             </select>
+
                                                             <div id="motivoDiv" style="display: none;" class="mt-2">
                                                                 <label for="status_<?= $row->idquid_propostas ?>" class="form-label">Motivo</label>
                                                                 <select class="form-select" name="motivoCancelamento">
                                                                     <?php
                                                                     $motivosCancelamento = json_decode($produto->motivosCancelamento, true) ?? [];
+                                                                    foreach ($motivosCancelamento as $optionCancelamento):
                                                                     ?>
-
-                                                                    <?php foreach ($motivosCancelamento as $optionCancelamento): ?>
                                                                         <option value="<?= htmlspecialchars($optionCancelamento) ?>" <?= $row->motivoCancelamento == $optionCancelamento ? 'selected' : '' ?>>
                                                                             <?= htmlspecialchars($optionCancelamento) ?>
                                                                         </option>
                                                                     <?php endforeach; ?>
                                                                 </select>
                                                             </div>
+
                                                             <div id="resumoDiv" style="display: none;" class="mt-2">
                                                                 <label for="status_<?= $row->idquid_propostas ?>" class="form-label">Pendência</label>
                                                                 <select class="form-select" id="status_<?= $row->resumo ?>" name="resumo">
                                                                     <?php
                                                                     $motivosPendencia = json_decode($produto->motivosPendencia, true) ?? [];
+                                                                    foreach ($motivosPendencia as $optionPendencias):
                                                                     ?>
-
-                                                                    <?php foreach ($motivosPendencia as $optionPendencias): ?>
                                                                         <option value="<?= htmlspecialchars($optionPendencias) ?>" <?= $row->resumo == $optionPendencias ? 'selected' : '' ?>>
                                                                             <?= htmlspecialchars($optionPendencias) ?>
                                                                         </option>
@@ -230,15 +243,15 @@ $movimentation = match ($row->status) {
                                                                 </select>
                                                             </div>
                                                         </div>
+
                                                         <div class="flex-grow-1">
                                                             <label class="form-label">Observação:</label>
-                                                            <div class="form-control fs-8" id="pasteArea" contenteditable="true"
-                                                                style="min-height:120px; width: 300px">
-                                                            </div>
+                                                            <div class="form-control fs-8" id="pasteArea" contenteditable="true" style="min-height:120px; width: 300px"></div>
                                                             <input type="hidden" name="conteudo" id="conteudo">
                                                         </div>
                                                     </div>
                                                 <?php endif; ?>
+
                                                 <div class="d-flex mt-20 gap-4">
                                                     <div>
                                                         <button type="button" class="btn btn-danger d-flex align-items-center gap-2" onclick="confirmarExclusao('<?= $row->idquid_propostas ?>')">
@@ -246,6 +259,7 @@ $movimentation = match ($row->status) {
                                                             <span class="text-white fw-semibold">Excluir Proposta</span>
                                                         </button>
                                                     </div>
+
                                                     <button type="submit" form="formEdit" id="saveChanges" class="btn btn-primary">
                                                         Salvar Alterações
                                                     </button>
@@ -255,109 +269,104 @@ $movimentation = match ($row->status) {
                                     </div>
 
                                     <div class="tab-pane fade" id="kt_tab_pane_2" role="tabpanel">
-                                        <div>
-                                            <div class="">
-                                                <div class="table-responsive">
-                                                    <table class="table table-rounded table-striped table-hover align-middle border gy-4 gx-4">
-                                                        <thead class="bg-light">
-                                                            <tr class="fw-bold fs-6 text-gray-800 text-uppercase">
-                                                                <th><i class="bi bi-clock me-2 text-dark"></i>Horário</th>
-                                                                <th><i class="bi bi-person-circle me-2 text-dark"></i>Usuário</th>
-                                                                <th class="text-center"><i class="bi bi-flag me-2 text-dark"></i>Status</th>
-                                                                <th class="text-center"><i class="bi bi-file-text me-2 text-dark"></i>Resumo</th>
-                                                                <th class="w-25"><i class="bi bi-pencil-square me-2 text-dark"></i>Observação</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <?php foreach ($moveRow as $linha):
-                                                                $statusMove = match ($linha->status_atual) {
-                                                                    "Análise"       => "info",
-                                                                    "Aprovada"      => "success",
-                                                                    "Cancelada"     => "danger",
-                                                                    "Pendente"      => "warning",
-                                                                    "Adesão"        => "dark",
-                                                                    "Auditoria"     => "warning",
-                                                                    default         => "secondary"
-                                                                };
+                                        <div class="table-responsive">
+                                            <table class="table table-rounded table-striped table-hover align-middle border gy-4 gx-4">
+                                                <thead class="bg-light">
+                                                    <tr class="fw-bold fs-6 text-gray-800 text-uppercase">
+                                                        <th><i class="bi bi-clock me-2 text-dark"></i>Horário</th>
+                                                        <th><i class="bi bi-person-circle me-2 text-dark"></i>Usuário</th>
+                                                        <th class="text-center"><i class="bi bi-flag me-2 text-dark"></i>Status</th>
+                                                        <th class="text-center"><i class="bi bi-file-text me-2 text-dark"></i>Resumo</th>
+                                                        <th class="w-25"><i class="bi bi-pencil-square me-2 text-dark"></i>Observação</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <?php foreach ($moveRow as $linha):
+                                                        $statusMove = match ($linha->status_atual) {
+                                                            "Análise" => "info",
+                                                            "Aprovada" => "success",
+                                                            "Cancelada" => "danger",
+                                                            "Pendente" => "warning",
+                                                            "Adesão" => "dark",
+                                                            "Auditoria" => "warning",
+                                                            default => "secondary"
+                                                        };
 
-                                                                if ($linha->usuario !== null) {
+                                                        if ($linha->usuario !== null) {
+                                                            $nomes = explode(' ', trim($linha->usuario));
+                                                        }
 
-                                                                    $nomes = explode(' ', trim($linha->usuario));
-                                                                }
+                                                        $usuario = $session->nickname;
 
-                                                                $usuario = $session->nickname;
-
-
-                                                                if ($session->role == "OPERADOR") {
-                                                                    if ($usuario == $linha->usuario) {
-                                                                        if (count($nomes) > 1) {
-                                                                            $usuarioView = $nomes[0] . ' ' . end($nomes);
-                                                                        } else {
-                                                                            $usuarioView = $linha->usuario;
-                                                                        }
-                                                                    } else {
-                                                                        $usuarioView = "*****";
-                                                                    }
+                                                        if ($session->role == "OPERADOR") {
+                                                            if ($usuario == $linha->usuario) {
+                                                                if (count($nomes) > 1) {
+                                                                    $usuarioView = $nomes[0] . ' ' . end($nomes);
                                                                 } else {
-                                                                    if ($linha->usuario == null) {
-                                                                        $usuarioView = "";
-                                                                    } else if (count($nomes) > 1) {
-                                                                        $usuarioView = $nomes[0] . ' ' . end($nomes);
-                                                                    } else {
-                                                                        $usuarioView = $linha->usuario;
-                                                                    }
+                                                                    $usuarioView = $linha->usuario;
                                                                 }
-                                                            ?>
-                                                                <tr>
-                                                                    <td class="text-gray-600"><?= date('d/m/Y - H:i', strtotime($linha->horario)) ?></td>
-                                                                    <td class="fw-semibold text-gray-700">
-                                                                        <?php echo $usuarioView ?>
-                                                                    </td>
-                                                                    <td class="text-center">
-                                                                        <span class="badge badge-light-<?= $statusMove ?> fs-7">
-                                                                            <?= esc($linha->status_atual) ?>
-                                                                        </span>
-                                                                    </td>
-                                                                    <td class="text-gray-700"><?= esc($linha->resumo) ?></td>
-                                                                    <td class="observacao text-gray-700"">
-                                                                        <?= html_entity_decode($linha->observacao ?? '') ?>
-                                                                    </td>
-                                                                </tr>
-                                                            <?php endforeach; ?>
-                                                        </tbody>
-                                                    </table>
+                                                            } else {
+                                                                $usuarioView = "*****";
+                                                            }
+                                                        } else {
+                                                            if ($linha->usuario == null) {
+                                                                $usuarioView = "";
+                                                            } else if (count($nomes) > 1) {
+                                                                $usuarioView = $nomes[0] . ' ' . end($nomes);
+                                                            } else {
+                                                                $usuarioView = $linha->usuario;
+                                                            }
+                                                        }
+                                                    ?>
+                                                        <tr>
+                                                            <td class="text-gray-600"><?= date('d/m/Y - H:i', strtotime($linha->horario)) ?></td>
+                                                            <td class="fw-semibold text-gray-700"><?= $usuarioView ?></td>
+                                                            <td class="text-center">
+                                                                <span class="badge badge-light-<?= $statusMove ?> fs-7"><?= esc($linha->status_atual) ?></span>
+                                                            </td>
+                                                            <td class="text-gray-700"><?= esc($linha->resumo) ?></td>
+                                                            <td class="observacao text-gray-700"><?= html_entity_decode($linha->observacao ?? '') ?></td>
+                                                        </tr>
+                                                    <?php endforeach; ?>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
 
-                                                </div>
+                                    <div class="tab-pane fade show mb-10" id="kt_tab_pane_3" role="tabpanel">
+                                        <div class="mb-10">
+                                            <h3 class="text-gray-700"><?= $qtdArquivos ?> Arquivos anexados</h3>
+                                            <div class="mt-5 d-flex flex-column gap-4">
+                                                <?php foreach ($arquivos as $arquivo): ?>
+                                                    <div style="width: 330px;" class="d-flex gap-3 p-2 border rounded align-items-center">
+                                                        <a href="<?= assetfolder ?>insight/download/<?= $arquivo->id ?>/<?= $arquivo->id_proposta ?>">
+                                                            <i class="bi ms-1 fs-6 px-2 rounded p-1 text-primary bi-download"></i>
+                                                        </a>
+                                                        <p class="my-auto fw-semibold text-gray-700"><i class="bi bi-file-earmark"></i> <?= esc($arquivo->nome_original) ?></p>
+                                                        <div class="d-flex gap-3 ms-auto justify-content-end">
+                                                            <p class="my-auto text-gray-700"><?= date('d/m/Y', strtotime($arquivo->created_at)) ?></p>
+                                                            <a href="<?= assetfolder ?>insight/excluir/<?= $arquivo->id ?>/<?= $arquivo->id_proposta ?>">
+                                                                <i class="bi text-danger bi-trash me-3"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                <?php endforeach; ?>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class=" mb-10 tab-pane fade show" id="kt_tab_pane_3" role="tabpanel">
-                                                                        <div class="mb-10">
-                                                                            <h3 class="text-gray-700"><?= $qtdArquivos ?> Arquivos anexados</h3>
-                                                                            <div class="mt-5 d-flex flex-column gap-4">
-                                                                                <?php foreach ($arquivos as $arquivo): ?>
-                                                                                    <div style="width: 330px;" class="d-flex gap-3 p-2 border rounded align-items-center">
-
-                                                                                        <a href="<?= assetfolder ?>insight/download/<?= $arquivo->id ?>/<?= $arquivo->id_proposta ?>">
-                                                                                            <i class="bi ms-1 fs-6 px-2 rounded p-1 text-primary bi-download"></i>
-                                                                                        </a>
-
-                                                                                        <p class="my-auto fw-semibold text-gray-700"><i class="bi bi-file-earmark"></i> <?= esc($arquivo->nome_original) ?></p>
-
-                                                                                        <div class="d-flex gap-3 ms-auto justify-content-end">
-                                                                                            <p class="my-auto text-gray-700"><?= date('d/m/Y', strtotime($arquivo->created_at)) ?></p>
-
-                                                                                            <a href="<?= assetfolder ?>insight/excluir/<?= $arquivo->id ?>/<?= $arquivo->id_proposta ?>">
-                                                                                                <i class="bi text-danger bi-trash me-3"></i>
-                                                                                            </a>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                <?php endforeach; ?>
-                                                                            </div>
-                                                                        </div>
-                                                </div>
+                                    <div class="tab-pane fade show mb-10" id="kt_tab_pane_4" role="tabpanel">
+                                        <div class="mb-10">
+                                            <h3 class="text-gray-700">Propostas vinculadas</h3>
+                                            <div class="mt-5 d-flex flex-column gap-4">
+                                                <?php foreach ($propostasAgregadas as $props): ?>
+                                                    <p><?= $props->idquid_propostas ?></p>
+                                                <?php endforeach; ?>
                                             </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </form>
+
                             <?php if ($my_security->checkPermission("ADMIN") || $my_security->checkPermission("FORMALIZACAO")): ?>
                                 <div id="form-upload" class="p-8 border-top d-none">
                                     <form enctype="multipart/form-data" method="post" action="<?php echo assetfolder ?>insight-anexar-arquivo/<?= $row->idquid_propostas ?>">
