@@ -1,3 +1,9 @@
+<?php
+
+$productName = $produto->nomeProduto;
+
+?>
+
 <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
     <div class="d-flex flex-column flex-column-fluid">
         <div id="kt_app_toolbar" class="app-toolbar py-3 py-lg-6">
@@ -103,7 +109,7 @@
                                                         </div>
                                                         <div class="input-group" style="width: 300px;">
                                                             <span class="input-group-text">Produto</span>
-                                                            <input type="text" class="form-control fs-4 fw-bold" placeholder="" name="produto" id="produto" value="<?= $produto->nomeProduto ?>" readonly />
+                                                            <input type="text" class="form-control fs-4 fw-bold" placeholder="" name="produto" id="produto" value="<?= $productName ?>" readonly />
                                                         </div>
                                                         <div class="input-group" style="width: 500px;">
                                                             <span class="input-group-text">Assessor</span>
@@ -119,7 +125,7 @@
                         </div>
 
 
-                        <?php if ($produto->temValorPrimario == "1" || $produto->temValorSeguro == "1"):
+                        <?php if ($produto->temValor == "1"):
 
                             $valor = '';
                             $readonly = '';
@@ -154,11 +160,11 @@
                                                             <div class="d-flex gap-4 justify-content-around w-100 mx-10">
                                                                 <div class="input-group" style="width: 220px;">
                                                                     <span class="input-group-text">Valor</span>
-                                                                    <input type="text" value="<?= $valor ?>" placeholder="R$ -" class="form-control fs-3 fw-bold" name="valorSaque" id="valorSaque" <?= $readonly ?> />
+                                                                    <input type="text" value="<?= $valor ?>" placeholder="R$ -" class="form-control fs-3 fw-bold valorSaque" name="valorSaque" id="valorSaque" <?= $readonly ?> />
                                                                 </div>
                                                                 <div class="input-group" style="width: 280px;">
                                                                     <span class="input-group-text">Valor da parcela</span>
-                                                                    <input type="text" class="form-control fs-3 fw-bold" value="<?= !empty($valor) ? '0' : '' ?>" placeholder="R$ -" name="valorParcela" id="valorParcela" <?= $readonly ?> />
+                                                                    <input type="text" class="form-control fs-3 fw-bold valorParcela" value="<?= !empty($valor) ? '0' : '' ?>" placeholder="R$ -" name="valorParcela" id="valorParcela" <?= $readonly ?> />
                                                                 </div>
                                                                 <div class="input-group" style="width: 260px;">
                                                                     <span class="input-group-text">Quantidade de parcelas</span>
@@ -174,6 +180,26 @@
                                 </div>
                             </div>
                         <?php endif; ?>
+                        <div class="mt-4 d-flex justify-content-end">
+                            <?php
+                            $produtosArray = [];
+                            foreach ($produtos as $produto) {
+                                $produtosArray[] = $produto->nomeProduto;
+                            }
+                            ?>
+
+                            <div class="mt-4 position-relative">
+                                <button id="dropdownButton" type="button" class="btn btn-primary">+</button>
+                                <ul id="dropdownMenu" class="dropdown-menu position-absolute" style="display:none; right:0;">
+                                </ul>
+                            </div>
+                        </div>
+
+                        <input type="hidden" name="totalAdicionados" id="totalAdicionados">
+                        <input type="hidden" name="produtosSelecionados" id="produtosSelecionados">
+                        <div id="produtosAdicionados">
+
+                        </div>
 
                         <div class="d-flex gap-5 mt-2 flex-end">
                             <div class="d-flex flex-column align-items-center mt-6 mb-0 gap-4">
@@ -226,6 +252,12 @@
 
     const produto = document.getElementById('produto')
 
+    let selecionados = [];
+    let number = 1;
+
+    const inputTotal = document.getElementById('totalAdicionados');
+    const inputSelecionados = document.getElementById('produtosSelecionados');
+
     form.addEventListener("submit", function(event) {
         const insight = document.querySelector('input[name="resposta_insight"]:checked')?.value;
         const panorama = document.querySelector('input[name="resposta_panorama"]:checked')?.value;
@@ -265,7 +297,6 @@
         telefone.value = value;
     })
 
-
     form.addEventListener('submit', function(e) {
         const cpf = cpfInput.value.trim();
         if (cpf.length !== 14) {
@@ -294,23 +325,20 @@
 
         }
 
+        inputTotal.value = number;
+        inputSelecionados.value = JSON.stringify(selecionados);
+
     });
 
-    if (valorSaqueInput && valorParcela) {
-        valorSaqueInput.addEventListener('input', () => {
-            let value = valorSaqueInput.value.replace(/\D/g, '');
-            valorSaqueInput.value = value.length > 2 ?
-                (parseFloat(value) / 100).toFixed(2).replace(',', '.') :
-                value;
-        });
-
-        valorParcelaInput.addEventListener('input', () => {
-            let value = valorParcelaInput.value.replace(/\D/g, '');
-            valorParcelaInput.value = value.length > 2 ?
-                (parseFloat(value) / 100).toFixed(2).replace(',', '.') :
-                value;
-        });
-    }
+    document.addEventListener('input', function(e) {
+        if (e.target.classList.contains('valorSaque') || e.target.classList.contains('valorParcela')) {
+            let valor = e.target.value.replace(/\D/g, '');
+            if (valor.length > 2) {
+                valor = (parseFloat(valor) / 100).toFixed(2);
+            }
+            e.target.value = valor.replace('.', '.');
+        }
+    });
 
     function extrairDados() {
         let texto = document.getElementById("entrada").value;
@@ -362,4 +390,85 @@
         dddInput.value = dados.Telefone1.ddd;
         telefoneInput.value = dados.Telefone1.numero;
     }
+
+    let produtos = <?= json_encode($produtosArray) ?>;
+    let produtoAtual = <?= json_encode($productName) ?>;
+
+    const divProdutosAdicionados = document.getElementById('produtosAdicionados')
+
+    const dropdownButton = document.getElementById('dropdownButton');
+    const dropdownMenu = document.getElementById('dropdownMenu');
+
+    function renderDropdown() {
+        dropdownMenu.innerHTML = "";
+
+        produtos
+            .filter(produto => !selecionados.some(obj => obj.produto === produto) && produto !== produtoAtual)
+            .forEach(produto => {
+                const li = document.createElement('li');
+                li.innerHTML = `<a class="dropdown-item">${produto}</a>`;
+                li.addEventListener('click', () => {
+                    number++;
+                    selecionados.push({
+                        produto: produto,
+                        valor: "valor" + number,
+                        parcela: "valorParcela" + number,
+                        numeroParcela: "parcelas" + number,
+                    });
+                    renderDropdown();
+
+                    divProdutosAdicionados.innerHTML += `<div class="card mt-4" id="kt_chat_messenger">
+                                <div class="accordion" id="kt_accordion_1 ms-lg-7 ms-xl-10">
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="kt_accordion_1_header_1">
+                                            <button class="accordion-button fs-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#kt_accordion_1_body_${number}" aria-expanded="true" aria-controls="kt_accordion_abordagem_body_1">${produto}</button>
+                                        </h2>
+                                        <div id="kt_accordion_1_body_${number}" class="accordion-collapse collapse show" aria-labelledby="kt_accordion_1_header_1" data-bs-parent="#kt_accordion_1">
+                                            <div id="kt_accordion_1_body_${number}" class="accordion-collapse collapse show" aria-labelledby="kt_accordion_1_header_1" data-bs-parent="#kt_accordion_1">
+                                                <div class="px-15 py-8 justify-content-center d-flex flex-column gap-4">
+                                                    <div class="d-flex flex-column gap-5">
+                                                        <div class="d-flex gap-4 justify-content-around w-100 mx-10">
+                                                            <div class="input-group" style="width: 220px;">
+                                                                <span class="input-group-text">Valor</span>
+                                                                <input type="text" value="" placeholder="R$ -" class="form-control fs-3 fw-bold valorSaque" name="valor${number}" id="" required/>
+                                                            </div>
+                                                            <div class="input-group" style="width: 280px;">
+                                                                <span class="input-group-text">Valor da parcela</span>
+                                                                <input type="text" class="form-control fs-3 fw-bold valorParcela" value="" placeholder="R$ -" name="valorParcela${number}" id="" required/>
+                                                            </div>
+                                                            <div class="input-group" style="width: 260px;">
+                                                                <span class="input-group-text">Quantidade de parcelas</span>
+                                                                <input type="text" class="form-control fs-3 fw-bold" value="" name="parcelas${number}" id="" required/>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>`
+                });
+                dropdownMenu.appendChild(li);
+            });
+
+        // Se não sobrar nenhum item
+        if (dropdownMenu.children.length === 0) {
+            const li = document.createElement('li');
+            li.innerHTML = `<span class="dropdown-item text-muted">Nenhum item disponível</span>`;
+            dropdownMenu.appendChild(li);
+        }
+    }
+
+    dropdownButton.addEventListener('click', () => {
+        dropdownMenu.style.display = dropdownMenu.style.display === 'none' ? 'block' : 'none';
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!dropdownButton.contains(e.target) && !dropdownMenu.contains(e.target)) {
+            dropdownMenu.style.display = 'none';
+        }
+    });
+
+    renderDropdown();
 </script>

@@ -688,6 +688,9 @@ class Insight extends BaseController
             $observacao = $this->getpost('observacao') ?? "";
             $produto = $this->getpost('produto');
 
+            $totalAdicionados = $this->getpost('totalAdicionados');
+            $produtosSelecionados = json_decode($this->request->getPost('produtosSelecionados'), true) ?? [];
+
             $respostaPanorama = $this->getpost('resposta_panorama');
 
             $returnData = [];
@@ -710,33 +713,76 @@ class Insight extends BaseController
                 ]);
             }
 
+            if ($totalAdicionados > 1) {
+                $this->m_bmg->gravar_proposta_bmg_database([
+                    'assessor' => $assessor,
+                    'produto' => $produto,
+                    'report_to' => $this->session->report_to,
+                    'codigo_entidade' => $codigoEntidade,
+                    'cpf' => $cpf,
+                    'dataNascimento' => $dataNascimento,
+                    'panorama_id' => $returnData["proposta"] ?? "",
+                    'matricula' => $matricula,
+                    'nomeCliente' => $nomeCliente,
+                    'telefone' => $ddd . $telefone,
+                    'adesao' => $adesao,
+                    'valorSaque' => $valorSaque,
+                    'valor_parcela' => $valorParcela,
+                    'numero_parcela' => $quantidadeParcelas,
+                    'data_criacao' => date('Y-m-d H:i:s'),
+                    'userId' => $this->session->userId,
+                ]);
 
-            $this->m_bmg->gravar_proposta_bmg_database([
-                'assessor' => $assessor,
-                'produto' => $produto,
-                'report_to' => $this->session->report_to,
-                'codigo_entidade' => $codigoEntidade,
-                'cpf' => $cpf,
-                'dataNascimento' => $dataNascimento,
-                'panorama_id' => $returnData["proposta"] ?? "",
-                'matricula' => $matricula,
-                'nomeCliente' => $nomeCliente,
-                'telefone' => $ddd . $telefone,
-                'adesao' => $adesao,
-                'valorSaque' => $valorSaque,
-                'valor_parcela' => $valorParcela,
-                'numero_parcela' => $quantidadeParcelas,
-                'data_criacao' => date('Y-m-d H:i:s'),
-                'userId' => $this->session->userId,
-            ]);
-
+                foreach ($produtosSelecionados as $product) {
+                    $this->m_bmg->gravar_proposta_bmg_database([
+                        'assessor' => $assessor,
+                        'produto' => $product['produto'],
+                        'report_to' => $this->session->report_to,
+                        'codigo_entidade' => $codigoEntidade,
+                        'cpf' => $cpf,
+                        'dataNascimento' => $dataNascimento,
+                        'panorama_id' => $returnData["proposta"] ?? "",
+                        'matricula' => $matricula,
+                        'nomeCliente' => $nomeCliente,
+                        'telefone' => $ddd . $telefone,
+                        'adesao' => $adesao,
+                        'valorSaque' => $this->getpost($product['valor']),
+                        'valor_parcela' => $this->getpost($product['parcela']),
+                        'numero_parcela' => $this->getpost($product['numeroParcela']),
+                        'data_criacao' => date('Y-m-d H:i:s'),
+                        'userId' => $this->session->userId,
+                    ]);
+                }
+            } else {
+                $this->m_bmg->gravar_proposta_bmg_database([
+                    'assessor' => $assessor,
+                    'produto' => $produto,
+                    'report_to' => $this->session->report_to,
+                    'codigo_entidade' => $codigoEntidade,
+                    'cpf' => $cpf,
+                    'dataNascimento' => $dataNascimento,
+                    'panorama_id' => $returnData["proposta"] ?? "",
+                    'matricula' => $matricula,
+                    'nomeCliente' => $nomeCliente,
+                    'telefone' => $ddd . $telefone,
+                    'adesao' => $adesao,
+                    'valorSaque' => $valorSaque,
+                    'valor_parcela' => $valorParcela,
+                    'numero_parcela' => $quantidadeParcelas,
+                    'data_criacao' => date('Y-m-d H:i:s'),
+                    'userId' => $this->session->userId,
+                ]);
+            }
 
             return redirect()->to(urlInstitucional . 'listar-propostas/0/0');
         }
 
         $produto = $this->m_insight->getProduto($idproduto);
 
+        $produtos = $this->m_insight->getAllThat('quid_produtos', ['ATIVO' => '1']);
+
         $dados['produto'] = $produto;
+        $dados['produtos'] = $produtos;
 
         return $this->loadpage('insight/insight_registrar_proposta', $dados);
     }
