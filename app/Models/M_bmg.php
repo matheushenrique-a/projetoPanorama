@@ -463,12 +463,14 @@ class M_bmg extends Model
         $currentIndex = (int)$checkIdOwner['firstRow']->id_owner;
 
         // Calcular o próximo índice (circular)
-        $nextIndex = ($currentIndex % $totalAuditores); 
+        $nextIndex = ($currentIndex % $totalAuditores);
 
         // Pegar auditor da lista
-        $auditoriaId = $auditores[$nextIndex]->userId; 
+        $auditoriaId = $auditores[$nextIndex]->userId;
 
-        $this->m_insight->atualizarOwner($nextIndex + 1); 
+        $att = $data['att'];
+
+        $this->m_insight->atualizarOwner($nextIndex + $att);
 
         if (isset($data['assessor'])) {
             if ($this->session->role == "SUPERVISOR") {

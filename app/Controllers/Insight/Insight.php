@@ -748,28 +748,32 @@ class Insight extends BaseController
                     'numero_parcela' => $quantidadeParcelas,
                     'data_criacao' => date('Y-m-d H:i:s'),
                     'userId' => $this->session->userId,
-                    'produtoBase' => 1
+                    'produtoBase' => 1,
+                    'att' => 0,
                 ]);
+
+                $last = end($produtosSelecionados);
 
                 foreach ($produtosSelecionados as $product) {
                     $this->m_bmg->gravar_proposta_bmg_database([
-                        'assessor' => $assessor,
-                        'produto' => $product['produto'],
-                        'report_to' => $this->session->report_to,
+                        'assessor'        => $assessor,
+                        'produto'         => $product['produto'],
+                        'report_to'       => $this->session->report_to,
                         'codigo_entidade' => $codigoEntidade,
-                        'cpf' => $cpf,
-                        'dataNascimento' => $dataNascimento,
-                        'panorama_id' => "",
-                        'matricula' => $matricula,
-                        'nomeCliente' => $nomeCliente,
-                        'telefone' => $ddd . $telefone,
-                        'adesao' => $adesao,
-                        'valorSaque' => $this->getpost($product['valor']),
-                        'valor_parcela' => $this->getpost($product['parcela']),
-                        'numero_parcela' => $this->getpost($product['numeroParcela']),
-                        'data_criacao' => date('Y-m-d H:i:s'),
-                        'userId' => $this->session->userId,
-                        'produtoBase' => 0
+                        'cpf'             => $cpf,
+                        'dataNascimento'  => $dataNascimento,
+                        'panorama_id'     => "",
+                        'matricula'       => $matricula,
+                        'nomeCliente'     => $nomeCliente,
+                        'telefone'        => $ddd . $telefone,
+                        'adesao'          => $adesao,
+                        'valorSaque'      => $this->getpost($product['valor']),
+                        'valor_parcela'   => $this->getpost($product['parcela']),
+                        'numero_parcela'  => $this->getpost($product['numeroParcela']),
+                        'data_criacao'    => date('Y-m-d H:i:s'),
+                        'userId'          => $this->session->userId,
+                        'produtoBase'     => 0,
+                        'att'             => ($product === $last ? 1 : 0),
                     ]);
                 }
             } else {
@@ -790,7 +794,8 @@ class Insight extends BaseController
                     'numero_parcela' => $quantidadeParcelas,
                     'data_criacao' => date('Y-m-d H:i:s'),
                     'userId' => $this->session->userId,
-                    'produtoBase' => 1
+                    'produtoBase' => 1,
+                    'att' => 1,
                 ]);
             }
 

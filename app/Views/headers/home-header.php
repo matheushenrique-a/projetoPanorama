@@ -807,7 +807,7 @@
 										</span>
 										<div class="menu-sub menu-sub-accordion">
 											<div class="menu-item">
-												<a class="menu-link" href="<?php echo assetfolder; ?>bmg-saque/0">
+												<a class="menu-link" href="<?php echo assetfolder; ?>bmg-saque/0" style="pointer-events: none; opacity: 0.5;">
 													<span class="menu-bullet">
 														<svg class="w-6 h-6 text-gray-800 dark:text-white"
 															aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
