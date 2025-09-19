@@ -13,7 +13,6 @@ $status = match ($row->status) {
     "Pendente"  => "warning",
     "Adesão"   => "dark",
     "Auditoria" => "warning",
-    "TED Devolvida" => "warning",
     default     => "secondary"
 };
 
@@ -24,7 +23,6 @@ $movimentation = match ($row->status) {
     "Pendente"  => true,
     "Adesão"   => true,
     "Auditoria" => false,
-    "TED Devolvida" => true,
     default     => false
 }
 
@@ -101,7 +99,7 @@ $movimentation = match ($row->status) {
                                                 <div>
                                                     <td class="observacao"><?= html_entity_decode($linha->observacao ?? '') ?> </td>
                                                 </div>
-                                                <?php if ($movimentation && $session->role !== "AUDITOR"): ?>
+                                                <?php if ($movimentation && $session->role !== "AUDITOR" && $row->produtoBase == '1'): ?>
                                                     <button type="submit" value="statusAudit" name="auditoria" class="btn btn-warning text-black">
                                                         Enviar Auditoria <i class="bi text-black bi-arrow-up-right"></i>
                                                     </button>
@@ -368,6 +366,7 @@ $movimentation = match ($row->status) {
                                                                 <div class="d-flex gap-3 ms-auto justify-content-end">
                                                                     <p class="my-auto text-gray-700"><?= date('d/m/Y', strtotime($props->data_criacao)) ?></p>
                                                                 </div>
+                                                                <input type="hidden" name="ids[]" value="<?= $props->idquid_propostas ?>">
                                                             </div>
                                                         </a>
                                                     <?php endif; ?>

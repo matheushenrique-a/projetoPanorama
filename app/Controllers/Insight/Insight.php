@@ -73,7 +73,7 @@ class Insight extends BaseController
         }
 
         if ($action == "alterar-status") {
-            $id = $this->request->getPost('id');
+            $idProposta = $this->request->getPost('id');
             $novoStatus = $this->request->getPost('status');
 
             if ($novoStatus == "Cancelada") {
@@ -88,7 +88,6 @@ class Insight extends BaseController
             $valorParcela = $this->getpost('valorParcela');
             $panorama_id = $this->getpost('idPanorama');
             $parcelas = $this->getpost('parcelas');
-            $observacao = $this->getpost('observacao') ?? '';
 
             $dataCriacaoStr = $this->getpost('dataCriacao');
             $dataCriacao = \DateTime::createFromFormat('d/m/Y', $dataCriacaoStr);
@@ -100,7 +99,7 @@ class Insight extends BaseController
             $dataNascimento = $this->getpost('dataNascimento');
             $assessor = $this->getpost('assessor');
 
-            $checkStatus = $this->m_insight->checkStatus($id);
+            $checkStatus = $this->m_insight->checkStatus($idProposta);
 
             $statusAnterior = $checkStatus['firstRow']->status;
 
@@ -132,11 +131,23 @@ class Insight extends BaseController
             //     $this->m_insight->registrarNotificacao($dados);
             // }
 
+            $idsAtrelados = $_POST['ids'] ?? [];
+
+            if (!empty($idsAtrelados)) {
+                foreach ($idsAtrelados as $id) {
+                    $this->dbMasterDefault->update(
+                        'quid_propostas',
+                        ['status' => $novoStatus],
+                        ['idquid_propostas' => intval($id)]
+                    );
+                }
+            }
+
             if ($statusAnterior !== $novoStatus) {
                 $obs = $this->getpost('conteudo');
 
                 $movimento = [
-                    'id_proposta' => $id,
+                    'id_proposta' => $idProposta,
                     'id_usuario' => $this->session->userId,
                     'usuario' => $this->session->nickname,
                     'status_anterior' => $statusAnterior,
@@ -150,10 +161,10 @@ class Insight extends BaseController
             }
 
             if ($resumo !== null) {
-                $this->m_insight->atualizarResumo($resumo, $id);
+                $this->m_insight->atualizarResumo($resumo, $idProposta);
             }
 
-            if ($id) {
+            if ($idProposta) {
                 $tabela = 'quid_propostas';
                 $valores = [
                     'status' => $novoStatus,
@@ -173,7 +184,7 @@ class Insight extends BaseController
                     'conta' => $conta ?? null,
                     'motivoCancelamento' => $motivoCancelamento ?? "",
                 ];
-                $condicao = ['idquid_propostas' => $id];
+                $condicao = ['idquid_propostas' => $idProposta];
 
                 $retorno = $this->dbMasterDefault->update($tabela, $valores, $condicao);
 
