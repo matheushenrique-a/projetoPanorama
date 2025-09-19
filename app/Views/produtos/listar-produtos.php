@@ -55,6 +55,7 @@
                                     <svg width="80" height="80" fill="#c0c0c0ff" viewBox="0 0 24 24">
                                         <?= $produto->iconSvg ?>
                                     </svg>
+                                    <span class="text-gray-600 fs-6 mt-2"><?= $produto->parceiroComercial?></span>
                                 </div>
                             </a>
                         <?php endforeach; ?>
