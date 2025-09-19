@@ -216,6 +216,7 @@ $movimentation = match ($row->status) {
                                                             <div id="motivoDiv" style="display: none;" class="mt-2">
                                                                 <label for="status_<?= $row->idquid_propostas ?>" class="form-label">Motivo</label>
                                                                 <select class="form-select" name="motivoCancelamento">
+                                                                    <option value=""></option>
                                                                     <?php
                                                                     $motivosCancelamento = json_decode($produto->motivosCancelamento, true) ?? [];
                                                                     foreach ($motivosCancelamento as $optionCancelamento):
@@ -230,6 +231,7 @@ $movimentation = match ($row->status) {
                                                             <div id="resumoDiv" style="display: none;" class="mt-2">
                                                                 <label for="status_<?= $row->idquid_propostas ?>" class="form-label">Pendência</label>
                                                                 <select class="form-select" id="status_<?= $row->resumo ?>" name="resumo">
+                                                                    <option value=""></option>
                                                                     <?php
                                                                     $motivosPendencia = json_decode($produto->motivosPendencia, true) ?? [];
                                                                     foreach ($motivosPendencia as $optionPendencias):
