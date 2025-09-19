@@ -470,5 +470,11 @@ $productName = $produto->nomeProduto;
         }
     });
 
+    dropdownMenu.addEventListener('mouseover', (e) => {
+        if (e.target.classList.contains('dropdown-item')) {
+            e.target.style.cursor = 'pointer';
+        }
+    });
+
     renderDropdown();
 </script>
