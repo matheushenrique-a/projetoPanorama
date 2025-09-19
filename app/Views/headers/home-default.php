@@ -286,8 +286,8 @@
 												<!--begin::Item-->
 												<div class="d-flex flex-stack">
 													<div class="d-flex align-items-center me-5">
-														<a target="_blank"
-															href="https://grupoquid.panoramaemprestimos.com.br/emprestimoInterno.do?action=exibir&codigo=<?= $row->panorama_id ?>"
+														<a
+															href="proposta/<?= $row->idquid_propostas ?>"
 															class="symbol symbol-40px me-4">
 															<span class="symbol-label bg-info"><i
 																	class="las la-file-invoice fs-1 p-0 text-white"></i></span>

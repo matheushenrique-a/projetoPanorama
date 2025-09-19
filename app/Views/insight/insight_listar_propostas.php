@@ -240,7 +240,9 @@
 										<th data-sortable="false" class="min-w-100px">CPF</th>
 										<th data-sortable="false" class="min-w-50">Valor</th>
 										<th data-sortable="false" class="min-w-25px">Produto</th>
-										<th data-sortable="false" class="min-w-50px">Ver</th>
+										<?php if ($session->role !== "OPERADOR"): ?>
+											<th data-sortable="false" class="min-w-50px">Ver</th>
+										<?php endif; ?>
 									</tr>
 								</thead>
 								<tbody class="text-gray-700 fw-semibold">
@@ -277,16 +279,18 @@
 											<td class="align-middle"><?= $row->cpf; ?></td>
 											<td class="align-middle text-success">R$ <?= number_format((float)$row->valor, 2, ',', '.') ?></td>
 											<td class="align-middle text-primary"><?= $row->produto ?></td>
-											<td class="align-middle">
-												<a target="_blank" href="https://grupoquid.panoramaemprestimos.com.br/emprestimoInterno.do?action=exibir&codigo=<?= $row->panorama_id ?>" class="btn btn-sm btn-icon btn-bg-light btn-active-color-primary w-25px h-25px">
-													<span class="svg-icon svg-icon-5 svg-icon-gray-700">
-														<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-															<path d="M14.4 11H3C2.4 11 2 11.4 2 12C2 12.6 2.4 13 3 13H14.4V11Z" fill="currentColor" />
-															<path opacity="0.3" d="M14.4 20V4L21.7 11.3C22.1 11.7 22.1 12.3 21.7 12.7L14.4 20Z" fill="currentColor" />
-														</svg>
-													</span>
-												</a>
-											</td>
+											<?php if ($session->role !== "OPERADOR"): ?>
+												<td class="align-middle">
+													<a target="_blank" href="https://grupoquid.panoramaemprestimos.com.br/emprestimoInterno.do?action=exibir&codigo=<?= $row->panorama_id ?>" class="btn btn-sm btn-icon btn-bg-light btn-active-color-primary w-25px h-25px">
+														<span class="svg-icon svg-icon-5 svg-icon-gray-700">
+															<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+																<path d="M14.4 11H3C2.4 11 2 11.4 2 12C2 12.6 2.4 13 3 13H14.4V11Z" fill="currentColor" />
+																<path opacity="0.3" d="M14.4 20V4L21.7 11.3C22.1 11.7 22.1 12.3 21.7 12.7L14.4 20Z" fill="currentColor" />
+															</svg>
+														</span>
+													</a>
+												</td>
+											<?php endif; ?>
 										</tr>
 									<?php endforeach; ?>
 								</tbody>
@@ -303,7 +307,7 @@
 	<div class="app-container container-fluid d-flex flex-column flex-md-row flex-center flex-md-stack py-3">
 		<div class="text-dark order-2 order-md-1">
 			<span class="text-muted fw-semibold me-1">2025&copy;</span>
-			<a href="<?= assetfolder?>" class="text-gray-800 text-hover-primary">QuidOne</a>
+			<a href="<?= assetfolder ?>" class="text-gray-800 text-hover-primary">QuidOne</a>
 		</div>
 	</div>
 </div>

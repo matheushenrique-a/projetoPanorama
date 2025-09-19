@@ -527,6 +527,7 @@ class M_bmg extends Model
     public function ultimasPropostasBMG($limit = 6)
     {
         $sql = "select * from quid_propostas where assessor = '" . $this->session->nickname . "' ";
+        $sql .= "and produtoBase = 1" ;
         $sql .= " order by data_criacao DESC LIMIT $limit;";
 
         return $this->dbMasterDefault->runQuery($sql);

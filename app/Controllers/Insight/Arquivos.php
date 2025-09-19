@@ -28,52 +28,52 @@ class Arquivos extends \App\Controllers\BaseController
         $dados['pageTitle'] = 'Exportação';
         $dados['session'] = $this->session;
 
+        // Pega assessores
         if ($this->m_security->checkPermission("ADMIN") || $this->m_security->checkPermission("FORMALIZACAO")) {
             $dados['assessores'] = $this->dbMasterDefault->select('user_account', ['role' => "OPERADOR"]);
         } else {
             $dados['assessores'] = $this->dbMasterDefault->select('user_account', ['report_to' => $this->session->userId]);
         }
-
         $dados['assessores'] = $dados['assessores']['result']->getResult();
 
         if ($action == '1') {
+            // Filtros do formulário
             $dataInicio = $this->getpost('dataInicial');
-            $dataFim = $this->getpost('dataFinal');
-            $status = $this->getpost('status');
-            $report_to = $this->getpost('report_to');
-            $produto = $this->getpost('produto');
-            $assessor = $this->getpost(valor: 'assessor');
+            $dataFim    = $this->getpost('dataFinal');
+            $status     = $this->getpost('status');
+            $report_to  = $this->getpost('report_to');
+            $produto    = $this->getpost('produto');
+            $assessor   = $this->getpost('assessor');
 
+            // Colunas personalizadas enviadas do front
+            // Ex.: ['idquid_propostas' => 'ID', 'nomeCliente' => 'Cliente', 'valorSaque' => 'Valor do Saque']
             $columns = $this->getPostArray('columns') ?? [];
 
+            // Monta filtro WHERE
             $where = [];
-
             if (!empty($dataInicio) && !empty($dataFim)) {
                 $where['DATE(data_criacao) >='] = $dataInicio;
                 $where['DATE(data_criacao) <='] = $dataFim;
             }
-
             if (!empty($status)) {
                 $where['status'] = $status;
             }
-
             if (!empty($report_to)) {
                 $where['report_to'] = $report_to;
             }
-
             if (!empty($produto)) {
                 $where['produto'] = $produto;
             }
-
             if (!empty($assessor)) {
                 $where['assessor'] = $assessor;
             }
-
+            
             $this->dbMasterDefault->exportCSV('quid_propostas', $columns, $where);
         }
 
         return $this->loadpage('insight/insight_export_propostas', $dados);
     }
+
 
     public function anexarArquivos($idProposta)
     {
