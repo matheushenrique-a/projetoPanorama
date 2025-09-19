@@ -161,7 +161,12 @@ class Insight extends BaseController
             }
 
             if ($resumo !== null) {
-                $this->m_insight->atualizarResumo($resumo, $idProposta);
+                if ($novoStatus == "Pendente" || $novoStatus == "Cancelada") {
+                    $this->m_insight->atualizarResumo($resumo, $idProposta);
+                } else {
+                    $resumo = '';
+                    $this->m_insight->atualizarResumo($resumo, $idProposta);
+                }
             }
 
             if ($idProposta) {
