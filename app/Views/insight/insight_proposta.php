@@ -359,8 +359,28 @@ $movimentation = match ($row->status) {
                                             <h3 class="text-gray-700">Propostas vinculadas</h3>
                                             <div class="mt-5 d-flex flex-column gap-4">
                                                 <?php foreach ($propostasAgregadas as $props): ?>
-                                                    <p><?= $props->idquid_propostas ?></p>
+                                                    <?php if ($row->produto !== $props->produto): ?>
+                                                        <a href="<?= assetfolder ?>proposta/<?= $props->idquid_propostas ?>">
+                                                            <div style="width: 400px; transition: 0.2s;"
+                                                                class="d-flex gap-3 shadow-sm p-3 border border-2 rounded-xl align-items-center hover-box">
+                                                                <i class="bi bi-arrow-90deg-left"></i>
+                                                                <p class="my-auto fw-semibold text-gray-700"><?= $props->produto ?></p>
+                                                                <div class="d-flex gap-3 ms-auto justify-content-end">
+                                                                    <p class="my-auto text-gray-700"><?= date('d/m/Y', strtotime($props->data_criacao)) ?></p>
+                                                                </div>
+                                                            </div>
+                                                        </a>
+                                                    <?php endif; ?>
                                                 <?php endforeach; ?>
+                                                <style>
+                                                    .hover-box:hover {
+                                                        background-color: #f8f8faff;
+                                                        /* cinza claro */
+                                                        transform: scale(1.02);
+                                                        /* leve aumento */
+                                                        cursor: pointer;
+                                                    }
+                                                </style>
                                             </div>
                                         </div>
                                     </div>

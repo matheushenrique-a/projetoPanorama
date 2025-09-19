@@ -748,7 +748,7 @@ class Insight extends BaseController
                         'codigo_entidade' => $codigoEntidade,
                         'cpf' => $cpf,
                         'dataNascimento' => $dataNascimento,
-                        'panorama_id' => $returnData["proposta"] ?? "",
+                        'panorama_id' => "",
                         'matricula' => $matricula,
                         'nomeCliente' => $nomeCliente,
                         'telefone' => $ddd . $telefone,
