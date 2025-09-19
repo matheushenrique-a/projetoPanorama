@@ -142,19 +142,6 @@
 </div>
 
 <script>
-    const temSeguro = document.getElementById('temSeguro')
-    const valorSeguro = document.getElementById('valorSeguro')
-
-    temSeguro.addEventListener('change', () => {
-        if (temSeguro.checked) {
-            valorSeguro.classList.remove('d-none')
-            valorSeguro.classList.add('d-flex')
-        } else {
-            valorSeguro.classList.remove('d-flex')
-            valorSeguro.classList.add('d-none')
-        }
-    })
-
     function setupSelect(selectId, containerId, inputName) {
         const select = document.getElementById(selectId);
         const container = document.getElementById(containerId);
