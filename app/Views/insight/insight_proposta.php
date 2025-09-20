@@ -85,9 +85,9 @@ $movimentation = match ($row->status) {
                                     <div class="tab-pane fade show active" id="kt_tab_pane_1" role="tabpanel">
                                         <div>
                                             <?php if (isset($ultimaLinha) && $ultimaLinha->observacao !== null && $ultimaLinha->observacao !== "" && $row->status !== "Adesão"): ?>
-                                                <div class="alert alert-primary text-gray-700 mb-6">
-                                                    <p class="fs-6 text-gray-800 fw-bold border-bottom border-gray-500 p-2 fst-italic">
-                                                        <i class="fs-3 text-gray-600 bi bi-clipboard2-x"></i> <?= $row->resumo ?>
+                                                <div class="alert alert-warning text-gray-700 mb-6">
+                                                    <p class="fs-5 text-warning fw-bold border-bottom border-warning p-2 fst-italic">
+                                                        <i class="fs-3 me-2 text-warning bi bi-clipboard2-x"></i> <?= $row->resumo ?>
                                                     </p>
                                                     <h4 class="text-gray-800">Observação:</h4>
                                                     <?= html_entity_decode($ultimaLinha->observacao) ?>
@@ -179,12 +179,14 @@ $movimentation = match ($row->status) {
                                                     <?php endif; ?>
 
                                                     <div class="d-flex gap-4">
-                                                        <div class="mb-2">
-                                                            <span class="fw-bold mb-1">Código Panorama:</span>
-                                                            <input type="text" class="form-control form-control-solid idPanorama" name="idPanorama" value="<?= $row->panorama_id ?>" data-original="<?= $row->panorama_id ?>"
-                                                                <?php if (!$my_security->checkPermission("FORMALIZACAO") && !$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("ADMIN")): echo "readonly";
-                                                                endif; ?> />
-                                                        </div>
+                                                        <?php if ($my_security->checkPermission("ADMIN") || $my_security->checkPermission("FORMALIZACAO")): ?>
+                                                            <div class="mb-2">
+                                                                <span class="fw-bold mb-1">Código Panorama:</span>
+                                                                <input type="text" class="form-control form-control-solid idPanorama" name="idPanorama" value="<?= $row->panorama_id ?>" data-original="<?= $row->panorama_id ?>"
+                                                                    <?php if (!$my_security->checkPermission("FORMALIZACAO") && !$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("ADMIN")): echo "readonly";
+                                                                    endif; ?> />
+                                                            </div>
+                                                        <?php endif; ?>
                                                         <div class="mb-2">
                                                             <span class="fw-bold mb-1">Data Criação:</span>
                                                             <input type="text" class="form-control form-control-solid dataCriacao" name="dataCriacao" value="<?= date('d/m/Y', strtotime($row->data_criacao)); ?>" data-original="<?= date('d/m/Y', strtotime($row->data_criacao)); ?>"

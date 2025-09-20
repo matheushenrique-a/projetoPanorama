@@ -146,6 +146,13 @@ class Insight extends BaseController
 
             if ($statusAnterior !== $novoStatus) {
                 $obs = $this->getpost('conteudo');
+                $switchStatus = "";
+
+                if($novoStatus == "Cancelada"){
+                    $switchStatus = $motivoCancelamento;
+                } else if($novoStatus == "Pendente"){
+                    $switchStatus = $resumo;
+                }
 
                 $movimento = [
                     'id_proposta' => $idProposta,
@@ -155,7 +162,7 @@ class Insight extends BaseController
                     'status_atual' => $novoStatus,
                     'horario' => (new DateTime())->format('Y-m-d H:i:s'),
                     'observacao' => $obs,
-                    'resumo' => $resumo
+                    'resumo' => $switchStatus
                 ];
 
                 $this->m_insight->registrarMovimentacao($movimento);
