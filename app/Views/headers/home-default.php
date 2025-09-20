@@ -82,6 +82,14 @@
 										lista.forEach(row => {
 											if (["Aprovada", "Cancelada", "Análise", "Adesão"].includes(row.status)) return;
 
+											let valor = row.valor || 0;
+											valor = parseFloat(valor.toString().replace(',', '.'));
+
+											let formatado = valor.toLocaleString('pt-BR', {
+												minimumFractionDigits: 2
+											});
+
+
 											let nomeAuditor = '';
 
 											if (row.id_owner == "165022") {
@@ -96,24 +104,60 @@
 												nomeAuditor = "Amanda"
 											}
 
+											let atual;
+
 											const statusClass = {
 												"Análise": "info",
 												"Aprovada": "success",
 												"Cancelada": "danger",
 												"Pendente": "warning",
 												"Adesão": "dark",
-												"Auditoria": "warning",
-												"TED Devolvida": "warning"
+												"Auditoria": "warning"
 											} [row.status] || "secondary";
 
-											container.innerHTML += `
+											if (row.status == "Pendente") {
+												atual = row.resumo
+											} else if (row.status == "Cancelada") {
+												atual = row.motivoCancelamento
+											}
+
+											function formatarTelefone(numero) {
+												if (!numero) return '';
+
+												// Remove tudo que não for número
+												numero = numero.toString().replace(/\D/g, '');
+
+												// Formatação para 10 ou 11 dígitos
+												if (numero.length === 11) {
+													// (XX) XXXXX-XXXX
+													return numero.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+												} else if (numero.length === 10) {
+													// (XX) XXXX-XXXX
+													return numero.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
+												} else if (numero.length === 9) {
+													// XXXXX-XXXX
+													return numero.replace(/(\d{5})(\d{4})/, '$1-$2');
+												} else if (numero.length === 8) {
+													// XXXX-XXXX
+													return numero.replace(/(\d{4})(\d{4})/, '$1-$2');
+												}
+
+												return numero;
+											}
+
+
+											let telefone = formatarTelefone(row.telefone)
+
+												container.innerHTML += `
 											<div class="d-flex justify-content-between">
 												<div class="d-flex align-items-center me-5">
 												<div class="d-flex flex-column gap-2">
 													<a href="<?= assetfolder ?>proposta/${row.idquid_propostas}" 
 													class="symbol symbol-40px me-10">
 													<span class="symbol-label bg-${statusClass}">
-														<i class="las la-file-invoice fs-1 p-0 text-white"></i>
+														<svg class="w-6 h-6 text-dark" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+														<path fill-rule="evenodd" d="M8 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1h2a2 2 0 0 1 2 2v15a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h2Zm6 1h-4v2H9a1 1 0 0 0 0 2h6a1 1 0 1 0 0-2h-1V4Zm-3 8a1 1 0 0 1 1-1h3a1 1 0 1 1 0 2h-3a1 1 0 0 1-1-1Zm-2-1a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2H9Zm2 5a1 1 0 0 1 1-1h3a1 1 0 1 1 0 2h-3a1 1 0 0 1-1-1Zm-2-1a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2H9Z" clip-rule="evenodd"/>
+														</svg>
 													</span>
 													</a>
 													<span class="text-warning fw-bold">${nomeAuditor}</span>
@@ -121,15 +165,22 @@
 													<div class="me-5">
 														<div class="d-flex flex-column">
 															<span class="text-gray-800 fw-bolder fs-6">${row.assessor.substring(0, 30)}</span>
+															<span class="text-gray-700 fw-bolder d-block fs-6">${row.produto}</span>
 															<span class="text-gray-600 fw-bolder fs-6">${row.nome.substring(0, 30)}</span>
 														</div>
-														<span class="text-success fw-bolder fs-6">R$ ${parseFloat(row.valor).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+														<span class="text-success fw-bolder fs-6">
+														R$ ${parseFloat((row.valor || 0).toString().replace(',', '.'))
+																.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+														</span>
 													</div>
 												</div>
 												<div class="text-gray-400 fw-bolder fs-7 text-end">
+												<span
+															class="text-gray-800 fw-bolder fs-6 d-block text-hover-info">${telefone}</span>
 													<span class="text-gray-800 fw-bold fs-6 d-block">${row.adesao}</span>
 													<span class="text-gray-400 fw-bold fs-7 d-block">${timeElapsedString(row.data_criacao)}</span>
 													<span class="badge badge-light-${statusClass} fs-6 mt-2">${row.status}</span>
+													<span class="text-${statusClass} ms-2">${atual}</span>
 												</div>
 											</div>
 											<div class="separator separator-dashed my-3"></div>
@@ -218,44 +269,91 @@
 										<div class="fw-bold cursor-pointer filter-btn " data-filter="Análise">
 											<div class="d-flex gap-2 bg-info text-black rounded p-2" style="height: 32px;">
 												<span
-													class="bg-light rounded px-2 text-white"><?= $contadores["Análise"] ?></span>
+													class="bg-light rounded px-2 text-dark"><?= $contadores["Análise"] ?></span>
 												<p>Análise</p>
 											</div>
 										</div>
 										<div class="fw-bold cursor-pointer filter-btn " data-filter="Pendente">
 											<div class="d-flex gap-2 bg-warning text-black rounded p-2" style="height: 32px;">
 												<span
-													class="bg-light rounded px-2 text-white"><?= $contadores["Pendente"] ?></span>
+													class="bg-light rounded px-2 text-dark"><?= $contadores["Pendente"] ?></span>
 												<p>Pendente</p>
 											</div>
 										</div>
 										<div class="fw-bold cursor-pointer filter-btn " data-filter="Aprovada">
 											<div class="d-flex gap-2 bg-success text-black rounded p-2" style="height: 32px;">
 												<span
-													class="bg-light rounded px-2 text-white"><?= $contadores["Aprovada"] ?></span>
+													class="bg-light rounded px-2 text-dark"><?= $contadores["Aprovada"] ?></span>
 												<p>Aprovada</p>
 											</div>
 										</div>
 										<div class="fw-bold cursor-pointer filter-btn " data-filter="Cancelada">
-											<div class="d-flex gap-2 bg-gray-400 text-black rounded p-2" style="height: 32px;">
+											<div class="d-flex gap-2 bg-danger text-black rounded p-2" style="height: 32px;">
 												<span
-													class="bg-light rounded px-2 text-white"><?= $contadores["Cancelada"] ?></span>
+													class="bg-light rounded px-2 text-dark"><?= $contadores["Cancelada"] ?></span>
 												<p>Cancelada</p>
 											</div>
 										</div>
 										<div class="fw-bold cursor-pointer filter-btn " data-filter="Auditoria">
 											<div class="d-flex gap-2 bg-warning text-black rounded p-2" style="height: 32px;">
 												<span
-													class="bg-light rounded px-2 text-white"><?= $contadores["Auditoria"] ?></span>
+													class="bg-light rounded px-2 text-dark"><?= $contadores["Auditoria"] ?></span>
 												<p>Auditoria</p>
 											</div>
 										</div>
-										<div class="d-flex  cursor-pointer filter-btn gap-2 bg-secondary text-white rounded p-2 filter-btn"
+										<div class="d-flex  cursor-pointer filter-btn gap-2 bg-secondary text-dark rounded p-2 filter-btn"
 											data-filter="all" style="height: 32px;">
 											<span class="px-2">Todos</span>
 										</div>
 
 									</div>
+
+									<style>
+										/* Tema claro (padrão Bootstrap) */
+										:root {
+											--analise-bg: var(--bs-info);
+											--analise-text: #000;
+
+											--pendente-bg: var(--bs-warning);
+											--pendente-text: #000;
+
+											--aprovada-bg: var(--bs-success);
+											--aprovada-text: #fff;
+
+											--cancelada-bg: #9ca3af;
+											/* cinza */
+											--cancelada-text: #000;
+
+											--auditoria-bg: var(--bs-warning);
+											--auditoria-text: #000;
+
+											--todos-bg: var(--bs-secondary);
+											--todos-text: #fff;
+										}
+
+										/* Tema escuro */
+										[data-theme="dark"] {
+											--analise-bg: #0dcaf0;
+											/* pode escolher outra variação */
+											--analise-text: #fff;
+
+											--pendente-bg: #ffc107;
+											--pendente-text: #000;
+
+											--aprovada-bg: #198754;
+											--aprovada-text: #fff;
+
+											--cancelada-bg: #6c757d;
+											--cancelada-text: #fff;
+
+											--auditoria-bg: #fd7e14;
+											--auditoria-text: #000;
+
+											--todos-bg: #495057;
+											--todos-text: #fff;
+										}
+									</style>
+
 									<div class="card-body pt-1">
 
 										<?php
@@ -268,6 +366,16 @@
 											$data_criacao = $row->data_criacao;
 											$telefone = formatarTelefone($row->telefone);
 											$panorama_id = $row->panorama_id;
+											$resumo = $row->resumo ?? '';
+											$motivoCancelamento = $row->motivoCancelamento ?? '';
+
+											$atual = '';
+
+											if ($row->status == 'Pendente') {
+												$atual = $resumo;
+											} elseif ($row->status == 'Cancelada') {
+												$atual = $motivoCancelamento;
+											}
 
 											$status = match ($row->status) {
 												"Análise" => "info",
@@ -284,17 +392,23 @@
 
 											<div class="proposta-item" data-status="<?= $row->status ?>">
 												<!--begin::Item-->
-												<div class="d-flex flex-stack">
+												<div class="d-flex flex-stack mt-2">
 													<div class="d-flex align-items-center me-5">
 														<a
 															href="proposta/<?= $row->idquid_propostas ?>"
-															class="symbol symbol-40px me-4">
-															<span class="symbol-label bg-info"><i
-																	class="las la-file-invoice fs-1 p-0 text-white"></i></span>
+															class="symbol symbol-45px me-4">
+															<span class="symbol-label bg-<?= $status ?>"><svg class="w-6 h-6 text-dark dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+																	<path fill-rule="evenodd" d="M8 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1h2a2 2 0 0 1 2 2v15a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h2Zm6 1h-4v2H9a1 1 0 0 0 0 2h6a1 1 0 1 0 0-2h-1V4Zm-6 8a1 1 0 0 1 1-1h6a1 1 0 1 1 0 2H9a1 1 0 0 1-1-1Zm1 3a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2H9Z" clip-rule="evenodd" />
+																</svg>
+
+
+																</svg>
+															</span>
 														</a>
 														<div class="me-5">
 															<span
 																class="text-gray-800 fw-bolder fs-6"><?= substr($nomeCliente, 0, 30) ?></span>
+															<span class="text-gray-700 fw-bolder d-block fs-6"><?= $row->produto ?></span>
 															<span
 																class="text-gray-400 fw-bold fs-7 d-block text-start ps-0"><?= $adesao . " | " . $cpf ?></span>
 															<span
@@ -305,9 +419,10 @@
 														<span
 															class="text-gray-800 fw-bolder fs-6 d-block text-hover-info"><?= $telefone ?></span>
 														<span
-															class="text-gray-400 fw-bold fs-7 d-block text-start ps-0"><?= time_elapsed_string($data_criacao) ?></span>
+															class="text-gray-400 fw-bold fs-7 d-block ps-0"><?= time_elapsed_string($data_criacao) ?></span>
 														<span
 															class="badge badge-light-<?= $status ?> fs-6 mt-2"><?= $row->status ?></span>
+														<span class="text-<?= $status ?> ms-2"><?= $atual ?></span>
 													</div>
 												</div>
 												<div class="separator separator-dashed my-3"></div>
@@ -322,7 +437,7 @@
 										<a href="<?php echo assetfolder; ?>listar-propostas/0/0"
 											class="text-primary opacity-75-hover fs-6 fw-semibold">Ver mais propostas</a>
 										<span class="text-gray-500 opacity-75-hover fs-6 fw-semibold">| </span>
-										<a href="<?php echo assetfolder; ?>bmg-saque/0"
+										<a href="<?php echo assetfolder; ?>listar-produtos"
 											class="text-primary opacity-75-hover fs-6 fw-semibold">Criar nova proposta</a>
 									</div>
 								</div>
