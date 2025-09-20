@@ -28,6 +28,8 @@ class Arquivos extends \App\Controllers\BaseController
         $dados['pageTitle'] = 'Exportação';
         $dados['session'] = $this->session;
 
+        $dados['produtosArray'] = $this->dbMasterDefault->selectAll('quid_produtos');
+
         // Pega assessores
         if ($this->m_security->checkPermission("ADMIN") || $this->m_security->checkPermission("FORMALIZACAO")) {
             $dados['assessores'] = $this->dbMasterDefault->select('user_account', ['role' => "OPERADOR"]);
@@ -45,11 +47,8 @@ class Arquivos extends \App\Controllers\BaseController
             $produto    = $this->getpost('produto');
             $assessor   = $this->getpost('assessor');
 
-            // Colunas personalizadas enviadas do front
-            // Ex.: ['idquid_propostas' => 'ID', 'nomeCliente' => 'Cliente', 'valorSaque' => 'Valor do Saque']
             $columns = $this->getPostArray('columns') ?? [];
 
-            // Monta filtro WHERE
             $where = [];
             if (!empty($dataInicio) && !empty($dataFim)) {
                 $where['DATE(data_criacao) >='] = $dataInicio;
