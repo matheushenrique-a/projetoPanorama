@@ -23,7 +23,7 @@
 	<meta property="og:url" content="https://keenthemes.com/metronic" />
 	<meta property="og:site_name" content="Keenthemes | Metronic" />
 	<link rel="canonical" href="https://preview.keenthemes.com/metronic8" />
-	<link rel="shortcut icon" href="<?php echo assetfolder ?>assets/logos/favicon-32x32.png" />
+	<link rel="shortcut icon" href="<?php echo assetfolder ?>assets/logos/favicon.ico" />
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700" />
 	<link href="<?php echo assetfolder ?>assets/plugins/custom/fullcalendar/fullcalendar.bundle.css" rel="stylesheet"
 		type="text/css" />
