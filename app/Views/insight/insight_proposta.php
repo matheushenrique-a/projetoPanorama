@@ -84,12 +84,12 @@ $movimentation = match ($row->status) {
                                 <div class="tab-content p-6" id="myTabContent">
                                     <div class="tab-pane fade show active" id="kt_tab_pane_1" role="tabpanel">
                                         <div>
-                                            <?php if (isset($ultimaLinha) && $ultimaLinha->observacao !== null && $ultimaLinha->observacao !== ""): ?>
-                                                <div class="alert alert-dark text-gray-800 mb-6">
-                                                    <p class="fs-6 text-gray-800 fw-bold border-bottom border-gray-800 p-2 fst-italic">
-                                                        <i class="fs-3 text-gray-800 bi bi-clipboard2-x"></i> <?= $row->resumo ?>
+                                            <?php if (isset($ultimaLinha) && $ultimaLinha->observacao !== null && $ultimaLinha->observacao !== "" && $row->status !== "Adesão"): ?>
+                                                <div class="alert alert-primary text-gray-700 mb-6">
+                                                    <p class="fs-6 text-gray-800 fw-bold border-bottom border-gray-500 p-2 fst-italic">
+                                                        <i class="fs-3 text-gray-600 bi bi-clipboard2-x"></i> <?= $row->resumo ?>
                                                     </p>
-                                                    <h4 class="text-dark">Observação:</h4>
+                                                    <h4 class="text-gray-800">Observação:</h4>
                                                     <?= html_entity_decode($ultimaLinha->observacao) ?>
                                                 </div>
                                             <?php endif; ?>
@@ -191,6 +191,12 @@ $movimentation = match ($row->status) {
                                                                 <?php if (!$my_security->checkPermission("FORMALIZACAO") && !$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("ADMIN")): echo "readonly";
                                                                 endif; ?> />
                                                         </div>
+                                                    </div>
+
+                                                    <div class="input-group mt-2 d-flex flex-column">
+                                                        <span class="fw-bold mb-1">Observação:</span>
+                                                        <textarea class="form-control form-control-solid" placeholder="..." name="observacaoInicial" style="width: 400px;" <?php if (!$my_security->checkPermission("FORMALIZACAO") && !$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("ADMIN")): echo "readonly";
+                                                                                                                                                                            endif; ?>><?= $row->observacaoInicial ?></textarea>
                                                     </div>
 
                                                     <input type="hidden" name="userId" value="<?= $row->userId ?>" />
@@ -387,22 +393,19 @@ $movimentation = match ($row->status) {
                                     </div>
                                 </div>
                             </form>
-
-                            <?php if ($my_security->checkPermission("ADMIN") || $my_security->checkPermission("FORMALIZACAO")): ?>
-                                <div id="form-upload" class="p-8 border-top d-none">
-                                    <form enctype="multipart/form-data" method="post" action="<?php echo assetfolder ?>insight-anexar-arquivo/<?= $row->idquid_propostas ?>">
-                                        <div class="d-flex gap-2">
-                                            <div class="d-flex gap-2 flex-column">
-                                                <span class="text-gray-800">Anexar arquivo:</span>
-                                                <input name="arquivo" style="width: auto;" type="file" class="form-control form-control-solid">
-                                            </div>
-                                            <div class="mt-8">
-                                                <button type="submit" class="btn btn-secondary">Enviar</button>
-                                            </div>
+                            <div id="form-upload" class="p-8 border-top d-none">
+                                <form enctype="multipart/form-data" method="post" action="<?php echo assetfolder ?>insight-anexar-arquivo/<?= $row->idquid_propostas ?>">
+                                    <div class="d-flex gap-2">
+                                        <div class="d-flex gap-2 flex-column">
+                                            <span class="text-gray-800">Anexar arquivo:</span>
+                                            <input name="arquivo" style="width: auto;" type="file" class="form-control form-control-solid">
                                         </div>
-                                    </form>
-                                </div>
-                            <?php endif; ?>
+                                        <div class="mt-8">
+                                            <button type="submit" class="btn btn-secondary">Enviar</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
                 </div>

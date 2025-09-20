@@ -14,8 +14,6 @@ class IpFilter implements FilterInterface
     {
         $ip = $request->getIPAddress();
 
-        return print_r($ip);
-
         if (!in_array($ip, $this->allowed_ips)) {
             return service('response')
                 ->setStatusCode(403)

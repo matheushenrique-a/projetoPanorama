@@ -55,6 +55,10 @@ $productName = $produto->nomeProduto;
                                                                 <option value="164">SIAPE - 164</option>
                                                             </select>
                                                         </div>
+                                                        <div class="input-group mt-2 d-flex flex-column">
+                                                            <span>Observação:</span>
+                                                            <textarea class="form-control fs-6 mt-2" placeholder="Observação..." name="observacao" style="width: 400px;"></textarea>
+                                                        </div>
                                                     </div>
                                                     <div class="w-50 d-flex flex-column gap-4">
                                                         <div class="d-flex">

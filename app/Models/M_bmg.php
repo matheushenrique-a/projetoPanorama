@@ -446,6 +446,7 @@ class M_bmg extends Model
         $numero_parcela = $data['numero_parcela'];
         $matricula = $data['matricula'];
         $dataNascimento = $data['dataNascimento'];
+        $observacao = $data['observacaoInicial'];
 
         $produtoBase = $data['produtoBase'];
 
@@ -508,7 +509,8 @@ class M_bmg extends Model
             "dataNascimento" => $dataNascimento,
             "id_owner" => $auditoriaId,
             "userId" => $userId,
-            "produtoBase" => $produtoBase
+            "produtoBase" => $produtoBase,
+            "observacaoInicial" => $observacao
         ]);
 
         $movimentacao = [
@@ -518,7 +520,7 @@ class M_bmg extends Model
             'status_anterior' => '',
             'status_atual' => $status,
             'horario' => (new DateTime())->format('Y-m-d H:i:s'),
-            'observacao' => '',
+            'observacao' => $observacao,
         ];
 
         $this->m_insight->registrarMovimentacao($movimentacao);

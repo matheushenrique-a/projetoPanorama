@@ -34,7 +34,7 @@ class Insight extends BaseController
         //o dbMasterDefault vai apontar para o banco do InsightSuite
         $this->dbMasterDefault = new dbMaster();
         $this->session = session();
-        $this->m_argus =  new M_argus();
+        $this->m_argus = new M_argus();
         $this->m_security = new M_seguranca();
         $this->m_insight = new M_insight();
         $this->m_bmg = new M_bmg();
@@ -86,6 +86,7 @@ class Insight extends BaseController
             $produto = $this->request->getPost('produto');
             $valorSaque = $this->request->getPost('valorSaque');
             $valorParcela = $this->getpost('valorParcela');
+            $observacaoInicial = $this->getPost('observacaoInicial');
             $panorama_id = $this->getpost('idPanorama');
             $parcelas = $this->getpost('parcelas');
 
@@ -188,6 +189,7 @@ class Insight extends BaseController
                     'agencia' => $agencia ?? null,
                     'conta' => $conta ?? null,
                     'motivoCancelamento' => $motivoCancelamento ?? "",
+                    'observacaoInicial' => $observacaoInicial
                 ];
                 $condicao = ['idquid_propostas' => $idProposta];
 
@@ -251,14 +253,22 @@ class Insight extends BaseController
         $whereIn = [];
         $betweenCheck = [];
 
-        if (!empty($cpf)) $likeCheck['cpf'] = $cpf;
-        if (!empty($celular)) $likeCheck['telefone'] = $celular;
-        if (!empty($nome)) $likeCheck['nome'] = $nome;
-        if (!empty($nomeAssessor)) $likeCheck['assessor'] = $nomeAssessor;
-        if (!empty($adesao)) $likeCheck['adesao'] = $adesao;
-        if (!empty($equipe)) $likeCheck['report_to'] = $equipe;
-        if (!empty($status)) $likeCheck['status'] = $status;
-        if (!empty($auditorMove)) $likeCheck['id_owner'] = $this->session->userId;
+        if (!empty($cpf))
+            $likeCheck['cpf'] = $cpf;
+        if (!empty($celular))
+            $likeCheck['telefone'] = $celular;
+        if (!empty($nome))
+            $likeCheck['nome'] = $nome;
+        if (!empty($nomeAssessor))
+            $likeCheck['assessor'] = $nomeAssessor;
+        if (!empty($adesao))
+            $likeCheck['adesao'] = $adesao;
+        if (!empty($equipe))
+            $likeCheck['report_to'] = $equipe;
+        if (!empty($status))
+            $likeCheck['status'] = $status;
+        if (!empty($auditorMove))
+            $likeCheck['id_owner'] = $this->session->userId;
 
         if (!empty($dateDe) && !empty($dateAte)) {
             $betweenCheck = ["betweenCheck" => ['data_criacao', $dateDe, $dateAte]];
@@ -283,7 +293,7 @@ class Insight extends BaseController
 
         $likeCheck = array("likeCheck" => $likeCheck);
 
-        $paginas = (empty($paginas)  ? 10 : $paginas);
+        $paginas = (empty($paginas) ? 10 : $paginas);
         $this->dbMasterDefault->setLimit($paginas);
         $this->dbMasterDefault->setOrderBy(array('idquid_propostas', 'DESC'));
         $propostas = $this->dbMasterDefault->select('quid_propostas', $whereCheck, $whereNotIn + $likeCheck + $whereIn + $betweenCheck);
@@ -345,22 +355,22 @@ class Insight extends BaseController
                 $dataCriacao = $this->converterDataHora($row[7]);
 
                 $dados[] = [
-                    'adesao'           => $row[0],
-                    'cpf'              => $row[1],
-                    'nome'             => $row[2],
-                    'assessor'         => $row[3],
-                    'produto'          => $row[4],
-                    'valor'            => $this->valorParaFloat($row[5]),
-                    'telefone'         => $row[6],
-                    'data_criacao'     => $dataCriacao,
-                    'panorama_id'      => $row[8],
-                    'report_to'        => $row[9],
-                    'codigo_entidade'  => $row[10],
-                    'valor_parcela'    => $this->valorParaFloat($row[11]),
-                    'numero_parcela'   => $row[12],
-                    'matricula'        => $row[13],
-                    'dataNascimento'   => $row[14],
-                    'ultimo_status'    => $row[15]
+                    'adesao' => $row[0],
+                    'cpf' => $row[1],
+                    'nome' => $row[2],
+                    'assessor' => $row[3],
+                    'produto' => $row[4],
+                    'valor' => $this->valorParaFloat($row[5]),
+                    'telefone' => $row[6],
+                    'data_criacao' => $dataCriacao,
+                    'panorama_id' => $row[8],
+                    'report_to' => $row[9],
+                    'codigo_entidade' => $row[10],
+                    'valor_parcela' => $this->valorParaFloat($row[11]),
+                    'numero_parcela' => $row[12],
+                    'matricula' => $row[13],
+                    'dataNascimento' => $row[14],
+                    'ultimo_status' => $row[15]
                 ];
 
                 $linha++;
@@ -385,7 +395,8 @@ class Insight extends BaseController
 
     private function converterDataHora($dataHora)
     {
-        if (empty($dataHora)) return null;
+        if (empty($dataHora))
+            return null;
 
         // Quebra data e hora
         [$data, $hora] = explode(' ', $dataHora);
@@ -754,6 +765,7 @@ class Insight extends BaseController
                     'data_criacao' => date('Y-m-d H:i:s'),
                     'userId' => $this->session->userId,
                     'produtoBase' => 1,
+                    'observacaoInicial' => $observacao,
                     'att' => 0,
                 ]);
 
@@ -761,24 +773,25 @@ class Insight extends BaseController
 
                 foreach ($produtosSelecionados as $product) {
                     $this->m_bmg->gravar_proposta_bmg_database([
-                        'assessor'        => $assessor,
-                        'produto'         => $product['produto'],
-                        'report_to'       => $this->session->report_to,
+                        'assessor' => $assessor,
+                        'produto' => $product['produto'],
+                        'report_to' => $this->session->report_to,
                         'codigo_entidade' => $codigoEntidade,
-                        'cpf'             => $cpf,
-                        'dataNascimento'  => $dataNascimento,
-                        'panorama_id'     => "",
-                        'matricula'       => $matricula,
-                        'nomeCliente'     => $nomeCliente,
-                        'telefone'        => $ddd . $telefone,
-                        'adesao'          => $adesao,
-                        'valorSaque'      => $this->getpost($product['valor']),
-                        'valor_parcela'   => $this->getpost($product['parcela']),
-                        'numero_parcela'  => $this->getpost($product['numeroParcela']),
-                        'data_criacao'    => date('Y-m-d H:i:s'),
-                        'userId'          => $this->session->userId,
-                        'produtoBase'     => 0,
-                        'att'             => ($product === $last ? 1 : 0),
+                        'cpf' => $cpf,
+                        'dataNascimento' => $dataNascimento,
+                        'panorama_id' => "",
+                        'matricula' => $matricula,
+                        'nomeCliente' => $nomeCliente,
+                        'telefone' => $ddd . $telefone,
+                        'adesao' => $adesao,
+                        'valorSaque' => $this->getpost($product['valor']),
+                        'valor_parcela' => $this->getpost($product['parcela']),
+                        'numero_parcela' => $this->getpost($product['numeroParcela']),
+                        'data_criacao' => date('Y-m-d H:i:s'),
+                        'userId' => $this->session->userId,
+                        'produtoBase' => 0,
+                        'att' => ($product === $last ? 1 : 0),
+                        'observacaoInicial' => $observacao,
                     ]);
                 }
             } else {
@@ -801,6 +814,7 @@ class Insight extends BaseController
                     'userId' => $this->session->userId,
                     'produtoBase' => 1,
                     'att' => 1,
+                    'observacaoInicial' => $observacao,
                 ]);
             }
 
