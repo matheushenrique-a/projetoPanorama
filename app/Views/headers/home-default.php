@@ -104,7 +104,7 @@
 												nomeAuditor = "Amanda"
 											}
 
-											let atual;
+											let atual = '';
 
 											const statusClass = {
 												"Análise": "info",
@@ -116,9 +116,17 @@
 											} [row.status] || "secondary";
 
 											if (row.status == "Pendente") {
-												atual = row.resumo
+												if (row.resumo !== null) {
+													atual = row.resumo
+												} else {
+													atual = ''
+												}
 											} else if (row.status == "Cancelada") {
-												atual = row.motivoCancelamento
+												if (row.motivoCancelamento !== null) {
+													atual = row.motivoCancelamento
+												} else {
+													atual = ''
+												}
 											}
 
 											function formatarTelefone(numero) {
@@ -148,7 +156,7 @@
 
 											let telefone = formatarTelefone(row.telefone)
 
-												container.innerHTML += `
+											container.innerHTML += `
 											<div class="d-flex justify-content-between">
 												<div class="d-flex align-items-center me-5">
 												<div class="d-flex flex-column gap-2">
