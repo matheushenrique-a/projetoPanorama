@@ -201,6 +201,12 @@ $movimentation = match ($row->status) {
                                                                                                                                                                             endif; ?>><?= $row->observacaoInicial ?></textarea>
                                                     </div>
 
+                                                    <?php if ($my_security->checkPermission("ADMIN")): ?>
+                                                        <div>
+                                                            <p class="mt-2">Produto base: <?= $row->produtoBase?></p>
+                                                        </div>
+                                                    <?php endif; ?>
+
                                                     <input type="hidden" name="userId" value="<?= $row->userId ?>" />
                                                 </div>
                                             </div>

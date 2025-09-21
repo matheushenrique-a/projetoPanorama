@@ -150,9 +150,9 @@ class Insight extends BaseController
                 $obs = $this->getpost('conteudo');
                 $switchStatus = "";
 
-                if($novoStatus == "Cancelada"){
+                if ($novoStatus == "Cancelada") {
                     $switchStatus = $motivoCancelamento;
-                } else if($novoStatus == "Pendente"){
+                } else if ($novoStatus == "Pendente") {
                     $switchStatus = $resumo;
                 }
 
@@ -295,7 +295,10 @@ class Insight extends BaseController
         }
 
         // alterar para admin caso necessário
-        $whereCheck['produtoBase'] = 1;
+
+        if (!$this->my_security->checkPermission("ADMIN")) {
+            $whereCheck['produtoBase'] = 1;
+        }
 
         if ($this->session->role == "OPERADOR") {
             $whereCheck["assessor"] = $this->session->nickname;

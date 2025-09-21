@@ -159,36 +159,36 @@ class Home extends BaseController
 
 
         // atualização de propostas PANORAMA
-        $tempoMinutos = 5;
+        // $tempoMinutos = 5;
 
-        $conf = $this->dbMasterDefault->select('configuracoes', ['id' => 1]);
+        // $conf = $this->dbMasterDefault->select('configuracoes', ['id' => 1]);
 
-        $executar = true;
-        if ($conf['existRecord']) {
-            $ultimaExecucao = strtotime($conf['firstRow']->ultima_atualizacao_propostas);
-            $agora = time();
+        // $executar = true;
+        // if ($conf['existRecord']) {
+        //     $ultimaExecucao = strtotime($conf['firstRow']->ultima_atualizacao_propostas);
+        //     $agora = time();
 
-            if (($agora - $ultimaExecucao) < ($tempoMinutos * 60)) {
-                $executar = false;
-            }
-        }
+        //     if (($agora - $ultimaExecucao) < ($tempoMinutos * 60)) {
+        //         $executar = false;
+        //     }
+        // }
 
-        if ($executar) {
-            $this->m_insight->atualizar_propostas();
+        // if ($executar) {
+        //     $this->m_insight->atualizar_propostas();
 
-            if ($conf['existRecord']) {
-                $this->dbMasterDefault->update(
-                    'configuracoes',
-                    ['ultima_atualizacao_propostas' => date('Y-m-d H:i:s')],
-                    ['id' => 1]
-                );
-            } else {
-                $this->dbMasterDefault->insert(
-                    'configuracoes',
-                    ['id' => 1, 'ultima_atualizacao_propostas' => date('Y-m-d H:i:s')]
-                );
-            }
-        }
+        //     if ($conf['existRecord']) {
+        //         $this->dbMasterDefault->update(
+        //             'configuracoes',
+        //             ['ultima_atualizacao_propostas' => date('Y-m-d H:i:s')],
+        //             ['id' => 1]
+        //         );
+        //     } else {
+        //         $this->dbMasterDefault->insert(
+        //             'configuracoes',
+        //             ['id' => 1, 'ultima_atualizacao_propostas' => date('Y-m-d H:i:s')]
+        //         );
+        //     }
+        // }
 
         if ($this->session->role == "AUDITOR" || $this->session->userId == "165001") {
             $ultimasPropostasAuditor = $this->m_bmg->ultimasPropostasAuditor(8);

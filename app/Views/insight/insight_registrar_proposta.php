@@ -206,16 +206,6 @@ $productName = $produto->nomeProduto;
                         </div>
 
                         <div class="d-flex gap-5 mt-2 flex-end">
-                            <div class="d-flex flex-column align-items-center mt-6 mb-0 gap-4">
-                                <span class="text-center fw-semibold fs-6">Enviar para Panorama?</span>
-                                <div class="btn-group" role="group" aria-label="Sim ou Não">
-                                    <input type="radio" class="btn-check" name="resposta_panorama" id="btn-sim-panorama" value="sim" autocomplete="off" checked>
-                                    <label class="btn btn-outline-success" for="btn-sim-panorama">Sim</label>
-
-                                    <input type="radio" class="btn-check" name="resposta_panorama" id="btn-nao-panorama" value="nao" autocomplete="off">
-                                    <label class="btn btn-outline-danger" for="btn-nao-panorama">Não</label>
-                                </div>
-                            </div>
                             <div class="d-flex align-items-center position-relative mt-10 mb-0">
                                 <button type="submit" class="btn btn-success" name="btnIncluirProposta" id="btnIncluirProposta" value="salvar">Enviar Proposta</button>
                             </div>
