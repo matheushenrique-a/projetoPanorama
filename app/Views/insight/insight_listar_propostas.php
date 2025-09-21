@@ -169,6 +169,17 @@
 											<input type="text" class="form-control" placeholder="CPF" name="txtCPF" value="" />
 										</div>
 									</div>
+									<div class="d-flex align-items-center position-relative mx-3">
+										<div class="mb-3">
+											<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Produto:</label>
+											<select class="form-select form-control-solid" aria-label="" name="produto">
+												<option value=""></option>
+												<?php foreach ($produtos as $p): ?>
+													<option value="<?= $p->nomeProduto ?>"><?= $p->nomeProduto ?></option>
+												<?php endforeach; ?>
+											</select>
+										</div>
+									</div>
 									<div class="mb-3  mx-3">
 										<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Registros:</label>
 										<div class="d-flex align-items-center position-relative">
@@ -196,6 +207,13 @@
 								</div>
 							</div>
 							<div class="card-title">
+								<div class="mb-0">
+									<div class="d-flex align-items-center position-relative my-1 mt-0 mb-0">
+										<button type="submit" class="btn btn-secondary mt-4 ms-3" name="buscarProp" value="buscarProp">Buscar Proposta</button>
+									</div>
+								</div>
+							</div>
+							<div class="card-title">
 								<div class="mb-0 mx-3">
 									<div class="d-flex align-items-center position-relative my-1 mt-0 mb-0">
 										<a href="<?php echo assetfolder; ?>listar-produtos" class="btn btn-primary mt-4 ms-3">Criar Proposta</a>
@@ -220,13 +238,6 @@
 									</div>
 								</div>
 							<?php endif; ?>
-							<div class="card-title">
-								<div class="mb-0">
-									<div class="d-flex align-items-center position-relative my-1 mt-0 mb-0">
-										<button type="submit" class="btn btn-secondary mt-4 ms-3" name="buscarProp" value="buscarProp">Buscar Proposta</button>
-									</div>
-								</div>
-							</div>
 						</div>
 
 						<div class="card-body p-10 table-responsive">

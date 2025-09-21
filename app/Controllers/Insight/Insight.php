@@ -66,6 +66,8 @@ class Insight extends BaseController
         $dados['pageTitle'] = 'Propostas';
         $buscarProp = $this->getpost('buscarProp');
 
+        $dados['produtos'] = $this->dbMasterDefault->selectAll('quid_produtos');
+
         if ($action == "remove") {
             $this->dbMaster->delete('quid_propostas', ['idquid_propostas' => $idProposta]);
             $this->dbMaster->delete('historico_propostas', ['id_proposta' => $idProposta]);
@@ -226,6 +228,7 @@ class Insight extends BaseController
             $equipe = $this->getpost('equipe', false);
             $status = $this->getpost('status', false);
             $auditorMove = $this->getpost('auditorMove', false);
+            $produto = $this->getpost('produto', false);
 
             Services::response()->setCookie('cpf', $cpf);
             Services::response()->setCookie('dateDe', $dateDe);
@@ -239,6 +242,7 @@ class Insight extends BaseController
             Services::response()->setCookie('equipe', $equipe);
             Services::response()->setCookie('status', $status);
             Services::response()->setCookie('auditorMove', $auditorMove);
+            Services::response()->setCookie('produto', $produto);
         } else {
             $cpf = $this->getpost('txtCPF', true);
             $celular = $this->getpost('celular', true);
@@ -252,6 +256,7 @@ class Insight extends BaseController
             $equipe = $this->getpost('equipe', true);
             $status = $this->getpost('status', true);
             $auditorMove = $this->getpost('auditorMove', true);
+            $produto = $this->getpost('produto', true);
         }
 
         $whereCheck = [];
@@ -276,6 +281,8 @@ class Insight extends BaseController
             $likeCheck['status'] = $status;
         if (!empty($auditorMove))
             $likeCheck['id_owner'] = $this->session->userId;
+        if (!empty($produto))
+            $likeCheck['produto'] = $produto;
 
         if (!empty($dateDe) && !empty($dateAte)) {
             $betweenCheck = ["betweenCheck" => ['data_criacao', $dateDe, $dateAte]];
@@ -306,6 +313,7 @@ class Insight extends BaseController
         $propostas = $this->dbMasterDefault->select('quid_propostas', $whereCheck, $whereNotIn + $likeCheck + $whereIn + $betweenCheck);
 
         $dados['indicadores'] = $this->indicadores();
+
 
         $dados['propostas'] = $propostas;
         $dados['cpf'] = $cpf;

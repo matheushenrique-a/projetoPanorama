@@ -32,7 +32,7 @@ class M_insight extends Model
 
     public function atualizar_propostas()
     {
-        $url = "https://grupoquid.panoramaemprestimos.com.br/html.do?action=exportarLayout&saida=json&chaveExportacao=a9fX3qV7zT2nP5wLmR8sD1cJ6bU0yH4eKQvZ&layout=33&dias=10";
+        $url = "https://grupoquid.panoramaemprestimos.com.br/html.do?action=exportarLayout&saida=json&chaveExportacao=a9fX3qV7zT2nP5wLmR8sD1cJ6bU0yH4eKQvZ&layout=33&dias=30";
 
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
