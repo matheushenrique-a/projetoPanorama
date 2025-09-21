@@ -347,7 +347,7 @@ class Insight extends BaseController
         $dados = [];
         if (($handle = fopen($caminho, 'r')) !== false) {
             $linha = 0;
-            while (($row = fgetcsv($handle, 1000, ";")) !== false) {
+            while (($row = fgetcsv($handle, 1000, ",")) !== false) {
                 if ($linha == 0) {
                     $linha++;
                     continue;
