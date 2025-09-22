@@ -437,6 +437,10 @@ class Insight extends BaseController
             "mensagem" => ""
         ];
 
+        if ($params['produto'] == "Seguro de Vida") {
+            return;
+        }
+
         if ($params['codigoEntidade'] == "1581" && $params['produto'] == "Cartão BMG") {
             $planoName = 'BMG CARD';
         } else if ($params['codigoEntidade'] == "4277" && $params['produto'] == "Cartão BMG") {
