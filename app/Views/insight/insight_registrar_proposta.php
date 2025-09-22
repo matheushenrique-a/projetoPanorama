@@ -172,7 +172,7 @@ $productName = $produto->nomeProduto;
                                                                 </div>
                                                                 <div class="input-group" style="width: 260px;">
                                                                     <span class="input-group-text">Quantidade de parcelas</span>
-                                                                    <input type="text" class="form-control fs-3 fw-bold" value="<?= $parcelas ?>" name="parcelas" id="parcelas" <?= $readonly ?> />
+                                                                    <input type="text" class="form-control fs-3 fw-bold" value="<?= $parcelas ?>" name="parcelas" id="parcelas" />
                                                                 </div>
                                                             </div>
                                                         <?php endif; ?>
