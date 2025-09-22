@@ -381,8 +381,8 @@ class M_insight extends Model
             "165022" => "Taline",
             "165021" => "Nayara",
             "165020" => "Marcos",
-            "165019" => "Gabriela",
-            "165017" => "Amanda"
+            // "165019" => "Gabriela",
+            // "165017" => "Amanda"
         ];
 
         $filtrados = [];
