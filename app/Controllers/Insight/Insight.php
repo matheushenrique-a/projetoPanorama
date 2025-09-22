@@ -76,7 +76,12 @@ class Insight extends BaseController
 
         if ($action == "alterar-status") {
             $idProposta = $this->request->getPost('id');
-            $novoStatus = $this->request->getPost('status');
+
+            if ($this->session->role == "OPERADOR") {
+                $novoStatus = $this->getpost('statusOperador');
+            } else {
+                $novoStatus = $this->request->getPost('status');
+            }
 
             if ($novoStatus == "Cancelada") {
                 $motivoCancelamento = $this->request->getpost('motivoCancelamento');

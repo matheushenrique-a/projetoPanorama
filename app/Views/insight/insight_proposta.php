@@ -110,16 +110,12 @@ $movimentation = match ($row->status) {
                                                 <div class="w-50">
                                                     <div class="mb-2">
                                                         <span class="fw-bold mb-1">Assessor:</span>
-                                                        <input type="text" class="form-control form-control-solid assessor" name="assessor" value="<?= $row->assessor ?>" data-original="<?= $row->assessor ?>"
-                                                            <?php if (!$my_security->checkPermission("FORMALIZACAO") && !$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("ADMIN")): echo "readonly";
-                                                            endif; ?> />
+                                                        <input type="text" class="form-control form-control-solid assessor" name="assessor" value="<?= $row->assessor ?>" data-original="<?= $row->assessor ?>" />
                                                     </div>
 
                                                     <div class="mb-2">
                                                         <span class="fw-bold mb-1">Nome Cliente:</span>
-                                                        <input type="text" class="form-control form-control-solid nome" name="nome" value="<?= $row->nome ?>" data-original="<?= $row->nome ?>"
-                                                            <?php if (!$my_security->checkPermission("FORMALIZACAO") && !$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("ADMIN")): echo "readonly";
-                                                            endif; ?> />
+                                                        <input type="text" class="form-control form-control-solid nome" name="nome" value="<?= $row->nome ?>" data-original="<?= $row->nome ?>" />
                                                     </div>
 
                                                     <div class="d-flex gap-4">
@@ -132,15 +128,11 @@ $movimentation = match ($row->status) {
                                                         <div>
                                                             <span class="fw-bold mb-1">Celular:</span>
                                                             <?php $telFormatado = formatarTelefone($row->telefone); ?>
-                                                            <input type="text" class="form-control form-control-solid telefone" name="telefone" id="telefone" value="<?= $telFormatado ?>" data-original="<?= $telFormatado ?>"
-                                                                <?php if (!$my_security->checkPermission("FORMALIZACAO") && !$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("ADMIN")): echo "readonly";
-                                                                endif; ?> />
+                                                            <input type="text" class="form-control form-control-solid telefone" name="telefone" id="telefone" value="<?= $telFormatado ?>" data-original="<?= $telFormatado ?>" />
                                                         </div>
                                                         <div class="mb-2">
                                                             <span class="fw-bold mb-1">Data de Nascimento:</span>
-                                                            <input type="text" class="form-control form-control-solid dataNascimento" name="dataNascimento" id="dataNascimento" value="<?= $row->dataNascimento ?>" data-original="<?= $row->dataNascimento ?>"
-                                                                <?php if (!$my_security->checkPermission("FORMALIZACAO") && !$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("ADMIN")): echo "readonly";
-                                                                endif; ?> />
+                                                            <input type="text" class="form-control form-control-solid dataNascimento" name="dataNascimento" id="dataNascimento" value="<?= $row->dataNascimento ?>" data-original="<?= $row->dataNascimento ?>" />
                                                         </div>
 
                                                     </div>
@@ -151,30 +143,22 @@ $movimentation = match ($row->status) {
                                                 <div class="w-50">
                                                     <div class="mb-2">
                                                         <span class="fw-bold mb-1">Produto:</span>
-                                                        <input type="text" class="form-control form-control-solid produto" name="produto" value="<?= $row->produto ?>" data-original="<?= $row->produto ?>"
-                                                            <?php if (!$my_security->checkPermission("FORMALIZACAO") && !$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("ADMIN")): echo "readonly";
-                                                            endif; ?> />
+                                                        <input type="text" class="form-control form-control-solid produto" name="produto" value="<?= $row->produto ?>" data-original="<?= $row->produto ?>" />
                                                     </div>
 
                                                     <?php if ($produto->temValor == "1"): ?>
                                                         <div class="d-flex gap-4">
                                                             <div class="mb-2">
                                                                 <span class="fw-bold mb-1">Valor:</span>
-                                                                <input type="text" class="form-control form-control-solid valorSaque" name="valorSaque" value="<?= $row->valor ?>" data-original="<?= $row->valor ?>"
-                                                                    <?php if (!$my_security->checkPermission("FORMALIZACAO") && !$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("ADMIN")): echo "readonly";
-                                                                    endif; ?> />
+                                                                <input type="text" class="form-control form-control-solid valorSaque" name="valorSaque" value="<?= $row->valor ?>" data-original="<?= $row->valor ?>" />
                                                             </div>
                                                             <div class="mb-2">
                                                                 <span class="fw-bold mb-1">Valor parcela:</span>
-                                                                <input type="text" class="form-control form-control-solid valorParcela" name="valorParcela" value="<?= $row->valor_parcela ?>" data-original="<?= $row->valor_parcela ?>"
-                                                                    <?php if (!$my_security->checkPermission("FORMALIZACAO") && !$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("ADMIN")): echo "readonly";
-                                                                    endif; ?> />
+                                                                <input type="text" class="form-control form-control-solid valorParcela" name="valorParcela" value="<?= $row->valor_parcela ?>" data-original="<?= $row->valor_parcela ?>" />
                                                             </div>
                                                             <div class="mb-2">
                                                                 <span class="fw-bold mb-1">Quantidade parcelas:</span>
-                                                                <input type="text" class="form-control form-control-solid parcelas" name="parcelas" value="<?= $row->numero_parcela ?>" data-original="<?= $row->numero_parcela ?>"
-                                                                    <?php if (!$my_security->checkPermission("FORMALIZACAO") && !$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("ADMIN")): echo "readonly";
-                                                                    endif; ?> />
+                                                                <input type="text" class="form-control form-control-solid parcelas" name="parcelas" value="<?= $row->numero_parcela ?>" data-original="<?= $row->numero_parcela ?>" />
                                                             </div>
                                                         </div>
                                                     <?php endif; ?>
@@ -196,17 +180,14 @@ $movimentation = match ($row->status) {
                                                         </div>
                                                         <div class="mb-2">
                                                             <span class="fw-bold mb-1">Código Entidade:</span>
-                                                            <input type="text" class="form-control form-control-solid" name="codigoEntidade" id="" value="<?= $row->codigo_entidade ?>" data-original="<?= $row->codigo_entidade ?>"
-                                                                <?php if (!$my_security->checkPermission("FORMALIZACAO") && !$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("ADMIN")): echo "readonly";
-                                                                endif; ?> />
+                                                            <input type="text" class="form-control form-control-solid" name="codigoEntidade" id="" value="<?= $row->codigo_entidade ?>" data-original="<?= $row->codigo_entidade ?>" />
                                                         </div>
                                                     </div>
 
 
                                                     <div class="input-group mt-2 d-flex flex-column">
                                                         <span class="fw-bold mb-1">Observação:</span>
-                                                        <textarea class="form-control form-control-solid" placeholder="..." name="observacaoInicial" style="width: 400px;" <?php if (!$my_security->checkPermission("FORMALIZACAO") && !$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("ADMIN")): echo "readonly";
-                                                                                                                                                                            endif; ?>><?= $row->observacaoInicial ?></textarea>
+                                                        <textarea class="form-control form-control-solid" placeholder="..." name="observacaoInicial" style="width: 400px;"><?= $row->observacaoInicial ?></textarea>
                                                     </div>
 
                                                     <?php if ($my_security->checkPermission("ADMIN")): ?>
@@ -216,78 +197,82 @@ $movimentation = match ($row->status) {
                                                     <?php endif; ?>
 
                                                     <input type="hidden" name="userId" value="<?= $row->userId ?>" />
+                                                    <input type="hidden" name="statusOperador" value="<?= $row->status ?>" />
                                                 </div>
                                             </div>
                                         </div>
 
-                                        <?php if ($my_security->checkPermission("SUPERVISOR") || $my_security->checkPermission("FORMALIZACAO")): ?>
-                                            <div class="modal-footer d-flex gap-4 justify-content-between px-6 pb-4 mt-6">
-                                                <?php if ($my_security->checkPermission("ADMIN") || $my_security->checkPermission("FORMALIZACAO")): ?>
-                                                    <div class="d-flex gap-4">
-                                                        <div style="width: 200px;">
-                                                            <label for="status_<?= $row->idquid_propostas ?>" class="form-label">Alterar Status</label>
-                                                            <select class="form-select" name="status">
-                                                                <option value="Adesão" <?= $row->status == 'Adesão' ? 'selected' : '' ?>>Adesão</option>
-                                                                <option value="Auditoria" <?= $row->status == 'Auditoria' ? 'selected' : '' ?>>Auditoria</option>
-                                                                <option value="Aprovada" <?= $row->status == 'Aprovada' ? 'selected' : '' ?>>Aprovada</option>
-                                                                <option value="Pendente" <?= $row->status == 'Pendente' ? 'selected' : '' ?>>Pendente</option>
-                                                                <option value="Análise" <?= $row->status == 'Análise' ? 'selected' : '' ?>>Análise</option>
-                                                                <option value="Cancelada" <?= $row->status == 'Cancelada' ? 'selected' : '' ?>>Cancelada</option>
+
+                                        <div class="modal-footer d-flex gap-4 justify-content-between px-6 pb-4 mt-2">
+                                            <?php if ($my_security->checkPermission("ADMIN") || $my_security->checkPermission("FORMALIZACAO")): ?>
+                                                <div class="d-flex gap-4">
+                                                    <div style="width: 200px;">
+                                                        <label for="status_<?= $row->idquid_propostas ?>" class="form-label">Alterar Status</label>
+                                                        <select class="form-select" name="status">
+                                                            <option value="Adesão" <?= $row->status == 'Adesão' ? 'selected' : '' ?>>Adesão</option>
+                                                            <option value="Auditoria" <?= $row->status == 'Auditoria' ? 'selected' : '' ?>>Auditoria</option>
+                                                            <option value="Aprovada" <?= $row->status == 'Aprovada' ? 'selected' : '' ?>>Aprovada</option>
+                                                            <option value="Pendente" <?= $row->status == 'Pendente' ? 'selected' : '' ?>>Pendente</option>
+                                                            <option value="Análise" <?= $row->status == 'Análise' ? 'selected' : '' ?>>Análise</option>
+                                                            <option value="Bloqueado" <?= $row->status == 'Bloqueado' ? 'selected' : '' ?>>Bloqueado</option>
+                                                            <option value="Cancelada" <?= $row->status == 'Cancelada' ? 'selected' : '' ?>>Cancelada</option>
+                                                        </select>
+
+                                                        <div id="motivoDiv" style="display: none;" class="mt-2">
+                                                            <label for="status_<?= $row->idquid_propostas ?>" class="form-label">Motivo</label>
+                                                            <select class="form-select" name="motivoCancelamento">
+                                                                <option value=""></option>
+                                                                <?php
+                                                                $motivosCancelamento = json_decode($produto->motivosCancelamento, true) ?? [];
+                                                                foreach ($motivosCancelamento as $optionCancelamento):
+                                                                ?>
+                                                                    <option value="<?= htmlspecialchars($optionCancelamento) ?>" <?= $row->motivoCancelamento == $optionCancelamento ? 'selected' : '' ?>>
+                                                                        <?= htmlspecialchars($optionCancelamento) ?>
+                                                                    </option>
+                                                                <?php endforeach; ?>
                                                             </select>
-
-                                                            <div id="motivoDiv" style="display: none;" class="mt-2">
-                                                                <label for="status_<?= $row->idquid_propostas ?>" class="form-label">Motivo</label>
-                                                                <select class="form-select" name="motivoCancelamento">
-                                                                    <option value=""></option>
-                                                                    <?php
-                                                                    $motivosCancelamento = json_decode($produto->motivosCancelamento, true) ?? [];
-                                                                    foreach ($motivosCancelamento as $optionCancelamento):
-                                                                    ?>
-                                                                        <option value="<?= htmlspecialchars($optionCancelamento) ?>" <?= $row->motivoCancelamento == $optionCancelamento ? 'selected' : '' ?>>
-                                                                            <?= htmlspecialchars($optionCancelamento) ?>
-                                                                        </option>
-                                                                    <?php endforeach; ?>
-                                                                </select>
-                                                            </div>
-
-                                                            <div id="resumoDiv" style="display: none;" class="mt-2">
-                                                                <label for="status_<?= $row->idquid_propostas ?>" class="form-label">Pendência</label>
-                                                                <select class="form-select" id="status_<?= $row->resumo ?>" name="resumo">
-                                                                    <option value=""></option>
-                                                                    <?php
-                                                                    $motivosPendencia = json_decode($produto->motivosPendencia, true) ?? [];
-                                                                    foreach ($motivosPendencia as $optionPendencias):
-                                                                    ?>
-                                                                        <option value="<?= htmlspecialchars($optionPendencias) ?>" <?= $row->resumo == $optionPendencias ? 'selected' : '' ?>>
-                                                                            <?= htmlspecialchars($optionPendencias) ?>
-                                                                        </option>
-                                                                    <?php endforeach; ?>
-                                                                </select>
-                                                            </div>
                                                         </div>
 
-                                                        <div class="flex-grow-1">
-                                                            <label class="form-label">Observação:</label>
-                                                            <div class="form-control fs-8" id="pasteArea" contenteditable="true" style="min-height:120px; width: 300px"></div>
-                                                            <input type="hidden" name="conteudo" id="conteudo">
+                                                        <div id="resumoDiv" style="display: none;" class="mt-2">
+                                                            <label for="status_<?= $row->idquid_propostas ?>" class="form-label">Pendência</label>
+                                                            <select class="form-select" id="status_<?= $row->resumo ?>" name="resumo">
+                                                                <option value=""></option>
+                                                                <?php
+                                                                $motivosPendencia = json_decode($produto->motivosPendencia, true) ?? [];
+                                                                foreach ($motivosPendencia as $optionPendencias):
+                                                                ?>
+                                                                    <option value="<?= htmlspecialchars($optionPendencias) ?>" <?= $row->resumo == $optionPendencias ? 'selected' : '' ?>>
+                                                                        <?= htmlspecialchars($optionPendencias) ?>
+                                                                    </option>
+                                                                <?php endforeach; ?>
+                                                            </select>
                                                         </div>
                                                     </div>
-                                                <?php endif; ?>
 
-                                                <div class="d-flex mt-20 gap-4">
+                                                    <div class="flex-grow-1">
+                                                        <label class="form-label">Observação:</label>
+                                                        <div class="form-control fs-8" id="pasteArea" contenteditable="true" style="min-height:120px; width: 300px"></div>
+                                                        <input type="hidden" name="conteudo" id="conteudo">
+                                                    </div>
+                                                </div>
+                                            <?php endif; ?>
+
+                                            <div class="d-flex mt-20 gap-4">
+                                                <?php if ($my_security->checkPermission("ADMIN") || $my_security->checkPermission("FORMALIZACAO")): ?>
                                                     <div>
                                                         <button type="button" class="btn btn-danger d-flex align-items-center gap-2" onclick="confirmarExclusao('<?= $row->idquid_propostas ?>')">
                                                             <i class="bi bi-trash fs-5 text-white"></i>
                                                             <span class="text-white fw-semibold">Excluir Proposta</span>
                                                         </button>
                                                     </div>
+                                                <?php endif; ?>
 
-                                                    <button type="submit" form="formEdit" id="saveChanges" class="btn btn-primary">
-                                                        Salvar Alterações
-                                                    </button>
-                                                </div>
+                                                <button type="submit" form="formEdit" id="saveChanges" class="btn btn-primary">
+                                                    Salvar Alterações
+                                                </button>
                                             </div>
-                                        <?php endif; ?>
+                                        </div>
+
                                     </div>
 
                                     <div class="tab-pane fade" id="kt_tab_pane_2" role="tabpanel">

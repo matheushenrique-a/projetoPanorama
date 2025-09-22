@@ -266,7 +266,7 @@
 											"Pendente"  => "warning",
 											"Adesão"   => "dark",
 											"Auditoria" => "warning",
-											"TED Devolvida" => "warning",
+											"Bloqueado" => "danger",
 											default     => "secondary"
 										};
 									?>
