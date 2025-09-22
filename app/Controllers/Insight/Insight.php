@@ -742,27 +742,23 @@ class Insight extends BaseController
             $totalAdicionados = $this->getpost('totalAdicionados');
             $produtosSelecionados = json_decode($this->request->getPost('produtosSelecionados'), true) ?? [];
 
-            $respostaPanorama = $this->getpost('resposta_panorama');
-
             $returnData = [];
 
-            if ($respostaPanorama == "sim") {
-                $returnData = $this->panorama_gravar_proposta_saque([
-                    'assessor' => $assessor,
-                    'produto' => $produto,
-                    'codigoEntidade' => $codigoEntidade,
-                    'cpf' => $cpf,
-                    'dataNascimento' => $dataNascimento,
-                    'matricula' => $matricula,
-                    'nomeCliente' => $nomeCliente,
-                    'celular1' => ['ddd' => $ddd, 'numero' => $telefone],
-                    'adesao' => $adesao,
-                    'valorSaque' => $valorSaque ?? '1',
-                    'valorParcela' => $valorParcela ?? '1',
-                    'quantidadeParcelas' => $quantidadeParcelas ?? '1',
-                    'observacao' => $observacao
-                ]);
-            }
+            $returnData = $this->panorama_gravar_proposta_saque([
+                'assessor' => $assessor,
+                'produto' => $produto,
+                'codigoEntidade' => $codigoEntidade,
+                'cpf' => $cpf,
+                'dataNascimento' => $dataNascimento,
+                'matricula' => $matricula,
+                'nomeCliente' => $nomeCliente,
+                'celular1' => ['ddd' => $ddd, 'numero' => $telefone],
+                'adesao' => $adesao,
+                'valorSaque' => '1',
+                'valorParcela' => '1',
+                'quantidadeParcelas' => '1',
+                'observacao' => $observacao
+            ]);
 
             if ($totalAdicionados > 1) {
                 $this->m_bmg->gravar_proposta_bmg_database([
