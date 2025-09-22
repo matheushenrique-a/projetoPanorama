@@ -190,7 +190,7 @@ class Home extends BaseController
         //     }
         // }
 
-        if ($this->session->role == "AUDITOR" || $this->session->userId == "165001") {
+        if ($this->session->role == "AUDITOR" || $this->session->userId == "165001" || $this->m_security->checkPermission("ADMIN")) {
             $ultimasPropostasAuditor = $this->m_bmg->ultimasPropostasAuditor(8);
 
             $ultimasPropostasAuditorTotal = $this->m_bmg->ultimasPropostasAuditorTotal(8);
