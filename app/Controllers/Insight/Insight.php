@@ -441,7 +441,7 @@ class Insight extends BaseController
             $planoName = 'BMG CARD';
         } else if ($params['codigoEntidade'] == "4277" && $params['produto'] == "Cartão BMG") {
             $planoName = 'BMG BENEFICIO CARD';
-        } else if($params['produto'] == "Seguro Med Família") {
+        } else if ($params['produto'] == "Seguro Med Família") {
             $planoName = 'BMG MED FAMILIAR';
         } else {
             $planoName = 'SAQUE ELETRONICO';
@@ -485,6 +485,7 @@ class Insight extends BaseController
             'TELEFONE' => formatarTelefone($numeroFormat),
             'DATANASCIMENTO' => $dataNascimento,
             'MATRICULA' => $matricula,
+            'ESPECIE' => '',
             'TABELA' => $planoName,
             'DATA_CADASTRO' => date('d/m/Y H:i:s'),
             'BANCO' => 'BMG',
@@ -505,6 +506,7 @@ class Insight extends BaseController
             'TELEFONE',
             'DATANASCIMENTO',
             'MATRICULA',
+            'ESPECIE',
             'TABELA',
             'DATA_CADASTRO',
             'BANCO',
