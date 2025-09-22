@@ -802,7 +802,7 @@
 
 						<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
 
-						<?php if ($my_security->checkPermission("SUPERVISOR") || $my_security->checkPermission("FORMALIZACAO")): ?>
+						<?php if ($my_security->checkPermission("SUPERVISOR") && $session->userId !== "165001"): ?>
 
 							<div class="col-xl-4 w-50">
 								<div class="card card-flush h-md-100 shadow-sm">
@@ -891,9 +891,70 @@
 									</div>
 								</div>
 							</div>
-
 						<?php endif; ?>
 
+						<?php if ($session->role == "AUDITOR" || $session->userId == "165001" || $my_security->checkPermission("ADMIN")): ?>
+							<div class="col-xl-4 w-50">
+								<div class="card card-flush h-md-100 shadow-sm">
+									<div class="card-header pt-7">
+										<h3 class="card-title align-items-start flex-column">
+											<span class="card-label fw-bold text-dark fs-4">Tabela de Auditoria (em desenvolvimento 🚧)</span>
+											<span class="text-muted mt-2 fw-semibold fs-6">Quantidade de propostas atuadas</span>
+										</h3>
+									</div>
+
+									<div class="card-body pt-6">
+										<div class="table-responsive">
+											<table class="table table-rounded table-bordered border gy-5 gs-7">
+												<thead class="bg-light">
+													<tr class="fw-bold text-muted">
+														<th class="ps-10">#</th>
+														<th>Auditor</th>
+														<th class="text-end">Qtd</th>
+													</tr>
+												</thead>
+												<tbody>
+													<?php
+													$posicao = 1;
+													$color = "secondary";
+													$textColor = "gray-500";
+													?>
+													<?php foreach ($progressoAuditoria as $row): ?>
+														<tr style="<?= $posicao == 1 ? 'box-shadow: 0 0 0px; font-weight: bold;' : '' ?>"
+															class="text-gray-600">
+															<td class="align-middle">
+																<span class="badge bg-warning fs-6 rounded-circle text-black"
+																	style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; <?= $posicao == 1 ? 'box-shadow: 0 0px 3px' : '' ?>">
+																	<?= $posicao == 1 ? "👑" : $posicao; ?>
+																</span>
+															</td>
+															<td class="align-middle">
+																<span class="fw-bold fs-6">
+																	<?php
+																	$nomes = explode(' ', trim($row->auditor));
+																	if (count($nomes) > 1) {
+																		echo $nomes[0] . ' ' . $nomes[count($nomes) - 1];
+																	} else {
+																		echo $row->auditor;
+																	}
+																	?>
+																</span>
+															</td>
+															<td class="text-end align-middle">
+																<span class="fs-5 px-3 py-2">
+																	<?= $row->total_propostas; ?>
+																</span>
+															</td>
+														</tr>
+														<?php $posicao++; ?>
+													<?php endforeach; ?>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+						<?php endif; ?>
 					</div>
 				</div>
 			</div>
