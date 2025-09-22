@@ -80,7 +80,7 @@
 										container.innerHTML = "";
 
 										lista.forEach(row => {
-											if (["Aprovada", "Cancelada", "Análise", "Adesão"].includes(row.status)) return;
+											if (["Aprovada", "Cancelada", "Análise", "Adesão", "Pendente", "Bloqueado"].includes(row.status)) return;
 
 											let valor = row.valor || 0;
 											valor = parseFloat(valor.toString().replace(',', '.'));
