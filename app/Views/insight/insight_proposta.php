@@ -143,7 +143,8 @@ $movimentation = match ($row->status) {
                                                 <div class="w-50">
                                                     <div class="mb-2">
                                                         <span class="fw-bold mb-1">Produto:</span>
-                                                        <input type="text" class="form-control form-control-solid produto" name="produto" value="<?= $row->produto ?>" data-original="<?= $row->produto ?>" />
+                                                        <input type="text" class="form-control form-control-solid produto" name="produto" value="<?= $row->produto ?>" data-original="<?= $row->produto ?>" <?php if (!$my_security->checkPermission("FORMALIZACAO") && !$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("ADMIN")): echo "readonly";
+                                                                                                                                                                                                            endif; ?> />
                                                     </div>
 
                                                     <?php if ($produto->temValor == "1"): ?>
