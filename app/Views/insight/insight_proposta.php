@@ -142,6 +142,7 @@ $movimentation = match ($row->status) {
                                                                 <?php if (!$my_security->checkPermission("FORMALIZACAO") && !$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("ADMIN")): echo "readonly";
                                                                 endif; ?> />
                                                         </div>
+
                                                     </div>
 
                                                     <input type="hidden" name="id" value="<?= $row->idquid_propostas ?>">
@@ -193,7 +194,14 @@ $movimentation = match ($row->status) {
                                                                 <?php if (!$my_security->checkPermission("FORMALIZACAO") && !$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("ADMIN")): echo "readonly";
                                                                 endif; ?> />
                                                         </div>
+                                                        <div class="mb-2">
+                                                            <span class="fw-bold mb-1">Código Entidade:</span>
+                                                            <input type="text" class="form-control form-control-solid" name="codigoEntidade" id="" value="<?= $row->codigo_entidade ?>" data-original="<?= $row->codigo_entidade ?>"
+                                                                <?php if (!$my_security->checkPermission("FORMALIZACAO") && !$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("ADMIN")): echo "readonly";
+                                                                endif; ?> />
+                                                        </div>
                                                     </div>
+
 
                                                     <div class="input-group mt-2 d-flex flex-column">
                                                         <span class="fw-bold mb-1">Observação:</span>
@@ -203,7 +211,7 @@ $movimentation = match ($row->status) {
 
                                                     <?php if ($my_security->checkPermission("ADMIN")): ?>
                                                         <div>
-                                                            <p class="mt-2">Produto base: <?= $row->produtoBase?></p>
+                                                            <p class="mt-2">Produto base: <?= $row->produtoBase ?></p>
                                                         </div>
                                                     <?php endif; ?>
 

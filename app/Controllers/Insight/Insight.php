@@ -91,6 +91,7 @@ class Insight extends BaseController
             $observacaoInicial = $this->getPost('observacaoInicial');
             $panorama_id = $this->getpost('idPanorama');
             $parcelas = $this->getpost('parcelas');
+            $codigoEntidade = $this->getpost('codigoEntidade');
 
             $dataCriacaoStr = $this->getpost('dataCriacao');
             $dataCriacao = \DateTime::createFromFormat('d/m/Y', $dataCriacaoStr);
@@ -188,6 +189,7 @@ class Insight extends BaseController
                     'nome' => $nome,
                     'produto' => $produto,
                     'valor' => $valorSaque,
+                    'codigo_entidade' => $codigoEntidade,
                     'valor_parcela' => $valorParcela,
                     'panorama_id' => $panorama_id,
                     'numero_parcela' => $parcelas,

@@ -126,6 +126,7 @@
 											<select class="form-select form-control-solid" aria-label="" name="status">
 												<option value=""></option>
 												<option value="Adesão">Adesão</option>
+												<option value="Bloqueado">Bloqueado</option>
 												<option value="Auditoria">Auditoria</option>
 												<option value="Pendente">Pendente</option>
 												<option value="Análise">Análise</option>
