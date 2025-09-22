@@ -252,7 +252,7 @@
 										<th data-sortable="false" class="min-w-100px">CPF</th>
 										<th data-sortable="false" class="min-w-50">Valor</th>
 										<th data-sortable="false" class="min-w-25px">Produto</th>
-										<?php if ($session->role !== "OPERADOR"): ?>
+										<?php if ($session->role == "AUDITOR"): ?>
 											<th data-sortable="false" class="min-w-50px">Ver</th>
 										<?php endif; ?>
 									</tr>
@@ -291,7 +291,7 @@
 											<td class="align-middle"><?= $row->cpf; ?></td>
 											<td class="align-middle text-success">R$ <?= number_format((float)$row->valor, 2, ',', '.') ?></td>
 											<td class="align-middle text-primary"><?= $row->produto ?></td>
-											<?php if ($session->role !== "OPERADOR"): ?>
+											<?php if ($session->role == "AUDITOR"): ?>
 												<td class="align-middle">
 													<a target="_blank" href="https://grupoquid.panoramaemprestimos.com.br/emprestimoInterno.do?action=exibir&codigo=<?= $row->panorama_id ?>" class="btn btn-sm btn-icon btn-bg-light btn-active-color-primary w-25px h-25px">
 														<span class="svg-icon svg-icon-5 svg-icon-gray-700">
