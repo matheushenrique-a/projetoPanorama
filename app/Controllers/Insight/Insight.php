@@ -441,6 +441,8 @@ class Insight extends BaseController
             $planoName = 'BMG CARD';
         } else if ($params['codigoEntidade'] == "4277" && $params['produto'] == "Cartão BMG") {
             $planoName = 'BMG BENEFICIO CARD';
+        } else if($params['produto'] == "Seguro Med Família") {
+            $planoName = 'BMG MED FAMILIAR';
         } else {
             $planoName = 'SAQUE ELETRONICO';
         }
@@ -458,11 +460,10 @@ class Insight extends BaseController
         $cpf = $params['cpf'] ?? '';
         $adesao = $params['adesao'] ?? '';
         $matricula = $params['matricula'] ?? '';
-        $especie = $params['especie'] ?? '';
         $nomeCliente = $params['nomeCliente'];
         $dataNascimento = $params['dataNascimento'] ?? '';
         $codigoEntidade = $params['codigoEntidade'];
-        $observacao = $params['observacao'];
+        $observacao = $params['observacao'] ?? '';
 
         if ($codigoEntidade !== "164") {
             $produto = "INSS";
@@ -484,7 +485,6 @@ class Insight extends BaseController
             'TELEFONE' => formatarTelefone($numeroFormat),
             'DATANASCIMENTO' => $dataNascimento,
             'MATRICULA' => $matricula,
-            'ESPECIE' => $especie,
             'TABELA' => $planoName,
             'DATA_CADASTRO' => date('d/m/Y H:i:s'),
             'BANCO' => 'BMG',
@@ -505,7 +505,6 @@ class Insight extends BaseController
             'TELEFONE',
             'DATANASCIMENTO',
             'MATRICULA',
-            'ESPECIE',
             'TABELA',
             'DATA_CADASTRO',
             'BANCO',
@@ -742,8 +741,6 @@ class Insight extends BaseController
             $totalAdicionados = $this->getpost('totalAdicionados');
             $produtosSelecionados = json_decode($this->request->getPost('produtosSelecionados'), true) ?? [];
 
-            $returnData = [];
-
             $returnData = $this->panorama_gravar_proposta_saque([
                 'assessor' => $assessor,
                 'produto' => $produto,
@@ -754,9 +751,9 @@ class Insight extends BaseController
                 'nomeCliente' => $nomeCliente,
                 'celular1' => ['ddd' => $ddd, 'numero' => $telefone],
                 'adesao' => $adesao,
-                'valorSaque' => '1',
-                'valorParcela' => '1',
-                'quantidadeParcelas' => '1',
+                'valorSaque' => $valorSaque,
+                'valorParcela' => $valorParcela,
+                'quantidadeParcelas' => $quantidadeParcelas,
                 'observacao' => $observacao
             ]);
 
