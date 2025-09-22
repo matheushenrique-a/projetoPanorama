@@ -97,6 +97,7 @@ class Insight extends BaseController
             $panorama_id = $this->getpost('idPanorama');
             $parcelas = $this->getpost('parcelas');
             $codigoEntidade = $this->getpost('codigoEntidade');
+            $adesao = $this->getpost('adesao');
 
             $dataCriacaoStr = $this->getpost('dataCriacao');
             $dataCriacao = \DateTime::createFromFormat('d/m/Y', $dataCriacaoStr);
@@ -189,6 +190,7 @@ class Insight extends BaseController
                 $tabela = 'quid_propostas';
                 $valores = [
                     'status' => $novoStatus,
+                    'adesao' => $adesao,
                     'cpf' => $cpf,
                     'telefone' => $telefone,
                     'nome' => $nome,

@@ -141,10 +141,18 @@ $movimentation = match ($row->status) {
                                                 </div>
 
                                                 <div class="w-50">
-                                                    <div class="mb-2">
-                                                        <span class="fw-bold mb-1">Produto:</span>
-                                                        <input type="text" class="form-control form-control-solid produto" name="produto" value="<?= $row->produto ?>" data-original="<?= $row->produto ?>" <?php if (!$my_security->checkPermission("FORMALIZACAO") && !$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("ADMIN")): echo "readonly";
+                                                    <div class="d-flex gap-4">
+                                                        <div class="mb-2">
+                                                            <span class="fw-bold mb-1">Produto:</span>
+                                                            <input type="text" class="form-control form-control-solid produto" name="produto" value="<?= $row->produto ?>" data-original="<?= $row->produto ?>" <?php if (!$my_security->checkPermission("FORMALIZACAO") && !$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("ADMIN")): echo "readonly";
+                                                                                                                                                                                                                endif; ?> />
+                                                        </div>
+                                                        <div class="mb-2">
+                                                            <span class="fw-bold mb-1">Adesão:</span>
+                                                            <input
+                                                                type="text" class="form-control form-control-solid adesao" name="adesao" value="<?= $row->adesao ?>" data-original="<?= $row->adesao ?>" <?php if (!$my_security->checkPermission("FORMALIZACAO") && !$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("ADMIN")): echo "readonly";
                                                                                                                                                                                                             endif; ?> />
+                                                        </div>
                                                     </div>
 
                                                     <?php if ($produto->temValor == "1"): ?>
@@ -651,5 +659,18 @@ $movimentation = match ($row->status) {
             }
         }
 
+    });
+
+    window.addEventListener('pageshow', function(event) {
+        if (event.persisted) { // true quando veio do cache
+            if (inputValor) {
+                formatarMoeda(inputValor);
+                formatarMoeda(inputParcela);
+            }
+
+            if (inputValorSeguro) {
+                formatarMoeda(inputValorSeguro);
+            }
+        }
     });
 </script>
