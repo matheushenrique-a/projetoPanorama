@@ -141,14 +141,6 @@ $productName = $produto->nomeProduto;
                             if ($produto->valorFixo == "1") {
                                 $readonly = 'readonly';
                             }
-
-                            if ($produto->modalidades == "mensal") {
-                                $parcelas = '1';
-                            } elseif ($produto->modalidades == "anual") {
-                                $parcelas = '12';
-                            } elseif ($produto->modalidades == "outro") {
-                                $parcelas = '';
-                            }
                         ?>
                             <div class="card" id="kt_chat_messenger">
                                 <div class="accordion" id="kt_accordion_1 ms-lg-7 ms-xl-10">
@@ -170,9 +162,13 @@ $productName = $produto->nomeProduto;
                                                                     <span class="input-group-text">Valor da parcela</span>
                                                                     <input type="text" class="form-control fs-3 fw-bold valorParcela" value="<?= !empty($valor) ? '0' : '' ?>" placeholder="R$ -" name="valorParcela" id="valorParcela" <?= $readonly ?> />
                                                                 </div>
-                                                                <div class="input-group" style="width: 260px;">
+                                                                <div class="input-group" style="width: 330px;">
                                                                     <span class="input-group-text">Quantidade de parcelas</span>
-                                                                    <input type="text" class="form-control fs-3 fw-bold" value="<?= $parcelas ?>" name="parcelas" id="parcelas" />
+                                                                    <select class="form-select fs-4 fw-bold" name="parcelas">
+                                                                        <option value="1">Mensal</option>
+                                                                        <option value="12">Parcelado</option>
+                                                                        <option value="94">94 Parcelas</option>
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         <?php endif; ?>
@@ -430,10 +426,14 @@ $productName = $produto->nomeProduto;
                                                                 <span class="input-group-text">Valor da parcela</span>
                                                                 <input type="text" class="form-control fs-3 fw-bold valorParcela" value="" placeholder="R$ -" name="valorParcela${number}" id="" required/>
                                                             </div>
-                                                            <div class="input-group" style="width: 260px;">
-                                                                <span class="input-group-text">Quantidade de parcelas</span>
-                                                                <input type="text" class="form-control fs-3 fw-bold" value="" name="parcelas${number}" id="" required/>
-                                                            </div>
+                                                            <div class="input-group" style="width: 330px;">
+                                                                    <span class="input-group-text">Quantidade de parcelas</span>
+                                                                    <select class="form-select fs-4 fw-bold" name="parcelas${number}">
+                                                                        <option value="1">Mensal</option>
+                                                                        <option value="12">Parcelado</option>
+                                                                        <option value="94">94 Parcelas</option>
+                                                                    </select>
+                                                                </div>
                                                         </div>
                                                     </div>
                                                 </div>
