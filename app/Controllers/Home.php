@@ -45,7 +45,7 @@ class Home extends BaseController
 
         $resultados = $this->m_bmg->countPropostasPorDia();
         $resultadosEquipe = $this->m_bmg->countPropostasPorDiaEquipe();
-        
+
         $labels = [];
         $valores = [];
 
@@ -195,9 +195,12 @@ class Home extends BaseController
 
             $ultimasPropostasAuditorTotal = $this->m_bmg->ultimasPropostasAuditorTotal(8);
 
+            $dados['progressoAuditoria'] = $this->m_insight->quantidadePorAuditor();
+
             $dados['ultimasPropostasAuditor'] = $ultimasPropostasAuditor;
             $dados['ultimasPropostasAuditorTotal'] = $ultimasPropostasAuditorTotal;
         }
+
 
         $dados['profile_image'] = $this->session->profile_image;
 

@@ -358,4 +358,44 @@ class M_insight extends Model
     {
         return $this->dbMasterDefault->insert('quid_clientes', $data);
     }
+
+    public function quantidadePorAuditor()
+    {
+        $sql = "
+        SELECT 
+            id_owner,
+            COUNT(*) AS total_propostas
+        FROM quid_propostas
+        WHERE MONTH(data_criacao) = MONTH(CURDATE())
+          AND YEAR(data_criacao) = YEAR(CURDATE())
+        GROUP BY id_owner
+        ORDER BY total_propostas DESC;
+    ";
+
+        $result = $this->dbMasterDefault
+            ->runQuery($sql)['result']
+            ->getResult();
+
+        // Mapeamento dos IDs para nomes
+        $auditores = [
+            "165022" => "Taline",
+            "165021" => "Nayara",
+            "165020" => "Marcos",
+            "165019" => "Gabriela",
+            "165017" => "Amanda"
+        ];
+
+        $filtrados = [];
+
+        foreach ($result as $row) {
+            if (isset($auditores[$row->id_owner])) {
+                $filtrados[] = (object)[
+                    'auditor' => $auditores[$row->id_owner],
+                    'total_propostas' => $row->total_propostas
+                ];
+            }
+        }
+
+        return $filtrados;
+    }
 }
