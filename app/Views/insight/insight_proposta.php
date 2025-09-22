@@ -84,18 +84,35 @@ $movimentation = match ($row->status) {
                                 <div class="tab-content p-6" id="myTabContent">
                                     <div class="tab-pane fade show active" id="kt_tab_pane_1" role="tabpanel">
                                         <div>
-                                            <?php if (isset($ultimaLinha) && $ultimaLinha->observacao !== null && $ultimaLinha->observacao !== "" && $row->status !== "Adesão"): ?>
+                                            <span class="fw-bold badge badge-<?= $status ?> text-black fs-5 mb-2"><?= $row->status ?></span>
+
+                                            <?php if (isset($ultimaLinha) && $row->status == "Pendente"): ?>
                                                 <div class="alert alert-warning text-gray-700 mb-6">
                                                     <p class="fs-5 text-warning fw-bold border-bottom border-warning p-2 fst-italic">
                                                         <i class="fs-3 me-2 text-warning bi bi-clipboard2-x"></i> <?= $row->resumo ?>
                                                     </p>
-                                                    <h4 class="text-gray-800">Observação:</h4>
-                                                    <?= html_entity_decode($ultimaLinha->observacao) ?>
+                                                    <?php if ($ultimaLinha->observacao !== null && $ultimaLinha->observacao !== ""): ?>
+                                                        <h4 class="text-gray-800">Observação:</h4>
+                                                        <?= html_entity_decode($ultimaLinha->observacao) ?>
+                                                    <?php endif; ?>
+                                                </div>
+                                            <?php endif; ?>
+
+                                            <?php if (isset($ultimaLinha) && $row->status == "Cancelada"): ?>
+                                                <div class="text-gray-700 mb-6">
+                                                    <p class="fs-5 text-danger fw-bold fst-italic">
+                                                        <?= $row->motivoCancelamento ?>
+                                                    </p>
+                                                    <?php if ($ultimaLinha->observacao !== null && $ultimaLinha->observacao !== ""): ?>
+                                                        <h4 class="text-gray-800">Observação:</h4>
+                                                        <?= html_entity_decode($ultimaLinha->observacao) ?>
+                                                    <?php endif; ?>
                                                 </div>
                                             <?php endif; ?>
 
                                             <div class="d-flex justify-content-between">
-                                                <span class="fw-bold badge badge-<?= $status ?> text-black fs-5 mb-4"><?= $row->status ?></span>
+
+
                                                 <div>
                                                     <td class="observacao"><?= html_entity_decode($linha->observacao ?? '') ?> </td>
                                                 </div>
