@@ -239,214 +239,181 @@
 							</div>
 						<?php endif; ?>
 
-						<?php if (!$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("FORMALIZACAO")): ?>
+						<?php
+						if (!$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("FORMALIZACAO")):
+
+						?>
+							<style>
+								/* Tema claro (padrão Bootstrap) */
+								:root {
+									--analise-bg: var(--bs-info);
+									--analise-text: #000;
+
+									--pendente-bg: var(--bs-warning);
+									--pendente-text: #000;
+
+									--aprovada-bg: var(--bs-success);
+									--aprovada-text: #fff;
+
+									--cancelada-bg: #9ca3af;
+									/* cinza */
+									--cancelada-text: #000;
+
+									--auditoria-bg: var(--bs-warning);
+									--auditoria-text: #000;
+
+									--todos-bg: var(--bs-secondary);
+									--todos-text: #fff;
+								}
+
+								/* Tema escuro */
+								[data-theme="dark"] {
+									--analise-bg: #0dcaf0;
+									/* pode escolher outra variação */
+									--analise-text: #fff;
+
+									--pendente-bg: #ffc107;
+									--pendente-text: #000;
+
+									--aprovada-bg: #198754;
+									--aprovada-text: #fff;
+
+									--cancelada-bg: #6c757d;
+									--cancelada-text: #fff;
+
+									--auditoria-bg: #fd7e14;
+									--auditoria-text: #000;
+
+									--todos-bg: #495057;
+									--todos-text: #fff;
+								}
+							</style>
+							<?php
+							$assessor = $session->nickname;
+							$statusSelecionado = $statusSelecionado ?? 'all'; // vindo do controller
+							$contadores = $contadores ?? [
+								"Análise"   => 0,
+								"Pendente"  => 0,
+								"Aprovada"  => 0,
+								"Cancelada" => 0,
+								"Auditoria" => 0,
+							];
+							$ultimasPropostasBMG = $ultimasPropostasBMG ?? [];
+							?>
 
 							<div class="col-xl-4 w-50">
 								<div class="card h-xl-100">
 									<div class="card-header pt-7 mb-3 pb-3">
 										<h3 class="card-title align-items-start flex-column">
 											<span class="card-label fw-bolder text-gray-800">Suas últimas propostas</span>
-											<span class="text-gray-400 mt-1 fw-bold fs-6"><?php echo $countPropostasBMG; ?>
-												<?php echo ($countPropostasBMG > 1 ? 'propostas digitadas hoje' : 'proposta digitada hoje'); ?></span>
+											<span class="text-gray-400 mt-1 fw-bold fs-6"><?= array_sum($contadores) ?> propostas este mês</span>
 										</h3>
 										<div class="card-toolbar">
-											<a href="<?php echo assetfolder; ?>" class="btn btn-sm btn-light"
-												title="">Atualizar</a>
+											<a href="<?= assetfolder ?>" class="btn btn-sm btn-light">Atualizar</a>
 										</div>
 									</div>
+									<?php
+									// $contadores já é um array simples, com chave = status, valor = total
+									?>
 									<div class="d-flex gap-5 ms-4 pt-3 mb-3 pb-3 flex-wrap">
-										<?php
-										// Inicializa os contadores
-										$contadores = [
-											"Análise" => 0,
-											"Pendente" => 0,
-											"Aprovada" => 0,
-											"Cancelada" => 0,
-											"Auditoria" => 0,
-										];
+										<a href="?status=Análise" class="fw-bold text-decoration-none">
+											<div class="d-flex gap-2 bg-info text-black rounded p-2" style="height:32px;">
+												<span class="bg-light rounded px-2 text-dark"><?= $contadores["Análise"] ?></span>
+												<p class="m-0">Análise</p>
+											</div>
+										</a>
 
-										// Percorre todas as propostas
-										foreach ($mensalPropostasBMG["result"]->getResult() as $row) {
-											if (isset($contadores[$row->status])) {
-												$contadores[$row->status]++;
-											}
-										}
-										?>
+										<a href="?status=Pendente" class="fw-bold text-decoration-none">
+											<div class="d-flex gap-2 bg-warning text-black rounded p-2" style="height:32px;">
+												<span class="bg-light rounded px-2 text-dark"><?= $contadores["Pendente"] ?></span>
+												<p class="m-0">Pendente</p>
+											</div>
+										</a>
 
+										<a href="?status=Aprovada" class="fw-bold text-decoration-none">
+											<div class="d-flex gap-2 bg-success text-white rounded p-2" style="height:32px;">
+												<span class="bg-light rounded px-2 text-dark"><?= $contadores["Aprovada"] ?></span>
+												<p class="m-0">Aprovada</p>
+											</div>
+										</a>
 
-										<div class="fw-bold cursor-pointer filter-btn " data-filter="Análise">
-											<div class="d-flex gap-2 bg-info text-black rounded p-2" style="height: 32px;">
-												<span
-													class="bg-light rounded px-2 text-dark"><?= $contadores["Análise"] ?></span>
-												<p>Análise</p>
+										<a href="?status=Cancelada" class="fw-bold text-decoration-none">
+											<div class="d-flex gap-2 bg-danger text-white rounded p-2" style="height:32px;">
+												<span class="bg-light rounded px-2 text-dark"><?= $contadores["Cancelada"] ?></span>
+												<p class="m-0">Cancelada</p>
 											</div>
-										</div>
-										<div class="fw-bold cursor-pointer filter-btn " data-filter="Pendente">
-											<div class="d-flex gap-2 bg-warning text-black rounded p-2" style="height: 32px;">
-												<span
-													class="bg-light rounded px-2 text-dark"><?= $contadores["Pendente"] ?></span>
-												<p>Pendente</p>
-											</div>
-										</div>
-										<div class="fw-bold cursor-pointer filter-btn " data-filter="Aprovada">
-											<div class="d-flex gap-2 bg-success text-black rounded p-2" style="height: 32px;">
-												<span
-													class="bg-light rounded px-2 text-dark"><?= $contadores["Aprovada"] ?></span>
-												<p>Aprovada</p>
-											</div>
-										</div>
-										<div class="fw-bold cursor-pointer filter-btn " data-filter="Cancelada">
-											<div class="d-flex gap-2 bg-danger text-black rounded p-2" style="height: 32px;">
-												<span
-													class="bg-light rounded px-2 text-dark"><?= $contadores["Cancelada"] ?></span>
-												<p>Cancelada</p>
-											</div>
-										</div>
-										<div class="fw-bold cursor-pointer filter-btn " data-filter="Auditoria">
-											<div class="d-flex gap-2 bg-warning text-black rounded p-2" style="height: 32px;">
-												<span
-													class="bg-light rounded px-2 text-dark"><?= $contadores["Auditoria"] ?></span>
-												<p>Auditoria</p>
-											</div>
-										</div>
-										<div class="d-flex  cursor-pointer filter-btn gap-2 bg-secondary text-dark rounded p-2 filter-btn"
-											data-filter="all" style="height: 32px;">
-											<span class="px-2">Todos</span>
-										</div>
+										</a>
 
+										<a href="?status=Auditoria" class="fw-bold text-decoration-none">
+											<div class="d-flex gap-2 bg-warning text-black rounded p-2" style="height:32px;">
+												<span class="bg-light rounded px-2 text-dark"><?= $contadores["Auditoria"] ?></span>
+												<p class="m-0">Auditoria</p>
+											</div>
+										</a>
+
+										<a href="?status=all" class="fw-bold text-decoration-none">
+											<div class="d-flex gap-2 bg-secondary text-white rounded p-2" style="height:32px;">
+												<span class="px-2"><?= array_sum($contadores) ?></span>
+												<p class="m-0">Todos</p>
+											</div>
+										</a>
 									</div>
-
-									<style>
-										/* Tema claro (padrão Bootstrap) */
-										:root {
-											--analise-bg: var(--bs-info);
-											--analise-text: #000;
-
-											--pendente-bg: var(--bs-warning);
-											--pendente-text: #000;
-
-											--aprovada-bg: var(--bs-success);
-											--aprovada-text: #fff;
-
-											--cancelada-bg: #9ca3af;
-											/* cinza */
-											--cancelada-text: #000;
-
-											--auditoria-bg: var(--bs-warning);
-											--auditoria-text: #000;
-
-											--todos-bg: var(--bs-secondary);
-											--todos-text: #fff;
-										}
-
-										/* Tema escuro */
-										[data-theme="dark"] {
-											--analise-bg: #0dcaf0;
-											/* pode escolher outra variação */
-											--analise-text: #fff;
-
-											--pendente-bg: #ffc107;
-											--pendente-text: #000;
-
-											--aprovada-bg: #198754;
-											--aprovada-text: #fff;
-
-											--cancelada-bg: #6c757d;
-											--cancelada-text: #fff;
-
-											--auditoria-bg: #fd7e14;
-											--auditoria-text: #000;
-
-											--todos-bg: #495057;
-											--todos-text: #fff;
-										}
-									</style>
 
 									<div class="card-body pt-1">
-
-										<?php
-
-										foreach ($ultimasPropostasBMG["result"]->getResult() as $row) {
+										<?php foreach ($ultimasPropostasBMG as $row):
 											$nomeCliente = $row->nome;
 											$cpf = $row->cpf;
 											$adesao = $row->adesao;
 											$valor = $row->valor;
 											$data_criacao = $row->data_criacao;
 											$telefone = formatarTelefone($row->telefone);
-											$panorama_id = $row->panorama_id;
 											$resumo = $row->resumo ?? '';
 											$motivoCancelamento = $row->motivoCancelamento ?? '';
 
 											$atual = '';
+											if ($row->status == 'Pendente') $atual = $resumo;
+											if ($row->status == 'Cancelada') $atual = $motivoCancelamento;
 
-											if ($row->status == 'Pendente') {
-												$atual = $resumo;
-											} elseif ($row->status == 'Cancelada') {
-												$atual = $motivoCancelamento;
-											}
-
-											$status = match ($row->status) {
+											$statusClass = match ($row->status) {
 												"Análise" => "info",
 												"Aprovada" => "success",
 												"Cancelada" => "danger",
 												"Pendente" => "warning",
-												"Adesão" => "dark",
 												"Auditoria" => "warning",
-												"TED Devolvida" => "warning",
 												default => "secondary"
 											};
-
 										?>
-
 											<div class="proposta-item" data-status="<?= $row->status ?>">
-												<!--begin::Item-->
 												<div class="d-flex flex-stack mt-2">
 													<div class="d-flex align-items-center me-5">
-														<a
-															href="proposta/<?= $row->idquid_propostas ?>"
-															class="symbol symbol-45px me-4">
-															<span class="symbol-label bg-<?= $status ?>"><svg class="w-6 h-6 text-dark dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+														<a href="proposta/<?= $row->idquid_propostas ?>" class="symbol symbol-45px me-4">
+															<span class="symbol-label bg-<?= $statusClass ?>"><svg class="w-6 h-6 text-dark dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
 																	<path fill-rule="evenodd" d="M8 3a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1h2a2 2 0 0 1 2 2v15a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h2Zm6 1h-4v2H9a1 1 0 0 0 0 2h6a1 1 0 1 0 0-2h-1V4Zm-6 8a1 1 0 0 1 1-1h6a1 1 0 1 1 0 2H9a1 1 0 0 1-1-1Zm1 3a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2H9Z" clip-rule="evenodd" />
-																</svg>
-
-
-																</svg>
-															</span>
+																</svg></span>
 														</a>
 														<div class="me-5">
-															<span
-																class="text-gray-800 fw-bolder fs-6"><?= substr($nomeCliente, 0, 30) ?></span>
+															<span class="text-gray-800 fw-bolder fs-6"><?= substr($nomeCliente, 0, 30) ?></span>
 															<span class="text-gray-700 fw-bolder d-block fs-6"><?= $row->produto ?></span>
-															<span
-																class="text-gray-400 fw-bold fs-7 d-block text-start ps-0"><?= $adesao . " | " . $cpf ?></span>
-															<span
-																class="text-success fw-bolder fs-6"><?= 'R$ ' . number_format((float) $valor, 2, ',', '.') ?></span>
+															<span class="text-gray-400 fw-bold fs-7 d-block"><?= $adesao . " | " . $cpf ?></span>
+															<span class="text-success fw-bolder fs-6"><?= 'R$ ' . number_format((float) $valor, 2, ',', '.') ?></span>
 														</div>
 													</div>
 													<div class="text-gray-400 fw-bolder fs-7 text-end">
-														<span
-															class="text-gray-800 fw-bolder fs-6 d-block text-hover-info"><?= $telefone ?></span>
-														<span
-															class="text-gray-400 fw-bold fs-7 d-block ps-0"><?= time_elapsed_string($data_criacao) ?></span>
-														<span
-															class="badge badge-light-<?= $status ?> fs-6 mt-2"><?= $row->status ?></span>
-														<span class="text-<?= $status ?> ms-2"><?= $atual ?></span>
+														<span class="text-gray-800 fw-bolder fs-6 d-block"><?= $telefone ?></span>
+														<span class="text-gray-400 fw-bold fs-7 d-block"><?= time_elapsed_string($data_criacao) ?></span>
+														<span class="badge badge-light-<?= $statusClass ?> fs-6 mt-2"><?= $row->status ?></span>
+														<span class="text-<?= $statusClass ?> ms-2"><?= $atual ?></span>
 													</div>
 												</div>
 												<div class="separator separator-dashed my-3"></div>
-												<!--end::Item-->
 											</div>
-
-
-										<?php }; ?>
-
+										<?php endforeach; ?>
 									</div>
+
 									<div class="pb-5 d-flex justify-content-center gap-10">
-										<a href="<?php echo assetfolder; ?>listar-propostas/0/0"
-											class="text-primary opacity-75-hover fs-6 fw-semibold">Ver mais propostas</a>
+										<a href="<?= assetfolder ?>listar-propostas/0/0" class="text-primary opacity-75-hover fs-6 fw-semibold">Ver mais propostas</a>
 										<span class="text-gray-500 opacity-75-hover fs-6 fw-semibold">| </span>
-										<a href="<?php echo assetfolder; ?>listar-produtos"
-											class="text-primary opacity-75-hover fs-6 fw-semibold">Criar nova proposta</a>
+										<a href="<?= assetfolder ?>listar-produtos" class="text-primary opacity-75-hover fs-6 fw-semibold">Criar nova proposta</a>
 									</div>
 								</div>
 							</div>
@@ -972,22 +939,6 @@
 
 <script>
 	document.addEventListener("DOMContentLoaded", () => {
-		const filterBtns = document.querySelectorAll(".filter-btn");
-		const propostas = document.querySelectorAll(".proposta-item");
-
-		filterBtns.forEach(btn => {
-			btn.addEventListener("click", () => {
-				const status = btn.getAttribute("data-filter");
-
-				propostas.forEach(item => {
-					if (status === "all" || item.getAttribute("data-status") === status) {
-						item.style.display = "";
-					} else {
-						item.style.display = "none";
-					}
-				});
-			});
-		});
 
 		let ctx = document.getElementById('graficoPropostas');
 
