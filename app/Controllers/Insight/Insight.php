@@ -464,6 +464,10 @@ class Insight extends BaseController
             $valorPlano = '1';
             $parcelas = '1';
             $prazo = '1';
+        } else if ($params['produto'] == "Seguro Med Família") {
+            $valorPlano = $params['valorSaque'] ?? '1';
+            $parcelas = '1';
+            $prazo = $params['quantidadeParcelas'] ?? '1';
         } else {
             $valorPlano = $params['valorSaque'] ?? '1';
             $parcelas = $params['valorParcela'] ?? '1';
