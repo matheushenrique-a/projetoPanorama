@@ -447,7 +447,7 @@ class Insight extends BaseController
         ];
 
         if ($params['produto'] == "Seguro Med Família") {
-            $planoName = 'BMG CARD';
+            $planoName = 'BMG MED FAMILIAR';
         }
 
         if ($params['codigoEntidade'] == "1581" && $params['produto'] == "Cartão BMG") {
