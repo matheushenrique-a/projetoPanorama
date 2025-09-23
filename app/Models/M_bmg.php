@@ -26,6 +26,7 @@ class M_bmg extends Model
         $this->m_http =  new M_http();
         $this->m_security = new M_seguranca();
         $this->m_insight = new M_insight();
+        $this->db = \Config\Database::connect(); // inicializa $this->db
     }
 
     public function statusSeguro()
@@ -526,13 +527,50 @@ class M_bmg extends Model
         $this->m_insight->registrarMovimentacao($movimentacao);
     }
 
-    public function ultimasPropostasBMG($limit = 6)
+    public function contarPropostasPorStatus($assessor)
     {
-        $sql = "select * from quid_propostas where assessor = '" . $this->session->nickname . "' ";
-        $sql .= "and produtoBase = 1" ;
-        $sql .= " order by data_criacao DESC LIMIT $limit;";
+        $builder = $this->db->table('quid_propostas');
+        $builder->select('status, COUNT(*) as total');
+        $builder->where('assessor', $assessor);
+        $builder->where('produtoBase', 1);
+        $builder->where('MONTH(data_criacao)', date('m'));
+        $builder->where('YEAR(data_criacao)', date('Y'));
+        $builder->groupBy('status');
 
-        return $this->dbMasterDefault->runQuery($sql);
+        $result = $builder->get()->getResult();
+
+        $contadores = [
+            "Análise"   => 0,
+            "Pendente"  => 0,
+            "Aprovada"  => 0,
+            "Cancelada" => 0,
+            "Auditoria" => 0,
+            "Bloqueado" => 0,
+        ];
+
+        foreach ($result as $row) {
+            $contadores[$row->status] = $row->total;
+        }
+
+        return $contadores;
+    }
+
+    public function ultimasPropostasBMG($assessor, $status = 'all', $limit = 10)
+    {
+        $builder = $this->db->table('quid_propostas');
+        $builder->where('assessor', $assessor);
+        $builder->where('produtoBase', 1);
+        $builder->where('MONTH(data_criacao)', date('m'));
+        $builder->where('YEAR(data_criacao)', date('Y'));
+
+        if ($status !== 'all') {
+            $builder->where('status', $status);
+        }
+
+        $builder->orderBy('data_criacao', 'DESC');
+        $builder->limit($limit);
+
+        return $builder->get()->getResult();
     }
 
     public function mensalPropostasBMG()

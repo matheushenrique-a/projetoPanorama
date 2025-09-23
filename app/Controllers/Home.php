@@ -141,6 +141,18 @@ class Home extends BaseController
             // }
             $dados['progresso'] = $this->m_bmg->barraProgressoAssessor();
             $dados['metaEquipe'] = $this->m_insight->buscarMetaSuaEquipe()['firstRow']->meta ?? "";
+
+            $assessor = $this->session->nickname;
+            $statusSelecionado = $this->request->getGet('status') ?? 'all';
+
+            $ultimasPropostasBMG = $this->m_bmg->ultimasPropostasBMG($assessor, $statusSelecionado, 10);
+
+            $dados['contadores'] = $this->m_bmg->contarPropostasPorStatus($assessor);
+
+            $dados += [
+                'ultimasPropostasBMG' => $ultimasPropostasBMG,
+                'statusSelecionado' => $statusSelecionado
+            ];
         }
 
         $dados['nickname'] = $this->session->nickname;
@@ -148,15 +160,11 @@ class Home extends BaseController
         $tabulacoesSucesso = $this->m_argus->tabulacoesSucesso();
         $dados['tabulacoesSucesso'] = $tabulacoesSucesso;
 
-        $ultimasPropostasBMG = $this->m_bmg->ultimasPropostasBMG(10);
-        $dados['ultimasPropostasBMG'] = $ultimasPropostasBMG;
-
         $mensalPropostasBMG = $this->m_bmg->mensalPropostasBMG();
         $dados['mensalPropostasBMG'] = $mensalPropostasBMG;
 
         $countPropostasBMG = $this->m_bmg->countPropostasBMG();
         $dados['countPropostasBMG'] = $countPropostasBMG;
-
 
         // atualização de propostas PANORAMA
         // $tempoMinutos = 5;
