@@ -543,10 +543,18 @@ class Insight extends BaseController
 
         $dadosString = implode(';', $valores);
         $dadosStringISO = $dadosString;
-        $url = 'https://grupoquid.panoramaemprestimos.com.br/html.do?action=adicionarOperacao'
-            . '&token=44321'
-            . '&idImportacao=1466'
-            . '&dados=' . rawurlencode($dadosStringISO);
+
+        if ($params['produto'] == "Seguro Med Família") {
+            $url = 'https://grupoquid.panoramaemprestimos.com.br/html.do?action=adicionarOperacao'
+                . '&token=44321'
+                . '&idImportacao=1494'
+                . '&dados=' . rawurlencode($dadosStringISO);
+        } else {
+            $url = 'https://grupoquid.panoramaemprestimos.com.br/html.do?action=adicionarOperacao'
+                . '&token=44321'
+                . '&idImportacao=1466'
+                . '&dados=' . rawurlencode($dadosStringISO);
+        }
 
         $output = "";
 
