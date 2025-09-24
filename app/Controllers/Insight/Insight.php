@@ -450,6 +450,10 @@ class Insight extends BaseController
             $planoName = 'BMG MED FAMILIAR';
         }
 
+        if ($params['produto'] == "Seguro de Vida") {
+            $planoName = 'GBOEX';
+        }
+
         if ($params['codigoEntidade'] == "1581" && $params['produto'] == "Cartão BMG") {
             $planoName = 'BMG CARD';
         } else if ($params['codigoEntidade'] == "4277" && $params['produto'] == "Cartão BMG") {
@@ -457,6 +461,8 @@ class Insight extends BaseController
         } else if ($params['produto'] == "Seguro Med Família") {
             $planoName = 'BMG MED FAMILIAR';
         } else if ($params['produto'] == "Saque") {
+            $planoName = 'SAQUE ELETRONICO';
+        } else {
             $planoName = 'SAQUE ELETRONICO';
         }
 
@@ -544,7 +550,7 @@ class Insight extends BaseController
         $dadosString = implode(';', $valores);
         $dadosStringISO = $dadosString;
 
-        if ($params['produto'] == "Seguro Med Família") {
+        if ($params['produto'] == "Seguro Med Família" || $params['produto'] == "Seguro de Vida") {
             $url = 'https://grupoquid.panoramaemprestimos.com.br/html.do?action=adicionarOperacao'
                 . '&token=44321'
                 . '&idImportacao=1494'
