@@ -283,7 +283,7 @@ $movimentation = match ($row->status) {
                                             <?php endif; ?>
 
                                             <div class="d-flex mt-20 gap-4">
-                                                <?php if ($my_security->checkPermission("ADMIN") || $my_security->checkPermission("FORMALIZACAO")): ?>
+                                                <?php if ($session->role !== "OPERADOR"): ?>
                                                     <div>
                                                         <button type="button" class="btn btn-danger d-flex align-items-center gap-2" onclick="confirmarExclusao('<?= $row->idquid_propostas ?>')">
                                                             <i class="bi bi-trash fs-5 text-white"></i>
