@@ -446,26 +446,34 @@ class Insight extends BaseController
             "mensagem" => ""
         ];
 
-        if ($params['produto'] == "Seguro Med Família") {
-            $planoName = 'BMG MED FAMILIAR';
-        }
+        switch (true) {
+            case ($params['produto'] === "Seguro de Vida"):
+                $planoName = 'GBOEX';
+                break;
 
-        if ($params['produto'] == "Seguro de Vida") {
-            $planoName = 'GBOEX';
-        }
+            case ($params['codigoEntidade'] === "1581" && $params['produto'] === "Cartão BMG"):
+                $planoName = 'BMG CARD';
+                break;
 
-        if ($params['codigoEntidade'] == "1581" && $params['produto'] == "Cartão BMG") {
-            $planoName = 'BMG CARD';
-        } else if ($params['codigoEntidade'] == "4277" && $params['produto'] == "Cartão BMG") {
-            $planoName = 'BMG BENEFICIO CARD';
-        } else if ($params['produto'] == "Seguro Med Família") {
-            $planoName = 'BMG MED FAMILIAR';
-        } else if ($params['produto'] == "Seguro Med Plus") {
-            $planoName = 'BMG MED PLUS';
-        } else if ($params['produto'] == "Seguro Med Individual") {
-            $planoName = 'BMG MED INDIVIDUAL';
-        } else {
-            $planoName = 'SAQUE ELETRONICO';
+            case ($params['codigoEntidade'] === "4277" && $params['produto'] === "Cartão BMG"):
+                $planoName = 'BMG BENEFICIO CARD';
+                break;
+
+            case ($params['produto'] === "Seguro Med Família"):
+                $planoName = 'BMG MED FAMILIAR';
+                break;
+
+            case ($params['produto'] === "Seguro Med Plus"):
+                $planoName = 'BMG MED PLUS';
+                break;
+
+            case ($params['produto'] === "Seguro Med Individual"):
+                $planoName = 'BMG MED INDIVIDUAL';
+                break;
+
+            default:
+                $planoName = 'SAQUE ELETRONICO';
+                break;
         }
 
         if ($params['produto'] == "Cartão BMG") {
