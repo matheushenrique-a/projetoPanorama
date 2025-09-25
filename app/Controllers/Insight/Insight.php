@@ -460,8 +460,10 @@ class Insight extends BaseController
             $planoName = 'BMG BENEFICIO CARD';
         } else if ($params['produto'] == "Seguro Med Família") {
             $planoName = 'BMG MED FAMILIAR';
-        } else if ($params['produto'] == "Saque") {
-            $planoName = 'SAQUE ELETRONICO';
+        } else if ($params['produto'] == "Seguro Med Plus") {
+            $planoName = 'BMG MED PLUS';
+        } else if ($params['produto'] == "Seguro Med Individual") {
+            $planoName = 'BMG MED INDIVIDUAL';
         } else {
             $planoName = 'SAQUE ELETRONICO';
         }
@@ -470,14 +472,17 @@ class Insight extends BaseController
             $valorPlano = '1';
             $parcelas = '1';
             $prazo = '1';
-        } else if ($params['produto'] == "Seguro Med Família") {
-            $valorPlano = $params['valorSaque'] ?? '1';
+            $valorSeguro = '1';
+        } else if ($params['produto'] == "Seguro Med Família" || $params['produto'] == "Seguro Med Plus" || $params['produto'] == "Seguro Med Individual") {
+            $valorSeguro = $params['valorSaque'] ?? '1';
+            $valorPlano = '1';
             $parcelas = '1';
             $prazo = $params['quantidadeParcelas'] ?? '1';
         } else {
             $valorPlano = $params['valorSaque'] ?? '1';
             $parcelas = $params['valorParcela'] ?? '1';
             $prazo = $params['quantidadeParcelas'] ?? '1';
+            $valorSeguro = '1';
         }
 
         $cpf = $params['cpf'] ?? '';
@@ -516,7 +521,7 @@ class Insight extends BaseController
             'PRAZO' => $prazo,
             'PARCELA' => $parcelas,
             'EMPRESTIMO' => $valorPlano,
-            'SEGURO' => '1',
+            'SEGURO' => $valorSeguro ?? '1',
             'OBSERVACAO' => $observacao
         ];
 
