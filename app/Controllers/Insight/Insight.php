@@ -521,7 +521,7 @@ class Insight extends BaseController
             'PRAZO' => $prazo,
             'PARCELA' => $parcelas,
             'EMPRESTIMO' => $valorPlano,
-            'SEGURO' => $valorSeguro ?? '1',
+            'SEGURO' => $valorSeguro,
             'OBSERVACAO' => $observacao
         ];
 
