@@ -555,7 +555,7 @@ class Insight extends BaseController
         $dadosString = implode(';', $valores);
         $dadosStringISO = $dadosString;
 
-        if ($params['produto'] == "Seguro Med Família" || $params['produto'] == "Seguro de Vida") {
+        if ($params['produto'] == "Seguro Med Família" || $params['produto'] == "Seguro de Vida" || $params['produto'] == "Seguro Med Plus" || $params['produto'] == "Seguro Med Individual") {
             $url = 'https://grupoquid.panoramaemprestimos.com.br/html.do?action=adicionarOperacao'
                 . '&token=44321'
                 . '&idImportacao=1494'
