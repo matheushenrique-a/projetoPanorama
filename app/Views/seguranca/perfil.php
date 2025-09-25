@@ -63,7 +63,30 @@
                                 </div>
                             </div>
                         </div>
+                        <?php if ($cargo !== "Operador"): ?>
+                            <div class="w-25">
+                                <button id="btnSenha" type="button" class="btn btn-primary">Alterar senha</button>
+                            </div>
+                        <?php endif; ?>
                     </div>
+                </div>
+            </div>
+            <div id="divSenhas" class="app-container container-xxl mt-10 mb-10 d-none">
+                <div class="col-xl-3 p-8 card">
+                    <form action="<?php echo assetfolder ?>perfil/senha" id="form">
+                        <h3>Atualizar senha</h3>
+                        <div class="mb-2 mt-5">
+                            <span class="fw-bold mb-1">Senha:</span>
+                            <input type="password" class="form-control" name="senha" id="senha" />
+                        </div>
+                        <div class="mb-2">
+                            <span class="fw-bold mb-1">Repetir senha:</span>
+                            <input type="password" class="form-control" name="repetirSenha" id="repetirSenha" />
+                        </div>
+                        <p id="textPassword" class="d-none text-danger">Senhas não coencidem!</p>
+                        <input name="userId" type="hidden" value="<?= $session->userId ?>">
+                        <button class="btn btn-secondary w-100 mt-5">Salvar</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -78,3 +101,44 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const form = document.querySelector("form");
+        const senha = document.getElementById("senha");
+        const repetirSenha = document.getElementById("repetirSenha");
+        const textPassword = document.getElementById('textPassword');
+        const btn = document.getElementById("btnSenha");
+
+        const divSenhas = document.getElementById('divSenhas');
+
+        btn.addEventListener("click", function() {
+            divSenhas.classList.remove('d-none');
+        });
+
+        form.addEventListener("submit", function(e) {
+            const senhaVal = senha.value.trim();
+            const repetirSenhaVal = repetirSenha.value.trim();
+
+            if (senhaVal !== repetirSenhaVal || senhaVal === "") {
+                e.preventDefault();
+
+                senha.classList.add("is-invalid");
+                repetirSenha.classList.add("is-invalid")
+                textPassword.classList.remove("d-none")
+            } else {
+                senha.classList.remove("is-invalid");
+                repetirSenha.classList.remove("is-invalid");
+                textPassword.classList.add("d-none")
+            }
+        });
+
+        senha.addEventListener("input", () => senha.classList.remove("is-invalid"));
+        senha.addEventListener("input", () => textPassword.classList.add("d-none"));
+        senha.addEventListener("input", () => repetirSenha.classList.remove("is-invalid"));
+
+        repetirSenha.addEventListener("input", () => senha.classList.remove("is-invalid"));
+        repetirSenha.addEventListener("input", () => textPassword.classList.add("d-none"));
+        repetirSenha.addEventListener("input", () => repetirSenha.classList.remove("is-invalid"));
+    });
+</script>

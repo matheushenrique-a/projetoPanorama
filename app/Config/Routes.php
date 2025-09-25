@@ -59,6 +59,7 @@ $routes->match(['get', 'post'], '/clientes/pesquisa', 'Insight\Clientes::pesquis
 $routes->match(['get', 'post'], '/clientes/update', 'Insight\Clientes::update');
 $routes->match(['get', 'post'], '/clientes/criar', 'Insight\Clientes::criar');
 $routes->match(['get', 'post'], '/perfil', 'Insight\Perfil::index');
+$routes->match(['get', 'post'], '/perfil/senha', 'Insight\Perfil::atualizarSenha');
 $routes->match(['get', 'post'], '/atualizar-meta/(:any)/(:any)', 'Insight\Insight::atualizarMetas/$1/$2');
 $routes->match(['get', 'post'], '/atualizar-meta-qtd/(:any)/(:any)', 'Insight\Insight::atualizarMetasQTD/$1/$2');
 $routes->match(['get', 'post'], '/insight-anexar-arquivo/(:any)', 'Insight\Arquivos::anexarArquivos/$1');

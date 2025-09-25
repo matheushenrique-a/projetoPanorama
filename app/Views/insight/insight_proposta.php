@@ -151,7 +151,6 @@ $movimentation = match ($row->status) {
                                                             <span class="fw-bold mb-1">Data de Nascimento:</span>
                                                             <input type="text" class="form-control form-control-solid dataNascimento" name="dataNascimento" id="dataNascimento" value="<?= $row->dataNascimento ?>" data-original="<?= $row->dataNascimento ?>" />
                                                         </div>
-
                                                     </div>
 
                                                     <input type="hidden" name="id" value="<?= $row->idquid_propostas ?>">

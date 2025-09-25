@@ -398,4 +398,9 @@ class M_insight extends Model
 
         return $filtrados;
     }
+
+    public function atualizarSenhaUser($id, $senha)
+    {
+        return $this->dbMasterDefault->update('user_account', ['password' => $senha], ['userId' => $id]);
+    }
 }

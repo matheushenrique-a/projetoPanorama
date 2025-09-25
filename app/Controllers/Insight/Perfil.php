@@ -24,6 +24,8 @@ class Perfil extends \App\Controllers\BaseController
         $dados['email'] = $this->session->email;
         $dados['profile_image'] = $this->session->profile_image;
 
+        $dados['session'] = $this->session;
+
         if ($this->session->role == "SUPERVISOR") {
             $dados['cargo'] = "Supervisor";
         } else if ($this->session->role == "OPERADOR") {
@@ -41,5 +43,17 @@ class Perfil extends \App\Controllers\BaseController
         }
 
         return $this->loadPage('seguranca/perfil', $dados);
+    }
+
+    public function atualizarSenha()
+    {
+        $this->m_insight = new M_insight();
+
+        $senha = $this->getpost('senha');
+        $id = $this->getpost('userId');
+
+        $this->m_insight->atualizarSenhaUser($id, $senha);
+
+        return redirect()->to(urlInstitucional . "perfil");
     }
 }
