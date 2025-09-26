@@ -178,7 +178,7 @@
 																</a>
 															</div>
 														</div>
-														
+
 														<div class="col-lg-6 mb-3">
 															<div class="menu-item p-0 m-0">
 																<a href="https://www.bmgconsig.com.br/principal/fsconsignataria.jsp"

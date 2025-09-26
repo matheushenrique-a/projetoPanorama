@@ -280,7 +280,6 @@ class dbMaster
 		return $this->db->insertID();
 	}
 
-
 	public function insertIgnore($table, $data)
 	{
 		$builder = $this->db->table($table);
@@ -292,7 +291,6 @@ class dbMaster
 
 		return $returnData;
 	}
-
 
 	public function insertBatch($table, array $data)
 	{
@@ -307,7 +305,6 @@ class dbMaster
 			'rowsInserted' => $this->db->affectedRows()
 		];
 	}
-
 
 	public function update($table, $fieldUpdate, $whereArrayUpdt, $fielDynamicdUpdate = null)
 	{

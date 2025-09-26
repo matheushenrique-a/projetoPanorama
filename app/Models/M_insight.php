@@ -192,6 +192,42 @@ class M_insight extends Model
             ->with('success', $mensagem);
     }
 
+    public function importarClientesEmMassaLimite(array $data)
+    {
+        ini_set('max_execution_time', 0);
+        ini_set('memory_limit', '1024M');
+        set_time_limit(0);
+
+        if (empty($data)) {
+            return redirect()
+                ->to(urlInstitucional . 'clientes/upload/limite')
+                ->with('error', 'Nenhum dado para importar.');
+        }
+
+        $tabela = 'quid_clientes_limite';
+        $inseridos = 0;
+        $duplicados = 0;
+
+        foreach ($data as $linha) {
+            $result = $this->dbMasterDefault->insertIgnore($tabela, $linha);
+
+            if ($result["affected_rows"] > 0) {
+                $inseridos++;
+            } else {
+                $duplicados++;
+            }
+        }
+
+        $mensagem = "registros importados com sucesso!";
+        if ($duplicados > 0) {
+            $mensagem .= "registros foram ignorados por duplicidade.";
+        }
+
+        return redirect()
+            ->to(urlInstitucional . 'clientes/upload/limite')
+            ->with('success', $mensagem);
+    }
+
     public function pesquisarClientesPorCpf($cpf)
     {
         $result = $this->dbMasterDefault->selectExact('quid_clientes', ['cpf' => $cpf]);

@@ -297,7 +297,6 @@ $movimentation = match ($row->status) {
                                                 </button>
                                             </div>
                                         </div>
-
                                     </div>
 
                                     <div class="tab-pane fade" id="kt_tab_pane_2" role="tabpanel">

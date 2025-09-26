@@ -57,6 +57,13 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="card-title">
+                                        <div class="mb-0 mx-3">
+                                            <div class="d-flex align-items-center position-relative my-1 mt-0 mb-0">
+                                                <a href="<?php echo assetfolder; ?>clientes/upload/limite" class="mt-4"><i class="bi bi-file-earmark-arrow-up-fill fs-2"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
                                 <?php endif; ?>
                             </div>
                         </div>

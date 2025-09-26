@@ -34,14 +34,35 @@ class Clientes extends \App\Controllers\BaseController
             $caminho = WRITEPATH . 'uploads/' . $arquivo->getRandomName();
             $arquivo->move(WRITEPATH . 'uploads', basename($caminho));
 
-            // Processar o CSV em lotes
             $this->lerCSVemLotes($caminho, 500); // 500 registros por vez
+        }
+
+        if ($action == "limite") {
+            return $this->loadPage('clientes/client_upload_limite', $dados);
+        }
+
+        if ($action === "addLimite") {
+            $arquivo = $this->request->getFile('arquivo');
+
+            if (!$arquivo || $arquivo->getError() !== UPLOAD_ERR_OK) {
+                return "Nenhum arquivo foi enviado ou ocorreu um erro no upload.";
+            }
+
+            $caminho = WRITEPATH . 'uploads/' . $arquivo->getRandomName();
+            $arquivo->move(WRITEPATH . 'uploads', basename($caminho));
+
+            try {
+                $this->lerCSVemLotesLimite($caminho, 500);
+                return "Upload e importação concluídos com sucesso!";
+            } catch (\Exception $e) {
+                return "Erro ao processar CSV: " . $e->getMessage();
+            }
         }
 
         return $this->loadPage('clientes/client_upload', $dados);
     }
 
-    private function lerCSVemLotes($caminho, $tamanhoLote = 500)
+    public function lerCSVemLotes($caminho, $tamanhoLote = 500)
     {
         $this->m_insight = new M_insight();
 
@@ -122,6 +143,55 @@ class Clientes extends \App\Controllers\BaseController
             fclose($handle);
         }
     }
+
+    public function lerCSVemLotesLimite($caminho, $tamanhoLote = 500)
+    {
+        $this->m_insight = new M_insight();
+
+        if (!file_exists($caminho) || !is_readable($caminho)) {
+            throw new \Exception("Arquivo CSV não encontrado ou não é legível: $caminho");
+        }
+
+        $handle = fopen($caminho, 'r');
+        if (!$handle) {
+            throw new \Exception("Não foi possível abrir o arquivo: $caminho");
+        }
+
+        $linha = 0;
+        $lote = [];
+
+        while (($row = fgetcsv($handle, 0, ";")) !== false) {
+            $linha++;
+
+            // Ignorar header ou linhas vazias
+            if ($linha == 1 || count(array_filter($row, fn($c) => strlen(trim($c)) > 0)) == 0) {
+                continue;
+            }
+
+            // Normaliza os campos
+            $row = array_map(fn($campo) => trim(mb_convert_encoding($campo, 'UTF-8', 'ISO-8859-1, Windows-1252, UTF-8')), $row);
+
+            // Preenche o lote (garantindo pelo menos 2 colunas)
+            $lote[] = [
+                'cpf'   => $row[0] ?? null,
+                'limite' => $row[1] ?? null
+            ];
+
+            // Salva lote se atingir tamanho máximo
+            if (count($lote) >= $tamanhoLote) {
+                $this->m_insight->importarClientesEmMassaLimite($lote);
+                $lote = [];
+            }
+        }
+
+        // Salva lote final se houver sobras
+        if (!empty($lote)) {
+            $this->m_insight->importarClientesEmMassaLimite($lote);
+        }
+
+        fclose($handle);
+    }
+
 
     public function pesquisa()
     {
