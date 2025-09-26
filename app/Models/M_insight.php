@@ -239,6 +239,17 @@ class M_insight extends Model
         }
     }
 
+    public function pesquisarClientesPorCpfLimite($cpf)
+    {
+        $result = $this->dbMasterDefault->selectExact('quid_clientes_limite', ['cpf' => $cpf]);
+
+        if ($result['existRecord']) {
+            return $result['firstRow'];
+        } else {
+            return "não encontrado";
+        }
+    }
+
     public function updateCliente($id, $data)
     {
         $where = ['idquid_clientes' => $id];

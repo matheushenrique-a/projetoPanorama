@@ -13,7 +13,7 @@ class Clientes extends \App\Controllers\BaseController
         $dados['pageTitle'] = 'Clientes';
         $dados['clientes'] = null;
 
-        return $this->loadPage('clientes/client_list', $dados);
+        return $this->loadPage('clientes/client_list_limite', $dados);
     }
 
     public function upload($action)
@@ -206,6 +206,20 @@ class Clientes extends \App\Controllers\BaseController
         }
 
         return $this->loadPage('clientes/client_list', $dados);
+    }
+
+    public function pesquisaLimite()
+    {
+        $this->m_insight = new M_insight();
+        $dados['pageTitle'] = 'Pesquisa Clientes';
+
+        $cpf = $this->getpost('cpf');
+
+        if ($cpf) {
+            $dados['clientes'] = $this->m_insight->pesquisarClientesPorCpfLimite($cpf);
+        }
+
+        return $this->loadPage('clientes/client_list_limite', $dados);
     }
 
     public function update()
