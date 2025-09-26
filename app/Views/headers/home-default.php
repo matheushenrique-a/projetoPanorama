@@ -80,15 +80,12 @@
 										container.innerHTML = "";
 
 										lista.forEach(row => {
-											if (["Aprovada", "Cancelada", "Análise", "Adesão", "Pendente", "Bloqueado"].includes(row.status)) return;
-
 											let valor = row.valor || 0;
 											valor = parseFloat(valor.toString().replace(',', '.'));
 
 											let formatado = valor.toLocaleString('pt-BR', {
 												minimumFractionDigits: 2
 											});
-
 
 											let nomeAuditor = '';
 
