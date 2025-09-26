@@ -52,8 +52,7 @@ class Clientes extends \App\Controllers\BaseController
             $arquivo->move(WRITEPATH . 'uploads', basename($caminho));
 
             try {
-                $this->lerCSVemLotesLimite($caminho, 500);
-                return "Upload e importação concluídos com sucesso!";
+                return $this->lerCSVemLotesLimite($caminho, 500);
             } catch (\Exception $e) {
                 return "Erro ao processar CSV: " . $e->getMessage();
             }
