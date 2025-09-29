@@ -431,7 +431,7 @@ $productName = $produto->nomeProduto;
                                                                     <select class="form-select fs-4 fw-bold" name="parcelas${number}">
                                                                         <option value="1">Mensal</option>
                                                                         <option value="12">Parcelado</option>
-                                                                        <option value="94">94 Parcelas</option>
+                                                                        <option value="96">96 Parcelas</option>
                                                                     </select>
                                                                 </div>
                                                         </div>
