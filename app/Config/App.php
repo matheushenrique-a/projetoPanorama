@@ -195,7 +195,11 @@ class App extends BaseConfig
      *
      * @var string
      */
+
+    // Produção:
     public $sessionSavePath = WRITEPATH . 'session';
+
+    //Localhost:
     // public $sessionSavePath = 'C:\xampp\tmp';
 
     /**
