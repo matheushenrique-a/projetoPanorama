@@ -144,12 +144,12 @@
 										<span>Atalhos</span>
 									</span>
 									<div
-										class="menu-sub menu-sub-lg-down-accordion menu-sub-lg-dropdown p-0 w-100 w-lg-850px">
+										class="menu-sub menu-sub-lg-down-accordion menu-sub-lg-dropdown p-0">
 										<div class="menu-state-bg menu-extended" data-kt-menu-dismiss="true">
 											<div class="row">
-												<div class="col-lg-8 mb-3 mb-lg-0 py-3 px-3 py-lg-6 px-lg-6">
-													<div class="row">
-														<div class="col-lg-6 mb-3">
+												<div class="mb-3 mb-lg-0 py-3 px-3 py-lg-6">
+													<div>
+														<div class="mb-3">
 															<div class="menu-item p-0 m-0">
 																<a href="https://gestao.sistemacorban.com.br/"
 																	class="menu-link" target="_blank">
@@ -157,16 +157,7 @@
 																		class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-40px h-40px me-3">
 																		<span
 																			class="svg-icon svg-icon-success svg-icon-1">
-																			<svg width="24" height="25"
-																				viewBox="0 0 24 25" fill="none"
-																				xmlns="http://www.w3.org/2000/svg">
-																				<path opacity="0.3"
-																					d="M8.9 21L7.19999 22.6999C6.79999 23.0999 6.2 23.0999 5.8 22.6999L4.1 21H8.9ZM4 16.0999L2.3 17.8C1.9 18.2 1.9 18.7999 2.3 19.1999L4 20.9V16.0999ZM19.3 9.1999L15.8 5.6999C15.4 5.2999 14.8 5.2999 14.4 5.6999L9 11.0999V21L19.3 10.6999C19.7 10.2999 19.7 9.5999 19.3 9.1999Z"
-																					fill="currentColor" />
-																				<path
-																					d="M21 15V20C21 20.6 20.6 21 20 21H11.8L18.8 14H20C20.6 14 21 14.4 21 15ZM10 21V4C10 3.4 9.6 3 9 3H4C3.4 3 3 3.4 3 4V21C3 21.6 3.4 22 4 22H9C9.6 22 10 21.6 10 21ZM7.5 18.5C7.5 19.1 7.1 19.5 6.5 19.5C5.9 19.5 5.5 19.1 5.5 18.5C5.5 17.9 5.9 17.5 6.5 17.5C7.1 17.5 7.5 17.9 7.5 18.5Z"
-																					fill="currentColor" />
-																			</svg>
+																			<img src="<?= assetfolder ?>assets/logos/vanguard.png" width="55px">
 																		</span>
 																	</span>
 																	<span class="d-flex flex-column">
@@ -179,7 +170,27 @@
 															</div>
 														</div>
 
-														<div class="col-lg-6 mb-3">
+														<div class="mb-3">
+															<div class="menu-item p-0 m-0">
+																<a href="https://gestao.sistemacorban.com.br/"
+																	class="menu-link" target="_blank">
+																	<span
+																		class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-40px h-40px me-3">
+																		<span
+																			class="svg-icon svg-icon-success svg-icon-1">
+																			<img src="<?= assetfolder ?>assets/logos/sydle.png" width="35px">
+																		</span>
+																	</span>
+																	<span class="d-flex flex-column">
+																		<span
+																			class="fs-6 fw-bold text-gray-800">Ponto</span>
+																		<span class="fs-7 fw-semibold text-muted">Portal do colaborador</span>
+																	</span>
+																</a>
+															</div>
+														</div>
+
+														<div class="mb-3">
 															<div class="menu-item p-0 m-0">
 																<a href="https://www.bmgconsig.com.br/principal/fsconsignataria.jsp"
 																	class="menu-link" target="_blank">
@@ -187,16 +198,7 @@
 																		class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-40px h-40px me-3">
 																		<span
 																			class="svg-icon svg-icon-danger svg-icon-1">
-																			<svg width="24" height="24"
-																				viewBox="0 0 24 24" fill="none"
-																				xmlns="http://www.w3.org/2000/svg">
-																				<path opacity="0.3"
-																					d="M22 8H8L12 4H19C19.6 4 20.2 4.39999 20.5 4.89999L22 8ZM3.5 19.1C3.8 19.7 4.4 20 5 20H12L16 16H2L3.5 19.1ZM19.1 20.5C19.7 20.2 20 19.6 20 19V12L16 8V22L19.1 20.5ZM4.9 3.5C4.3 3.8 4 4.4 4 5V12L8 16V2L4.9 3.5Z"
-																					fill="currentColor" />
-																				<path
-																					d="M22 8L20 12L16 8H22ZM8 16L4 12L2 16H8ZM16 16L12 20L16 22V16ZM8 8L12 4L8 2V8Z"
-																					fill="currentColor" />
-																			</svg>
+																			<img src="<?= assetfolder?>assets/logos/bmg.png" width="35px">
 																		</span>
 																	</span>
 																	<span class="d-flex flex-column">
@@ -221,17 +223,7 @@
 															class="btn btn-sm btn-primary fw-bold">Sair</a>
 													</div>
 												</div>
-												<div
-													class="menu-more bg-light col-lg-4 py-3 px-3 py-lg-6 px-lg-6 rounded-end">
-													<h4 class="fs-6 fs-lg-4 text-gray-800 fw-bold mt-3 mb-3 ms-4">Mais
-														Links</h4>
-													<div class="menu-item p-0 m-0">
-														<a href="https://grupoquid.sydle.one/portal/"
-															class="menu-link py-2" target="_blank">
-															<span class="menu-title">Portal Colaborador</span>
-														</a>
-													</div>
-												</div>
+
 											</div>
 										</div>
 									</div>
