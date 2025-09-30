@@ -214,10 +214,9 @@ class Home extends BaseController
 
         $userId = $this->session->userId;
 
-        // $notificacoes = $this->dbMasterDefault->listarNotificacoes($userId);
+        $notificacoes = $this->dbMasterDefault->listarNotificacoes($userId);
 
-        // // $notificacoes já é o array que você quer
-        // $dados['notificacoes'] = $notificacoes;
+        $dados['notificacoes'] = $notificacoes;
 
         return $this->loadpage('headers/home-default', $dados);
     }

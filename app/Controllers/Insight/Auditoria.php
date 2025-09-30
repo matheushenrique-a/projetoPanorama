@@ -12,12 +12,14 @@ class Auditoria extends \App\Controllers\BaseController
     protected $m_security;
     protected $m_insight;
     protected $dbMaster;
+    protected $db;
 
     public function __construct()
     {
         $this->session = session();
         $this->m_insight = new M_insight();
         $this->dbMaster = new dbMaster();
+        $this->db = \Config\Database::connect();
     }
 
     public function filaAuditoria()
@@ -46,5 +48,30 @@ class Auditoria extends \App\Controllers\BaseController
         }
 
         return redirect()->to(urlInstitucional . 'fila-auditoria');
+    }
+
+    public function notificacoes()
+    {
+        $input = json_decode(file_get_contents('php://input'), true);
+        $id = $input['id'] ?? null;
+
+        $updated = $this->dbMaster->update(
+            'quid_notificacoes',
+            ['is_read' => 1],
+            ['idquid_notificacoes' => $id]
+        );
+
+        return $this->response->setJSON(['success' => (bool)$updated]);
+    }
+
+    public function buscarNotificacoes($userId)
+    {
+        $builder = $this->db->table('quid_notificacoes');
+        $builder->where('userId', $userId);
+        $builder->where('is_read', 0);
+        $builder->orderBy('created_at', 'DESC');
+        $query = $builder->get();
+
+        return $this->response->setJSON($query->getResult());
     }
 }

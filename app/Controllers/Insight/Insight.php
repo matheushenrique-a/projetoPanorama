@@ -117,29 +117,28 @@ class Insight extends BaseController
             $resumo = $this->getpost('resumo');
 
             if ($btnAudit == "statusAudit") {
-                if ($statusAnterior == "TED Devolvida") {
-                    $banco = $this->getpost('bancoFix');
-                    $agencia = $this->getpost('agenciaFix');
-                    $conta = $this->getpost('contaFix');
-                    $statusAnterior = "TED Devolvida";
-                } else {
-                    $statusAnterior = "Adesão";
-                }
+
+                $statusAnterior = $statusAnterior;
 
                 $novoStatus = "Auditoria";
             }
 
+            if ($statusAnterior == "Pendente" || $statusAnterior == "Corrigir erro") {
+                $this->dbMasterDefault->update('quid_notificacoes', ['is_read' => '1'], ['link' => $idProposta]);
+            }
             $userId = $this->getpost('userId');
 
-            // if ($novoStatus == "Pendente") {
-            //     $dados = [
-            //         'userId' => $userId,
-            //         'message' => $resumo ?? "",
-            //         'link' => $id,
-            //     ];
+            if ($novoStatus == "Pendente" || $novoStatus == "Corrigir erro") {
+                $dados = [
+                    'userId' => $userId,
+                    'resumo' => $resumo ?? "",
+                    'obs' => $this->getpost('conteudo') ?? "",
+                    'link' => $idProposta,
+                    'status' => $novoStatus
+                ];
 
-            //     $this->m_insight->registrarNotificacao($dados);
-            // }
+                $this->m_insight->registrarNotificacao($dados);
+            }
 
             $idsAtrelados = $_POST['ids'] ?? [];
 
