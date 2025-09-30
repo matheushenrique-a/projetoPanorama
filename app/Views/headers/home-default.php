@@ -26,7 +26,7 @@
 									</div>
 									<div class="toast-body d-flex flex-column gap-2 p-3">
 										<span class="text-warning fs-6"><?= $not->resumo ?></span>
-										<span class="fs-7"><?= html_entity_decode($not->obs) ?></span>
+										<?= html_entity_decode($not->obs) ?>
 										<a href="<?= assetfolder ?>proposta/<?= $not->link ?>" class="me-auto">Link</a>
 									</div>
 								</div>
@@ -213,7 +213,7 @@
                     </div>
                     <div class="toast-body d-flex flex-column gap-2 p-3">
 					<span class="text-warning fs-6">${not.resumo}</span>
-										<span class="fs-7">${not.obs !== null ? htmlEntityDecode(not.obs) : ''}</span>
+										${not.obs !== null ? htmlEntityDecode(not.obs) : ''}
                         <a href="<?= assetfolder ?>proposta/${not.link}" class="me-auto">Link</a>
                     </div>
                 `;
