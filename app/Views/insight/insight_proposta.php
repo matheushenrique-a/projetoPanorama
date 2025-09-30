@@ -11,6 +11,7 @@ $status = match ($row->status) {
     "Aprovada"  => "success",
     "Cancelada" => "danger",
     "Pendente"  => "warning",
+    "Corrigir erro"  => "warning",
     "Adesão"   => "dark",
     "Auditoria" => "warning",
     default     => "secondary"
@@ -21,6 +22,7 @@ $movimentation = match ($row->status) {
     "Aprovada"  => false,
     "Cancelada" => false,
     "Pendente"  => true,
+    "Corrigir erro"  => true,
     "Adesão"   => true,
     "Auditoria" => false,
     default     => false
@@ -86,7 +88,7 @@ $movimentation = match ($row->status) {
                                         <div>
                                             <span class="fw-bold badge badge-<?= $status ?> text-black fs-5 mb-2"><?= $row->status ?></span>
 
-                                            <?php if (isset($ultimaLinha) && $row->status == "Pendente"): ?>
+                                            <?php if (isset($ultimaLinha) && ($row->status == "Pendente" || $row->status == "Corrigir erro")): ?>
                                                 <div class="alert alert-warning text-gray-700 mb-6">
                                                     <p class="fs-5 text-warning fw-bold border-bottom border-warning p-2 fst-italic">
                                                         <i class="fs-3 me-2 text-warning bi bi-clipboard2-x"></i> <?= $row->resumo ?>
@@ -215,9 +217,9 @@ $movimentation = match ($row->status) {
                                                         <textarea class="form-control form-control-solid" placeholder="..." name="observacaoInicial" style="width: 400px;"><?= $row->observacaoInicial ?></textarea>
                                                     </div>
 
-                                                    <?php if ($my_security->checkPermission("ADMIN")): ?>
+                                                    <?php if ($my_security->checkPermission("ADMIN") || $my_security->checkPermission("FORMALIZACAO")): ?>
                                                         <div>
-                                                            <p class="mt-2">Produto base: <?= $row->produtoBase ?></p>
+                                                            <p class="mt-2">Produto base: <?= $row->produtoBase == "1" ? "sim" : "não" ?></p>
                                                         </div>
                                                     <?php endif; ?>
 
@@ -238,6 +240,7 @@ $movimentation = match ($row->status) {
                                                             <option value="Auditoria" <?= $row->status == 'Auditoria' ? 'selected' : '' ?>>Auditoria</option>
                                                             <option value="Aprovada" <?= $row->status == 'Aprovada' ? 'selected' : '' ?>>Aprovada</option>
                                                             <option value="Pendente" <?= $row->status == 'Pendente' ? 'selected' : '' ?>>Pendente</option>
+                                                            <option value="Corrigir erro" <?= $row->status == 'Corrigir erro' ? 'selected' : '' ?>>Corrigir erro</option>
                                                             <option value="Análise" <?= $row->status == 'Análise' ? 'selected' : '' ?>>Análise</option>
                                                             <option value="Bloqueado" <?= $row->status == 'Bloqueado' ? 'selected' : '' ?>>Bloqueado</option>
                                                             <option value="Cancelada" <?= $row->status == 'Cancelada' ? 'selected' : '' ?>>Cancelada</option>
@@ -318,6 +321,7 @@ $movimentation = match ($row->status) {
                                                             "Aprovada" => "success",
                                                             "Cancelada" => "danger",
                                                             "Pendente" => "warning",
+                                                            "Corrigir erro" => "warning",
                                                             "Adesão" => "dark",
                                                             "Auditoria" => "warning",
                                                             default => "secondary"

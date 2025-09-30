@@ -129,6 +129,7 @@
 												<option value="Bloqueado">Bloqueado</option>
 												<option value="Auditoria">Auditoria</option>
 												<option value="Pendente">Pendente</option>
+												<option value="Corrigir erro">Corrigir erro</option>
 												<option value="Análise">Análise</option>
 												<option value="Aprovada">Aprovada</option>
 												<option value="Cancelada">Cancelada</option>
@@ -155,9 +156,8 @@
 												<div class="d-flex align-items-center position-relative my-1">
 													<select class="form-select form-control-solid" aria-label="" name="equipe">
 														<option value=""></option>
-														<option value="164815">Matheus</option>
 														<option value="165005">Ana Karla</option>
-														<option value="165004">Paula</option>
+														<option value="164979">Amanda</option>
 														<option value="165006">Jéssica</option>
 													</select>
 												</div>
@@ -186,7 +186,7 @@
 										<div class="d-flex align-items-center position-relative">
 											<select class="form-select form-control-solid" aria-label="" name="paginas">
 												<?php
-												echo '<option value="10" ' .  ($paginas == "" ? 'selected' : '') . '> 10 </option>';
+												echo '<option value="20" ' .  ($paginas == "" ? 'selected' : '') . '> 20 </option>';
 												echo '<option value="50" ' .  ($paginas == "50" ? 'selected' : '') . '> 50 </option>';
 												echo '<option value="500" ' .  ($paginas == "500" ? 'selected' : '') . '> 500 </option>';
 												echo '<option value="1000" ' .  ($paginas == "1000" ? 'selected' : '') . '> 1000 </option>';
@@ -266,6 +266,7 @@
 											"Pendente"  => "warning",
 											"Adesão"   => "dark",
 											"Auditoria" => "warning",
+											"Corrigir erro" => "warning",
 											"Bloqueado" => "danger",
 											default     => "secondary"
 										};

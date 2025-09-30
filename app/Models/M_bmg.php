@@ -807,7 +807,7 @@ class M_bmg extends Model
 
     public function ultimasPropostasAuditor($limit)
     {
-        $sql = "select * from quid_propostas where id_owner = '{$this->session->userId}' and status = 'Auditoria'";
+        $sql = "select * from quid_propostas where id_owner = '{$this->session->userId}' and status = 'Auditoria' and produtoBase = '1'";
         $sql .= " order by data_criacao DESC LIMIT $limit;";
 
         return $this->dbMasterDefault->runQuery($sql);
@@ -815,7 +815,7 @@ class M_bmg extends Model
 
     public function ultimasPropostasAuditorTotal($limit)
     {
-        $sql = "select * from quid_propostas where status = 'Auditoria'";
+        $sql = "select * from quid_propostas where status = 'Auditoria' and produtoBase = '1'";
         $sql .= " order by data_criacao DESC LIMIT $limit;";
 
         return $this->dbMasterDefault->runQuery($sql);

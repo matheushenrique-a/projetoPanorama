@@ -319,7 +319,7 @@ class Insight extends BaseController
 
         $likeCheck = array("likeCheck" => $likeCheck);
 
-        $paginas = (empty($paginas) ? 10 : $paginas);
+        $paginas = (empty($paginas) ? 20 : $paginas);
         $this->dbMasterDefault->setLimit($paginas);
         $this->dbMasterDefault->setOrderBy(array('idquid_propostas', 'DESC'));
         $propostas = $this->dbMasterDefault->select('quid_propostas', $whereCheck, $whereNotIn + $likeCheck + $whereIn + $betweenCheck);
