@@ -242,59 +242,105 @@
 						</div>
 
 						<div class="card-body p-10 table-responsive">
-							<table class="table align-middle table-row-dashed table-hover fs-6 gy-3" id="kt_widget_table_3" data-kt-table-widget-3="all">
+							<table class="table align-middle table-bordered table-flush table-row-bordered fs-6 gy-4" id="kt_widget_table_3" data-kt-table-widget-3="all">
 								<thead>
-									<tr class="text-start text-gray-800 fw-bold fs-7 text-uppercase gs-0">
-										<th class="min-w-25px">Status</th>
-										<th class="min-w-25px">Data</th>
-										<th data-sortable="false" class="min-w-50">Adesão | Entidade</th>
-										<th data-sortable="false" class="min-w-200px">Cliente | Assessor</th>
-										<th data-sortable="false" class="min-w-100px">CPF</th>
-										<th data-sortable="false" class="min-w-50">Valor</th>
-										<th data-sortable="false" class="min-w-25px">Produto</th>
+									<tr class="text-gray-800 fw-bold fs-6 gs-0">
+										<th data-sortable="false" class="min-w-25px text-center">Status</th>
+										<th class="min-w-50px text-center">Data</th>
+										<th data-sortable="false" class="min-w-50 text-center">Adesão | Entidade</th>
+										<th data-sortable="false" class="min-w-200px text-center">Cliente | Assessor</th>
+										<th data-sortable="false" class="min-w-100px text-center">CPF</th>
+										<th data-sortable="false" class="min-w-60 text-center">Valor</th>
+										<th data-sortable="false" class="min-w-25px text-center">Produto</th>
 										<?php if ($session->role == "AUDITOR"): ?>
 											<th data-sortable="false" class="min-w-50px">Ver</th>
 										<?php endif; ?>
 									</tr>
 								</thead>
-								<tbody class="text-gray-700 fw-semibold">
+								<style>
+									.clickable-row {
+										cursor: pointer;
+										transition: background-color 0.2s ease-in-out;
+									}
+
+									/* Light mode */
+									html[data-theme="light"] .clickable-row:hover td {
+										background-color: #e9e9e9ff;
+										/* cinza bem claro */
+									}
+
+									html[data-theme="light"] .clickable-row:focus td {
+										background-color: #e9ecef;
+										/* leve destaque no foco */
+									}
+
+									/* Dark mode */
+									html[data-theme="dark"] .clickable-row:hover td {
+										background-color: #333333ff;
+										/* cinza escuro suave */
+									}
+
+									html[data-theme="dark"] .clickable-row:focus td {
+										background-color: #333333ff;
+										/* contraste no foco */
+									}
+
+									table td p {
+										margin: 0;
+										/* tira espaçamento vertical */
+										line-height: 1.3;
+										/* mantém leitura boa */
+									}
+
+									table td {
+										vertical-align: middle;
+										/* garante alinhamento */
+									}
+								</style>
+								<tbody class="text-gray-700 fw-semibold ">
 									<?php foreach ($propostas['result']->getResult() as $row):
 										$status = match ($row->status) {
-											"Análise"   => "info",
-											"Aprovada"  => "success",
-											"Cancelada" => "danger",
-											"Pendente"  => "warning",
-											"Adesão"   => "dark",
-											"Auditoria" => "warning",
+											"Análise"       => "info",
+											"Aprovada"      => "success",
+											"Cancelada"     => "danger",
+											"Pendente"      => "warning",
+											"Adesão"        => "dark",
+											"Auditoria"     => "warning",
 											"Corrigir erro" => "warning",
-											"Bloqueado" => "danger",
-											default     => "secondary"
+											"Bloqueado"     => "danger",
+											default         => "secondary"
 										};
 									?>
-										<tr>
+										<tr class="clickable-row" data-href="<?= assetfolder ?>proposta/<?= $row->idquid_propostas ?>" style="cursor: pointer;">
 											<td class="align-middle text-center">
 												<span class="badge badge-light-<?= $status ?> fs-6"><?= $row->status ?></span>
-												<p class="text-<?= $status ?> fw-bold fst-italic fs-7 pt-2"><?php if ($row->status == "Cancelada"): echo $row->motivoCancelamento;
-																											else: echo $row->resumo ?? "";
-																											endif; ?></p>
+												<p class="text-<?= $status ?> fw-bold fst-italic fs-7 pt-2">
+													<?php if ($row->status == "Cancelada"): ?>
+														<?= $row->motivoCancelamento ?>
+													<?php else: ?>
+														<?= $row->resumo ?? "" ?>
+													<?php endif; ?>
+												</p>
 											</td>
-											<td class="align-middle"><?= date('d/m/Y', strtotime($row->data_criacao)); ?></td>
-											<td class="align-middle text-gray-800">
-												<a href="<?= assetfolder ?>proposta/<?= $row->idquid_propostas ?>" class="m-0 p-0">
-													<?= $row->adesao; ?>
-												</a>
+											<td class="align-middle text-center"><?= date('d/m/Y', strtotime($row->data_criacao)); ?></td>
+											<td class="align-middle text-center text-gray-800">
+												<?= $row->adesao; ?>
 												<p class="text-gray-500 fw-bold fs-8"><?= $row->codigo_entidade; ?></p>
 											</td>
 											<td class="align-middle">
 												<?= $row->nome; ?>
 												<p class="text-gray-500 fw-bold fs-8"><?= $row->assessor ?></p>
 											</td>
-											<td class="align-middle"><?= $row->cpf; ?></td>
-											<td class="align-middle text-success">R$ <?= number_format((float)$row->valor, 2, ',', '.') ?></td>
-											<td class="align-middle text-primary"><?= $row->produto ?></td>
+											<td class="align-middle "><?= $row->cpf; ?></td>
+											<td class="align-middle text-success">
+												<?= $row->valor == '' ? '-' : 'R$ ' . number_format((float)$row->valor, 2, ',', '.') ?>
+											</td>
+											<td class="align-middle text-dark text-center"><?= $row->produto ?></td>
 											<?php if ($session->role == "AUDITOR"): ?>
 												<td class="align-middle">
-													<a target="_blank" href="https://grupoquid.panoramaemprestimos.com.br/emprestimoInterno.do?action=exibir&codigo=<?= $row->panorama_id ?>" class="btn btn-sm btn-icon btn-bg-light btn-active-color-primary w-25px h-25px">
+													<a target="_blank"
+														href="https://grupoquid.panoramaemprestimos.com.br/emprestimoInterno.do?action=exibir&codigo=<?= $row->panorama_id ?>"
+														class="btn btn-sm btn-icon btn-bg-light btn-active-color-primary w-25px h-25px">
 														<span class="svg-icon svg-icon-5 svg-icon-gray-700">
 															<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
 																<path d="M14.4 11H3C2.4 11 2 11.4 2 12C2 12.6 2.4 13 3 13H14.4V11Z" fill="currentColor" />
@@ -306,6 +352,17 @@
 											<?php endif; ?>
 										</tr>
 									<?php endforeach; ?>
+
+									<!-- Script para deixar a linha clicável -->
+									<script>
+										document.addEventListener("DOMContentLoaded", function() {
+											document.querySelectorAll(".clickable-row").forEach(row => {
+												row.addEventListener("click", function() {
+													window.location = this.dataset.href;
+												});
+											});
+										});
+									</script>
 								</tbody>
 							</table>
 						</div>
