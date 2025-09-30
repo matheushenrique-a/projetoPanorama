@@ -66,12 +66,12 @@
 					}
 
 					html[data-theme="dark"] .toast-header {
-						background-color: #2a2a2a;
+						background-color: #1e1e2d;
 						color: #f5f5f5;
 					}
 
 					html[data-theme="dark"] .toast-body {
-						background-color: #3a3a3acc;
+						background-color: #1e1e2d;
 						color: #f5f5f5;
 					}
 
