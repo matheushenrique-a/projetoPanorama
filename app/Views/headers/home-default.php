@@ -26,7 +26,7 @@
 									</div>
 									<div class="toast-body d-flex flex-column gap-2 p-3">
 										<span class="text-warning fs-6"><?= $not->resumo ?></span>
-										<span class="fs-7"><?= $not->obs ?></span>
+										<span class="fs-7"><?= html_entity_decode($not->obs) ?></span>
 										<a href="<?= assetfolder ?>proposta/<?= $not->link ?>" class="me-auto">Link</a>
 									</div>
 								</div>
@@ -181,6 +181,13 @@
 					return result.length ? result.join(', ') + ' atrás' : 'agora pouco';
 				}
 
+				function htmlEntityDecode(str) {
+					const textarea = document.createElement("textarea");
+					textarea.innerHTML = str;
+					return textarea.value;
+				}
+
+
 				function atualizarNotificacoes() {
 					const container = document.querySelector('.position-fixed .d-flex');
 					const userId = <?= $session->userId ?>;
@@ -206,7 +213,7 @@
                     </div>
                     <div class="toast-body d-flex flex-column gap-2 p-3">
 					<span class="text-warning fs-6">${not.resumo}</span>
-										<span class="fs-7">${not.obs !== null ? not.obs : ''}</span>
+										<span class="fs-7">${not.obs !== null ? htmlEntityDecode(not.obs) : ''}</span>
                         <a href="<?= assetfolder ?>proposta/${not.link}" class="me-auto">Link</a>
                     </div>
                 `;
