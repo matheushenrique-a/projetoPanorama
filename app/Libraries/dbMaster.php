@@ -43,6 +43,7 @@ class dbMaster
 	{
 		$builder = $this->db->table('quid_notificacoes');
 		$builder->where('userId', $userId);
+		$builder->where('is_read', '0');
 		$builder->orderBy('created_at', 'DESC');
 		$query = $builder->get();
 

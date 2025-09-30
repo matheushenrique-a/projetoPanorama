@@ -12,13 +12,263 @@
 						</li>
 					</ul>
 				</div>
+
+				<div class="position-fixed top-0 mt-20 end-0 p-3" style="z-index:1080;">
+					<div class="d-flex flex-column gap-3 align-items-end">
+						<?php if (!empty($notificacoes)): ?>
+							<?php foreach ($notificacoes as $not): ?>
+								<div class="toast show" data-id="<?= $not->idquid_notificacoes ?>" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="false">
+									<div class="toast-header">
+										<i class="bi bi-exclamation-triangle text-warning me-2"></i>
+										<span class="me-auto fs-5 text-warning"><?= $not->status ?></span>
+										<small><?= time_elapsed_string($not->created_at) ?></small>
+										<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+									</div>
+									<div class="toast-body d-flex flex-column gap-2 p-3">
+										<span class="text-warning fs-6"><?= $not->resumo ?></span>
+										<span class="fs-7"><?= $not->obs ?></span>
+										<a href="<?= assetfolder ?>proposta/<?= $not->link ?>" class="me-auto">Link</a>
+									</div>
+								</div>
+
+							<?php endforeach; ?>
+						<?php endif; ?>
+					</div>
+				</div>
+
+				<style>
+					.toast {
+						border: 1px solid transparent;
+						border-radius: 0.375rem;
+					}
+
+					html[data-theme="light"] .toast-header {
+						background-color: #f8f9fa;
+						color: #333;
+					}
+
+					html[data-theme="light"] .toast-body {
+						background-color: #ffffffcc;
+						color: #333;
+					}
+
+					html[data-theme="light"] .toast-header i {
+						color: #0d6efdcc;
+					}
+
+					html[data-theme="light"] .toast-header strong {
+						color: #e0b700;
+					}
+
+					html[data-theme="light"] .toast-body a {
+						color: #0d6efd;
+						text-decoration: underline;
+					}
+
+					html[data-theme="dark"] .toast-header {
+						background-color: #2a2a2a;
+						color: #f5f5f5;
+					}
+
+					html[data-theme="dark"] .toast-body {
+						background-color: #3a3a3acc;
+						color: #f5f5f5;
+					}
+
+					html[data-theme="dark"] .toast-header i {
+						color: #6ea0ff;
+					}
+
+					html[data-theme="dark"] .toast-header strong {
+						color: #ffd94d;
+					}
+
+					html[data-theme="dark"] .toast-body a {
+						color: #80bfff;
+						text-decoration: underline;
+					}
+				</style>
 			</div>
 		</div>
 
+		<script>
+			document.addEventListener("DOMContentLoaded", function() {
+				function marcarComoLido(toast, id) {
+					if (!id) return;
+
+					fetch(`<?= assetfolder ?>notificacoes/${id}`, {
+							method: 'POST',
+							headers: {
+								'Content-Type': 'application/json',
+							},
+							body: JSON.stringify({
+								id
+							})
+						})
+						.then(res => res.json())
+						.then(data => {
+							if (data.success) console.log('Notificação marcada como lida');
+						})
+						.catch(err => console.error(err));
+
+					toast.remove();
+				}
+
+				document.querySelectorAll('.toast .btn-close').forEach(btn => {
+					btn.addEventListener('click', function() {
+						const toast = btn.closest('.toast');
+						const id = toast.dataset.id;
+						marcarComoLido(toast, id);
+					});
+				});
+
+				document.querySelectorAll('.toast-body a').forEach(link => {
+					link.addEventListener('click', function(e) {
+						const toast = link.closest('.toast');
+						const id = toast.dataset.id;
+						marcarComoLido(toast, id);
+					});
+				});
+
+				function timeElapsedString(datetime, full = false) {
+					const now = new Date();
+					const ago = new Date(datetime);
+					const diff = now - ago; // diferença em milissegundos
+
+					const seconds = Math.floor(diff / 1000);
+					const minutes = Math.floor(seconds / 60);
+					const hours = Math.floor(minutes / 60);
+					const days = Math.floor(hours / 24);
+					const weeks = Math.floor(days / 7);
+					const months = Math.floor(days / 30);
+					const years = Math.floor(days / 365);
+
+					const values = {
+						y: years,
+						m: months % 12,
+						w: weeks % 4,
+						d: days % 7,
+						h: hours % 24,
+						i: minutes % 60,
+						s: seconds % 60
+					};
+
+					const strings = {
+						y: 'ano',
+						m: 'mês',
+						w: 'semana',
+						d: 'dia',
+						h: 'hora',
+						i: 'minuto',
+						s: 'segundo'
+					};
+
+					const result = [];
+
+					for (let k of Object.keys(values)) {
+						const v = values[k];
+						if (v) {
+							if (k === 'm' && v > 1) {
+								result.push(v + ' meses');
+							} else {
+								result.push(v + ' ' + strings[k] + (v > 1 ? 's' : ''));
+							}
+						}
+					}
+
+					if (!full) result.splice(1);
+
+					return result.length ? result.join(', ') + ' atrás' : 'agora pouco';
+				}
+
+				function atualizarNotificacoes() {
+					const container = document.querySelector('.position-fixed .d-flex');
+					const userId = <?= $session->userId ?>;
+
+					fetch(`<?= assetfolder ?>buscarNotificacoes/${userId}`)
+						.then(res => res.json())
+						.then(notificacoes => {
+							container.innerHTML = '';
+							notificacoes.forEach(not => {
+								const toast = document.createElement('div');
+								toast.className = 'toast show';
+								toast.dataset.id = not.idquid_notificacoes;
+								toast.role = 'alert';
+								toast.setAttribute('aria-live', 'assertive');
+								toast.setAttribute('aria-atomic', 'true');
+
+								toast.innerHTML = `
+                    <div class="toast-header">
+                    <i class="bi bi-exclamation-triangle text-warning me-2"></i>
+										<span class="me-auto fs-5 text-warning">${not.status}</span>
+										<small>${timeElapsedString(not.created_at)}</small>
+										<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>    
+                    </div>
+                    <div class="toast-body d-flex flex-column gap-2 p-3">
+					<span class="text-warning fs-6">${not.resumo}</span>
+										<span class="fs-7">${not.obs !== null ? not.obs : ''}</span>
+                        <a href="<?= assetfolder ?>proposta/${not.link}" class="me-auto">Link</a>
+                    </div>
+                `;
+
+								container.appendChild(toast);
+							});
+
+							attachToastEvents();
+						})
+						.catch(err => console.error(err));
+				}
+
+				function attachToastEvents() {
+					document.querySelectorAll('.toast .btn-close').forEach(btn => {
+						btn.onclick = function() {
+							const toast = btn.closest('.toast');
+							const id = toast.dataset.id;
+							fetch(`<?= assetfolder ?>notificacoes/${id}`, {
+								method: 'POST',
+								headers: {
+									'Content-Type': 'application/json'
+								},
+								body: JSON.stringify({
+									id
+								})
+							});
+							toast.remove();
+						};
+					});
+
+					document.querySelectorAll('.toast-body a').forEach(link => {
+						link.onclick = function() {
+							const toast = link.closest('.toast');
+							const id = toast.dataset.id;
+							fetch(`<?= assetfolder ?>notificacoes/${id}`, {
+								method: 'POST',
+								headers: {
+									'Content-Type': 'application/json'
+								},
+								body: JSON.stringify({
+									id
+								})
+							});
+							toast.remove();
+						};
+					});
+				}
+
+				setInterval(atualizarNotificacoes, 10000);
+			});
+		</script>
+
+
 		<?php if ($my_security->HasPermission(["BMG", "AASPA"], ["quid", "pravoce"])): ?>
+
 			<div id="kt_app_content" class="app-content flex-column-fluid">
+
 				<div id="kt_app_content_container" class="app-container container-fluid">
+
 					<div class="row g-5 g-xl-10 mb-5">
+
+
 
 						<?php if (!$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("FORMALIZACAO")): ?>
 							<div>
