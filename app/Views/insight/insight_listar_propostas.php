@@ -311,8 +311,9 @@
 											default         => "secondary"
 										};
 									?>
-										<tr class="clickable-row" data-href="<?= assetfolder ?>proposta/<?= $row->idquid_propostas ?>" style="cursor: pointer;">
+										<tr class="position-relative clickable-row">
 											<td class="align-middle text-center">
+												<a href="<?= assetfolder ?>proposta/<?= $row->idquid_propostas ?>" class="stretched-link"></a>
 												<span class="badge badge-light-<?= $status ?> fs-6"><?= $row->status ?></span>
 												<p class="text-<?= $status ?> fw-bold fst-italic fs-7 pt-2">
 													<?php if ($row->status == "Cancelada"): ?>
@@ -331,11 +332,12 @@
 												<?= $row->nome; ?>
 												<p class="text-gray-500 fw-bold fs-8"><?= $row->assessor ?></p>
 											</td>
-											<td class="align-middle "><?= $row->cpf; ?></td>
+											<td class="align-middle"><?= $row->cpf; ?></td>
 											<td class="align-middle text-success">
 												<?= $row->valor == '' ? '-' : 'R$ ' . number_format((float)$row->valor, 2, ',', '.') ?>
 											</td>
 											<td class="align-middle text-dark text-center"><?= $row->produto ?></td>
+
 											<?php if ($session->role == "AUDITOR"): ?>
 												<td class="align-middle">
 													<a target="_blank"
@@ -352,17 +354,6 @@
 											<?php endif; ?>
 										</tr>
 									<?php endforeach; ?>
-
-									<!-- Script para deixar a linha clicável -->
-									<script>
-										document.addEventListener("DOMContentLoaded", function() {
-											document.querySelectorAll(".clickable-row").forEach(row => {
-												row.addEventListener("click", function() {
-													window.location = this.dataset.href;
-												});
-											});
-										});
-									</script>
 								</tbody>
 							</table>
 						</div>
