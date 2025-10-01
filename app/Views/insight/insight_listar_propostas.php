@@ -87,7 +87,7 @@
 						</div>
 					</div>
 					<div class="card" style="justify-content: start;">
-						<div class="card-header border-0 pt-6" style="justify-content: start;">
+						<div class="card-header pb-6 pt-6" style="justify-content: start;">
 							<div class="card-title">
 								<style>
 									input[type="date"]::-webkit-calendar-picker-indicator {
@@ -107,23 +107,23 @@
 										<input type="date" class="form-control" placeholder="" name="dateAte" value="" />
 									</div>
 								</div>
-								<div class="d-flex align-items-center position-relative  mx-3">
-									<div class="mb-3">
-										<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Nome:</label>
-										<input type="text" class="form-control" placeholder="Nome cliente" name="txtNome" value="" />
-									</div>
-								</div>
-								<div class="d-flex align-items-center position-relative  mx-3">
+								<div class="d-flex align-items-center position-relative mx-3">
 									<div class="mb-3">
 										<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Adesão:</label>
-										<input type="text" class="form-control" placeholder="Nº Adesão" name="numeroAdesao" value="" />
+										<input type="text" style="width: 150px;" class="form-control" placeholder="Nº Adesão" name="numeroAdesao" value="" />
 									</div>
 								</div>
-								<div class="d-flex align-items-center position-relative  mx-3">
+								<div class="d-flex align-items-center position-relative mx-3">
+									<div class="mb-3">
+										<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">CPF:</label>
+										<input type="text" style="width: 150px;" class="form-control" placeholder="000.000.000-00" name="txtCPF" value="" />
+									</div>
+								</div>
+								<div class="d-flex align-items-center position-relative mx-3">
 									<div class="mb-3">
 										<label for="exampleFormControlInput2" class="form-label text-gray-800 mb-0">Status:</label>
 										<div class="d-flex align-items-center position-relative ">
-											<select class="form-select form-control-solid" aria-label="" name="status">
+											<select style="width: 130px;" class="form-select form-control-solid" aria-label="" name="status">
 												<option value=""></option>
 												<option value="Adesão">Adesão</option>
 												<option value="Bloqueado">Bloqueado</option>
@@ -137,6 +137,48 @@
 										</div>
 									</div>
 								</div>
+								<div class="d-flex align-items-center position-relative mx-3">
+									<div class="mb-3">
+										<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Produto:</label>
+										<select style="width: 180px;" class="form-select form-control-solid" aria-label="" name="produto">
+											<option value=""></option>
+											<?php foreach ($produtos as $p): ?>
+												<option value="<?= $p->nomeProduto ?>"><?= $p->nomeProduto ?></option>
+											<?php endforeach; ?>
+										</select>
+									</div>
+								</div>
+								<div class="mb-3  mx-3">
+									<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Registros:</label>
+									<div class="d-flex align-items-center position-relative">
+										<select class="form-select form-control-solid" aria-label="" name="paginas">
+											<?php
+											echo '<option value="20" ' .  ($paginas == "" ? 'selected' : '') . '> 20 </option>';
+											echo '<option value="50" ' .  ($paginas == "50" ? 'selected' : '') . '> 50 </option>';
+											echo '<option value="500" ' .  ($paginas == "500" ? 'selected' : '') . '> 500 </option>';
+											echo '<option value="1000" ' .  ($paginas == "1000" ? 'selected' : '') . '> 1000 </option>';
+											?>
+										</select>
+									</div>
+								</div>
+							</div>
+
+							<div class="d-flex align-items-center">
+								<?php if ($my_security->checkPermission("FORMALIZACAO") || $my_security->checkPermission("ADMIN") || $my_security->checkPermission("GERENTE")): ?>
+									<div class="d-flex align-items-center my-1 mx-3">
+										<div class="mb-3">
+											<label for="exampleFormControlInput2" class="form-label text-gray-800 mb-0">Equipe:</label>
+											<div class="d-flex align-items-center my-1">
+												<select class="form-select form-control-solid" aria-label="" name="equipe">
+													<option value=""></option>
+													<option value="165005">Ana Karla</option>
+													<option value="164979">Amanda</option>
+													<option value="165006">Jéssica</option>
+												</select>
+											</div>
+										</div>
+									</div>
+								<?php endif; ?>
 								<?php if ($my_security->checkPermission("SUPERVISOR") || $my_security->checkPermission("ADMIN") || $my_security->checkPermission("FORMALIZACAO") || $my_security->checkPermission("GERENTE")): ?>
 									<div class="d-flex align-items-center position-relative mx-3">
 										<div class="mb-3">
@@ -145,105 +187,65 @@
 										</div>
 									</div>
 								<?php endif; ?>
+								<div class="d-flex align-items-center position-relative  mx-3">
+									<div class="mb-3">
+										<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Nome cliente:</label>
+										<input type="text" class="form-control" placeholder="Nome cliente" name="txtNome" value="" />
+									</div>
+								</div>
+								<?php if ($session->role == "AUDITOR"): ?>
+									<div class="mb-3  mx-3">
+										<label for="exampleFormControlInput2" class="form-label text-gray-800 mb-0">Mostrar:</label>
+										<div class="d-flex align-items-center position-relative my-1">
+											<select class="form-select form-control-solid" aria-label="" name="auditorMove">
+												<option value="">Todas</option>
+												<option value="1">Suas Movimentações</option>
+											</select>
+										</div>
+									</div>
+								<?php endif; ?>
+								<div class="card-title">
+									<div class="mb-0">
+										<div class="d-flex align-items-center position-relative my-1 mt-0 mb-0">
+											<button type="submit" class="btn btn-secondary mt-4 ms-3" name="buscarProp" value="buscarProp"><i class="bi mb-1 fs-4 bi-search"></i> Buscar Proposta</button>
+										</div>
+									</div>
+								</div>
 
 							</div>
-							<div class="card-title">
-								<div class="d-flex align-items-center position-relative">
-									<?php if ($my_security->checkPermission("FORMALIZACAO") || $my_security->checkPermission("ADMIN") || $my_security->checkPermission("GERENTE")): ?>
-										<div class="d-flex align-items-center position-relative my-1 mx-3">
-											<div class="mb-3">
-												<label for="exampleFormControlInput2" class="form-label text-gray-800 mb-0">Equipe:</label>
-												<div class="d-flex align-items-center position-relative my-1">
-													<select class="form-select form-control-solid" aria-label="" name="equipe">
-														<option value=""></option>
-														<option value="165005">Ana Karla</option>
-														<option value="164979">Amanda</option>
-														<option value="165006">Jéssica</option>
-													</select>
-												</div>
-											</div>
-										</div>
-									<?php endif; ?>
-									<div class="d-flex align-items-center position-relative mx-3">
-										<div class="mb-3">
-											<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">CPF:</label>
-											<input type="text" class="form-control" placeholder="CPF" name="txtCPF" value="" />
-										</div>
-									</div>
-									<div class="d-flex align-items-center position-relative mx-3">
-										<div class="mb-3">
-											<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Produto:</label>
-											<select class="form-select form-control-solid" aria-label="" name="produto">
-												<option value=""></option>
-												<?php foreach ($produtos as $p): ?>
-													<option value="<?= $p->nomeProduto ?>"><?= $p->nomeProduto ?></option>
-												<?php endforeach; ?>
-											</select>
-										</div>
-									</div>
-									<div class="mb-3  mx-3">
-										<label for="exampleFormControlInput1" class="form-label text-gray-800 mb-0">Registros:</label>
-										<div class="d-flex align-items-center position-relative">
-											<select class="form-select form-control-solid" aria-label="" name="paginas">
-												<?php
-												echo '<option value="20" ' .  ($paginas == "" ? 'selected' : '') . '> 20 </option>';
-												echo '<option value="50" ' .  ($paginas == "50" ? 'selected' : '') . '> 50 </option>';
-												echo '<option value="500" ' .  ($paginas == "500" ? 'selected' : '') . '> 500 </option>';
-												echo '<option value="1000" ' .  ($paginas == "1000" ? 'selected' : '') . '> 1000 </option>';
-												?>
-											</select>
-										</div>
-									</div>
-									<?php if ($session->role == "AUDITOR"): ?>
-										<div class="mb-3  mx-3">
-											<label for="exampleFormControlInput2" class="form-label text-gray-800 mb-0">Mostrar:</label>
-											<div class="d-flex align-items-center position-relative my-1">
-												<select class="form-select form-control-solid" aria-label="" name="auditorMove">
-													<option value="">Todas</option>
-													<option value="1">Suas Movimentações</option>
-												</select>
-											</div>
-										</div>
-									<?php endif; ?>
-								</div>
-							</div>
-							<div class="card-title">
-								<div class="mb-0">
-									<div class="d-flex align-items-center position-relative my-1 mt-0 mb-0">
-										<button type="submit" class="btn btn-secondary mt-4 ms-3" name="buscarProp" value="buscarProp">Buscar Proposta</button>
-									</div>
-								</div>
-							</div>
-							<div class="card-title">
+							<div class="card-title ms-auto">
 								<div class="mb-0 mx-3">
 									<div class="d-flex align-items-center position-relative my-1 mt-0 mb-0">
-										<a href="<?php echo assetfolder; ?>listar-produtos" class="btn btn-primary mt-4 ms-3">Criar Proposta</a>
+										<a href="<?php echo assetfolder; ?>listar-produtos" class="btn btn-primary mt-4 ms-3"><i class="bi fs-3 bi-plus-lg"></i> Criar Proposta</a>
 									</div>
 								</div>
 							</div>
-							<?php if ($my_security->checkPermission("ADMIN")): ?>
-								<div class="card-title">
-									<div class="mb-0 mx-3">
-										<div class="d-flex align-items-center position-relative my-1 mt-0 mb-0">
-											<a href="<?php echo assetfolder; ?>insight-upload" class="mt-4 ms-3 btn btn-secondary">Importar <i class="bi fs-3 bi-file-earmark-arrow-up"></i></a>
+							<div class="d-flex">
+								<?php if ($my_security->checkPermission("ADMIN")): ?>
+									<div class="card-title">
+										<div class="mb-0 mx-3">
+											<div class="d-flex align-items-center position-relative my-1 mt-0 mb-0">
+												<a href="<?php echo assetfolder; ?>insight-upload" class="mt-4 ms-3 btn btn-secondary"><i class="bi fs-3 mb-1 bi-file-earmark-arrow-up"></i> Importar</a>
+											</div>
 										</div>
 									</div>
-								</div>
-							<?php endif; ?>
-							<?php if ($my_security->checkPermission("FORMALIZACAO") || $my_security->checkPermission("ADMIN") || $my_security->checkPermission("SUPERVISOR")): ?>
-								<div class="card-title">
-									<div class="mb-0 mx-3">
-										<div class="d-flex align-items-center position-relative my-1 mt-0 mb-0">
-											<a href="<?php echo assetfolder; ?>export-propostas/0" class="mt-4 ms-3 btn btn-secondary">Exportar <i class="bi fs-3 bi-file-earmark-arrow-down"></i></a>
+								<?php endif; ?>
+								<?php if ($my_security->checkPermission("FORMALIZACAO") || $my_security->checkPermission("ADMIN") || $my_security->checkPermission("SUPERVISOR")): ?>
+									<div class="card-title">
+										<div class="mb-0 mx-3">
+											<div class="d-flex align-items-center position-relative my-1 mt-0 mb-0">
+												<a href="<?php echo assetfolder; ?>export-propostas/0" class="mt-4 ms-3 btn btn-secondary"><i class="bi fs-3 mb-1 bi-file-earmark-arrow-down"></i> Exportar</a>
+											</div>
 										</div>
 									</div>
-								</div>
-							<?php endif; ?>
+								<?php endif; ?>
+							</div>
 						</div>
 
-						<div class="card-body p-10 table-responsive">
+
+						<div class="table-responsive">
 							<table class="table align-middle table-bordered table-flush table-row-bordered fs-6 gy-4" id="kt_widget_table_3" data-kt-table-widget-3="all">
-								<thead>
+								<thead class="shadow bg-body-tertiary rounded">
 									<tr class="text-gray-800 fw-bold fs-6 gs-0">
 										<th data-sortable="false" class="min-w-25px text-center">Status</th>
 										<th class="min-w-50px text-center">Data</th>
