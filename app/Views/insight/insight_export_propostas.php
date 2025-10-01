@@ -203,6 +203,12 @@
                                     Último resumo
                                 </label>
                             </div>
+                            <div class="form-check">
+                                <input class="form-check-input" name="columns[produtoBase]" type="checkbox" value="produto base" id="col_produtoBase" />
+                                <label class="form-check-label text-muted" for="col_produtoBase">
+                                    Produto base
+                                </label>
+                            </div>
                         </div>
                     </div>
                 </form>

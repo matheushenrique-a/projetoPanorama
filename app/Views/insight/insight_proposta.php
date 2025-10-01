@@ -35,6 +35,17 @@ $movimentation = match ($row->status) {
         max-width: 100%;
         max-height: 200px;
     }
+
+    .copy-btn {
+        transition: transform 0.2s ease, color 0.2s ease, opacity 0.2s ease;
+        cursor: pointer;
+    }
+
+    .copy-btn.copied {
+        color: #198754 !important;
+        transform: scale(1.2);
+        opacity: 0.9;
+    }
 </style>
 <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
     <div class="d-flex flex-column flex-column-fluid">
@@ -113,8 +124,6 @@ $movimentation = match ($row->status) {
                                             <?php endif; ?>
 
                                             <div class="d-flex justify-content-between">
-
-
                                                 <div>
                                                     <td class="observacao"><?= html_entity_decode($linha->observacao ?? '') ?> </td>
                                                 </div>
@@ -129,29 +138,39 @@ $movimentation = match ($row->status) {
                                                 <div class="w-50">
                                                     <div class="mb-2">
                                                         <span class="fw-bold mb-1">Assessor:</span>
-                                                        <input type="text" class="form-control form-control-solid assessor" name="assessor" value="<?= $row->assessor ?>" data-original="<?= $row->assessor ?>" />
+                                                        <div class="d-flex align-items-center">
+                                                            <input type="text" class="form-control form-control-solid assessor copyable" name="assessor" value="<?= $row->assessor ?>" data-original="<?= $row->assessor ?>" />
+                                                        </div>
                                                     </div>
 
                                                     <div class="mb-2">
                                                         <span class="fw-bold mb-1">Nome Cliente:</span>
-                                                        <input type="text" class="form-control form-control-solid nome" name="nome" value="<?= $row->nome ?>" data-original="<?= $row->nome ?>" />
+                                                        <div class="d-flex align-items-center">
+                                                            <input type="text" class="form-control form-control-solid nome copyable" name="nome" value="<?= $row->nome ?>" data-original="<?= $row->nome ?>" />
+                                                        </div>
                                                     </div>
 
                                                     <div class="d-flex gap-4">
                                                         <div class="mb-2">
                                                             <span class="fw-bold mb-1">CPF:</span>
-                                                            <input type="text" class="form-control form-control-solid cpf" name="cpf" id="cpf" value="<?= $row->cpf ?>" data-original="<?= $row->cpf ?>"
-                                                                <?php if (!$my_security->checkPermission("FORMALIZACAO") && !$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("ADMIN")): echo "readonly";
-                                                                endif; ?> />
+                                                            <div class="d-flex align-items-center">
+                                                                <input type="text" class="form-control form-control-solid cpf copyable" name="cpf" id="cpf" value="<?= $row->cpf ?>" data-original="<?= $row->cpf ?>"
+                                                                    <?php if (!$my_security->checkPermission("FORMALIZACAO") && !$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("ADMIN")): echo "readonly";
+                                                                    endif; ?> />
+                                                            </div>
                                                         </div>
                                                         <div>
                                                             <span class="fw-bold mb-1">Celular:</span>
                                                             <?php $telFormatado = formatarTelefone($row->telefone); ?>
-                                                            <input type="text" class="form-control form-control-solid telefone" name="telefone" id="telefone" value="<?= $telFormatado ?>" data-original="<?= $telFormatado ?>" />
+                                                            <div class="d-flex align-items-center">
+                                                                <input type="text" class="form-control form-control-solid telefone copyable" name="telefone" id="telefone" value="<?= $telFormatado ?>" data-original="<?= $telFormatado ?>" />
+                                                            </div>
                                                         </div>
                                                         <div class="mb-2">
                                                             <span class="fw-bold mb-1">Data de Nascimento:</span>
-                                                            <input type="text" class="form-control form-control-solid dataNascimento" name="dataNascimento" id="dataNascimento" value="<?= $row->dataNascimento ?>" data-original="<?= $row->dataNascimento ?>" />
+                                                            <div class="d-flex align-items-center">
+                                                                <input type="text" class="form-control form-control-solid dataNascimento copyable" name="dataNascimento" id="dataNascimento" value="<?= $row->dataNascimento ?>" data-original="<?= $row->dataNascimento ?>" />
+                                                            </div>
                                                         </div>
                                                     </div>
 
@@ -162,14 +181,18 @@ $movimentation = match ($row->status) {
                                                     <div class="d-flex gap-4">
                                                         <div class="mb-2">
                                                             <span class="fw-bold mb-1">Produto:</span>
-                                                            <input type="text" class="form-control form-control-solid produto" name="produto" value="<?= $row->produto ?>" data-original="<?= $row->produto ?>" <?php if (!$my_security->checkPermission("FORMALIZACAO") && !$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("ADMIN")): echo "readonly";
-                                                                                                                                                                                                                endif; ?> />
+                                                            <div class="d-flex align-items-center">
+                                                                <input type="text" class="form-control form-control-solid produto copyable" name="produto" value="<?= $row->produto ?>" data-original="<?= $row->produto ?>" <?php if (!$my_security->checkPermission("FORMALIZACAO") && !$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("ADMIN")): echo "readonly";
+                                                                                                                                                                                                                                endif; ?> />
+                                                            </div>
                                                         </div>
                                                         <div class="mb-2">
                                                             <span class="fw-bold mb-1">Adesão:</span>
-                                                            <input
-                                                                type="text" class="form-control form-control-solid adesao" name="adesao" value="<?= $row->adesao ?>" data-original="<?= $row->adesao ?>" <?php if (!$my_security->checkPermission("FORMALIZACAO") && !$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("ADMIN")): echo "readonly";
-                                                                                                                                                                                                            endif; ?> />
+                                                            <div class="d-flex align-items-center">
+                                                                <input
+                                                                    type="text" class="form-control form-control-solid adesao copyable" name="adesao" value="<?= $row->adesao ?>" data-original="<?= $row->adesao ?>" <?php if (!$my_security->checkPermission("FORMALIZACAO") && !$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("ADMIN")): echo "readonly";
+                                                                                                                                                                                                                        endif; ?> />
+                                                            </div>
                                                         </div>
                                                     </div>
 
@@ -301,6 +324,36 @@ $movimentation = match ($row->status) {
                                             </div>
                                         </div>
                                     </div>
+
+                                    <script>
+                                        document.addEventListener("DOMContentLoaded", () => {
+                                            document.querySelectorAll("input.copyable").forEach(input => {
+                                                const icon = document.createElement("i");
+                                                icon.className = "fa-regular fa-copy fs-5 ms-2 copy-btn";
+                                                icon.title = "Copiar";
+
+                                                input.parentNode.appendChild(icon);
+                                            });
+
+                                            document.body.addEventListener("click", (e) => {
+                                                if (e.target.classList.contains("copy-btn")) {
+                                                    const input = e.target.parentNode.querySelector("input");
+                                                    if (input) {
+                                                        navigator.clipboard.writeText(input.value).then(() => {
+                                                            e.target.classList.remove("fa-copy");
+                                                            e.target.classList.add("bi-check2", "copied");
+
+                                                            setTimeout(() => {
+                                                                e.target.classList.remove("bi-check2", "copied");
+                                                                e.target.classList.add("fa-copy");
+                                                            }, 2000);
+                                                        });
+                                                    }
+                                                }
+                                            });
+
+                                        });
+                                    </script>
 
                                     <div class="tab-pane fade" id="kt_tab_pane_2" role="tabpanel">
                                         <div class="table-responsive">

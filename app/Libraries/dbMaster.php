@@ -380,22 +380,18 @@ class dbMaster
 
 	public function exportCSV($table, $columns = [], $where = [])
 	{
-		// Se não passar colunas, seleciona todas
 		if (empty($columns)) {
 			$builder = $this->db->table($table);
 			$builder->select('*');
 		} else {
-			// Se passar colunas no formato ['campo_banco' => 'Cabeçalho']
 			$builder = $this->db->table($table);
-			$builder->select(array_keys($columns)); // seleciona os campos reais do banco
+			$builder->select(array_keys($columns));
 		}
 
-		// Aplica filtro WHERE, se houver
 		if (!empty($where)) {
 			$builder->where($where);
 		}
 
-		// Executa a query
 		$query = $builder->get();
 		$results = $query->getResultArray();
 
@@ -404,32 +400,34 @@ class dbMaster
 			exit;
 		}
 
-		// Cabeçalhos HTTP para download
 		header('Content-Type: text/csv; charset=UTF-8');
 		header('Content-Disposition: attachment; filename="export.csv"');
 
-		// BOM UTF-8
 		echo "\xEF\xBB\xBF";
 
 		$fp = fopen('php://output', 'w');
 		$separator = ';';
 
-		// Monta cabeçalho
 		if (!empty($columns)) {
-			// Se colunas customizadas forem passadas
 			fputcsv($fp, array_values($columns), $separator);
 		} else {
-			// Cabeçalho automático a partir das chaves do primeiro registro
+
 			fputcsv($fp, array_keys($results[0]), $separator);
 		}
 
-		// Grava os dados
 		foreach ($results as $row) {
 			foreach ($row as $k => $v) {
-				if ($v === null) $row[$k] = '';
+				if ($v === null) {
+					$row[$k] = '';
+				} else {
+					if ($k === 'valor') {
+						$row[$k] = str_replace('.', ',', number_format((float)$v, 2, '.', ''));
+					}
+				}
 			}
 			fputcsv($fp, $row, $separator);
 		}
+
 
 		fclose($fp);
 		exit;
