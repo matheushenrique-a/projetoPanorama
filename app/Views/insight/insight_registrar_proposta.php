@@ -407,6 +407,21 @@ $productName = $produto->nomeProduto;
                     });
                     renderDropdown();
 
+                    let readonly;
+                    let value;
+
+                    let valueFix;
+
+                    console.log(produto)
+
+                    if (produto == "Saque") {
+                        readonly = '';
+                        value = '';
+                    } else {
+                        readonly = 'readonly';
+                        value = '0'
+                    }
+
                     divProdutosAdicionados.innerHTML += `<div class="card mt-4" id="kt_chat_messenger">
                                 <div class="accordion" id="kt_accordion_1 ms-lg-7 ms-xl-10">
                                     <div class="accordion-item">
@@ -424,7 +439,7 @@ $productName = $produto->nomeProduto;
                                                             </div>
                                                             <div class="input-group" style="width: 280px;">
                                                                 <span class="input-group-text">Valor da parcela</span>
-                                                                <input type="text" class="form-control fs-3 fw-bold valorParcela" value="" placeholder="R$ -" name="valorParcela${number}" id="" required/>
+                                                                <input type="text" class="form-control fs-3 fw-bold valorParcela" value="${value}" placeholder="R$ -" name="valorParcela${number}" id="" required ${readonly}/>
                                                             </div>
                                                             <div class="input-group" style="width: 330px;">
                                                                     <span class="input-group-text">Quantidade de parcelas</span>
