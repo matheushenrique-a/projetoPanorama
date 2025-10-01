@@ -302,8 +302,6 @@ class Insight extends BaseController
             $betweenCheck = [];
         }
 
-        // alterar para admin caso necessário
-
         if (!$this->my_security->checkPermission("ADMIN")) {
             $whereCheck['produtoBase'] = 1;
         }
@@ -320,7 +318,7 @@ class Insight extends BaseController
 
         $paginas = (empty($paginas) ? 20 : $paginas);
         $this->dbMasterDefault->setLimit($paginas);
-        $this->dbMasterDefault->setOrderBy(array('idquid_propostas', 'DESC'));
+        $this->dbMasterDefault->setOrderBy(array('data_criacao', 'DESC'));
         $propostas = $this->dbMasterDefault->select('quid_propostas', $whereCheck, $whereNotIn + $likeCheck + $whereIn + $betweenCheck);
 
         $dados['indicadores'] = $this->indicadores();
@@ -366,7 +364,7 @@ class Insight extends BaseController
         $dados = [];
         if (($handle = fopen($caminho, 'r')) !== false) {
             $linha = 0;
-            while (($row = fgetcsv($handle, 1000, ",")) !== false) {
+            while (($row = fgetcsv($handle, 1000, ";")) !== false) {
                 if ($linha == 0) {
                     $linha++;
                     continue;
@@ -421,20 +419,21 @@ class Insight extends BaseController
 
     private function converterDataHora($dataHora)
     {
-        if (empty($dataHora))
+        if (empty($dataHora)) {
             return null;
-
-        // Quebra data e hora
-        [$data, $hora] = explode(' ', $dataHora);
-
-        // Quebra a parte da data
-        $partes = explode('/', $data);
-        if (count($partes) === 3) {
-            $dataConvertida = $partes[2] . '-' . $partes[1] . '-' . $partes[0];
-            return $dataConvertida . ' ' . $hora . ':00'; // adiciona segundos
         }
 
-        return null; // formato inválido
+        $partes = explode(' ', $dataHora);
+        $data = $partes[0];
+        $hora = $partes[1] ?? '00:00';
+
+        $partesData = explode('/', $data);
+        if (count($partesData) === 3) {
+            $dataConvertida = $partesData[2] . '-' . $partesData[1] . '-' . $partesData[0];
+            return $dataConvertida . ' ' . $hora . ':00';
+        }
+
+        return null;
     }
 
     public function panorama_gravar_proposta_saque($params)
