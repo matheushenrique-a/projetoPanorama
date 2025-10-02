@@ -38,12 +38,12 @@
                 </div>
             </div>
         </div>
-        <div class="container mt-6">
+        <div class="container">
             <div class="mb-10 text-center">
                 <h1>Selecione o produto</h1>
             </div>
             <div class="d-flex justify-content-center">
-                <div class="d-flex gap-20 flex-wrap justify-content-center mb-10">
+                <div class="d-flex gap-10 flex-wrap justify-content-center mb-10">
                     <?php if (!empty($listarProdutos)): ?>
                         <?php foreach ($listarProdutos as $produto): ?>
                             <a class="card d-flex card-hover" style="width:200px;height:200px;border-radius:20px;" href="<?= assetfolder ?>criar-proposta/<?= $produto->id ?>/0">
