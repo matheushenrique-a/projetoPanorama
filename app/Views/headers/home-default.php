@@ -1159,7 +1159,7 @@
 																</span>
 															</td>
 															<td class="align-middle text-center">
-																<?= isset($row->total_movimentacoes) ? $row->total_movimentacoes : 0; ?>
+																<?= $row->total_movimentacoes; ?>
 															</td>
 															<td class="text-end align-middle">
 																<span class="fs-5 px-3 py-2">
