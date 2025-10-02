@@ -415,16 +415,16 @@ class M_insight extends Model
             "165017" => "Amanda"
         ];
 
-        $sql = "
+        $sqlPropostas = "
         SELECT id_owner AS id, COUNT(*) AS total_propostas
         FROM quid_propostas
         WHERE DATE(data_criacao) = CURDATE()
         GROUP BY id_owner
     ";
-        $result = $this->dbMasterDefault->runQuery($sql)['result']->getResult();
+        $resultPropostas = $this->dbMasterDefault->runQuery($sqlPropostas)['result']->getResult();
 
         $sqlHistorico = "
-        SELECT id_usuario AS id, COUNT(*) AS total_propostas
+        SELECT id_usuario AS id, COUNT(*) AS total_movimentacoes
         FROM historico_propostas
         WHERE DATE(horario) = CURDATE()
         GROUP BY id_usuario
@@ -432,22 +432,33 @@ class M_insight extends Model
         $resultHistorico = $this->dbMasterDefault->runQuery($sqlHistorico)['result']->getResult();
 
         $totais = [];
-        foreach ($result as $row) {
+
+        foreach ($resultPropostas as $row) {
             if (isset($auditores[$row->id])) {
-                $totais[$row->id] = ($totais[$row->id] ?? 0) + $row->total_propostas;
+                $id = $row->id;
+                if (!isset($totais[$id])) {
+                    $totais[$id] = ['total_propostas' => 0, 'total_movimentacoes' => 0];
+                }
+                $totais[$id]['total_propostas'] += $row->total_propostas;
             }
         }
+
         foreach ($resultHistorico as $row) {
             if (isset($auditores[$row->id])) {
-                $totais[$row->id] = ($totais[$row->id] ?? 0) + $row->total_propostas;
+                $id = $row->id;
+                if (!isset($totais[$id])) {
+                    $totais[$id] = ['total_propostas' => 0, 'total_movimentacoes' => 0];
+                }
+                $totais[$id]['total_movimentacoes'] += $row->total_movimentacoes;
             }
         }
 
         $progressoAuditoria = [];
-        foreach ($totais as $id => $total) {
+        foreach ($totais as $id => $tot) {
             $progressoAuditoria[] = (object)[
                 'auditor' => $auditores[$id],
-                'total_propostas' => $total
+                'total_propostas' => $tot['total_propostas'],
+                'total_movimentacoes' => $tot['total_movimentacoes']
             ];
         }
 
