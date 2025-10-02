@@ -1119,11 +1119,10 @@
 								<div class="card card-flush h-md-100 shadow-sm">
 									<div class="card-header pt-7">
 										<h3 class="card-title align-items-start flex-column">
-											<span class="card-label fw-bold text-dark fs-4">Tabela de Auditoria (em desenvolvimento 🚧)</span>
-											<span class="text-muted mt-2 fw-semibold fs-6">Quantidade de propostas atuadas</span>
+											<span class="card-label fw-bold text-dark fs-4">Tabela de Auditoria</span>
+											<span class="text-muted mt-2 fw-semibold fs-6">Quantidade de propostas atuadas diariamente</span>
 										</h3>
 									</div>
-
 									<div class="card-body pt-6">
 										<div class="table-responsive">
 											<table class="table table-rounded table-bordered border gy-5 gs-7">
@@ -1131,18 +1130,16 @@
 													<tr class="fw-bold text-muted">
 														<th class="ps-10">#</th>
 														<th>Auditor</th>
-														<th class="text-end">Qtd</th>
+														<th class="text-center">Qtd movimentações</th>
+														<th class="text-end">Qtd propostas</th>
 													</tr>
 												</thead>
 												<tbody>
 													<?php
 													$posicao = 1;
-													$color = "secondary";
-													$textColor = "gray-500";
 													?>
 													<?php foreach ($progressoAuditoria as $row): ?>
-														<tr style="<?= $posicao == 1 ? 'box-shadow: 0 0 0px; font-weight: bold;' : '' ?>"
-															class="text-gray-600">
+														<tr style="<?= $posicao == 1 ? 'box-shadow: 0 0 0px; font-weight: bold;' : '' ?>" class="text-gray-600">
 															<td class="align-middle">
 																<span class="badge bg-warning fs-6 rounded-circle text-black"
 																	style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; <?= $posicao == 1 ? 'box-shadow: 0 0px 3px' : '' ?>">
@@ -1160,6 +1157,9 @@
 																	}
 																	?>
 																</span>
+															</td>
+															<td class="align-middle text-center">
+																<?= isset($row->total_movimentacoes) ? $row->total_movimentacoes : 0; ?>
 															</td>
 															<td class="text-end align-middle">
 																<span class="fs-5 px-3 py-2">

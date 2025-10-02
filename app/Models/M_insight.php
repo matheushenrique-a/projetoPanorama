@@ -408,46 +408,53 @@ class M_insight extends Model
 
     public function quantidadePorAuditor()
     {
-        $sql = "
-        SELECT 
-            id_owner,
-            COUNT(*) AS total_propostas
-        FROM quid_propostas
-        WHERE MONTH(data_criacao) = MONTH(CURDATE())
-          AND YEAR(data_criacao) = YEAR(CURDATE())
-        GROUP BY id_owner
-        ORDER BY total_propostas DESC;
-    ";
-
-        $result = $this->dbMasterDefault
-            ->runQuery($sql)['result']
-            ->getResult();
-
-        // Mapeamento dos IDs para nomes
         $auditores = [
             "165022" => "Taline",
             "165021" => "Nayara",
             "165020" => "Marcos",
-            // "165019" => "Gabriela",
-            // "165017" => "Amanda"
+            "165017" => "Amanda"
         ];
 
-        $filtrados = [];
+        $sql = "
+        SELECT id_owner AS id, COUNT(*) AS total_propostas
+        FROM quid_propostas
+        WHERE DATE(data_criacao) = CURDATE()
+        GROUP BY id_owner
+    ";
+        $result = $this->dbMasterDefault->runQuery($sql)['result']->getResult();
 
+        $sqlHistorico = "
+        SELECT id_usuario AS id, COUNT(*) AS total_propostas
+        FROM historico_propostas
+        WHERE DATE(horario) = CURDATE()
+        GROUP BY id_usuario
+    ";
+        $resultHistorico = $this->dbMasterDefault->runQuery($sqlHistorico)['result']->getResult();
+
+        $totais = [];
         foreach ($result as $row) {
-            if (isset($auditores[$row->id_owner])) {
-                $filtrados[] = (object)[
-                    'auditor' => $auditores[$row->id_owner],
-                    'total_propostas' => $row->total_propostas
-                ];
+            if (isset($auditores[$row->id])) {
+                $totais[$row->id] = ($totais[$row->id] ?? 0) + $row->total_propostas;
+            }
+        }
+        foreach ($resultHistorico as $row) {
+            if (isset($auditores[$row->id])) {
+                $totais[$row->id] = ($totais[$row->id] ?? 0) + $row->total_propostas;
             }
         }
 
-        return $filtrados;
-    }
+        $progressoAuditoria = [];
+        foreach ($totais as $id => $total) {
+            $progressoAuditoria[] = (object)[
+                'auditor' => $auditores[$id],
+                'total_propostas' => $total
+            ];
+        }
 
-    public function atualizarSenhaUser($id, $senha)
-    {
-        return $this->dbMasterDefault->update('user_account', ['password' => $senha], ['userId' => $id]);
+        usort($progressoAuditoria, function ($a, $b) {
+            return $b->total_propostas <=> $a->total_propostas;
+        });
+
+        return $progressoAuditoria;
     }
 }
