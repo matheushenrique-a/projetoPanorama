@@ -37,7 +37,7 @@ $routes->match(['get', 'post'], '/bradesco-receptivo/(:any)', 'Bradesco\Bradesco
 
 //BMG
 $routes->match(['get', 'post'], '/bmg-receptivo/(:any)', 'Bmg\Bmg::bmg_receptivo/$1');
-$routes->match(['get', 'post'], '/bmg-saque/(:any)', 'Bmg\Bmg::bmg_saque/$1');
+$routes->match(['get', 'post'], '/bmg-saque/(:any)', 'Bmg\Bmg::bmg_saque/$1', ['filter' => 'auth:ADMIN']);
 $routes->match(['get', 'post'], '/bmg-cartao/(:any)', 'Bmg\Bmg::bmg_cartao/$1');
 $routes->match(['get', 'post'], '/bmg-script-vendas/(:any)/(:any)/(:any)/(:any)/(:any)', 'Bmg\Bmg::bmg_script_vendas/$1/$2/$3/$4/$5');
 $routes->match(['get', 'post'], '/bmg-gravar-proposta', 'Bmg\Bmg::bmg_gravar_proposta');

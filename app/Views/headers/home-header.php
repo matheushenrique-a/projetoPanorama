@@ -198,7 +198,7 @@
 																		class="menu-custom-icon d-flex flex-center flex-shrink-0 rounded w-40px h-40px me-3">
 																		<span
 																			class="svg-icon svg-icon-danger svg-icon-1">
-																			<img src="<?= assetfolder?>assets/logos/bmg.png" width="35px">
+																			<img src="<?= assetfolder ?>assets/logos/bmg.png" width="35px">
 																		</span>
 																	</span>
 																	<span class="d-flex flex-column">
@@ -230,6 +230,27 @@
 								</div>
 							</div>
 						</div>
+						<?php
+						$noPermission = session('noPermission');
+						?>
+						<?php if (isset($noPermission) && $noPermission == true): ?>
+							<div id="noPermissionAlert" class="alert alert-danger position-fixed top-10 start-50 translate-middle-x mt-3" style="z-index: 1050; min-width: 300px; text-align: center;">
+								Usuário sem permissão para acessar!
+							</div>
+
+							<script>
+								setTimeout(() => {
+									const alertEl = document.getElementById('noPermissionAlert');
+									if (alertEl) {
+										alertEl.style.transition = "opacity 0.5s ease";
+										alertEl.style.opacity = 0;
+
+										setTimeout(() => alertEl.remove(), 500);
+									}
+								}, 3000);
+							</script>
+						<?php endif; ?>
+
 						<div class="app-navbar flex-shrink-0">
 							<div class="app-navbar-item ms-1 ms-lg-3">
 								<div class=" btn btn-icon btn-custom btn-icon-muted btn-active-light btn-active-color-primary w-35px h-35px w-md-40px h-md-40px"

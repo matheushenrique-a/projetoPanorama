@@ -57,12 +57,14 @@ class M_seguranca extends Model
             $this->my_session->set('perfil', $login['firstRow']->perfil_acesso);
             $this->my_session->set('observacao', $login['firstRow']->observacao);
             $this->my_session->set('profile_image', $login['firstRow']->profile_image);
+            $this->my_session->set('isLoggedIn', true);
             $this->my_session->set('parameters', json_decode($login['firstRow']->parameters ?? "", true));
 
             helper('cookie');
             set_cookie('insight', $login['firstRow']->email, time() + 60 * 60 * 24 * 7); //30 days 
             return true;
         } else {
+            $this->my_session->set('isLoggedIn', false);
             return false;
         }
     }
