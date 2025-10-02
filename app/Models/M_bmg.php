@@ -285,7 +285,7 @@ class M_bmg extends Model
                 'senha'        => BMG_SEGURO_SENHA,
                 'loginConsig'  => BMG_SEGURO_LOGIN_CONSIG,
                 'senhaConsig'  => BMG_SEGURO_SENHA_CONSIG,
-                'codLoja' => BMG_LOJA_QUID,             // Código da loja fornecido pelo BMG
+                'codLoja' => BMG_LOJA_UNITY,             // Código da loja fornecido pelo BMG
             ];
 
             $returnData["status"] = true;
@@ -369,6 +369,24 @@ class M_bmg extends Model
             }
 
             $response = $client->__soapCall('buscarSimulacao', [$params]);
+
+            return $response;
+        } catch (SoapFault $fault) {
+            echo "Erro: {$fault->faultcode} - {$fault->faultstring}";
+
+            return [
+                'erro' => true,
+                'mensagem' => "{$fault->faultcode} - {$fault->faultstring}"
+            ];
+        }
+    }
+
+    public function obtemInfoSeguro($params)
+    {
+        try {
+            $client = new \SoapClient('https://ws1.bmgconsig.com.br/webservices/ProdutoSeguroWebService?wsdl', ['trace' => 1, 'exceptions' => true]);
+
+            $response = $client->__soapCall('listaPlanosRating', [$params]);
 
             return $response;
         } catch (SoapFault $fault) {

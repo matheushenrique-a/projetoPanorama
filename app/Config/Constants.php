@@ -22,7 +22,6 @@ define('BMG_SEGURO_SENHA', 'robo@2025');
 define('BMG_SEGURO_LOGIN_CONSIG', 'UY.COORD2632');
 define('BMG_SEGURO_SENHA_CONSIG', 'Coord@2026');
 define('BMG_ENTIDADE', '1581');
-define('BMG_LOJA_QUID', '54577'); //Unity
 define('BMG_LOJA_UNITY', '54577'); //QUID
 define('BMG_CODIGO_PRODUTO_PAP', 1007);
 define('BMG_CODIGO_PRODUTO_MED', 54);
