@@ -1131,7 +1131,7 @@
 														<th class="ps-10">#</th>
 														<th>Auditor</th>
 														<th class="text-center">Propostas</th>
-														<th class="text-center">Movimentações</th>
+														<th class="text-end">Movimentações</th>
 													</tr>
 												</thead>
 												<tbody>
@@ -1159,12 +1159,14 @@
 																</span>
 															</td>
 															<td class="text-center align-middle">
-																<span class="fs-5 px-3 py-2">
+																<span class="fs-4 px-3 py-2">
 																	<?= $row->total_propostas; ?>
 																</span>
 															</td>
-															<td class="align-middle text-center">
-																<?= $row->total_movimentacoes; ?>
+															<td class="align-middle text-end me-4">
+																<span class="fs-4 px-3 py-2">
+																	<?= $row->total_movimentacoes; ?>
+																</span>
 															</td>
 														</tr>
 														<?php $posicao++; ?>
