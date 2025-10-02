@@ -1130,8 +1130,8 @@
 													<tr class="fw-bold text-muted">
 														<th class="ps-10">#</th>
 														<th>Auditor</th>
-														<th class="text-center">Qtd movimentações</th>
-														<th class="text-end">Qtd propostas</th>
+														<th class="text-center">Propostas</th>
+														<th class="text-center">Movimentações</th>
 													</tr>
 												</thead>
 												<tbody>
@@ -1158,13 +1158,13 @@
 																	?>
 																</span>
 															</td>
-															<td class="align-middle text-center">
-																<?= $row->total_movimentacoes; ?>
-															</td>
-															<td class="text-end align-middle">
+															<td class="text-center align-middle">
 																<span class="fs-5 px-3 py-2">
 																	<?= $row->total_propostas; ?>
 																</span>
+															</td>
+															<td class="align-middle text-center">
+																<?= $row->total_movimentacoes; ?>
 															</td>
 														</tr>
 														<?php $posicao++; ?>

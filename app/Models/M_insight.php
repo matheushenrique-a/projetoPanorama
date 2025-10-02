@@ -463,7 +463,7 @@ class M_insight extends Model
         }
 
         usort($progressoAuditoria, function ($a, $b) {
-            return $b->total_propostas <=> $a->total_propostas;
+            return $b->total_movimentacoes <=> $a->total_movimentacoes;
         });
 
         return $progressoAuditoria;
