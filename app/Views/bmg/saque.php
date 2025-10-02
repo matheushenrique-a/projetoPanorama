@@ -16,12 +16,19 @@
 
 <?php $valorSaque = session('valorSaque'); ?>
 <?php $valorParcela = session('valorParcela'); ?>
+<?php $infoSeguro = session('infoSeguro'); ?>
 
 <?php $erro = session()->getFlashdata('erro'); ?>
 
 <?php $codigoEntidade = session('codigoEntidade'); ?>
 <?php $panoramaId = session('panoramaId'); ?>
 <?php $numeroAdesao = session('numeroAdesao'); ?>
+
+<?php 
+if(isset($cardData)) {
+    return var_dump($infoSeguro);
+}
+?>
 
 <?php if ($valores = session()->getFlashdata('valores')): ?>
     <div class="alert alert-success">
@@ -102,7 +109,7 @@
                                                                 $temCartaoDisponivel = true;
                                                             }
                                                             ?>
-                                                            <?php if ($temCartaoDisponivel): ?>
+                                                            <?php if (true == false): ?>
 
 
                                                                 <div class="input-group">
@@ -361,6 +368,20 @@
 
                         </div>
                     </div>
+                    <?php if (isset($infoSeguro->planos) && is_array($infoSeguro->planos)): ?>
+                        <div class="accordion" id="accordionPlanos">
+                            <?php foreach ($infoSeguro->planos as $index => $plano): ?>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header d-flex justify-content-between" id="heading<?= $index ?>">
+                                        <button class="accordion-button fs-5 fw-semibold">
+                                            <?= $plano->nomePlano ?> (<?= $plano->tipoPagamento ?>)
+                                            R$ <?= number_format($plano->valorPremio, 2, ',', '.') ?>
+                                        </button>
+                                    </h2>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
@@ -372,7 +393,7 @@
     <div class="app-container container-fluid d-flex flex-column flex-md-row flex-center flex-md-stack py-3">
         <div class="text-dark order-2 order-md-1">
             <span class="text-muted fw-semibold me-1">2025&copy;</span>
-            <a href="<?= assetfolder?>" class="text-gray-800 text-hover-primary">QuidOne</a>
+            <a href="<?= assetfolder ?>" class="text-gray-800 text-hover-primary">QuidOne</a>
         </div>
     </div>
 </div>

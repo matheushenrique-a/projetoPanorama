@@ -941,6 +941,21 @@ class Bmg extends BaseController
 
             $obtemValorParcela = $this->m_bmg->obterValorParcela($data);
 
+            $dataSeguro = [
+                'login' => BMG_SEGURO_LOGIN,
+                'senha' => BMG_SEGURO_SENHA,
+                'cpf' => $params['cpf'],
+                'renda' => $valorMaximo,
+                'codigoProdutoSeguro' => 54,
+                'entidade' => $entidade,
+                'numeroInternoConta' => $contaInterna
+            ];
+            // return print_r($dataSeguro);
+
+            $obtemInfoSeguro = $this->m_bmg->obtemInfoSeguro($dataSeguro);
+
+            // return print_r($obtemInfoSeguro);
+
             $valorParcela = $obtemValorParcela[0]->valorParcela ?? 0;
             $dados['valorParcela'] = $valorParcela;
 
@@ -951,7 +966,8 @@ class Bmg extends BaseController
                 ->with('matricula', $matricula)
                 ->with('contaInterna', $contaInterna)
                 ->with('valorSaque', $valorMaximo)
-                ->with('codigoEntidade', $entidade);
+                ->with('codigoEntidade', $entidade)
+                ->with('infoSeguro', $obtemInfoSeguro);
         } elseif (isset($returnData->cartoes) && count($returnData->cartoes) > 1) {
             return redirect()->to(urlInstitucional . 'bmg-saque/0')
                 ->with('cardData', $returnData)
