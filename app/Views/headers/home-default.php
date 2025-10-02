@@ -1131,7 +1131,7 @@
 														<th class="ps-10">#</th>
 														<th>Auditor</th>
 														<th class="text-center">Propostas</th>
-														<th class="text-end">Movimentações</th>
+														<th style="max-width: 80px;" class="text-center">Movimentações</th>
 													</tr>
 												</thead>
 												<tbody>
@@ -1163,7 +1163,7 @@
 																	<?= $row->total_propostas; ?>
 																</span>
 															</td>
-															<td class="align-middle text-end me-4">
+															<td class="align-middle text-center">
 																<span class="fs-4 px-3 py-2">
 																	<?= $row->total_movimentacoes; ?>
 																</span>
