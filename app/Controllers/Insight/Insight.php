@@ -77,10 +77,12 @@ class Insight extends BaseController
         if ($action == "alterar-status") {
             $idProposta = $this->request->getPost('id');
 
-            if ($this->session->role == "OPERADOR") {
+            if ($this->session->role == "OPERADOR" || $this->session->userId == "165006" || $this->session->userId == "165005" || $this->session->userId == "164979") {
                 $novoStatus = $this->getpost('statusOperador');
+                $dataLançamento = false;
             } else {
                 $novoStatus = $this->request->getPost('status');
+                $dataLançamento = true;
             }
 
             if ($novoStatus == "Cancelada") {
@@ -187,6 +189,11 @@ class Insight extends BaseController
 
             if ($idProposta) {
                 $tabela = 'quid_propostas';
+
+                if ($dataLançamento == true) {
+                    $valores['data_criacao'] = $dataCriacaoMySQL;
+                }
+
                 $valores = [
                     'status' => $novoStatus,
                     'adesao' => $adesao,
@@ -199,8 +206,7 @@ class Insight extends BaseController
                     'valor_parcela' => $valorParcela,
                     'panorama_id' => $panorama_id,
                     'numero_parcela' => $parcelas,
-                    'data_criacao' => $dataCriacaoMySQL,
-                    'dataNascimento' => $dataNascimento,
+                    'dataNascimento' => $dataNascimento, // JÁ TÁ OK DEPOIS DO ALMOÇO!!
                     'assessor' => $assessor,
                     'banco' => $banco ?? null,
                     'agencia' => $agencia ?? null,
