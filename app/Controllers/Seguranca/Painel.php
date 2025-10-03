@@ -107,37 +107,18 @@ class Painel extends BaseController
                 $permissions[] = "BRADESCO";
             }
 
-            if (EMPRESA == 'quid') {
-                if ($cargo == "SUPERVISOR") {
-                    array_push($permissions, "SUPERVISOR", "QUID");
-                } else if ($cargo == "AUDITOR") {
-                    array_push($permissions, "QUID", "FORMALIZACAO");
-                } else {
-                    array_push($permissions, "QUID");
-                }
+            if ($this->getpost('admin')) {
+                $permissions[] = "ADMIN";
             }
 
-            if (EMPRESA == 'theone') {
-                if ($cargo == "SUPERVISOR") {
-                    array_push($permissions, "SUPERVISOR", "THEONE");
-                } else {
-                    array_push($permissions, "THEONE");
-                }
-            }
 
-            if (EMPRESA == 'pravoce') {
-                if ($cargo == "SUPERVISOR") {
-                    array_push($permissions, "SUPERVISOR", "PRAVOCE");
-                } else {
-                    array_push($permissions, "PRAVOCE");
-                }
+            if ($cargo == "SUPERVISOR") {
+                array_push($permissions, "SUPERVISOR", "QUID");
+            } else if ($cargo == "AUDITOR") {
+                array_push($permissions, "QUID", "FORMALIZACAO");
+            } else {
+                array_push($permissions, "QUID");
             }
-
-            // configurar parametros
-            $parameters = json_encode([
-                "integraallId" => 1107,
-                "google-meeting" => "https://meet.google.com/nni-mqwn-xxj"
-            ]);
 
             $status = 'ATIVO';
 
@@ -150,7 +131,6 @@ class Painel extends BaseController
                 'role' => $cargo,
                 'report_to' => $supervisor,
                 'perfil_acesso' => json_encode($permissions),
-                'parameters' => $parameters,
                 'status' => $status,
                 'profile_image' => $imgPath ?? ""
             ];
@@ -199,6 +179,12 @@ class Painel extends BaseController
                 $dados['bradesco'] = true;
             } else {
                 $dados['bradesco'] = false;
+            }
+
+            if (in_array("ADMIN", $permissions)) {
+                $dados['admin'] = true;
+            } else {
+                $dados['admin'] = false;
             }
 
             $whereCheck['role'] = 'SUPERVISOR';

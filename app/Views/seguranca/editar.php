@@ -70,16 +70,22 @@
                                 <div class="d-flex gap-6 mt-4 mb-4">
                                     <div class="form-check">
                                         <input class="form-check-input" name="bmg" type="checkbox" value="1" id="bmg"
-                                            checked />
+                                            <?= $bmg ? 'checked' : '' ?> />
                                         <label class="form-check-label" for="flexCheckChecked">
                                             BMG
                                         </label>
                                     </div>
                                     <div class="form-check">
                                         <input class="form-check-input" name="bradesco" type="checkbox" value="1"
-                                            id="bradesco" />
+                                            id="bradesco"<?= $bradesco ? 'checked' : '' ?> />
                                         <label class="form-check-label" for="flexCheckChecked">
                                             Bradesco
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" name="admin" type="checkbox" value="1" id="admin" <?= $admin ? 'checked' : '' ?>/>
+                                        <label class="form-check-label" for="flexCheckChecked">
+                                            Admin
                                         </label>
                                     </div>
                                 </div>
@@ -127,10 +133,10 @@
 
         const reader = new FileReader();
         reader.onload = function (e) {
-            preview.innerHTML = ''; // limpa conteúdo anterior
+            preview.innerHTML = ''; 
             const img = document.createElement('img');
             img.src = e.target.result;
-            img.classList.add('rounded-3'); // aplica borda arredondada
+            img.classList.add('rounded-3'); 
             img.style.width = '100%';
             img.style.height = '100%';
             img.style.objectFit = 'cover';
@@ -143,12 +149,10 @@
     const gerenteList = <?= json_encode($gerentelist) ?>;
     const supervisorId = <?= json_encode($supervisor) ?>;
 
-    // Função para atualizar os responsáveis no select
     function atualizarResponsaveis(cargo) {
         const select = document.getElementById('report_to');
-        select.innerHTML = ''; // limpa as opções
+        select.innerHTML = ''; 
 
-        // Se o cargo for OPERADOR, exibe os SUPERVISORES como responsáveis
         if (cargo === 'OPERADOR' || cargo == 'AUDITOR') {
             supervisorList.forEach(supervisor => {
                 const option = document.createElement('option');
@@ -173,12 +177,10 @@
         }
     }
 
-    // Detectar mudança no campo de cargo
     document.getElementById('role').addEventListener('change', function () {
         atualizarResponsaveis(this.value);
     });
 
-    // Preencher automaticamente caso já haja valor selecionado
     window.addEventListener('DOMContentLoaded', function () {
         const cargoAtual = document.getElementById('role').value;
         atualizarResponsaveis(cargoAtual);
