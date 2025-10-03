@@ -90,15 +90,6 @@ class Painel extends BaseController
 
             $file = $this->request->getFile('profile_image');
 
-            if ($file && $file->isValid() && !$file->hasMoved()) {
-                $newName = $file->getRandomName();
-
-                $file->move(FCPATH . 'uploads/profile_images', $newName);
-                $imgPath = 'uploads/profile_images/' . $newName;
-
-                $dados['profile-image'] = $imgPath;
-            }
-
             $permissions = [];
 
             if ($this->getpost('bmg')) {
@@ -135,6 +126,17 @@ class Painel extends BaseController
                 'perfil_acesso' => json_encode($permissions),
                 'status' => $status,
             ];
+
+            if ($file && $file->isValid() && !$file->hasMoved()) {
+                $newName = $file->getRandomName();
+
+                $file->move(FCPATH . 'uploads/profile_images', $newName);
+                $imgPath = 'uploads/profile_images/' . $newName;
+
+                $dados = [
+                    'profile_image' => $imgPath
+                ];
+            }
 
             if ($userId != 0) {
                 $this->dbMaster->update('user_account', $dados, ['userId' => $userId]);
