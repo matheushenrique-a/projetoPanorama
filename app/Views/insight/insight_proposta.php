@@ -136,6 +136,15 @@ $movimentation = match ($row->status) {
 
                                             <div class="modal-body d-flex mt-4 gap-8">
                                                 <div class="w-50">
+                                                    <?php
+                                                    $superviores = [
+                                                        '164979' => 'Amanda',
+                                                        '165005' => 'Jéssica Laís',
+                                                        '165006' => 'Ana Karla'
+                                                    ];
+
+                                                    $supervisorName = $superviores[$row->report_to] ?? $row->report_to;
+                                                    ?>
                                                     <div class="mb-2">
                                                         <span class="fw-bold mb-1">Assessor:</span>
                                                         <div class="d-flex align-items-center">
@@ -173,6 +182,15 @@ $movimentation = match ($row->status) {
                                                             </div>
                                                         </div>
                                                     </div>
+
+                                                    <?php if ($my_security->checkPermission("ADMIN") || $my_security->checkPermission("FORMALIZACAO")): ?>
+                                                        <div class="mb-2">
+                                                            <span class="fw-bold mb-1">Supervisora:</span>
+                                                            <div class="d-flex align-items-center">
+                                                                <input type="text" class="form-control form-control-solid" name="report_to" value="<?= $supervisorName ?>" readonly style="width: 150px" />
+                                                            </div>
+                                                        </div>
+                                                    <?php endif; ?>
 
                                                     <input type="hidden" name="id" value="<?= $row->idquid_propostas ?>">
                                                 </div>
@@ -233,7 +251,6 @@ $movimentation = match ($row->status) {
                                                             <input type="text" class="form-control form-control-solid" name="codigoEntidade" id="" value="<?= $row->codigo_entidade ?>" data-original="<?= $row->codigo_entidade ?>" />
                                                         </div>
                                                     </div>
-
 
                                                     <div class="input-group mt-2 d-flex flex-column">
                                                         <span class="fw-bold mb-1">Observação:</span>
