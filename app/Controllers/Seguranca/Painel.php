@@ -95,6 +95,8 @@ class Painel extends BaseController
 
                 $file->move(FCPATH . 'uploads/profile_images', $newName);
                 $imgPath = 'uploads/profile_images/' . $newName;
+
+                $dados['profile-image'] = $imgPath;
             }
 
             $permissions = [];
@@ -121,10 +123,6 @@ class Painel extends BaseController
             }
 
             $status = 'ATIVO';
-
-            if(!empty($file)){
-                $dados['profile-image'] = $imgPath ?? "";
-            }
 
             $dados = [
                 'nickname' => $nome,
