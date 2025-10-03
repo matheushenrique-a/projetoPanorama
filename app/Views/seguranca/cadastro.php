@@ -74,6 +74,12 @@
                                             Bradesco
                                         </label>
                                     </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" name="admin" type="checkbox" value="1" id="admin" />
+                                        <label class="form-check-label" for="flexCheckChecked">
+                                            Admin
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                             <div>
