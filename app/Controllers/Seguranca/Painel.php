@@ -122,6 +122,10 @@ class Painel extends BaseController
 
             $status = 'ATIVO';
 
+            if(!empty($file)){
+                $dados['profile-image'] = $imgPath ?? "";
+            }
+
             $dados = [
                 'nickname' => $nome,
                 'email' => $email,
@@ -132,7 +136,6 @@ class Painel extends BaseController
                 'report_to' => $supervisor,
                 'perfil_acesso' => json_encode($permissions),
                 'status' => $status,
-                'profile_image' => $imgPath ?? ""
             ];
 
             if ($userId != 0) {
