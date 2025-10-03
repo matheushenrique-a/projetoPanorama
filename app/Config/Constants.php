@@ -1,6 +1,6 @@
 <?php
 
-define('IsProduction', false);
+define('IsProduction', true);
 // QUID
 define('AppName', "Quid");
 define('EMPRESA', 'quid');
