@@ -11,12 +11,12 @@
     }
 
     .card-hover:hover h1 {
-        color: #6f42c1;
+        color: #59b85eff;
     }
 
     .card-hover:hover svg {
 
-        fill: #6f42c1;
+        fill: #59b85eff;
         transition: fill 0.3s ease-in-out;
     }
 </style>
@@ -42,20 +42,25 @@
             <div class="mb-10 text-center">
                 <h1>Selecione o produto</h1>
             </div>
-            <div class="d-flex justify-content-center">
-                <div class="d-flex gap-10 flex-wrap justify-content-center mb-10">
+            <div class="d-flex justify-content-center mb-10">
+                <div class="d-flex gap-10 flex-wrap justify-content-center mb-10" style="width: 700px;">
                     <?php if (!empty($listarProdutos)): ?>
                         <?php foreach ($listarProdutos as $produto): ?>
                             <a class="card d-flex card-hover" style="width:200px;height:200px;border-radius:20px;" href="<?= assetfolder ?>criar-proposta/<?= $produto->id ?>/0">
-                                <div class="d-flex gap-2 flex-column justify-content-center align-items-center w-100 h-100 text-center">
+                                <div class="d-flex flex-column justify-content-center align-items-center w-100 h-100 text-center">
 
-                                    <h1 class="fw-bold fs-2 mb-3 text-center text-break">
+                                    <h1 class="fw-bold fs-3 mb-3 text-center text-break px-4">
                                         <?= esc($produto->nomeProduto) ?>
                                     </h1>
                                     <svg width="80" height="80" fill="#c0c0c0ff" viewBox="0 0 24 24">
                                         <?= $produto->iconSvg ?>
                                     </svg>
-                                    <span class="text-gray-600 fs-6 mt-2"><?= $produto->parceiroComercial?></span>
+                                    <?php if ($produto->valorFixo == '1'): ?>
+                                        <span class="text-success fs-5 fw-semibold"><?= 'R$' . number_format((float) $produto->valor, 2, ',', '.') ?></span>
+                                    <?php else: ?>
+                                        <span class="text-success fs-5 fw-semibold">R$ -</span>
+                                    <?php endif; ?>
+                                    <span class="text-gray-600 fs-6 mt-2"><?= $produto->parceiroComercial ?></span>
                                 </div>
                             </a>
                         <?php endforeach; ?>
