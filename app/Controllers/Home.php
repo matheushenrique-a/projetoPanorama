@@ -137,8 +137,11 @@ class Home extends BaseController
         $dados['ranking'] = $this->m_bmg->tabelaAssessores();
 
         if ($this->session->role == "OPERADOR") {
-            // if ($this->session->report_to !== "164979") {
-            // }
+
+            if ($this->session->report_to == "164979") {
+                $dados['previsãoComissaoGBOEX'] = $this->m_insight->previsãoComissaoGBOEX($this->session->userId);
+            }
+
             $dados['progresso'] = $this->m_bmg->barraProgressoAssessor();
             $dados['metaEquipe'] = $this->m_insight->buscarMetaSuaEquipe()['firstRow']->meta ?? "";
 
