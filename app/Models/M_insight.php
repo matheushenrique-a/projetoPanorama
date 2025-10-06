@@ -468,4 +468,58 @@ class M_insight extends Model
 
         return $progressoAuditoria;
     }
+
+    public function previsãoComissaoGBOEX($userId)
+    {
+        $produtoName = "Seguro de Vida";
+        $comissaoConsignado = 0.25;
+        $comissaoCartao = 0.12;
+
+        $mesAtual = date('m');
+        $anoAtual = date('Y');
+
+        $builder = $this->db->table('quid_propostas');
+        $builder->select('tipoDesconto, CAST(SUM(valor) AS DECIMAL(10,2)) as totalValor');
+        $builder->where('userId', $userId);
+        $builder->where('produto', $produtoName);
+        $builder->where('status', "Aprovada");
+        $builder->where('MONTH(data_criacao)', $mesAtual);
+        $builder->where('YEAR(data_criacao)', $anoAtual);
+        $builder->groupBy('tipoDesconto');
+
+        $result = $builder->get()->getResult();
+
+        $totalComissao = 0;
+        $dados = [];
+
+        foreach ($result as $row) {
+            $tipo = trim($row->tipoDesconto ?? '');
+
+            if ($tipo === '') continue;
+
+            if ($tipo === 'Consignado') {
+                $comissao = $row->totalValor * $comissaoConsignado;
+            } elseif ($tipo === 'Cartão') {
+                $comissao = $row->totalValor * $comissaoCartao;
+            } else {
+                $comissao = 0;
+            }
+
+            $comissao = round($comissao, 2);
+            $valorTotal = round($row->totalValor, 2);
+
+            $dados[] = [
+                'tipoDesconto'   => $tipo,
+                'totalPropostas' => $valorTotal,
+                'comissao'       => $comissao
+            ];
+
+            $totalComissao += $comissao;
+        }
+
+        return [
+            'detalhes' => $dados,
+            'totalComissao' => round($totalComissao, 2)
+        ];
+    }
 }

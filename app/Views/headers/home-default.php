@@ -287,6 +287,12 @@
 													class="text-success">R$ <?php if (isset($progresso->total_valor)):
 																				echo number_format((float) $progresso->total_valor, 2, ',', '.');
 																			endif; ?></span></span>
+											<?php if ($report_to == "164979"): ?>
+												<span class="text-gray-600 mt-2 fw-semibold fs-6">Comissão prevista: <span
+														class="text-success">R$ <?php if (isset($previsãoComissaoGBOEX)):
+																					echo number_format((float) $previsãoComissaoGBOEX['totalComissao'], 2, ',', '.');
+																				endif; ?></span></span>
+											<?php endif; ?>
 											<span class="text-gray-600 mt-2 fw-semibold fs-6">Meta: <span
 													class="text-success">R$
 													<?php echo number_format((float) $metaEquipe, 2, ',', '.') ?></span></span></span>
@@ -949,7 +955,7 @@
 						<?php endif; ?>
 
 
-						<?php if ($my_security->checkPermission("GERENTE") || $my_security->checkPermission("ADMIN")): ?>
+						<?php if ($my_security->checkPermission("GERENTE")): ?>
 							<div class="col-xl-4 w-50 d-flex flex-column gap-10">
 								<div class="card h-xl-100">
 									<div class="card-header pt-6 pb-2 d-flex flex-column">
