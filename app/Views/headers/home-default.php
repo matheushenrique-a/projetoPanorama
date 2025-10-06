@@ -12,6 +12,7 @@
 						</li>
 					</ul>
 				</div>
+				<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 				<div class="position-fixed top-0 mt-20 end-0 p-3" style="z-index:1080;">
 					<div class="d-flex flex-column gap-3 align-items-end">
@@ -303,8 +304,6 @@
 									</div>
 								</div>
 							</div>
-
-							<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 						<?php endif; ?>
 
 						<?php if ($session->role == "AUDITOR" || $session->userId == "165001"): ?>
@@ -763,12 +762,8 @@
 																	</td>
 																</tr>
 															<?php endforeach; ?>
-
-
-
 														</tbody>
 													</table>
-
 												</div>
 											</div>
 										</div>
@@ -788,8 +783,6 @@
 									</div>
 								</div>
 							</div>
-
-							<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 						<?php endif; ?>
 
@@ -1296,22 +1289,18 @@
 			const grafico2 = new Chart(ctx2, {
 				type: 'bar',
 				data: {
-					labels: <?= json_encode($labelsEquipe); ?>,
-					datasets: [{
-						label: 'Propostas',
-						data: <?= json_encode($dadosEquipe); ?>,
-						backgroundColor: 'rgba(48, 186, 221, 0.6)',
-						borderColor: 'rgba(44, 187, 230, 1)',
-						borderWidth: 1,
-						borderRadius: 4,
-						barThickness: 40,
-					}]
+					labels: <?= json_encode($labelsTeam); ?>,
+					datasets: <?= json_encode($datasetsTeam); ?>
 				},
 				options: {
 					responsive: true,
 					scales: {
+						x: {
+							stacked: true
+						},
 						y: {
 							beginAtZero: true,
+							stacked: true,
 							ticks: {
 								precision: 0
 							}
