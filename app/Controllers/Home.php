@@ -87,7 +87,7 @@ class Home extends BaseController
         // Montar datasets
         foreach ($statuses as $status) {
             $dataStatus = [];
-            for ($i = 15; $i >= 0; $i--) {
+            for ($i = 10; $i >= 0; $i--) {
                 $dateKey = date('Y-m-d', strtotime("-$i days"));
                 $dataStatus[] = $dataEquipe[$status][$dateKey] ?? 0;
             }
@@ -180,13 +180,54 @@ class Home extends BaseController
             $dados['statusSelecionado'] = $statusSelecionado;
         }
 
-        $dados['tabulacoesSucesso'] = $this->m_argus->tabulacoesSucesso();
-        $dados['mensalPropostasBMG'] = $this->m_bmg->mensalPropostasBMG();
-        $dados['countPropostasBMG'] = $this->m_bmg->countPropostasBMG();
+        $dados['nickname'] = $this->session->nickname;
 
-        if ($this->session->role == "AUDITOR" || $this->session->userId == "165001" || $this->my_security->checkPermission("ADMIN")) {
-            $dados['ultimasPropostasAuditor'] = $this->m_bmg->ultimasPropostasAuditor(10);
-            $dados['ultimasPropostasAuditorTotal'] = $this->m_bmg->ultimasPropostasAuditorTotal(10);
+        $tabulacoesSucesso = $this->m_argus->tabulacoesSucesso();
+        $dados['tabulacoesSucesso'] = $tabulacoesSucesso;
+
+        $mensalPropostasBMG = $this->m_bmg->mensalPropostasBMG();
+        $dados['mensalPropostasBMG'] = $mensalPropostasBMG;
+
+        $countPropostasBMG = $this->m_bmg->countPropostasBMG();
+        $dados['countPropostasBMG'] = $countPropostasBMG;
+
+        // atualização de propostas PANORAMA
+        // $tempoMinutos = 5;
+
+        // $conf = $this->dbMasterDefault->select('configuracoes', ['id' => 1]);
+
+        // $executar = true;
+        // if ($conf['existRecord']) {
+        //     $ultimaExecucao = strtotime($conf['firstRow']->ultima_atualizacao_propostas);
+        //     $agora = time();
+
+        //     if (($agora - $ultimaExecucao) < ($tempoMinutos * 60)) {
+        //         $executar = false;
+        //     }
+        // }
+
+        // if ($executar) {
+        //     $this->m_insight->atualizar_propostas();
+
+        //     if ($conf['existRecord']) {
+        //         $this->dbMasterDefault->update(
+        //             'configuracoes',
+        //             ['ultima_atualizacao_propostas' => date('Y-m-d H:i:s')],
+        //             ['id' => 1]
+        //         );
+        //     } else {
+        //         $this->dbMasterDefault->insert(
+        //             'configuracoes',
+        //             ['id' => 1, 'ultima_atualizacao_propostas' => date('Y-m-d H:i:s')]
+        //         );
+        //     }
+        // }
+
+        if ($this->session->role == "AUDITOR" || $this->session->userId == "165001" || $this->m_security->checkPermission("ADMIN")) {
+            $ultimasPropostasAuditor = $this->m_bmg->ultimasPropostasAuditor(10);
+
+            $ultimasPropostasAuditorTotal = $this->m_bmg->ultimasPropostasAuditorTotal(10);
+
             $dados['progressoAuditoria'] = $this->m_insight->quantidadePorAuditor();
         }
 

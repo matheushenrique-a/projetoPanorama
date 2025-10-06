@@ -759,7 +759,7 @@ class M_bmg extends Model
         WHERE MONTH(data_criacao) = MONTH(CURDATE())
           AND YEAR(data_criacao) = YEAR(CURDATE())
           AND assessor = '$assessor'
-          AND status IN ('Aprovada', 'Análise')
+          AND status IN ('Aprovada')
         GROUP BY TRIM(assessor)
         LIMIT 1;
         ";
