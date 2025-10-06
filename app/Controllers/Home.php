@@ -226,7 +226,12 @@ class Home extends BaseController
         if ($this->session->role == "AUDITOR" || $this->session->userId == "165001" || $this->m_security->checkPermission("ADMIN")) {
             $ultimasPropostasAuditor = $this->m_bmg->ultimasPropostasAuditor(10);
 
+            $dados['ultimasPropostasAuditor'] = $ultimasPropostasAuditor;
+
             $ultimasPropostasAuditorTotal = $this->m_bmg->ultimasPropostasAuditorTotal(10);
+
+            $dados['ultimasPropostasAuditorTotal'] = $ultimasPropostasAuditorTotal;
+
 
             $dados['progressoAuditoria'] = $this->m_insight->quantidadePorAuditor();
         }
