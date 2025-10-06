@@ -220,8 +220,7 @@ $movimentation = match ($row->status) {
                                                             <span class="fw-bold mb-1">Adesão:</span>
                                                             <div class="d-flex align-items-center">
                                                                 <input
-                                                                    type="text" class="form-control form-control-solid adesao copyable" name="adesao" value="<?= $row->adesao ?>" data-original="<?= $row->adesao ?>" <?php if (!$my_security->checkPermission("FORMALIZACAO") && !$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("ADMIN")): echo "readonly";
-                                                                                                                                                                                                                        endif; ?> />
+                                                                    type="text" class="form-control form-control-solid adesao copyable" name="adesao" value="<?= $row->adesao ?>" data-original="<?= $row->adesao ?>" />
                                                             </div>
                                                         </div>
                                                     </div>
