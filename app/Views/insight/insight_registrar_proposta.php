@@ -162,14 +162,23 @@ $productName = $produto->nomeProduto;
                                                                     <span class="input-group-text">Valor da parcela</span>
                                                                     <input type="text" class="form-control fs-3 fw-bold valorParcela" value="<?= !empty($valor) ? '0' : '' ?>" placeholder="R$ -" name="valorParcela" id="valorParcela" <?= $readonly ?> />
                                                                 </div>
-                                                                <div class="input-group" style="width: 330px;">
-                                                                    <span class="input-group-text">Quantidade de parcelas</span>
+                                                                <div class="input-group" style="width: 240px;">
+                                                                    <span class="input-group-text">Parcelas</span>
                                                                     <select class="form-select fs-4 fw-bold" name="parcelas">
                                                                         <option value="1">Mensal</option>
                                                                         <option value="12">Parcelado</option>
                                                                         <option value="96">96 Parcelas</option>
                                                                     </select>
                                                                 </div>
+                                                                <?php if ($productName == "Seguro de Vida"): ?>
+                                                                    <div class="input-group" style="width: 260px;">
+                                                                        <span class="input-group-text">Desconto</span>
+                                                                        <select class="form-select fs-4 fw-bold" name="tipoDesconto">
+                                                                            <option value="Consignado">Consignado</option>
+                                                                            <option value="Cartão">Cartão</option>
+                                                                        </select>
+                                                                    </div>
+                                                                <?php endif ?>
                                                             </div>
                                                         <?php endif; ?>
                                                     </div>

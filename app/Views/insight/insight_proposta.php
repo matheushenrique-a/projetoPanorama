@@ -182,15 +182,27 @@ $movimentation = match ($row->status) {
                                                             </div>
                                                         </div>
                                                     </div>
-
-                                                    <?php if ($my_security->checkPermission("ADMIN") || $my_security->checkPermission("FORMALIZACAO")): ?>
-                                                        <div class="mb-2">
-                                                            <span class="fw-bold mb-1">Supervisora:</span>
-                                                            <div class="d-flex align-items-center">
-                                                                <input type="text" class="form-control form-control-solid" name="report_to" value="<?= $supervisorName ?>" readonly style="width: 150px" />
+                                                    <div class="d-flex gap-4">
+                                                        <?php if ($my_security->checkPermission("ADMIN") || $my_security->checkPermission("FORMALIZACAO")): ?>
+                                                            <div class="mb-2">
+                                                                <span class="fw-bold mb-1">Supervisora:</span>
+                                                                <div class="d-flex align-items-center">
+                                                                    <input type="text" class="form-control form-control-solid" name="report_to" value="<?= $supervisorName ?>" readonly style="width: 150px" />
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    <?php endif; ?>
+                                                        <?php endif; ?>
+                                                        <?php if ($row->produto == "Seguro de Vida"): ?>
+                                                            <div class="mb-2">
+                                                                <span class="fw-bold mb-1">Tipo desconto:</span>
+                                                                <div class="d-flex align-items-center">
+                                                                    <select class="form-select form-select-solid fw-bold" name="tipoDesconto">
+                                                                        <option value="Consignado" <?= ($row->tipoDesconto == 'Consignado') ? 'selected' : '' ?>>Consignado</option>
+                                                                        <option value="Cartão" <?= ($row->tipoDesconto == 'Cartão') ? 'selected' : '' ?>>Cartão</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        <?php endif; ?>
+                                                    </div>
 
                                                     <input type="hidden" name="id" value="<?= $row->idquid_propostas ?>">
                                                 </div>

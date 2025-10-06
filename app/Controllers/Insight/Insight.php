@@ -101,6 +101,9 @@ class Insight extends BaseController
             $codigoEntidade = $this->getpost('codigoEntidade');
             $adesao = $this->getpost('adesao');
 
+            //gboex 
+            $tipoDesconto = $this->getpost('tipoDesconto') ?? '';
+
             $dataCriacaoStr = $this->getpost('dataCriacao');
             $dataCriacao = \DateTime::createFromFormat('d/m/Y', $dataCriacaoStr);
 
@@ -212,7 +215,8 @@ class Insight extends BaseController
                     'agencia' => $agencia ?? null,
                     'conta' => $conta ?? null,
                     'motivoCancelamento' => $motivoCancelamento ?? "",
-                    'observacaoInicial' => $observacaoInicial
+                    'observacaoInicial' => $observacaoInicial,
+                    'tipoDesconto' => $tipoDesconto
                 ];
                 $condicao = ['idquid_propostas' => $idProposta];
 
@@ -788,6 +792,9 @@ class Insight extends BaseController
             $observacao = $this->getpost('observacao') ?? "";
             $produto = $this->getpost('produto');
 
+            //GBOEX
+            $tipoDesconto = $this->getpost('tipoDesconto') ?? ''; 
+
             $totalAdicionados = $this->getpost('totalAdicionados');
             $produtosSelecionados = json_decode($this->request->getPost('produtosSelecionados'), true) ?? [];
 
@@ -876,6 +883,7 @@ class Insight extends BaseController
                     'produtoBase' => 1,
                     'att' => 1,
                     'observacaoInicial' => $observacao,
+                    'tipoDesconto' => $tipoDesconto
                 ]);
             }
 

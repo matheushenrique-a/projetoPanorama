@@ -467,6 +467,9 @@ class M_bmg extends Model
         $dataNascimento = $data['dataNascimento'];
         $observacao = $data['observacaoInicial'];
 
+        //gboex
+        $tipoDesconto = $data['tipoDesconto'];
+
         $produtoBase = $data['produtoBase'];
 
         $userId = $data['userId'];
@@ -529,7 +532,8 @@ class M_bmg extends Model
             "id_owner" => $auditoriaId,
             "userId" => $userId,
             "produtoBase" => $produtoBase,
-            "observacaoInicial" => $observacao
+            "observacaoInicial" => $observacao,
+            "tipoDesconto" => $tipoDesconto ?? ''
         ]);
 
         $movimentacao = [
