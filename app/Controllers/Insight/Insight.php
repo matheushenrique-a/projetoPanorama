@@ -209,7 +209,7 @@ class Insight extends BaseController
                     'valor_parcela' => $valorParcela,
                     'panorama_id' => $panorama_id,
                     'numero_parcela' => $parcelas,
-                    'dataNascimento' => $dataNascimento, // JÁ TÁ OK DEPOIS DO ALMOÇO!!
+                    'dataNascimento' => $dataNascimento,
                     'assessor' => $assessor,
                     'banco' => $banco ?? null,
                     'agencia' => $agencia ?? null,
