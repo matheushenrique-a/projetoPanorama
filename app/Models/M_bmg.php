@@ -640,8 +640,8 @@ class M_bmg extends Model
             $sql = "
             SELECT DATE(data_criacao) as data, COUNT(*) as total
             FROM quid_propostas
-            WHERE DATE(data_criacao) >= CURDATE() - INTERVAL 15 DAY
-            AND status IN ('Aprovada', 'Análise')
+            WHERE DATE(data_criacao) >= CURDATE() - INTERVAL 10 DAY
+            AND status IN ('Aprovada', 'Análise', 'Pendente')
             GROUP BY DATE(data_criacao)
             ORDER BY data
             ";
@@ -651,8 +651,8 @@ class M_bmg extends Model
             SELECT DATE(data_criacao) as data, COUNT(*) as total
             FROM quid_propostas
             WHERE report_to = $equipe
-            AND DATE(data_criacao) >= CURDATE() - INTERVAL 15 DAY
-            AND status IN ('Aprovada', 'Análise')
+            AND DATE(data_criacao) >= CURDATE() - INTERVAL 10 DAY
+            AND status IN ('Aprovada', 'Análise', 'Pendente')
             GROUP BY DATE(data_criacao)
             ORDER BY data
             ";
@@ -758,7 +758,7 @@ class M_bmg extends Model
         WHERE MONTH(data_criacao) = MONTH(CURDATE())
           AND YEAR(data_criacao) = YEAR(CURDATE())
           AND assessor = '$assessor'
-          AND status IN ('Aprovada', 'Análise')
+          AND status IN ('Aprovada')
         GROUP BY TRIM(assessor)
         LIMIT 1;
         ";
