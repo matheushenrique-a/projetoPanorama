@@ -1305,8 +1305,62 @@
 								precision: 0
 							}
 						}
+					},
+					plugins: {
+						legend: {
+							display: true,
+							position: 'top'
+						},
+						tooltip: {
+							enabled: true
+						}
 					}
-				}
+				},
+				plugins: [{
+					id: 'customLabels',
+					afterDatasetsDraw(chart) {
+						const {
+							ctx
+						} = chart;
+						ctx.save();
+						ctx.font = 'bold 12px sans-serif';
+						ctx.textAlign = 'center';
+						ctx.textBaseline = 'middle';
+
+						const datasets = chart.data.datasets;
+
+						datasets.forEach((dataset, datasetIndex) => {
+							const meta = chart.getDatasetMeta(datasetIndex);
+							ctx.fillStyle = '#fff'; // cor padrão do texto
+
+							meta.data.forEach((bar, i) => {
+								const value = dataset.data[i];
+								if (value && value !== 0) {
+									// posição central da barra
+									const x = bar.x;
+									const y = bar.y + bar.height / 2;
+
+									// muda cor se a barra for muito clara (opcional)
+									try {
+										const bg = dataset.backgroundColor;
+										if (bg && typeof bg === 'string') {
+											// calcula brilho aproximado
+											const rgb = bg.match(/\d+/g);
+											if (rgb) {
+												const brightness = (0.299 * rgb[0] + 0.587 * rgb[1] + 0.114 * rgb[2]);
+												ctx.fillStyle = brightness > 140 ? '#ffffffff' : '#fff';
+											}
+										}
+									} catch (e) {}
+
+									ctx.fillText(value, x, y);
+								}
+							});
+						});
+
+						ctx.restore();
+					}
+				}]
 			});
 		}
 	});
@@ -1442,3 +1496,5 @@
 		});
 	}
 </script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
