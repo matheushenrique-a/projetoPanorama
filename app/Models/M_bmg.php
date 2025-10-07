@@ -468,7 +468,7 @@ class M_bmg extends Model
         $observacao = $data['observacaoInicial'];
 
         //gboex
-        $tipoDesconto = $data['tipoDesconto'];
+        $tipoDesconto = $data['tipoDesconto'] ?? "";
 
         $produtoBase = $data['produtoBase'];
 
