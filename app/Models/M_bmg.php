@@ -686,7 +686,7 @@ class M_bmg extends Model
                 $meta = 22000;
             }
         } else {
-            $meta = 22000;
+            $meta = 3200;
         }
 
         $supervisor = $this->session->userId;
@@ -703,7 +703,7 @@ class M_bmg extends Model
             WHERE MONTH(data_criacao) = MONTH(CURDATE())
             AND YEAR(data_criacao) = YEAR(CURDATE())
             AND report_to = {$report_to}
-            AND status IN ('Aprovada', 'Análise')
+            AND status IN ('Aprovada')
             GROUP BY TRIM(assessor)
             ORDER BY total_valor DESC;
             ";
@@ -717,7 +717,7 @@ class M_bmg extends Model
             FROM quid_propostas
             WHERE MONTH(data_criacao) = MONTH(CURDATE())
             AND YEAR(data_criacao) = YEAR(CURDATE())
-            AND status IN ('Aprovada', 'Análise')
+            AND status IN ('Aprovada')
             GROUP BY TRIM(assessor)
             ORDER BY total_valor DESC;
             ";
@@ -732,7 +732,7 @@ class M_bmg extends Model
             WHERE MONTH(data_criacao) = MONTH(CURDATE())
             AND YEAR(data_criacao) = YEAR(CURDATE())
             AND report_to = {$supervisor}
-            AND status IN ('Aprovada', 'Análise')
+            AND status IN ('Aprovada')
             GROUP BY TRIM(assessor)
             ORDER BY total_valor DESC;
             ";
