@@ -638,24 +638,25 @@ class M_bmg extends Model
 
         if (($this->session->role !== "SUPERVISOR") || $this->m_security->checkPermission("FORMALIZACAO") || $this->m_security->checkPermission("ADMIN")) {
             $sql = "
-            SELECT DATE(data_criacao) as data, COUNT(*) as total
+            SELECT DATE(data_criacao) as data, status, COUNT(*) as total
             FROM quid_propostas
-            WHERE DATE(data_criacao) >= CURDATE() - INTERVAL 10 DAY
+            WHERE userId = $equipe
+            AND DATE(data_criacao) >= CURDATE() - INTERVAL 10 DAY
             AND status IN ('Aprovada', 'Análise', 'Pendente')
-            GROUP BY DATE(data_criacao)
-            ORDER BY data
-            ";
+            GROUP BY DATE(data_criacao), status
+            ORDER BY data, status
+        ";
         } else {
 
             $sql = "
-            SELECT DATE(data_criacao) as data, COUNT(*) as total
+            SELECT DATE(data_criacao) as data, status, COUNT(*) as total
             FROM quid_propostas
             WHERE report_to = $equipe
             AND DATE(data_criacao) >= CURDATE() - INTERVAL 10 DAY
             AND status IN ('Aprovada', 'Análise', 'Pendente')
-            GROUP BY DATE(data_criacao)
-            ORDER BY data
-            ";
+            GROUP BY DATE(data_criacao), status
+            ORDER BY data, status
+        ";
         }
 
 

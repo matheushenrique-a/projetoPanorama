@@ -43,32 +43,74 @@ class Home extends BaseController
         $dados['role'] = $this->session->role;
         $dados['session'] = $this->session;
 
+        // Resultados do usuário individual
         $resultados = $this->m_bmg->countPropostasPorDia();
-        $resultadosEquipe = $this->m_bmg->countPropostasPorDiaEquipe();
 
         $labels = [];
         $valores = [];
-
         foreach ($resultados as $row) {
             $labels[] = date('d/m', strtotime($row->data));
             $valores[] = (int)$row->total;
         }
-
-        $labelsEquipe = [];
-        $valoresEquipe = [];
-
-        foreach ($resultadosEquipe as $row) {
-            $labelsEquipe[] = date('d/m', strtotime($row->data));
-            $valoresEquipe[] = (int)$row->total;
-        }
-
         $dados['labels'] = $labels;
         $dados['dados'] = $valores;
 
+        $resultadosEquipe = $this->m_bmg->countPropostasPorDiaEquipe();
+
+        $dataEquipe = [
+            'Aprovada' => [],
+            'Análise'  => [],
+            'Pendente' => []
+        ];
+
+        // Indexar os dados por Y-m-d para facilitar comparação
+        foreach ($resultadosEquipe as $row) {
+            $status = $row->status;
+            $dataEquipe[$status][$row->data] = (int)$row->total;
+        }
+
+        // Criar labels para últimos 15 dias, formato d/m para exibição
+        $labelsTeam = [];
+        $datasetsTeam = [];
+        $statuses = ['Aprovada', 'Análise', 'Pendente'];
+        $colors = [
+            'Aprovada' => 'rgba(49, 219, 114, 0.6)',
+            'Análise'  => 'rgba(119, 56, 219, 0.6)',
+            'Pendente' => 'rgba(235, 238, 61, 0.6)'
+        ];
+
+        for ($i = 10; $i >= 0; $i--) {
+            $dateYmd = date('Y-m-d', strtotime("-$i days")); // chave do dataEquipe
+            $labelsTeam[] = date('d/m', strtotime("-$i days")); // label exibido no gráfico
+        }
+
+        // Montar datasets
+        foreach ($statuses as $status) {
+            $dataStatus = [];
+            for ($i = 10; $i >= 0; $i--) {
+                $dateKey = date('Y-m-d', strtotime("-$i days"));
+                $dataStatus[] = $dataEquipe[$status][$dateKey] ?? 0;
+            }
+            $datasetsTeam[] = [
+                'label' => $status,
+                'data' => $dataStatus,
+                'backgroundColor' => $colors[$status],
+                'borderColor' => str_replace('0.6', '1', $colors[$status]),
+                'borderWidth' => 1,
+                'borderRadius' => 4,
+                'barThickness' => 30
+            ];
+        }
+
+        $dados['labelsTeam'] = $labelsTeam;
+        $dados['datasetsTeam'] = $datasetsTeam;
+
+
+        // Supervisor / Gerente
         if ($this->session->role == "SUPERVISOR" || $this->my_security->checkPermission("GERENTE")) {
             $totalMensal = $this->m_bmg->totalMensal();
 
-            $buscarMeta = $this->m_insight->buscarMetaIndividual()['firstRow'] ?? "";
+            $buscarMeta = $this->m_insight->buscarMetaIndividual()['firstRow'] ?? null;
             $meta = $buscarMeta->meta ?? 0;
             $metaMensal = $buscarMeta->meta_mensal ?? 0;
 
@@ -78,44 +120,29 @@ class Home extends BaseController
 
             $dados['quantidadeAssessoresIndividual'] = $this->m_insight->quantidadeEquipe($this->session->userId)['countAll'];
 
-            if ($meta !== 0) {
-                $progresso = ($totalMensal / $metaMensal) * 100;
-                $progresso = round($progresso, 2);
-                $dados['progressoSupervisor'] = $progresso;
-            } else {
-                $dados['progressoSupervisor'] = 0;
-            }
-
-            // quantidade só do cartão BMG
+            $dados['progressoSupervisor'] = ($metaMensal > 0) ? round(($totalMensal / $metaMensal) * 100, 2) : 0;
 
             $dados['metaQuantidadeMensal'] = $buscarMeta->meta_quantidade_mensal ?? 0;
-
-
             $dados['metaQuantidade'] = $buscarMeta->meta_quantidade ?? 0;
             $dados['feitoQuantidade'] = $this->m_insight->metaQuantidade();
-
-            $dados['progressoQuantidade'] = $dados['metaQuantidade'] > 0
+            $dados['progressoQuantidade'] = ($dados['metaQuantidade'] > 0)
                 ? round(($dados['feitoQuantidade'] / $dados['metaQuantidade']) * 100, 2)
                 : 0;
         }
 
-
+        // Gerente / Admin
         if ($this->my_security->checkPermission("GERENTE") || $this->my_security->checkPermission("ADMIN")) {
             $buscarInfoMetas = $this->dbMasterDefault->buscarInfoMetas();
-
             $equipes = [];
 
             foreach ($buscarInfoMetas as $individual) {
                 $obj = new \stdClass();
-
                 $idSupervisor = $individual->supervisor;
                 $meta = $individual->meta;
                 $metaMensal = $individual->meta_mensal;
                 $totalMensal = $this->m_bmg->totalMensal($idSupervisor);
                 $quantidadeAssessor = $this->m_insight->quantidadeEquipe($idSupervisor)['countAll'];
-
-                $progresso = ($totalMensal / $metaMensal) * 100;
-                $progresso = round($progresso, 2);
+                $progresso = ($metaMensal > 0) ? round(($totalMensal / $metaMensal) * 100, 2) : 0;
 
                 $obj->nome = $individual->nome;
                 $obj->supervisor = $idSupervisor;
@@ -131,13 +158,14 @@ class Home extends BaseController
             $dados['equipesGerente'] = $equipes;
         }
 
-        $dados['labelsEquipe'] = $labelsEquipe;
-        $dados['dadosEquipe'] = $valoresEquipe;
-
         $dados['ranking'] = $this->m_bmg->tabelaAssessores();
+        $dados['nickname'] = $this->session->nickname;
+        $dados['profile_image'] = $this->session->profile_image;
+
+        $userId = $this->session->userId;
+        $dados['notificacoes'] = $this->dbMasterDefault->listarNotificacoes($userId);
 
         if ($this->session->role == "OPERADOR") {
-
             if ($this->session->report_to == "164979") {
                 $dados['previsãoComissaoGBOEX'] = $this->m_insight->previsãoComissaoGBOEX($this->session->userId);
             }
@@ -147,15 +175,9 @@ class Home extends BaseController
 
             $assessor = $this->session->nickname;
             $statusSelecionado = $this->request->getGet('status') ?? 'all';
-
-            $ultimasPropostasBMG = $this->m_bmg->ultimasPropostasBMG($assessor, $statusSelecionado, 10);
-
+            $dados['ultimasPropostasBMG'] = $this->m_bmg->ultimasPropostasBMG($assessor, $statusSelecionado, 10);
             $dados['contadores'] = $this->m_bmg->contarPropostasPorStatus($assessor);
-
-            $dados += [
-                'ultimasPropostasBMG' => $ultimasPropostasBMG,
-                'statusSelecionado' => $statusSelecionado
-            ];
+            $dados['statusSelecionado'] = $statusSelecionado;
         }
 
         $dados['nickname'] = $this->session->nickname;
@@ -172,22 +194,15 @@ class Home extends BaseController
         if ($this->session->role == "AUDITOR" || $this->session->userId == "165001" || $this->m_security->checkPermission("ADMIN")) {
             $ultimasPropostasAuditor = $this->m_bmg->ultimasPropostasAuditor(10);
 
+            $dados['ultimasPropostasAuditor'] = $ultimasPropostasAuditor;
+
             $ultimasPropostasAuditorTotal = $this->m_bmg->ultimasPropostasAuditorTotal(10);
 
-            $dados['progressoAuditoria'] = $this->m_insight->quantidadePorAuditor();
-
-            $dados['ultimasPropostasAuditor'] = $ultimasPropostasAuditor;
             $dados['ultimasPropostasAuditorTotal'] = $ultimasPropostasAuditorTotal;
+
+
+            $dados['progressoAuditoria'] = $this->m_insight->quantidadePorAuditor();
         }
-
-
-        $dados['profile_image'] = $this->session->profile_image;
-
-        $userId = $this->session->userId;
-
-        $notificacoes = $this->dbMasterDefault->listarNotificacoes($userId);
-
-        $dados['notificacoes'] = $notificacoes;
 
         return $this->loadpage('headers/home-default', $dados);
     }
