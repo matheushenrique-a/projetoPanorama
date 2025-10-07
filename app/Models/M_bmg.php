@@ -173,13 +173,13 @@ class M_bmg extends Model
                 'senha'        => BMG_SEGURO_SENHA,
                 'loginConsig'  => BMG_SEGURO_LOGIN_CONSIG,
                 'senhaConsig'  => BMG_SEGURO_SENHA_CONSIG,
-                'codigoSeguro' => $produto,              // Ex: 35 = Seguro Prestamista Consignado
-                'cpf'          => $cpf,   // CPF do cliente, apenas números
-                'tipoPagamento' => 2,               // 1=à vista, 2=mensal, etc
+                'codigoSeguro' => $produto,
+                'cpf'          => $cpf,
+                'tipoPagamento' => 3,
             ];
 
             $response = $client->__soapCall('obterCartoesDisponiveis', [$params]);
-
+            
             if (((isset($response->mensagemDeErro))) and ((!empty($response->mensagemDeErro)))) {
                 $returnData["mensagem"] = "Cliente Inválido: <br>" . $response->mensagemDeErro;
             } else {
@@ -205,9 +205,6 @@ class M_bmg extends Model
                             'sequencialOrgao'     => $cartao->sequencialOrgao,
                             'planos' => [
                                 'med' => $this->listaPlanosRating(BMG_CODIGO_PRODUTO_MED, $cartao->numeroInternoConta, $cartao->limiteCartao),
-                                //'pap' => $this->listaPlanosRating(BMG_CODIGO_PRODUTO_PAP, $cartao->numeroInternoConta, $cartao->limiteCartao),
-                                'vida' => $this->listaPlanosRating(BMG_CODIGO_PRODUTO_VIDA, $cartao->numeroInternoConta, $cartao->limiteCartao)
-                                //'prestamista' => $this->listaPlanosRating(BMG_CODIGO_PRODUTO_PRESTAMISTA, $cartao->numeroInternoConta, $cartao->limiteCartao),
                             ]
                         ];
                     }
@@ -217,10 +214,7 @@ class M_bmg extends Model
             }
         } catch (SoapFault $fault) {
             $returnData["mensagem"] = "Erro: {$fault->faultcode} - {$fault->faultstring}";
-            //echo "Erro: {$fault->faultcode} - {$fault->faultstring}";
         }
-
-        //exit;
 
         return $returnData;
     }
@@ -386,7 +380,7 @@ class M_bmg extends Model
         try {
             $client = new \SoapClient('https://ws1.bmgconsig.com.br/webservices/ProdutoSeguroWebService?wsdl', ['trace' => 1, 'exceptions' => true]);
 
-            $response = $client->__soapCall('listaPlanosRating', [$params]);
+            $response = $client->__soapCall('listaPlanos', [$params]);
 
             return $response;
         } catch (SoapFault $fault) {

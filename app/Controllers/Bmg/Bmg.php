@@ -952,7 +952,7 @@ class Bmg extends BaseController
             ];
             // return print_r($dataSeguro);
 
-            $obtemInfoSeguro = $this->m_bmg->obtemInfoSeguro($dataSeguro);
+            $obtemInfoSeguro = $this->m_bmg->obterCartoesDisponiveis($params['cpf'], 54);
 
             // return print_r($obtemInfoSeguro);
 
