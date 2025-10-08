@@ -139,8 +139,8 @@ $movimentation = match ($row->status) {
                                                     <?php
                                                     $superviores = [
                                                         '164979' => 'Amanda',
-                                                        '165005' => 'Jéssica Laís',
-                                                        '165006' => 'Ana Karla'
+                                                        '165006' => 'Jéssica Laís',
+                                                        '165005' => 'Ana Karla'
                                                     ];
 
                                                     $supervisorName = $superviores[$row->report_to] ?? $row->report_to;
