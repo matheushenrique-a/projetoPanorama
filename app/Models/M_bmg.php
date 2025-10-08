@@ -178,39 +178,41 @@ class M_bmg extends Model
             ];
 
             $response = $client->__soapCall('obterCartoesDisponiveis', [$params]);
-            
-            if (((isset($response->mensagemDeErro))) and ((!empty($response->mensagemDeErro)))) {
-                $returnData["mensagem"] = "Cliente Inválido: <br>" . $response->mensagemDeErro;
-            } else {
 
-                if (isset($response->cartaoClienteAtivoVendaSeguro) && is_array($response->cartaoClienteAtivoVendaSeguro)) {
-                    $returnData["status"] = true;
-                    foreach ($response->cartaoClienteAtivoVendaSeguro as $cartao) {
-                        $returnData["cartoes"][] = [
-                            'nomeCliente'         => $cartao->nomeCliente,
-                            'numeroCartao'        => $cartao->numeroCartao,
-                            'limiteCartao'        => number_format($cartao->limiteCartao, 2, ',', '.'),
-                            'cidade'              => $cartao->cidade,
-                            'numeroInternoConta'  => $cartao->numeroInternoConta,
-                            'cartaoSelecionado'   => $cartao->cartaoSelecionado,
-                            'codigoCliente'       => $cartao->codigoCliente,
-                            'codigoEntidade'      => $cartao->codigoEntidade,
-                            'cpf'                 => $cartao->cpf,
-                            'dataNascimento'      => $cartao->dataNascimento,
-                            'ehElegivel'          => $cartao->ehElegivel,
-                            'motivoElegibilidade' => $cartao->motivoElegibilidade,
-                            'nomeEntidade'        => $cartao->nomeEntidade,
-                            'orgaoFormatado'      => $cartao->orgaoFormatado,
-                            'sequencialOrgao'     => $cartao->sequencialOrgao,
-                            'planos' => [
-                                'med' => $this->listaPlanosRating(BMG_CODIGO_PRODUTO_MED, $cartao->numeroInternoConta, $cartao->limiteCartao),
-                            ]
-                        ];
-                    }
-                } else {
-                    $returnData["mensagem"] = "Nenhum cartão disponível ou retorno inesperado.<br>";
-                }
-            }
+            return $response;
+            
+            // if (((isset($response->mensagemDeErro))) and ((!empty($response->mensagemDeErro)))) {
+            //     $returnData["mensagem"] = "Cliente Inválido: <br>" . $response->mensagemDeErro;
+            // } else {
+
+            //     if (isset($response->cartaoClienteAtivoVendaSeguro) && is_array($response->cartaoClienteAtivoVendaSeguro)) {
+            //         $returnData["status"] = true;
+            //         foreach ($response->cartaoClienteAtivoVendaSeguro as $cartao) {
+            //             $returnData["cartoes"][] = [
+            //                 'nomeCliente'         => $cartao->nomeCliente,
+            //                 'numeroCartao'        => $cartao->numeroCartao,
+            //                 'limiteCartao'        => number_format($cartao->limiteCartao, 2, ',', '.'),
+            //                 'cidade'              => $cartao->cidade,
+            //                 'numeroInternoConta'  => $cartao->numeroInternoConta,
+            //                 'cartaoSelecionado'   => $cartao->cartaoSelecionado,
+            //                 'codigoCliente'       => $cartao->codigoCliente,
+            //                 'codigoEntidade'      => $cartao->codigoEntidade,
+            //                 'cpf'                 => $cartao->cpf,
+            //                 'dataNascimento'      => $cartao->dataNascimento,
+            //                 'ehElegivel'          => $cartao->ehElegivel,
+            //                 'motivoElegibilidade' => $cartao->motivoElegibilidade,
+            //                 'nomeEntidade'        => $cartao->nomeEntidade,
+            //                 'orgaoFormatado'      => $cartao->orgaoFormatado,
+            //                 'sequencialOrgao'     => $cartao->sequencialOrgao,
+            //                 'planos' => [
+            //                     'med' => $this->listaPlanosRating(BMG_CODIGO_PRODUTO_MED, $cartao->numeroInternoConta, $cartao->limiteCartao),
+            //                 ]
+            //             ];
+            //         }
+            //     } else {
+            //         $returnData["mensagem"] = "Nenhum cartão disponível ou retorno inesperado.<br>";
+            //     }
+            // }
         } catch (SoapFault $fault) {
             $returnData["mensagem"] = "Erro: {$fault->faultcode} - {$fault->faultstring}";
         }
