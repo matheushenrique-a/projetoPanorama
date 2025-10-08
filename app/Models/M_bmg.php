@@ -175,7 +175,6 @@ class M_bmg extends Model
                 'senhaConsig'  => BMG_SEGURO_SENHA_CONSIG,
                 'codigoSeguro' => $produto,
                 'cpf'          => $cpf,
-                'tipoPagamento' => 3,
             ];
 
             $response = $client->__soapCall('obterCartoesDisponiveis', [$params]);
