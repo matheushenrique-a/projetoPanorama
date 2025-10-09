@@ -954,7 +954,7 @@ class Bmg extends BaseController
 
             $obtemInfoSeguro = $this->m_bmg->obterCartoesDisponiveis($params['cpf'], 54);
 
-            // return print_r($obtemInfoSeguro);
+            return print_r($obtemInfoSeguro);
 
             $valorParcela = $obtemValorParcela[0]->valorParcela ?? 0;
             $dados['valorParcela'] = $valorParcela;
