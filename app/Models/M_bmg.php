@@ -169,18 +169,18 @@ class M_bmg extends Model
             $client = new \SoapClient(BMG_WSDL, ['trace' => 1, 'exceptions' => true]);
 
             $params = [
-                'login'        => BMG_SEGURO_LOGIN,
-                'senha'        => BMG_SEGURO_SENHA,
-                // 'loginConsig'  => BMG_SEGURO_LOGIN_CONSIG,
-                // 'senhaConsig'  => BMG_SEGURO_SENHA_CONSIG,
-                'codigoSeguro' => $produto,
-                'cpf'          => $cpf,
+                'param' => [
+                    'login'        => BMG_SEGURO_LOGIN,
+                    'senha'        => BMG_SEGURO_SENHA,
+                    'codigoSeguro' => $produto,
+                    'cpf'          => $cpf,
+                ]
             ];
 
             $response = $client->__soapCall('obterCartoesDisponiveis', [$params]);
 
             // return $response;
-            
+
             if (((isset($response->mensagemDeErro))) and ((!empty($response->mensagemDeErro)))) {
                 $returnData["mensagem"] = "Cliente Inválido: <br>" . $response->mensagemDeErro;
             } else {
