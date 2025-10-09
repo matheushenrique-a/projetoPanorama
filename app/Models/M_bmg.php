@@ -177,7 +177,7 @@ class M_bmg extends Model
                 'cpf'          => $cpf,
             ];
 
-            $response = $client->__soapCall('obterCartoesDisponiveis', [$params]);
+            $response = $client->__soapCall('buscarCartoesDisponiveis', [$params]);
 
             return $response;
             
