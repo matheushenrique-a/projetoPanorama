@@ -179,7 +179,7 @@ class M_bmg extends Model
 
             $response = $client->__soapCall('obterCartoesDisponiveis', [$params]);
 
-            return $response;
+            // return $response;
             
             if (((isset($response->mensagemDeErro))) and ((!empty($response->mensagemDeErro)))) {
                 $returnData["mensagem"] = "Cliente Inválido: <br>" . $response->mensagemDeErro;
