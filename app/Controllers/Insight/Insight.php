@@ -792,8 +792,10 @@ class Insight extends BaseController
             $observacao = $this->getpost('observacao') ?? "";
             $produto = $this->getpost('produto');
 
+            $produtoId = $this->getpost('produtoId');
+
             //GBOEX
-            $tipoDesconto = $this->getpost('tipoDesconto') ?? ''; 
+            $tipoDesconto = $this->getpost('tipoDesconto') ?? '';
 
             $totalAdicionados = $this->getpost('totalAdicionados');
             $produtosSelecionados = json_decode($this->request->getPost('produtosSelecionados'), true) ?? [];
@@ -835,6 +837,7 @@ class Insight extends BaseController
                     'produtoBase' => 1,
                     'observacaoInicial' => $observacao,
                     'att' => 0,
+                    'produtoId' => $produtoId
                 ]);
 
                 $last = end($produtosSelecionados);
@@ -860,6 +863,7 @@ class Insight extends BaseController
                         'produtoBase' => 0,
                         'att' => ($product === $last ? 1 : 0),
                         'observacaoInicial' => $observacao,
+                        'produtoId' => $produtoId
                     ]);
                 }
             } else {
@@ -883,7 +887,8 @@ class Insight extends BaseController
                     'produtoBase' => 1,
                     'att' => 1,
                     'observacaoInicial' => $observacao,
-                    'tipoDesconto' => $tipoDesconto
+                    'tipoDesconto' => $tipoDesconto,
+                    'produtoId' => $produtoId
                 ]);
             }
 

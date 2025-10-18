@@ -950,7 +950,6 @@ class Bmg extends BaseController
                 'entidade' => $entidade,
                 'numeroInternoConta' => $contaInterna
             ];
-            // return print_r($dataSeguro);
 
             $obtemInfoSeguro = $this->m_bmg->obterCartoesDisponiveis($params['cpf'], 54);
 
@@ -981,7 +980,6 @@ class Bmg extends BaseController
         }
     }
 
-    //http://localhost/InsightSuite/public/sign-in
     public function listarPropostas()
     {
         $buscarProp = $this->getpost('buscarProp');
