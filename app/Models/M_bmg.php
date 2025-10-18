@@ -468,7 +468,8 @@ class M_bmg extends Model
         $dataNascimento = $data['dataNascimento'];
         $observacao = $data['observacaoInicial'];
 
-        //gboex
+        $produtoId = $data['produtoId'];
+
         $tipoDesconto = $data['tipoDesconto'] ?? "";
 
         $produtoBase = $data['produtoBase'];
@@ -535,6 +536,39 @@ class M_bmg extends Model
             "produtoBase" => $produtoBase,
             "observacaoInicial" => $observacao,
             "tipoDesconto" => $tipoDesconto ?? ''
+        ]);
+
+        $client = \Config\Services::curlrequest();
+
+        $url = 'https://grupoquid-dev.sydle.one/api/1/crm/com.grupoquid.crm/proposal/createAPI/';
+
+        $sydle = [
+            "adesao" => $adesao,
+            "cpf" => $cpf,
+            "nome" => $nome,
+            "produto" => $produto,
+            "produtoId" => $produtoId,
+            "valor" => $valor,
+            "telefone" => $telefone,
+            "status" => $status,
+            "data_criacao" => $data_criacao,
+            "codigo_entidade" => $codigo_entidade,
+            "valor_parcela" => $valor_parcela,
+            "numero_parcela" => $numero_parcela,
+            "matricula" => $matricula,
+            "dataNascimento" => $dataNascimento,
+            "id_owner" => $auditoriaId,
+            "userId" => $userId,
+            "observacaoInicial" => $observacao,
+            "tipoDesconto" => $tipoDesconto ?? ''
+        ];
+
+        $username = 'victor.pomaroli';
+        $password = '102030';
+
+        $client->post($url, [
+            'auth' => [$username, $password],
+            'json' => $sydle
         ]);
 
         $movimentacao = [

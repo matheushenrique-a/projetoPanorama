@@ -205,6 +205,7 @@ $productName = $produto->nomeProduto;
                         </div>
 
                         <input type="hidden" name="totalAdicionados" id="totalAdicionados">
+                        <input type="hidden" value="<?= $produto->id ?>" name="produtoId" id="produtoId">
                         <input type="hidden" name="produtosSelecionados" id="produtosSelecionados">
                         <div id="produtosAdicionados">
 
