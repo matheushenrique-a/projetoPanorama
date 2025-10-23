@@ -175,6 +175,8 @@ $productName = $produto->nomeProduto;
                                                                         <span class="input-group-text">Desconto</span>
                                                                         <select class="form-select fs-4 fw-bold" name="tipoDesconto">
                                                                             <option value="Consignado">Consignado</option>
+                                                                            <option value="Débito em conta">Débito em conta</option>
+                                                                            <option value="Boleto">Boleto</option>
                                                                             <option value="Cartão">Cartão</option>
                                                                         </select>
                                                                     </div>
