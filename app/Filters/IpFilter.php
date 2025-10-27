@@ -8,7 +8,7 @@ use CodeIgniter\Filters\FilterInterface;
 
 class IpFilter implements FilterInterface
 {
-    private $allowed_ips = ['127.0.0.1', '::1','2804:33cc:1434:d400:456e:7ccf:6404:4f09', '177.73.197.2', '162.120.186.81', '2804:33cc:1420:1200:cda9:7453:8828:5372'];
+    private $allowed_ips = ['127.0.0.1', '::1','2804:33cc:1434:d400:14bb:b8d3:43c9:eca8', '177.73.197.2', '162.120.186.81', '2804:33cc:1420:1200:cda9:7453:8828:5372'];
 
     public function before(RequestInterface $request, $arguments = null)
     {

@@ -209,7 +209,7 @@ class Insight extends BaseController
                     'valor_parcela' => $valorParcela,
                     'panorama_id' => $panorama_id,
                     'numero_parcela' => $parcelas,
-                    'dataNascimento' => $dataNascimento, // JÁ TÁ OK DEPOIS DO ALMOÇO!!
+                    'dataNascimento' => $dataNascimento,
                     'assessor' => $assessor,
                     'banco' => $banco ?? null,
                     'agencia' => $agencia ?? null,
@@ -800,22 +800,6 @@ class Insight extends BaseController
             $totalAdicionados = $this->getpost('totalAdicionados');
             $produtosSelecionados = json_decode($this->request->getPost('produtosSelecionados'), true) ?? [];
 
-            $returnData = $this->panorama_gravar_proposta_saque([
-                'assessor' => $assessor,
-                'produto' => $produto,
-                'codigoEntidade' => $codigoEntidade,
-                'cpf' => $cpf,
-                'dataNascimento' => $dataNascimento,
-                'matricula' => $matricula,
-                'nomeCliente' => $nomeCliente,
-                'celular1' => ['ddd' => $ddd, 'numero' => $telefone],
-                'adesao' => $adesao,
-                'valorSaque' => $valorSaque,
-                'valorParcela' => $valorParcela,
-                'quantidadeParcelas' => $quantidadeParcelas,
-                'observacao' => $observacao
-            ]);
-
             if ($totalAdicionados > 1) {
                 $this->m_bmg->gravar_proposta_bmg_database([
                     'assessor' => $assessor,
@@ -824,7 +808,7 @@ class Insight extends BaseController
                     'codigo_entidade' => $codigoEntidade,
                     'cpf' => $cpf,
                     'dataNascimento' => $dataNascimento,
-                    'panorama_id' => $returnData["proposta"] ?? "",
+                    'panorama_id' => "",
                     'matricula' => $matricula,
                     'nomeCliente' => $nomeCliente,
                     'telefone' => $ddd . $telefone,
