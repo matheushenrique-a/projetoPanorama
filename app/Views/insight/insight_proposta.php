@@ -282,29 +282,29 @@ $movimentation = match ($row->status) {
                                                         <div class="d-flex gap-4">
                                                             <div class="mb-2">
                                                                 <span class="fw-bold mb-1">Cep:</span>
-                                                                <input type="text" class="form-control form-control-solid" name="cep" value="<?= $row->cep?>" data-original="<?= $row->cep?>" style="width: 100px;" />
+                                                                <input type="text" class="form-control form-control-solid" name="cep" value="<?= $row->cep ?>" data-original="<?= $row->cep ?>" style="width: 100px;" />
                                                             </div>
                                                             <div class="mb-2">
                                                                 <span class="fw-bold mb-1">Rua:</span>
-                                                                <input type="text" class="form-control form-control-solid" name="rua" value="<?= $row->rua?>" data-original="<?= $row->rua?>" style="width: 370px;" />
+                                                                <input type="text" class="form-control form-control-solid" name="rua" value="<?= $row->rua ?>" data-original="<?= $row->rua ?>" style="width: 370px;" />
                                                             </div>
                                                             <div class="mb-2">
                                                                 <span class="fw-bold mb-1">Número:</span>
-                                                                <input type="text" class="form-control form-control-solid" name="numero" value="<?= $row->numeroEnd?>" data-original="<?= $row->numeroEnd?>" style="width: 75px;" />
+                                                                <input type="text" class="form-control form-control-solid" name="numero" value="<?= $row->numeroEnd ?>" data-original="<?= $row->numeroEnd ?>" style="width: 75px;" />
                                                             </div>
                                                         </div>
                                                         <div class="d-flex gap-4">
                                                             <div class="mb-2">
                                                                 <span class="fw-bold mb-1">Bairro:</span>
-                                                                <input type="text" class="form-control form-control-solid" name="bairro" value="<?= $row->bairro?>" data-original="<?= $row->bairro?>" />
+                                                                <input type="text" class="form-control form-control-solid" name="bairro" value="<?= $row->bairro ?>" data-original="<?= $row->bairro ?>" />
                                                             </div>
                                                             <div class="mb-2">
                                                                 <span class="fw-bold mb-1">Cidade:</span>
-                                                                <input type="text" class="form-control form-control-solid" name="cidade" value="<?= $row->cidade?>" data-original="<?= $row->cidade?>" />
+                                                                <input type="text" class="form-control form-control-solid" name="cidade" value="<?= $row->cidade ?>" data-original="<?= $row->cidade ?>" />
                                                             </div>
                                                             <div class="mb-2">
                                                                 <span class="fw-bold mb-1">Estado:</span>
-                                                                <input type="text" class="form-control form-control-solid" name="estado" value="<?= $row->estado?>" data-original="<?= $row->estado?>" />
+                                                                <input type="text" class="form-control form-control-solid" name="estado" value="<?= $row->estado ?>" data-original="<?= $row->estado ?>" />
                                                             </div>
                                                         </div>
                                                     <?php endif; ?>
@@ -500,7 +500,7 @@ $movimentation = match ($row->status) {
                                                         </a>
                                                         <p class="my-auto fw-semibold text-gray-700"><i class="bi bi-file-earmark"></i> <?= esc($arquivo->nome_original) ?></p>
                                                         <div class="d-flex gap-3 ms-auto justify-content-end">
-                                                            <p class="my-auto text-gray-700"><?= date('d/m/Y', strtotime($arquivo->created_at)) ?></p>
+                                                            <p class="my-auto text-gray-700"><?= date('d/m/y - H:i', strtotime($arquivo->created_at)) ?></p>
                                                             <a href="<?= assetfolder ?>insight/excluir/<?= $arquivo->id ?>/<?= $arquivo->id_proposta ?>">
                                                                 <i class="bi text-danger bi-trash me-3"></i>
                                                             </a>
