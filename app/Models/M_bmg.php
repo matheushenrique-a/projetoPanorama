@@ -468,6 +468,19 @@ class M_bmg extends Model
         $dataNascimento = $data['dataNascimento'];
         $observacao = $data['observacaoInicial'];
 
+        //Dados bancarios
+        $banco = $data['banco'];
+        $agencia = $data['agencia'];
+        $conta = $data['conta'];
+
+        //Endereço
+        $cep = $data['cep'];
+        $rua = $data['rua'];
+        $numero = $data['numero'];
+        $bairro = $data['bairro'];
+        $cidade = $data['cidade'];
+        $estado = $data['estado'];
+
         $produtoId = $data['produtoId'];
 
         $tipoDesconto = $data['tipoDesconto'] ?? "";
@@ -535,7 +548,16 @@ class M_bmg extends Model
             "userId" => $userId,
             "produtoBase" => $produtoBase,
             "observacaoInicial" => $observacao,
-            "tipoDesconto" => $tipoDesconto ?? ''
+            "tipoDesconto" => $tipoDesconto ?? '',
+            "banco" => $banco,
+            "agencia" => $agencia,
+            "conta" => $conta,
+            "cep" => $cep,
+            "rua" => $rua,
+            "numeroEnd" => $numero,
+            "bairro" => $bairro,
+            "cidade" => $cidade,
+            "estado" => $estado,
         ]);
 
         $client = \Config\Services::curlrequest();

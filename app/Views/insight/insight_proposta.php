@@ -2,6 +2,15 @@
 $row = $propostas['result']->getResult()[0];
 $moveRow = $movimento['result']->getResult() ?? '';
 
+
+$superviores = [
+    '164979' => 'Amanda',
+    '165006' => 'Jéssica Laís',
+    '165005' => 'Ana Karla'
+];
+
+$supervisorName = $superviores[$row->report_to] ?? $row->report_to;
+
 $qtdArquivos = count($arquivos);
 
 $ultimaLinha = !empty($moveRow) ? end($moveRow) : null;
@@ -136,15 +145,6 @@ $movimentation = match ($row->status) {
 
                                             <div class="modal-body d-flex mt-4 gap-8">
                                                 <div class="w-50">
-                                                    <?php
-                                                    $superviores = [
-                                                        '164979' => 'Amanda',
-                                                        '165006' => 'Jéssica Laís',
-                                                        '165005' => 'Ana Karla'
-                                                    ];
-
-                                                    $supervisorName = $superviores[$row->report_to] ?? $row->report_to;
-                                                    ?>
                                                     <div class="mb-2">
                                                         <span class="fw-bold mb-1">Assessor:</span>
                                                         <div class="d-flex align-items-center">
@@ -182,15 +182,34 @@ $movimentation = match ($row->status) {
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <div class="d-flex gap-4">
-                                                        <?php if ($my_security->checkPermission("ADMIN") || $my_security->checkPermission("FORMALIZACAO")): ?>
+                                                    <?php if ($produto->dadosBancarios == "1"): ?>
+                                                        <div class="d-flex gap-4">
                                                             <div class="mb-2">
-                                                                <span class="fw-bold mb-1">Supervisora:</span>
+                                                                <span class="fw-bold mb-1">
+                                                                    Banco:</span>
                                                                 <div class="d-flex align-items-center">
-                                                                    <input type="text" class="form-control form-control-solid" name="report_to" value="<?= $supervisorName ?>" readonly style="width: 150px" />
+                                                                    <input type="text" class="form-control form-control-solid" name="banco" id="banco" value="<?= $row->banco ?>" data-original="<?= $row->banco ?>" />
                                                                 </div>
                                                             </div>
-                                                        <?php endif; ?>
+                                                            <div>
+                                                                <span class="fw-bold mb-1">Agência:</span>
+                                                                <div class="d-flex align-items-center">
+                                                                    <input type="text" class="form-control form-control-solid" name="agencia" id="agencia" value="<?= $row->agencia ?>" data-original="<?= $row->agencia ?>" />
+                                                                </div>
+                                                            </div>
+                                                            <div class="mb-2">
+                                                                <span class="fw-bold mb-1">Conta:</span>
+                                                                <div class="d-flex align-items-center">
+                                                                    <input type="text" class="form-control form-control-solid" name="conta" id="conta" value="<?= $row->conta ?>" data-original="<?= $row->agencia ?>" />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    <?php endif; ?>
+                                                    <div class="input-group d-flex flex-column">
+                                                        <span class="fw-bold mb-1">Observação:</span>
+                                                        <textarea class="form-control form-control-solid w-100" placeholder="..." name="observacaoInicial"><?= $row->observacaoInicial ?></textarea>
+                                                    </div>
+                                                    <div class="d-flex gap-4 mt-2">
                                                         <?php if ($row->produto == "Seguro de Vida"): ?>
                                                             <div class="mb-2">
                                                                 <span class="fw-bold mb-1">Tipo desconto:</span>
@@ -243,14 +262,6 @@ $movimentation = match ($row->status) {
                                                     <?php endif; ?>
 
                                                     <div class="d-flex gap-4">
-                                                        <?php if ($my_security->checkPermission("ADMIN") || $my_security->checkPermission("FORMALIZACAO")): ?>
-                                                            <div class="mb-2">
-                                                                <span class="fw-bold mb-1">Código Panorama:</span>
-                                                                <input type="text" class="form-control form-control-solid idPanorama" name="idPanorama" value="<?= $row->panorama_id ?>" data-original="<?= $row->panorama_id ?>"
-                                                                    <?php if (!$my_security->checkPermission("FORMALIZACAO") && !$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("ADMIN")): echo "readonly";
-                                                                    endif; ?> />
-                                                            </div>
-                                                        <?php endif; ?>
                                                         <div class="mb-2">
                                                             <span class="fw-bold mb-1">Data Criação:</span>
                                                             <input type="text" class="form-control form-control-solid dataCriacao" name="dataCriacao" value="<?= date('d/m/Y', strtotime($row->data_criacao)); ?>" data-original="<?= date('d/m/Y', strtotime($row->data_criacao)); ?>"
@@ -261,16 +272,47 @@ $movimentation = match ($row->status) {
                                                             <span class="fw-bold mb-1">Código Entidade:</span>
                                                             <input type="text" class="form-control form-control-solid" name="codigoEntidade" id="" value="<?= $row->codigo_entidade ?>" data-original="<?= $row->codigo_entidade ?>" />
                                                         </div>
+                                                        <div class="mb-2">
+                                                            <span class="fw-bold mb-1">Número Benefício:</span>
+                                                            <input type="text" class="form-control form-control-solid" name="numeroBeneficio" id="" value="<?= $row->matricula ?>" data-original="<?= $row->matricula ?>" />
+                                                        </div>
                                                     </div>
 
-                                                    <div class="input-group mt-2 d-flex flex-column">
-                                                        <span class="fw-bold mb-1">Observação:</span>
-                                                        <textarea class="form-control form-control-solid" placeholder="..." name="observacaoInicial" style="width: 400px;"><?= $row->observacaoInicial ?></textarea>
-                                                    </div>
+                                                    <?php if ($produto->endereco == "1"): ?>
+                                                        <div class="d-flex gap-4">
+                                                            <div class="mb-2">
+                                                                <span class="fw-bold mb-1">Cep:</span>
+                                                                <input type="text" class="form-control form-control-solid" name="cep" value="<?= $row->cep?>" data-original="<?= $row->cep?>" style="width: 100px;" />
+                                                            </div>
+                                                            <div class="mb-2">
+                                                                <span class="fw-bold mb-1">Rua:</span>
+                                                                <input type="text" class="form-control form-control-solid" name="rua" value="<?= $row->rua?>" data-original="<?= $row->rua?>" style="width: 370px;" />
+                                                            </div>
+                                                            <div class="mb-2">
+                                                                <span class="fw-bold mb-1">Número:</span>
+                                                                <input type="text" class="form-control form-control-solid" name="numero" value="<?= $row->numeroEnd?>" data-original="<?= $row->numeroEnd?>" style="width: 75px;" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="d-flex gap-4">
+                                                            <div class="mb-2">
+                                                                <span class="fw-bold mb-1">Bairro:</span>
+                                                                <input type="text" class="form-control form-control-solid" name="bairro" value="<?= $row->bairro?>" data-original="<?= $row->bairro?>" />
+                                                            </div>
+                                                            <div class="mb-2">
+                                                                <span class="fw-bold mb-1">Cidade:</span>
+                                                                <input type="text" class="form-control form-control-solid" name="cidade" value="<?= $row->cidade?>" data-original="<?= $row->cidade?>" />
+                                                            </div>
+                                                            <div class="mb-2">
+                                                                <span class="fw-bold mb-1">Estado:</span>
+                                                                <input type="text" class="form-control form-control-solid" name="estado" value="<?= $row->estado?>" data-original="<?= $row->estado?>" />
+                                                            </div>
+                                                        </div>
+                                                    <?php endif; ?>
 
                                                     <?php if ($my_security->checkPermission("ADMIN") || $my_security->checkPermission("FORMALIZACAO")): ?>
-                                                        <div>
-                                                            <p class="mt-2">Produto base: <?= $row->produtoBase == "1" ? "sim" : "não" ?></p>
+                                                        <div class="flex flex-row">
+                                                            <p class="mt-2 badge badge-<?= $row->produtoBase == "1" ? "white" : "light" ?> text-<?= $row->produtoBase == "1" ? "black" : "light" ?> fs-6"><?= $row->produtoBase == "1" ? "Proposta base" : "Proposta secundária" ?></p>
+                                                            <p class="mt-2 badge badge-info text-white fs-6"><?= $supervisorName ?></p>
                                                         </div>
                                                     <?php endif; ?>
 
@@ -280,8 +322,7 @@ $movimentation = match ($row->status) {
                                             </div>
                                         </div>
 
-
-                                        <div class="modal-footer d-flex gap-4 justify-content-between px-6 pb-4 mt-2">
+                                        <div class="modal-footer d-flex gap-4 justify-content-between px-6 pb-4 mt-10">
                                             <?php if ($my_security->checkPermission("ADMIN") || $my_security->checkPermission("FORMALIZACAO")): ?>
                                                 <div class="d-flex gap-4">
                                                     <div style="width: 200px;">
@@ -296,7 +337,6 @@ $movimentation = match ($row->status) {
                                                             <option value="Bloqueado" <?= $row->status == 'Bloqueado' ? 'selected' : '' ?>>Bloqueado</option>
                                                             <option value="Cancelada" <?= $row->status == 'Cancelada' ? 'selected' : '' ?>>Cancelada</option>
                                                         </select>
-
                                                         <div id="motivoDiv" style="display: none;" class="mt-2">
                                                             <label for="status_<?= $row->idquid_propostas ?>" class="form-label">Motivo</label>
                                                             <select class="form-select" name="motivoCancelamento">
