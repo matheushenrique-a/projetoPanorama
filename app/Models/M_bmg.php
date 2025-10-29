@@ -166,63 +166,64 @@ class M_bmg extends Model
         $returnData["cartoes"] = [];
 
         try {
-            $client = new \SoapClient(BMG_WSDL, ['trace' => 1, 'exceptions' => true]);
+            $client = new \SoapClient(BMG_WSDL, [
+                'trace'      => 1,
+                'exceptions' => true,
+                'soap_version' => SOAP_1_1,
+            ]);
 
             $params = [
-                'login'        => BMG_SEGURO_LOGIN,
-                'senha'        => BMG_SEGURO_SENHA,
-                'loginConsig'  => BMG_SEGURO_LOGIN_CONSIG,
-                'senhaConsig'  => BMG_SEGURO_SENHA_CONSIG,
-                'codigoSeguro' => $produto,              // Ex: 35 = Seguro Prestamista Consignado
-                'cpf'          => $cpf,   // CPF do cliente, apenas números
-                'tipoPagamento' => 2,               // 1=à vista, 2=mensal, etc
+                'param' => [
+                    'login'        => BMG_SEGURO_LOGIN,
+                    'senha'        => BMG_SEGURO_SENHA,
+                    'loginConsig' => BMG_SEGURO_LOGIN_CONSIG,
+                    'senhaConsig' => BMG_SEGURO_SENHA_CONSIG,
+                    'codigoSeguro' => $produto,
+                    'cpf'          => $cpf,
+                ]
             ];
 
             $response = $client->__soapCall('obterCartoesDisponiveis', [$params]);
 
-            if (((isset($response->mensagemDeErro))) and ((!empty($response->mensagemDeErro)))) {
-                $returnData["mensagem"] = "Cliente Inválido: <br>" . $response->mensagemDeErro;
-            } else {
+            return $response;
 
-                if (isset($response->cartaoClienteAtivoVendaSeguro) && is_array($response->cartaoClienteAtivoVendaSeguro)) {
-                    $returnData["status"] = true;
-                    foreach ($response->cartaoClienteAtivoVendaSeguro as $cartao) {
-                        $returnData["cartoes"][] = [
-                            'nomeCliente'         => $cartao->nomeCliente,
-                            'numeroCartao'        => $cartao->numeroCartao,
-                            'limiteCartao'        => number_format($cartao->limiteCartao, 2, ',', '.'),
-                            'cidade'              => $cartao->cidade,
-                            'numeroInternoConta'  => $cartao->numeroInternoConta,
-                            'cartaoSelecionado'   => $cartao->cartaoSelecionado,
-                            'codigoCliente'       => $cartao->codigoCliente,
-                            'codigoEntidade'      => $cartao->codigoEntidade,
-                            'cpf'                 => $cartao->cpf,
-                            'dataNascimento'      => $cartao->dataNascimento,
-                            'ehElegivel'          => $cartao->ehElegivel,
-                            'motivoElegibilidade' => $cartao->motivoElegibilidade,
-                            'nomeEntidade'        => $cartao->nomeEntidade,
-                            'orgaoFormatado'      => $cartao->orgaoFormatado,
-                            'sequencialOrgao'     => $cartao->sequencialOrgao,
-                            'planos' => [
-                                'med' => $this->listaPlanosRating(BMG_CODIGO_PRODUTO_MED, $cartao->numeroInternoConta, $cartao->limiteCartao),
-                                //'pap' => $this->listaPlanosRating(BMG_CODIGO_PRODUTO_PAP, $cartao->numeroInternoConta, $cartao->limiteCartao),
-                                'vida' => $this->listaPlanosRating(BMG_CODIGO_PRODUTO_VIDA, $cartao->numeroInternoConta, $cartao->limiteCartao)
-                                //'prestamista' => $this->listaPlanosRating(BMG_CODIGO_PRODUTO_PRESTAMISTA, $cartao->numeroInternoConta, $cartao->limiteCartao),
-                            ]
-                        ];
-                    }
-                } else {
-                    $returnData["mensagem"] = "Nenhum cartão disponível ou retorno inesperado.<br>";
-                }
-            }
+            // if (((isset($response->mensagemDeErro))) and ((!empty($response->mensagemDeErro)))) {
+            //     $returnData["mensagem"] = "Cliente Inválido: <br>" . $response->mensagemDeErro;
+            // } else {
+
+            //     if (isset($response->cartaoClienteAtivoVendaSeguro) && is_array($response->cartaoClienteAtivoVendaSeguro)) {
+            //         $returnData["status"] = true;
+            //         foreach ($response->cartaoClienteAtivoVendaSeguro as $cartao) {
+            //             $returnData["cartoes"][] = [
+            //                 'nomeCliente'         => $cartao->nomeCliente,
+            //                 'numeroCartao'        => $cartao->numeroCartao,
+            //                 'limiteCartao'        => number_format($cartao->limiteCartao, 2, ',', '.'),
+            //                 'cidade'              => $cartao->cidade,
+            //                 'numeroInternoConta'  => $cartao->numeroInternoConta,
+            //                 'cartaoSelecionado'   => $cartao->cartaoSelecionado,
+            //                 'codigoCliente'       => $cartao->codigoCliente,
+            //                 'codigoEntidade'      => $cartao->codigoEntidade,
+            //                 'cpf'                 => $cartao->cpf,
+            //                 'dataNascimento'      => $cartao->dataNascimento,
+            //                 'ehElegivel'          => $cartao->ehElegivel,
+            //                 'motivoElegibilidade' => $cartao->motivoElegibilidade,
+            //                 'nomeEntidade'        => $cartao->nomeEntidade,
+            //                 'orgaoFormatado'      => $cartao->orgaoFormatado,
+            //                 'sequencialOrgao'     => $cartao->sequencialOrgao,
+            //                 'planos' => [
+            //                     'med' => $this->listaPlanosRating(BMG_CODIGO_PRODUTO_MED, $cartao->numeroInternoConta, $cartao->limiteCartao),
+            //                 ]
+            //             ];
+            //         }
+            //     } else {
+            //         $returnData["mensagem"] = "Nenhum cartão disponível ou retorno inesperado.<br>";
+            //     }
+            // }
         } catch (SoapFault $fault) {
             $returnData["mensagem"] = "Erro: {$fault->faultcode} - {$fault->faultstring}";
-            //echo "Erro: {$fault->faultcode} - {$fault->faultstring}";
         }
 
-        //exit;
-
-        return $returnData;
+        // return $returnData;
     }
 
 
@@ -386,7 +387,7 @@ class M_bmg extends Model
         try {
             $client = new \SoapClient('https://ws1.bmgconsig.com.br/webservices/ProdutoSeguroWebService?wsdl', ['trace' => 1, 'exceptions' => true]);
 
-            $response = $client->__soapCall('listaPlanosRating', [$params]);
+            $response = $client->__soapCall('listaPlanos', [$params]);
 
             return $response;
         } catch (SoapFault $fault) {
@@ -467,7 +468,21 @@ class M_bmg extends Model
         $dataNascimento = $data['dataNascimento'];
         $observacao = $data['observacaoInicial'];
 
-        //gboex
+        //Dados bancarios
+        $banco = $data['banco'];
+        $agencia = $data['agencia'];
+        $conta = $data['conta'];
+
+        //Endereço
+        $cep = $data['cep'];
+        $rua = $data['rua'];
+        $numero = $data['numero'];
+        $bairro = $data['bairro'];
+        $cidade = $data['cidade'];
+        $estado = $data['estado'];
+
+        $produtoId = $data['produtoId'];
+
         $tipoDesconto = $data['tipoDesconto'] ?? "";
 
         $produtoBase = $data['produtoBase'];
@@ -533,7 +548,49 @@ class M_bmg extends Model
             "userId" => $userId,
             "produtoBase" => $produtoBase,
             "observacaoInicial" => $observacao,
+            "tipoDesconto" => $tipoDesconto ?? '',
+            "banco" => $banco,
+            "agencia" => $agencia,
+            "conta" => $conta,
+            "cep" => $cep,
+            "rua" => $rua,
+            "numeroEnd" => $numero,
+            "bairro" => $bairro,
+            "cidade" => $cidade,
+            "estado" => $estado,
+        ]);
+
+        $client = \Config\Services::curlrequest();
+
+        $url = 'https://grupoquid-dev.sydle.one/api/1/crm/com.grupoquid.crm/proposal/createAPI/';
+
+        $sydle = [
+            "adesao" => $adesao,
+            "cpf" => $cpf,
+            "nome" => $nome,
+            "produto" => $produto,
+            "produtoId" => $produtoId,
+            "valor" => $valor,
+            "telefone" => $telefone,
+            "status" => $status,
+            "data_criacao" => $data_criacao,
+            "codigo_entidade" => $codigo_entidade,
+            "valor_parcela" => $valor_parcela,
+            "numero_parcela" => $numero_parcela,
+            "matricula" => $matricula,
+            "dataNascimento" => $dataNascimento,
+            "id_owner" => $auditoriaId,
+            "userId" => $userId,
+            "observacaoInicial" => $observacao,
             "tipoDesconto" => $tipoDesconto ?? ''
+        ];
+
+        $username = 'victor.pomaroli';
+        $password = '102030';
+
+        $client->post($url, [
+            'auth' => [$username, $password],
+            'json' => $sydle
         ]);
 
         $movimentacao = [

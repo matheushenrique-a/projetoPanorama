@@ -101,6 +101,21 @@ class Insight extends BaseController
             $codigoEntidade = $this->getpost('codigoEntidade');
             $adesao = $this->getpost('adesao');
 
+            $nb = $this->getpost('numeroBeneficio') ?? '';
+
+            //Dados bancarios
+            $banco = $this->getpost('banco') ?? '';
+            $agencia = $this->getpost('agencia') ?? '';
+            $conta = $this->getpost('conta') ?? '';
+
+            //Endereço
+            $cep = $this->getpost('cep') ?? '';
+            $rua = $this->getpost('rua') ?? '';
+            $numero = $this->getpost('numero') ?? '';
+            $bairro = $this->getpost('bairro') ?? '';
+            $cidade = $this->getpost('cidade') ?? '';
+            $estado = $this->getpost('estado') ?? '';
+
             //gboex 
             $tipoDesconto = $this->getpost('tipoDesconto') ?? '';
 
@@ -201,6 +216,7 @@ class Insight extends BaseController
                     'status' => $novoStatus,
                     'adesao' => $adesao,
                     'cpf' => $cpf,
+                    'matricula' => $nb,
                     'telefone' => $telefone,
                     'nome' => $nome,
                     'produto' => $produto,
@@ -216,7 +232,13 @@ class Insight extends BaseController
                     'conta' => $conta ?? null,
                     'motivoCancelamento' => $motivoCancelamento ?? "",
                     'observacaoInicial' => $observacaoInicial,
-                    'tipoDesconto' => $tipoDesconto
+                    'tipoDesconto' => $tipoDesconto,
+                    'cep' => $cep,
+                    'rua' => $rua,
+                    'numeroEnd' => $numero,
+                    'bairro' => $bairro,
+                    'cidade' => $cidade,
+                    'estado' => $estado,
                 ];
                 $condicao = ['idquid_propostas' => $idProposta];
 
@@ -792,27 +814,26 @@ class Insight extends BaseController
             $observacao = $this->getpost('observacao') ?? "";
             $produto = $this->getpost('produto');
 
+            $produtoId = $this->getpost('produtoId');
+
+            //Dados bancarios
+            $banco = $this->getpost('banco');
+            $agencia = $this->getpost('agencia');
+            $conta = $this->getpost('conta');
+
+            //Endereço
+            $cep = $this->getpost('cep');
+            $rua = $this->getpost('rua');
+            $numero = $this->getpost('numeroEnd');
+            $bairro = $this->getpost('bairro');
+            $cidade = $this->getpost('cidade');
+            $estado = $this->getpost('estado');
+
             //GBOEX
-            $tipoDesconto = $this->getpost('tipoDesconto') ?? ''; 
+            $tipoDesconto = $this->getpost('tipoDesconto') ?? '';
 
             $totalAdicionados = $this->getpost('totalAdicionados');
             $produtosSelecionados = json_decode($this->request->getPost('produtosSelecionados'), true) ?? [];
-
-            $returnData = $this->panorama_gravar_proposta_saque([
-                'assessor' => $assessor,
-                'produto' => $produto,
-                'codigoEntidade' => $codigoEntidade,
-                'cpf' => $cpf,
-                'dataNascimento' => $dataNascimento,
-                'matricula' => $matricula,
-                'nomeCliente' => $nomeCliente,
-                'celular1' => ['ddd' => $ddd, 'numero' => $telefone],
-                'adesao' => $adesao,
-                'valorSaque' => $valorSaque,
-                'valorParcela' => $valorParcela,
-                'quantidadeParcelas' => $quantidadeParcelas,
-                'observacao' => $observacao
-            ]);
 
             if ($totalAdicionados > 1) {
                 $this->m_bmg->gravar_proposta_bmg_database([
@@ -822,7 +843,7 @@ class Insight extends BaseController
                     'codigo_entidade' => $codigoEntidade,
                     'cpf' => $cpf,
                     'dataNascimento' => $dataNascimento,
-                    'panorama_id' => $returnData["proposta"] ?? "",
+                    'panorama_id' => "",
                     'matricula' => $matricula,
                     'nomeCliente' => $nomeCliente,
                     'telefone' => $ddd . $telefone,
@@ -835,6 +856,16 @@ class Insight extends BaseController
                     'produtoBase' => 1,
                     'observacaoInicial' => $observacao,
                     'att' => 0,
+                    'produtoId' => $produtoId,
+                    'banco' => $banco ?? '',
+                    'agencia' => $agencia ?? '',
+                    'conta' => $conta ?? '',
+                    'cep' => $cep ?? '',
+                    'rua' => $rua ?? '',
+                    'numero' => $numero ?? '',
+                    'bairro' => $bairro ?? '',
+                    'cidade' => $cidade ?? '',
+                    'estado' => $estado ?? '',
                 ]);
 
                 $last = end($produtosSelecionados);
@@ -860,6 +891,16 @@ class Insight extends BaseController
                         'produtoBase' => 0,
                         'att' => ($product === $last ? 1 : 0),
                         'observacaoInicial' => $observacao,
+                        'produtoId' => $produtoId,
+                        'banco' => $banco ?? '',
+                        'agencia' => $agencia ?? '',
+                        'conta' => $conta ?? '',
+                        'cep' => $cep ?? '',
+                        'rua' => $rua ?? '',
+                        'numero' => $numero ?? '',
+                        'bairro' => $bairro ?? '',
+                        'cidade' => $cidade ?? '',
+                        'estado' => $estado ?? '',
                     ]);
                 }
             } else {
@@ -870,7 +911,7 @@ class Insight extends BaseController
                     'codigo_entidade' => $codigoEntidade,
                     'cpf' => $cpf,
                     'dataNascimento' => $dataNascimento,
-                    'panorama_id' => $returnData["proposta"] ?? "",
+                    'panorama_id' => "",
                     'matricula' => $matricula,
                     'nomeCliente' => $nomeCliente,
                     'telefone' => $ddd . $telefone,
@@ -883,7 +924,17 @@ class Insight extends BaseController
                     'produtoBase' => 1,
                     'att' => 1,
                     'observacaoInicial' => $observacao,
-                    'tipoDesconto' => $tipoDesconto
+                    'tipoDesconto' => $tipoDesconto,
+                    'produtoId' => $produtoId,
+                    'banco' => $banco ?? '',
+                    'agencia' => $agencia ?? '',
+                    'conta' => $conta ?? '',
+                    'cep' => $cep ?? '',
+                    'rua' => $rua ?? '',
+                    'numero' => $numero ?? '',
+                    'bairro' => $bairro ?? '',
+                    'cidade' => $cidade ?? '',
+                    'estado' => $estado ?? '',
                 ]);
             }
 

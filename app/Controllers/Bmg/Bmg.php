@@ -950,11 +950,10 @@ class Bmg extends BaseController
                 'entidade' => $entidade,
                 'numeroInternoConta' => $contaInterna
             ];
-            // return print_r($dataSeguro);
 
-            $obtemInfoSeguro = $this->m_bmg->obtemInfoSeguro($dataSeguro);
+            $obtemInfoSeguro = $this->m_bmg->obterCartoesDisponiveis($params['cpf'], 54);
 
-            // return print_r($obtemInfoSeguro);
+            return print_r($obtemInfoSeguro);
 
             $valorParcela = $obtemValorParcela[0]->valorParcela ?? 0;
             $dados['valorParcela'] = $valorParcela;
@@ -981,7 +980,6 @@ class Bmg extends BaseController
         }
     }
 
-    //http://localhost/InsightSuite/public/sign-in
     public function listarPropostas()
     {
         $buscarProp = $this->getpost('buscarProp');
