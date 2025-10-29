@@ -208,10 +208,6 @@ class Insight extends BaseController
             if ($idProposta) {
                 $tabela = 'quid_propostas';
 
-                if ($dataLançamento == true) {
-                    $valores['data_criacao'] = $dataCriacaoMySQL;
-                }
-
                 $valores = [
                     'status' => $novoStatus,
                     'adesao' => $adesao,
@@ -240,6 +236,11 @@ class Insight extends BaseController
                     'cidade' => $cidade,
                     'estado' => $estado,
                 ];
+
+                if ($dataLançamento == true) {
+                    $valores['data_criacao'] = $dataCriacaoMySQL;
+                }
+                
                 $condicao = ['idquid_propostas' => $idProposta];
 
                 $retorno = $this->dbMasterDefault->update($tabela, $valores, $condicao);
