@@ -45,6 +45,7 @@ $routes->match(['get', 'post'], '/panorama-gravar-proposta-saque', 'Bmg\Bmg::pan
 $routes->match(['get', 'post'], '/mailing', 'Bmg\Mailing::index');
 $routes->match(['get', 'post'], '/extrair-relatorio', 'Bmg\Relatorio::index');
 $routes->match(['get', 'post'], '/envio-relatorio', 'Bmg\Relatorio::envioRelatorio');
+$routes->match(['get', 'post'], '/bmg/mailing/generate', 'Bmg\Mailing::generate');
 
 //INSIGHT
 $routes->match(['get', 'post'], '/insight-listar-notificacoes', 'Insight\Insight::insight_listar_notificacoes');
