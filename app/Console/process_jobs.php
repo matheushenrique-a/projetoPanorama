@@ -1,23 +1,22 @@
 <?php
 
-// Força exibição de erros
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
 echo "[START] Executando ProcessJobs...\n";
 
-// Garante que o script rode na raiz do projeto
 chdir(__DIR__ . '/../../');
 
-// Inclui autoload e inicialização do CodeIgniter
 require 'vendor/autoload.php';
+
+define('ENVIRONMENT', 'production');
+
 require_once 'app/Config/Paths.php';
 
 $paths = new Config\Paths();
 require_once rtrim($paths->systemDirectory, '/ ') . '/bootstrap.php';
 
-// Define ambiente de execução
-$context = APPPATH . 'Config/Boot/production.php';
+$context = APPPATH . 'Config/Boot/' . ENVIRONMENT . '.php';
 if (file_exists($context)) {
     require_once $context;
 }
@@ -28,13 +27,11 @@ use Config\Services;
 try {
     echo "[INFO] CodeIgniter carregado. Criando instâncias...\n";
 
-    // Instancia serviços necessários para o comando
-    $commands = service('commands');
     $logger   = service('logger');
+    $commands = service('commands');
 
     echo "[INFO] Executando comando ProcessJobs...\n";
 
-    // Cria o comando com os serviços obrigatórios
     $job = new ProcessJobs($logger, $commands);
     $job->run([]);
 
