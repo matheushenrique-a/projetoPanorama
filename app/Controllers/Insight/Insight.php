@@ -79,10 +79,8 @@ class Insight extends BaseController
 
             if ($this->session->role == "OPERADOR" || $this->session->userId == "165006" || $this->session->userId == "165005" || $this->session->userId == "164979") {
                 $novoStatus = $this->getpost('statusOperador');
-                $dataLançamento = false;
             } else {
                 $novoStatus = $this->request->getPost('status');
-                $dataLançamento = true;
             }
 
             if ($novoStatus == "Cancelada") {
@@ -118,13 +116,6 @@ class Insight extends BaseController
 
             //gboex 
             $tipoDesconto = $this->getpost('tipoDesconto') ?? '';
-
-            $dataCriacaoStr = $this->getpost('dataCriacao');
-            $dataCriacao = \DateTime::createFromFormat('d/m/Y', $dataCriacaoStr);
-
-            $horaAtual = date('H:i:s');
-
-            $dataCriacaoMySQL = $dataCriacao->format('Y-m-d') . ' ' . $horaAtual;
 
             $dataNascimento = $this->getpost('dataNascimento');
             $assessor = $this->getpost('assessor');
@@ -236,10 +227,6 @@ class Insight extends BaseController
                     'cidade' => $cidade,
                     'estado' => $estado,
                 ];
-
-                if ($dataLançamento == true) {
-                    $valores['data_criacao'] = $dataCriacaoMySQL;
-                }
                 
                 $condicao = ['idquid_propostas' => $idProposta];
 
