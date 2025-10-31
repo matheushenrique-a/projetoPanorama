@@ -681,7 +681,7 @@ class M_bmg extends Model
         FROM quid_propostas
         WHERE assessor = '{$nickname}'
         AND DATE(data_criacao) >= CURDATE() - INTERVAL 15 DAY
-        AND status IN ('Aprovada', 'Análise')
+        AND status IN ('Aprovada')
         GROUP BY DATE(data_criacao)
         ORDER BY data
         ";
@@ -837,7 +837,7 @@ class M_bmg extends Model
             COALESCE(SUM(valor), 0) AS total_mensal
         FROM quid_propostas
         WHERE report_to = {$equipe}
-        AND status IN ('Aprovada', 'Análise')
+        AND status IN ('Aprovada')
           AND MONTH(data_criacao) = MONTH(CURRENT_DATE())
           AND YEAR(data_criacao) = YEAR(CURRENT_DATE())
         ";
@@ -857,7 +857,7 @@ class M_bmg extends Model
             COALESCE(SUM(valor), 0) AS total_mensal
         FROM quid_propostas
         WHERE report_to IN (164815,165005,165004,165006)
-          AND status IN ('Aprovada', 'Análise')
+          AND status IN ('Aprovada')
           AND MONTH(data_criacao) = MONTH(CURRENT_DATE())
           AND YEAR(data_criacao) = YEAR(CURRENT_DATE())
         GROUP BY report_to
