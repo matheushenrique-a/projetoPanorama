@@ -116,4 +116,45 @@ class Mailing extends BaseController
 
         return redirect()->to('/mailing')->with('success', 'Job de mailing criado com sucesso!');
     }
+
+    public function download($jobId)
+    {
+        $jobsConcluidos = WRITEPATH . 'jobs/resultados/';
+        $pattern = $jobsConcluidos . $jobId . '_resultado*.csv';
+
+        $arquivos = glob($pattern);
+
+        if (empty($arquivos)) {
+            return 'Arquivo de resultado não encontrado.';
+        }
+
+        $jobFile = $arquivos[0];
+
+        return $this->response->download($jobFile, null);
+    }
+
+    public function delete($jobId)
+    {
+        $dirs = [
+            WRITEPATH . 'jobs/pendentes/',
+            WRITEPATH . 'jobs/processando/',
+            WRITEPATH . 'jobs/concluidos/',
+            WRITEPATH . 'jobs/resultados/',
+        ];
+
+        foreach ($dirs as $dir) {
+            $jsonFile = $dir . $jobId . '.json';
+            if (file_exists($jsonFile)) {
+                unlink($jsonFile);
+            }
+
+            $csvPattern = $dir . $jobId . '*.csv';
+            $csvFiles = glob($csvPattern);
+            foreach ($csvFiles as $csvFile) {
+                unlink($csvFile);
+            }
+        }
+
+        return redirect()->to('/mailing/list');
+    }
 }

@@ -43,6 +43,15 @@
                                     <?= esc($job['status']) ?>
                                 </span>
                             </div>
+                            <div class="d-flex gap-2">
+                                <a href="<?= assetfolder . 'mailing/download/' . esc($job['id']) ?>" class="btn btn-secondary btn-sm p-1
+                    <?= strtolower($job['status']) !== 'concluído' ? 'disabled' : 'btn-success' ?>">
+                                    <i class="bi ms-1 fs-6 bi-download"></i>
+                                </a>
+                                <a href="<?= assetfolder . 'mailing/delete/' . esc($job['id']) ?>" class="btn btn-danger btn-sm p-1">
+                                    <i class="bi ms-1 fs-6 bi-x-lg"></i>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 <?php endforeach; ?>
