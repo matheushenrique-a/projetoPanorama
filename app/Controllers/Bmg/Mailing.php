@@ -16,55 +16,117 @@ class Mailing extends BaseController
         return $this->loadpage('bmg/mailing', $dados);
     }
 
+    // public function generate()
+    // {
+    //     $this->m_bmg = new M_bmg();
+
+    //     $produto = $this->getpost('produto');
+    //     $valorMinimo = $this->getpost('valorMinimo') ?? "";
+    //     $valorMaximo = $this->getpost('valorMaximo') ?? "";
+    //     $entidade = $this->getpost('entidade');
+
+    //     $file = $this->request->getFile('file');
+
+    //     if (!$file->isValid()) {
+    //         return $this->response->setJSON(['erro' => 'Arquivo inválido']);
+    //     }
+
+    //     $tempPath = $file->getTempName();
+
+    //     $handle = fopen($tempPath, 'r');
+    //     if (!$handle) {
+    //         return $this->response->setJSON(['erro' => 'Erro ao ler o arquivo']);
+    //     }
+
+    //     $cpfs = [];
+
+    //     while (($data = fgetcsv($handle, 1000, ';')) !== FALSE) {
+    //         $cpf = trim($data[0] ?? '');
+    //         if (!empty($cpf) && strtolower($cpf) !== 'cpf') {
+    //             $cpfs[] = $cpf;
+    //         }
+    //     }
+
+    //     fclose($handle);
+
+    //     $dados = [
+    //         'produto' => $produto,
+    //         'valorMinimo' => $valorMinimo,
+    //         'valorMaximo' => $valorMaximo,
+    //         'entidade' => $entidade,
+    //         'cpfs' => $cpfs
+    //     ];
+
+    //     if ($produto == "seguro") {
+    //         return print_r($this->m_bmg->gerarMailingSeguro($dados));
+    //     }
+
+    //     if ($produto == "saque") {
+    //         return $this->m_bmg->gerarMailingSaque($dados);
+    //     }
+
+    //     return $this->response->setJSON(['erro' => 'Produto inválido']);
+    // }
+
     public function generate()
     {
-        $this->m_bmg = new M_bmg();
+        helper(['filesystem']); // para mkdir, file_put_contents
 
-        $produto = $this->getpost('produto');
-        $valorMinimo = $this->getpost('valorMinimo') ?? "";
-        $valorMaximo = $this->getpost('valorMaximo') ?? "";
-        $entidade = $this->getpost('entidade');
+        $produto = $this->request->getPost('produto');
+        $valorMinimo = $this->request->getPost('valorMinimo') ?? "";
+        $valorMaximo = $this->request->getPost('valorMaximo') ?? "";
+        $entidade = $this->request->getPost('entidade');
 
         $file = $this->request->getFile('file');
 
-        if (!$file->isValid()) {
+        if (!$file || !$file->isValid()) {
             return $this->response->setJSON(['erro' => 'Arquivo inválido']);
         }
 
-        $tempPath = $file->getTempName();
+        // Pastas para uploads e jobs
+        $uploadDir = WRITEPATH . 'uploads/jobs/';
+        $jobsPendentes = WRITEPATH . 'jobs/pendentes/';
 
-        $handle = fopen($tempPath, 'r');
-        if (!$handle) {
-            return $this->response->setJSON(['erro' => 'Erro ao ler o arquivo']);
-        }
+        if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
+        if (!is_dir($jobsPendentes)) mkdir($jobsPendentes, 0777, true);
 
+        // Salva o arquivo enviado
+        $jobId = uniqid('job_', true);
+        $filePath = $uploadDir . $jobId . '.csv';
+        $file->move($uploadDir, $jobId . '.csv');
+
+        // Lê os CPFs do arquivo
+        $handle = fopen($filePath, 'r');
         $cpfs = [];
-
         while (($data = fgetcsv($handle, 1000, ';')) !== FALSE) {
             $cpf = trim($data[0] ?? '');
             if (!empty($cpf) && strtolower($cpf) !== 'cpf') {
                 $cpfs[] = $cpf;
             }
         }
-
         fclose($handle);
 
-        $dados = [
+        $jobData = [
+            'id' => $jobId,
+            'arquivo' => $filePath,
             'produto' => $produto,
             'valorMinimo' => $valorMinimo,
             'valorMaximo' => $valorMaximo,
             'entidade' => $entidade,
-            'cpfs' => $cpfs
+            'cpfs' => $cpfs,
+            'status' => 'pendente',
+            'progresso' => 0,
+            'total' => count($cpfs),
+            'concluidos' => 0,
+            'criado_em' => date('Y-m-d H:i:s')
         ];
 
-        if ($produto == "seguro") {
-            return print_r($this->m_bmg->gerarMailingSeguro($dados));
-        }
+        file_put_contents($jobsPendentes . $jobId . '.json', json_encode($jobData, JSON_PRETTY_PRINT));
 
-        if ($produto == "saque") {
-            return $this->m_bmg->gerarMailingSaque($dados);
-        }
-
-        return $this->response->setJSON(['erro' => 'Produto inválido']);
+        return $this->response->setJSON([
+            'sucesso' => true,
+            'jobId' => $jobId,
+            'mensagem' => 'Job criado com sucesso e aguardando processamento.'
+        ]);
     }
 }
