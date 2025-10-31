@@ -265,8 +265,7 @@ $movimentation = match ($row->status) {
                                                         <div class="mb-2">
                                                             <span class="fw-bold mb-1">Data Criação:</span>
                                                             <input type="text" class="form-control form-control-solid dataCriacao" name="dataCriacao" value="<?= date('d/m/Y', strtotime($row->data_criacao)); ?>" data-original="<?= date('d/m/Y', strtotime($row->data_criacao)); ?>"
-                                                                <?php if (!$my_security->checkPermission("FORMALIZACAO") && !$my_security->checkPermission("SUPERVISOR") && !$my_security->checkPermission("ADMIN")): echo "readonly";
-                                                                endif; ?> />
+                                                                readonly />
                                                         </div>
                                                         <div class="mb-2">
                                                             <span class="fw-bold mb-1">Código Entidade:</span>
