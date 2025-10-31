@@ -23,13 +23,20 @@ if (file_exists($context)) {
 }
 
 use App\Commands\ProcessJobs;
+use Config\Services;
 
 try {
-    echo "[INFO] CodeIgniter carregado. Executando comando...\n";
+    echo "[INFO] CodeIgniter carregado. Criando instâncias...\n";
 
-    // Instancia e executa o comando diretamente
-    $command = new ProcessJobs();
-    $command->run([]);
+    // Instancia serviços necessários para o comando
+    $commands = service('commands');
+    $logger   = service('logger');
+
+    echo "[INFO] Executando comando ProcessJobs...\n";
+
+    // Cria o comando com os serviços obrigatórios
+    $job = new ProcessJobs($commands, $logger);
+    $job->run([]);
 
     echo "[SUCCESS] Comando finalizado.\n";
 } catch (Throwable $e) {
