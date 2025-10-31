@@ -35,7 +35,7 @@ try {
     echo "[INFO] Executando comando ProcessJobs...\n";
 
     // Cria o comando com os serviços obrigatórios
-    $job = new ProcessJobs($commands, $logger);
+    $job = new ProcessJobs($logger, $commands);
     $job->run([]);
 
     echo "[SUCCESS] Comando finalizado.\n";
