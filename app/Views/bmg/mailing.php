@@ -1,3 +1,5 @@
+<?php $success = session()->getFlashdata('success'); ?>
+
 <div class="app-main flex-column flex-row-fluid" id="kt_app_main">
     <div class="d-flex flex-column flex-column-fluid">
         <div id="kt_app_toolbar" class="app-toolbar py-3 py-lg-6">
@@ -21,6 +23,14 @@
                 </div>
             </div>
         </div>
+        <?php if (isset($success)): ?>
+            <div class="container mt-5">
+                <div class="alert alert-success text-center w-75 mx-auto" role="alert">
+                    <?= esc($success) ?>
+                </div>
+            </div>
+        <?php endif; ?>
+
         <div class="container mt-2 mb-20">
             <div class="card p-4 w-75 mx-auto">
                 <div>
