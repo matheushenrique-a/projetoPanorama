@@ -16,61 +16,55 @@ class Mailing extends BaseController
         return $this->loadpage('bmg/mailing', $dados);
     }
 
-    // public function generate()
-    // {
-    //     $this->m_bmg = new M_bmg();
+    public function list()
+    {
+        helper('filesystem');
 
-    //     $produto = $this->getpost('produto');
-    //     $valorMinimo = $this->getpost('valorMinimo') ?? "";
-    //     $valorMaximo = $this->getpost('valorMaximo') ?? "";
-    //     $entidade = $this->getpost('entidade');
+        $baseDir = WRITEPATH . 'jobs/';
+        $dirs = [
+            'Pendentes'    => $baseDir . 'pendentes/',
+            'Processando'  => $baseDir . 'processando/',
+            'Concluído'   => $baseDir . 'concluidos/',
+        ];
 
-    //     $file = $this->request->getFile('file');
+        $jobs = [];
 
-    //     if (!$file->isValid()) {
-    //         return $this->response->setJSON(['erro' => 'Arquivo inválido']);
-    //     }
+        foreach ($dirs as $status => $dir) {
+            if (!is_dir($dir)) continue;
 
-    //     $tempPath = $file->getTempName();
+            $arquivos = glob($dir . '*.json');
+            log_message('debug', "Buscando em {$dir}, encontrados: " . count($arquivos));
 
-    //     $handle = fopen($tempPath, 'r');
-    //     if (!$handle) {
-    //         return $this->response->setJSON(['erro' => 'Erro ao ler o arquivo']);
-    //     }
+            foreach ($arquivos as $arquivo) {
+                $data = json_decode(file_get_contents($arquivo), true);
+                if (!$data) continue;
 
-    //     $cpfs = [];
+                $data['status'] = ucfirst($status);
+                $data['arquivo'] = basename($arquivo);
+                $data['ultimo_update'] = date('d/m/Y H:i:s', filemtime($arquivo));
+                $data['_mtime'] = filemtime($arquivo);
 
-    //     while (($data = fgetcsv($handle, 1000, ';')) !== FALSE) {
-    //         $cpf = trim($data[0] ?? '');
-    //         if (!empty($cpf) && strtolower($cpf) !== 'cpf') {
-    //             $cpfs[] = $cpf;
-    //         }
-    //     }
+                // Limitar os dados exibidos (sem CPFs)
+                unset($data['cpfs']);
 
-    //     fclose($handle);
+                $jobs[] = $data;
+            }
+        }
 
-    //     $dados = [
-    //         'produto' => $produto,
-    //         'valorMinimo' => $valorMinimo,
-    //         'valorMaximo' => $valorMaximo,
-    //         'entidade' => $entidade,
-    //         'cpfs' => $cpfs
-    //     ];
+        // Ordena pelo último update (mais recente primeiro)
+        usort($jobs, fn($a, $b) => ($b['_mtime'] ?? 0) <=> ($a['_mtime'] ?? 0));
 
-    //     if ($produto == "seguro") {
-    //         return print_r($this->m_bmg->gerarMailingSeguro($dados));
-    //     }
+        $dados = [
+            'pageTitle' => 'Mailing - Processos',
+            'jobs' => $jobs
+        ];
 
-    //     if ($produto == "saque") {
-    //         return $this->m_bmg->gerarMailingSaque($dados);
-    //     }
-
-    //     return $this->response->setJSON(['erro' => 'Produto inválido']);
-    // }
+        return $this->loadpage('bmg/mailing_list', $dados);
+    }
 
     public function generate()
     {
-        helper(['filesystem']); // para mkdir, file_put_contents
+        helper(['filesystem']);
 
         $produto = $this->request->getPost('produto');
         $valorMinimo = $this->request->getPost('valorMinimo') ?? "";
@@ -83,19 +77,16 @@ class Mailing extends BaseController
             return $this->response->setJSON(['erro' => 'Arquivo inválido']);
         }
 
-        // Pastas para uploads e jobs
         $uploadDir = WRITEPATH . 'uploads/jobs/';
         $jobsPendentes = WRITEPATH . 'jobs/pendentes/';
 
         if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
         if (!is_dir($jobsPendentes)) mkdir($jobsPendentes, 0777, true);
 
-        // Salva o arquivo enviado
         $jobId = uniqid('job_', true);
         $filePath = $uploadDir . $jobId . '.csv';
         $file->move($uploadDir, $jobId . '.csv');
 
-        // Lê os CPFs do arquivo
         $handle = fopen($filePath, 'r');
         $cpfs = [];
         while (($data = fgetcsv($handle, 1000, ';')) !== FALSE) {
@@ -123,10 +114,6 @@ class Mailing extends BaseController
 
         file_put_contents($jobsPendentes . $jobId . '.json', json_encode($jobData, JSON_PRETTY_PRINT));
 
-        return $this->response->setJSON([
-            'sucesso' => true,
-            'jobId' => $jobId,
-            'mensagem' => 'Job criado com sucesso e aguardando processamento.'
-        ]);
+        return redirect()->to('/mailing')->with('success', 'Job de mailing criado com sucesso!');
     }
 }
