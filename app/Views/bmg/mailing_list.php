@@ -3,7 +3,7 @@
         <div id="kt_app_toolbar" class="app-toolbar py-3 py-lg-6">
             <div id="kt_app_toolbar_container" class="app-container container-xxl d-flex flex-stack">
                 <div class="page-title d-flex flex-column justify-content-center flex-wrap me-3">
-                    <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">BMG - Mailing List</h1>
+                    <h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">BMG - Lista de Mailing</h1>
                     <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
                         <li class="breadcrumb-item text-muted">
                             <a href="/" class="text-muted text-hover-primary">Home</a>
@@ -16,22 +16,28 @@
                             <span class="bullet bg-gray-800 w-5px h-2px"></span>
                         </li>
 
-                        <li class="breadcrumb-item text-muted">Mailing List</li>
+                        <li class="breadcrumb-item text-muted">Lista de Mailing</li>
                     </ul>
                 </div>
             </div>
         </div>
         <div class="container mt-2 mb-20">
-            <div class="card p-4 w-75 mx-auto shadow-sm">
+            <div class="card p-6 w-75 mx-auto shadow-sm">
                 <div>
                     <h2 class="fs-2 fw-semibold text-center p-5">Lista de processamentos</h2>
                 </div>
+                <?php if (empty($jobs)): ?>
+                    <div class="text-center text-gray-400 fw-semibold mb-5">
+                        Nenhum processo de mailing encontrado.
+                    </div>
+                <?php endif; ?>
                 <?php foreach ($jobs as $job): ?>
-                    <div class="card bg-light p-2 mb-3">
+                    <div class=" card bg-light p-2 mb-3">
                         <div class="d-flex justify-content-between align-items-center mx-4">
                             <div>
                                 <p class="mb-1 fw-bold">ID: <?= esc($job['id']) ?></p>
-                                <p class="mb-0 text-muted">Criado em: <?= esc($job['criado_em'] ?? '-') ?></p>
+                                <p class="mb-0 text-muted">Criado em: <?= date('d/m/Y - H:i', strtotime($job['criado_em'])) ?>
+                                </p>
                             </div>
                             <div class="text-center">
                                 <p class="mb-0">Progresso: <strong><?= esc($job['progresso']) ?>%</strong></p>
