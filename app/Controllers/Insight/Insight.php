@@ -79,10 +79,8 @@ class Insight extends BaseController
 
             if ($this->session->role == "OPERADOR" || $this->session->userId == "165006" || $this->session->userId == "165005" || $this->session->userId == "164979") {
                 $novoStatus = $this->getpost('statusOperador');
-                $dataLançamento = false;
             } else {
                 $novoStatus = $this->request->getPost('status');
-                $dataLançamento = true;
             }
 
             if ($novoStatus == "Cancelada") {
@@ -101,15 +99,23 @@ class Insight extends BaseController
             $codigoEntidade = $this->getpost('codigoEntidade');
             $adesao = $this->getpost('adesao');
 
+            $nb = $this->getpost('numeroBeneficio') ?? '';
+
+            //Dados bancarios
+            $banco = $this->getpost('banco') ?? '';
+            $agencia = $this->getpost('agencia') ?? '';
+            $conta = $this->getpost('conta') ?? '';
+
+            //Endereço
+            $cep = $this->getpost('cep') ?? '';
+            $rua = $this->getpost('rua') ?? '';
+            $numero = $this->getpost('numero') ?? '';
+            $bairro = $this->getpost('bairro') ?? '';
+            $cidade = $this->getpost('cidade') ?? '';
+            $estado = $this->getpost('estado') ?? '';
+
             //gboex 
             $tipoDesconto = $this->getpost('tipoDesconto') ?? '';
-
-            $dataCriacaoStr = $this->getpost('dataCriacao');
-            $dataCriacao = \DateTime::createFromFormat('d/m/Y', $dataCriacaoStr);
-
-            $horaAtual = date('H:i:s');
-
-            $dataCriacaoMySQL = $dataCriacao->format('Y-m-d') . ' ' . $horaAtual;
 
             $dataNascimento = $this->getpost('dataNascimento');
             $assessor = $this->getpost('assessor');
@@ -193,14 +199,11 @@ class Insight extends BaseController
             if ($idProposta) {
                 $tabela = 'quid_propostas';
 
-                if ($dataLançamento == true) {
-                    $valores['data_criacao'] = $dataCriacaoMySQL;
-                }
-
                 $valores = [
                     'status' => $novoStatus,
                     'adesao' => $adesao,
                     'cpf' => $cpf,
+                    'matricula' => $nb,
                     'telefone' => $telefone,
                     'nome' => $nome,
                     'produto' => $produto,
@@ -216,8 +219,15 @@ class Insight extends BaseController
                     'conta' => $conta ?? null,
                     'motivoCancelamento' => $motivoCancelamento ?? "",
                     'observacaoInicial' => $observacaoInicial,
-                    'tipoDesconto' => $tipoDesconto
+                    'tipoDesconto' => $tipoDesconto,
+                    'cep' => $cep,
+                    'rua' => $rua,
+                    'numeroEnd' => $numero,
+                    'bairro' => $bairro,
+                    'cidade' => $cidade,
+                    'estado' => $estado,
                 ];
+                
                 $condicao = ['idquid_propostas' => $idProposta];
 
                 $retorno = $this->dbMasterDefault->update($tabela, $valores, $condicao);
@@ -794,6 +804,19 @@ class Insight extends BaseController
 
             $produtoId = $this->getpost('produtoId');
 
+            //Dados bancarios
+            $banco = $this->getpost('banco');
+            $agencia = $this->getpost('agencia');
+            $conta = $this->getpost('conta');
+
+            //Endereço
+            $cep = $this->getpost('cep');
+            $rua = $this->getpost('rua');
+            $numero = $this->getpost('numeroEnd');
+            $bairro = $this->getpost('bairro');
+            $cidade = $this->getpost('cidade');
+            $estado = $this->getpost('estado');
+
             //GBOEX
             $tipoDesconto = $this->getpost('tipoDesconto') ?? '';
 
@@ -821,7 +844,16 @@ class Insight extends BaseController
                     'produtoBase' => 1,
                     'observacaoInicial' => $observacao,
                     'att' => 0,
-                    'produtoId' => $produtoId
+                    'produtoId' => $produtoId,
+                    'banco' => $banco ?? '',
+                    'agencia' => $agencia ?? '',
+                    'conta' => $conta ?? '',
+                    'cep' => $cep ?? '',
+                    'rua' => $rua ?? '',
+                    'numero' => $numero ?? '',
+                    'bairro' => $bairro ?? '',
+                    'cidade' => $cidade ?? '',
+                    'estado' => $estado ?? '',
                 ]);
 
                 $last = end($produtosSelecionados);
@@ -847,7 +879,16 @@ class Insight extends BaseController
                         'produtoBase' => 0,
                         'att' => ($product === $last ? 1 : 0),
                         'observacaoInicial' => $observacao,
-                        'produtoId' => $produtoId
+                        'produtoId' => $produtoId,
+                        'banco' => $banco ?? '',
+                        'agencia' => $agencia ?? '',
+                        'conta' => $conta ?? '',
+                        'cep' => $cep ?? '',
+                        'rua' => $rua ?? '',
+                        'numero' => $numero ?? '',
+                        'bairro' => $bairro ?? '',
+                        'cidade' => $cidade ?? '',
+                        'estado' => $estado ?? '',
                     ]);
                 }
             } else {
@@ -858,7 +899,7 @@ class Insight extends BaseController
                     'codigo_entidade' => $codigoEntidade,
                     'cpf' => $cpf,
                     'dataNascimento' => $dataNascimento,
-                    'panorama_id' => $returnData["proposta"] ?? "",
+                    'panorama_id' => "",
                     'matricula' => $matricula,
                     'nomeCliente' => $nomeCliente,
                     'telefone' => $ddd . $telefone,
@@ -872,7 +913,16 @@ class Insight extends BaseController
                     'att' => 1,
                     'observacaoInicial' => $observacao,
                     'tipoDesconto' => $tipoDesconto,
-                    'produtoId' => $produtoId
+                    'produtoId' => $produtoId,
+                    'banco' => $banco ?? '',
+                    'agencia' => $agencia ?? '',
+                    'conta' => $conta ?? '',
+                    'cep' => $cep ?? '',
+                    'rua' => $rua ?? '',
+                    'numero' => $numero ?? '',
+                    'bairro' => $bairro ?? '',
+                    'cidade' => $cidade ?? '',
+                    'estado' => $estado ?? '',
                 ]);
             }
 

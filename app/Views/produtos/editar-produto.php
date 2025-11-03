@@ -51,7 +51,7 @@
                                 </div>
                                 <div class="d-flex gap-6 mt-1 mb-4">
                                     <div class="form-check">
-                                        <input class="form-check-input" name="dadosBancarios" type="checkbox" value="1" id="bmg" <?php if ($produto->dadosBancarios = '1'): echo 'checked';
+                                        <input class="form-check-input" name="dadosBancarios" type="checkbox" value="1" id="bmg" <?php if ($produto->dadosBancarios == '1'): echo 'checked';
                                                                                                                                     endif; ?> />
                                         <label class="form-check-label" for="flexCheckChecked">
                                             Necessita dados bancários?

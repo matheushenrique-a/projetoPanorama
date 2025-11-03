@@ -71,10 +71,12 @@ $productName = $produto->nomeProduto;
                                                                 <input maxlength="10" type="text" class="form-control fs-4 fw-bold" placeholder="00/00/0000" name="dataNascimento" id="dataNascimento" required />
                                                             </div>
                                                         </div>
-                                                        <div class="input-group">
-                                                            <span class="input-group-text" style="width: 156px">Número Benefício</span>
-                                                            <input type="text" value="" class="form-control fs-3 fw-bold" placeholder="" name="matricula" id="matricula" />
-                                                        </div>
+                                                        <?php if ($produto->inss == "1"): ?>
+                                                            <div class="input-group">
+                                                                <span class="input-group-text" style="width: 156px">Número Benefício</span>
+                                                                <input type="text" value="" class="form-control fs-3 fw-bold" placeholder="" name="matricula" id="matricula" />
+                                                            </div>
+                                                        <?php endif; ?>
                                                         <div class="input-group">
                                                             <span class="input-group-text" style="width: 55px">DDD</span>
                                                             <input type="text" maxlength="2" class="form-control fs-3 fw-bold" value="" style="color:rgb(188, 188, 188)" name="ddd" id="ddd" required />
@@ -94,6 +96,117 @@ $productName = $produto->nomeProduto;
                             </div>
                         </div>
 
+                        <?php if ($produto->dadosBancarios == "1"): ?>
+                            <div class="card" id="kt_chat_messenger">
+                                <div class="accordion" id="kt_accordion_1 ms-lg-7 ms-xl-10">
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="kt_accordion_1_header_1">
+                                            <button class="accordion-button fs-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#kt_accordion_1_body_20" aria-expanded="true" aria-controls="kt_accordion_abordagem_body_1">DADOS BANCÁRIOS</button>
+                                        </h2>
+                                        <div id="kt_accordion_1_body_20" class="accordion-collapse collapse show" aria-labelledby="kt_accordion_1_header_1" data-bs-parent="#kt_accordion_1">
+                                            <div id="kt_accordion_1_body_20" class="accordion-collapse collapse show" aria-labelledby="kt_accordion_1_header_1" data-bs-parent="#kt_accordion_1">
+                                                <div class="px-15 py-8 justify-content-center d-flex flex-column gap-4">
+                                                    <div class="d-flex flex-column gap-5">
+
+                                                        <div class="d-flex gap-4 justify-content-around w-100 mx-10">
+                                                            <div class="input-group" style="width: 220px;">
+                                                                <span class="input-group-text">Banco</span>
+                                                                <input type="text" value="" placeholder="" class="form-control fs-3 fw-bold" name="banco" id="banco" />
+                                                            </div>
+                                                            <div class="input-group" style="width: 280px;">
+                                                                <span class="input-group-text">Agência</span>
+                                                                <input type="text" class="form-control fs-3 fw-bold" value="" placeholder="" name="agencia" id="agencia" />
+                                                            </div>
+                                                            <div class="input-group" style="width: 240px;">
+                                                                <span class="input-group-text">Conta</span>
+                                                                <input type="text" class="form-control fs-3 fw-bold" value="" placeholder="" name="conta" id="conta" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endif; ?>
+
+                        <?php if ($produto->endereco == "1"): ?>
+                            <div class="card" id="kt_chat_messenger">
+                                <div class="accordion" id="kt_accordion_1 ms-lg-7 ms-xl-10">
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="kt_accordion_1_header_1">
+                                            <button class="accordion-button fs-4 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#kt_accordion_1_body_22" aria-expanded="true" aria-controls="kt_accordion_abordagem_body_1">ENDEREÇO</button>
+                                        </h2>
+                                        <div id="kt_accordion_1_body_22" class="accordion-collapse collapse show" aria-labelledby="kt_accordion_1_header_1" data-bs-parent="#kt_accordion_1">
+                                            <div id="kt_accordion_1_body_22" class="accordion-collapse collapse show" aria-labelledby="kt_accordion_1_header_1" data-bs-parent="#kt_accordion_1">
+                                                <div class="px-15 py-8 justify-content-center d-flex flex-column gap-4">
+                                                    <div class="d-flex flex-column gap-5">
+                                                        <div class="d-flex gap-4 justify-content-around w-100">
+                                                            <div class="input-group" style="width: 220px;">
+                                                                <span class="input-group-text">CEP</span>
+                                                                <input type="text" value="" placeholder="" class="form-control fs-3 fw-bold" name="cep" id="cep" />
+                                                            </div>
+                                                            <div class="input-group" style="width: 580px;">
+                                                                <span class="input-group-text">Rua</span>
+                                                                <input type="text" class="form-control fs-3 fw-bold" value="" placeholder="" name="rua" id="rua" />
+                                                            </div>
+                                                            <div class="input-group" style="width: 170px;">
+                                                                <span class="input-group-text">Número</span>
+                                                                <input type="text" class="form-control fs-3 fw-bold" value="" placeholder="" name="numeroEnd" id="numeroEnd" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="d-flex gap-6 w-100 mx-2">
+                                                            <div class="input-group" style="width: 220px;">
+                                                                <span class="input-group-text">Bairro</span>
+                                                                <input type="text" value="" placeholder="" class="form-control fs-3 fw-bold" name="bairro" id="bairro" />
+                                                            </div>
+                                                            <div class="input-group" style="width: 220px;">
+                                                                <span class="input-group-text">Cidade</span>
+                                                                <input type="text" class="form-control fs-3 fw-bold" value="" placeholder="" name="cidade" id="cidade" />
+                                                            </div>
+                                                            <div class="input-group" style="width: 280px;">
+                                                                <span class="input-group-text">Estado</span>
+                                                                <select class="form-select fs-3 fw-bold" name="estado" id="estado">
+                                                                    <option value=""></option>
+                                                                    <option value="AC">Acre</option>
+                                                                    <option value="AL">Alagoas</option>
+                                                                    <option value="AP">Amapá</option>
+                                                                    <option value="AM">Amazonas</option>
+                                                                    <option value="BA">Bahia</option>
+                                                                    <option value="CE">Ceará</option>
+                                                                    <option value="DF">Distrito Federal</option>
+                                                                    <option value="ES">Espírito Santo</option>
+                                                                    <option value="GO">Goiás</option>
+                                                                    <option value="MA">Maranhão</option>
+                                                                    <option value="MT">Mato Grosso</option>
+                                                                    <option value="MS">Mato Grosso do Sul</option>
+                                                                    <option value="MG">Minas Gerais</option>
+                                                                    <option value="PA">Pará</option>
+                                                                    <option value="PB">Paraíba</option>
+                                                                    <option value="PR">Paraná</option>
+                                                                    <option value="PE">Pernambuco</option>
+                                                                    <option value="PI">Piauí</option>
+                                                                    <option value="RJ">Rio de Janeiro</option>
+                                                                    <option value="RN">Rio Grande do Norte</option>
+                                                                    <option value="RS">Rio Grande do Sul</option>
+                                                                    <option value="RO">Rondônia</option>
+                                                                    <option value="RR">Roraima</option>
+                                                                    <option value="SC">Santa Catarina</option>
+                                                                    <option value="SP">São Paulo</option>
+                                                                    <option value="SE">Sergipe</option>
+                                                                    <option value="TO">Tocantins</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endif; ?>
 
                         <div class="card" id="kt_chat_messenger">
                             <div class="accordion" id="kt_accordion_1 ms-lg-7 ms-xl-10">
@@ -105,8 +218,7 @@ $productName = $produto->nomeProduto;
                                         <div id="kt_accordion_1_body_14" class="accordion-collapse collapse show" aria-labelledby="kt_accordion_1_header_1" data-bs-parent="#kt_accordion_1">
                                             <div class="px-15 py-8 justify-content-center d-flex flex-column gap-4">
                                                 <div class="d-flex gap-5">
-                                                    <div class="d-flex gap-4 justify-content-around w-100 mx-10">
-
+                                                    <div class="d-flex gap-4 justify-content-around w-100">
                                                         <div class="input-group" style="width: 220px;">
                                                             <span class="input-group-text" style="width: 80px">Adesão</span>
                                                             <input maxlength="10" type="text" value="" class="form-control fs-4 fw-bold" placeholder="" name="adesao" id="adesao" required />
@@ -127,7 +239,6 @@ $productName = $produto->nomeProduto;
                                 </div>
                             </div>
                         </div>
-
 
                         <?php if ($produto->temValor == "1"):
 
@@ -253,6 +364,15 @@ $productName = $produto->nomeProduto;
 
     const produto = document.getElementById('produto')
 
+    const bancoInput = document.getElementById('banco');
+    const agenciaInput = document.getElementById('agencia');
+    const contaInput = document.getElementById('conta');
+    const cepInput = document.getElementById('cep');
+    const enderecoInput = document.getElementById('rua');
+    const bairroInput = document.getElementById('bairro');
+    const cidadeInput = document.getElementById('cidade');
+    const ufSelect = document.getElementById('estado');
+
     let selecionados = [];
     let number = 1;
 
@@ -364,32 +484,50 @@ $productName = $produto->nomeProduto;
         }
 
         function formatarCPF(cpf) {
-            if (!cpf) return ""; // se não tiver valor, retorna vazio
-            cpf = cpf.replace(/\D/g, ""); // tira tudo que não é dígito
+            if (!cpf) return "";
+            cpf = cpf.replace(/\D/g, "");
             return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, "$1.$2.$3-$4");
         }
-
 
         let dados = {
             Nascimento: extrair(/Nascimento\s*([\d]{2}\/[\d]{2}\/[\d]{4})/, texto),
             Nome: extrair(/Nome\s+([A-Z\sÁÂÃÉÊÍÓÔÕÚÇ]+?)\s+CPF/i, texto),
             CPF: extrair(/CPF\s*([\d.-]{11,14})/, texto),
             Telefone1: extrairTelefone(/Tel\.?\s*1\s*\(?(\d{2})\)?\s*(\d{4,5})-?(\d{4})/i, texto),
-            NB: extrair(/NB\s*-\s*UF\s*([0-9]{6,})/i, texto)
-        };
+            NB: extrair(/NB\s*-\s*UF\s*([0-9]{6,})/i, texto),
 
-        let dadosSiape = {
-            Nascimento: extrair(/Dt\s*Nascimento\s*-\s*Idade\s*([\d\/]{10})/, texto),
+            Banco: extrair(/Banco\s*([0-9]{3})/i, texto),
+            Agencia: extrair(/Ag\.?\s*Banco\s*([0-9]+)/i, texto),
+            ContaCorrente: extrair(/Conta\s*Corrente\s*([0-9]+)/i, texto),
+            Endereco: extrair(/Endere[cç]o\s*([^\n]+)/i, texto),
+            CEP: extrair(/CEP\s*([0-9]{5}-?[0-9]{3})/i, texto),
+            Bairro: extrair(/Bairro\s*([A-ZÀ-Ú\s]+?)(?:\n|Cidade|CEP|$)/i, texto),
+            Cidade: extrair(/Cidade\s*-\s*UF\s*([A-ZÀ-Ú\s]+?)\s*-\s*[A-Z]{2}/i, texto),
+            UF: extrair(/Cidade\s*-\s*UF\s*[A-ZÀ-Ú\s]+\s*-\s*([A-Z]{2})/i, texto)
         };
 
         let cpfFormatado = formatarCPF(dados.CPF);
 
-        dataNascimentoInput.value = dados.Nascimento;
-        nomeCliente.value = dados.Nome;
-        cpfInput.value = cpfFormatado;
-        nbInput.value = dados.NB;
-        dddInput.value = dados.Telefone1.ddd;
-        telefoneInput.value = dados.Telefone1.numero;
+        dataNascimentoInput.value = dados.Nascimento || '';
+        nomeCliente.value = dados.Nome || '';
+        cpfInput.value = cpfFormatado || '';
+        if (nbInput) nbInput.value = dados.NB || '';
+        dddInput.value = dados.Telefone1.ddd || '';
+        telefoneInput.value = dados.Telefone1.numero || '';
+
+        if (bancoInput) {
+            bancoInput.value = dados.Banco || '';
+            agenciaInput.value = dados.Agencia || '';
+            contaInput.value = dados.ContaCorrente || '';
+        }
+
+        if (cepInput) {
+            enderecoInput.value = dados.Endereco || '';
+            cepInput.value = dados.CEP || '';
+            bairroInput.value = dados.Bairro || '';
+            cidadeInput.value = dados.Cidade || '';
+            ufSelect.value = dados.UF || '';
+        }
     }
 
     let produtos = <?= json_encode($produtosArray) ?>;

@@ -43,8 +43,12 @@ $routes->match(['get', 'post'], '/bmg-gravar-proposta', 'Bmg\Bmg::bmg_gravar_pro
 $routes->match(['get', 'post'], '/panorama-gravar-proposta', 'Bmg\Bmg::panorama_gravar_proposta');
 $routes->match(['get', 'post'], '/panorama-gravar-proposta-saque', 'Bmg\Bmg::panorama_gravar_proposta_saque');
 $routes->match(['get', 'post'], '/mailing', 'Bmg\Mailing::index');
+$routes->match(['get', 'post'], '/mailing/list', 'Bmg\Mailing::list');
+$routes->match(['get', 'post'], '/mailing/download/(:any)', 'Bmg\Mailing::download/$1');
+$routes->match(['get', 'post'], '/mailing/delete/(:any)', 'Bmg\Mailing::delete/$1');
 $routes->match(['get', 'post'], '/extrair-relatorio', 'Bmg\Relatorio::index');
 $routes->match(['get', 'post'], '/envio-relatorio', 'Bmg\Relatorio::envioRelatorio');
+$routes->match(['get', 'post'], '/bmg/mailing/generate', 'Bmg\Mailing::generate');
 
 //INSIGHT
 $routes->match(['get', 'post'], '/insight-listar-notificacoes', 'Insight\Insight::insight_listar_notificacoes');

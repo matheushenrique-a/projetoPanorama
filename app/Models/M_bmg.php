@@ -468,6 +468,19 @@ class M_bmg extends Model
         $dataNascimento = $data['dataNascimento'];
         $observacao = $data['observacaoInicial'];
 
+        //Dados bancarios
+        $banco = $data['banco'];
+        $agencia = $data['agencia'];
+        $conta = $data['conta'];
+
+        //Endereço
+        $cep = $data['cep'];
+        $rua = $data['rua'];
+        $numero = $data['numero'];
+        $bairro = $data['bairro'];
+        $cidade = $data['cidade'];
+        $estado = $data['estado'];
+
         $produtoId = $data['produtoId'];
 
         $tipoDesconto = $data['tipoDesconto'] ?? "";
@@ -535,7 +548,16 @@ class M_bmg extends Model
             "userId" => $userId,
             "produtoBase" => $produtoBase,
             "observacaoInicial" => $observacao,
-            "tipoDesconto" => $tipoDesconto ?? ''
+            "tipoDesconto" => $tipoDesconto ?? '',
+            "banco" => $banco,
+            "agencia" => $agencia,
+            "conta" => $conta,
+            "cep" => $cep,
+            "rua" => $rua,
+            "numeroEnd" => $numero,
+            "bairro" => $bairro,
+            "cidade" => $cidade,
+            "estado" => $estado,
         ]);
 
         $client = \Config\Services::curlrequest();
@@ -659,7 +681,7 @@ class M_bmg extends Model
         FROM quid_propostas
         WHERE assessor = '{$nickname}'
         AND DATE(data_criacao) >= CURDATE() - INTERVAL 15 DAY
-        AND status IN ('Aprovada', 'Análise')
+        AND status IN ('Aprovada')
         GROUP BY DATE(data_criacao)
         ORDER BY data
         ";
@@ -815,7 +837,7 @@ class M_bmg extends Model
             COALESCE(SUM(valor), 0) AS total_mensal
         FROM quid_propostas
         WHERE report_to = {$equipe}
-        AND status IN ('Aprovada', 'Análise')
+        AND status IN ('Aprovada')
           AND MONTH(data_criacao) = MONTH(CURRENT_DATE())
           AND YEAR(data_criacao) = YEAR(CURRENT_DATE())
         ";
@@ -835,7 +857,7 @@ class M_bmg extends Model
             COALESCE(SUM(valor), 0) AS total_mensal
         FROM quid_propostas
         WHERE report_to IN (164815,165005,165004,165006)
-          AND status IN ('Aprovada', 'Análise')
+          AND status IN ('Aprovada')
           AND MONTH(data_criacao) = MONTH(CURRENT_DATE())
           AND YEAR(data_criacao) = YEAR(CURRENT_DATE())
         GROUP BY report_to
@@ -877,5 +899,269 @@ class M_bmg extends Model
         $sql .= " order by data_criacao DESC LIMIT $limit;";
 
         return $this->dbMasterDefault->runQuery($sql);
+    }
+
+    // public function gerarMailingSeguro($dados)
+    // {
+    //     $fixParams = [
+    //         'login'        => BMG_SEGURO_LOGIN,
+    //         'senha'        => BMG_SEGURO_SENHA,
+    //         'codigoSeguro' => 54,
+    //     ];
+
+    //     $operations = [];
+
+    //     function toUtf8($str)
+    //     {
+    //         if (!is_string($str)) return $str;
+    //         $encoding = mb_detect_encoding($str, ['UTF-8', 'ISO-8859-1', 'WINDOWS-1252'], true);
+    //         if ($encoding !== 'UTF-8') {
+    //             return mb_convert_encoding($str, 'UTF-8', $encoding);
+    //         }
+    //         return $str;
+    //     }
+
+
+
+    //     foreach ($dados['cpfs'] as $dado) {
+    //         $cpf = str_pad(preg_replace('/\D/', '', $dado), 11, '0', STR_PAD_LEFT);
+
+    //         $search = [
+    //             'cpf' => $cpf
+    //         ];
+
+    //         $params = array_merge($fixParams, $search);
+
+    //         $mensagem = '';
+
+    //         try {
+    //             $client = new \SoapClient(BMG_WSDL, ['trace' => 1, 'exceptions' => true]);
+
+    //             $response = $client->__soapCall('obterCartoesDisponiveis', [$params]);
+
+    //             if (isset($response->cartaoClienteAtivoVendaSeguro[0]->numeroInternoConta)) {
+    //                 $newParams = [
+    //                     'numeroInternoConta' => $response->cartaoClienteAtivoVendaSeguro[0]->numeroInternoConta,
+    //                     'entidade' => $dados['entidade'],
+    //                     'codigoProdutoSeguro' => 54,
+    //                     'renda' => 2500.00
+    //                 ];
+    //             }
+
+    //             $legivel = true;
+
+    //             if (isset($response->cartaoClienteAtivoVendaSeguro) && is_array($response->cartaoClienteAtivoVendaSeguro)) {
+    //                 foreach ($response->cartaoClienteAtivoVendaSeguro as $cartao) {
+    //                     if ($cartao->ehElegivel === false) {
+    //                         $legivel = false;
+    //                         $mensagem = $cartao->motivoElegibilidade;
+    //                     }
+    //                 }
+    //             }
+
+    //             if ($response->mensagemDeErro !== "") {
+    //                 $mensagem = $response->mensagemDeErro;
+    //             }
+
+    //             if ($response->mensagemDeErro !== "" || $legivel == false) {
+    //                 $encoding = mb_detect_encoding($mensagem, ['UTF-8', 'ISO-8859-1', 'WINDOWS-1252'], true);
+
+    //                 if ($encoding !== 'UTF-8') {
+    //                     $mensagemCorrigida = mb_convert_encoding($mensagem, 'UTF-8', $encoding);
+    //                 } else {
+    //                     $mensagemCorrigida = $mensagem;
+    //                 }
+
+    //                 $operations[] = [
+    //                     'cpf' => toUtf8($dado),
+    //                     'plano' => '',
+    //                     'valorPremio' => '',
+    //                     'tipoPagamento' => '',
+    //                     'mensagem' => toUtf8($mensagemCorrigida)
+    //                 ];
+    //             } else {
+    //                 $clientListaPlanos = new \SoapClient(BMG_WSDL, ['trace' => 1, 'exceptions' => true]);
+
+    //                 $paramsPlanos = array_merge($fixParams, $newParams);
+
+    //                 $responsePlanos = $clientListaPlanos->__soapCall('listaPlanosRating', [$paramsPlanos]);
+
+    //                 $planos = $responsePlanos->planos;
+
+    //                 if (empty($planos)) {
+    //                     $mensagem = $responsePlanos->mensagemDeErro ?? "";
+    //                 } else {
+    //                     $mensagem = "Possui planos disponíveis.";
+    //                 }
+
+    //                 $parcelados = array_filter($planos, fn($p) => strtolower($p->tipoPagamento) === 'parcelado');
+
+    //                 $base = !empty($parcelados) ? $parcelados : $planos;
+
+    //                 $maiorPlano = array_reduce($base, function ($carry, $item) {
+    //                     if ($carry === null) return $item;
+    //                     return $item->valorPremio > $carry->valorPremio ? $item : $carry;
+    //                 });
+
+    //                 $operations[] = [
+    //                     'cpf' => $dado,
+    //                     'plano' => toUtf8($maiorPlano->nomePlano ?? ''),
+    //                     'valorPremio' => $maiorPlano->valorPremio ?? '',
+    //                     'tipoPagamento' => toUtf8($maiorPlano->tipoPagamento ?? ''),
+    //                     'mensagem' => toUtf8($mensagem)
+    //                 ];
+    //             }
+    //         } catch (SoapFault $fault) {
+    //             echo "Erro: {$fault->faultcode} - {$fault->faultstring}";
+    //         }
+    //     }
+
+    //     $filename = 'resultado_' . date('Ymd_His') . '.csv';
+
+    //     header('Content-Type: text/csv; charset=UTF-8');
+    //     header("Content-Disposition: attachment; filename={$filename}");
+
+    //     $output = fopen('php://output', 'w');
+    //     fwrite($output, "\xEF\xBB\xBF");
+    //     fputcsv($output, ['CPF', 'Plano', 'Valor Prêmio', 'Tipo Pagamento', 'Mensagem'], ';');
+
+    //     foreach ($operations as $op) {
+    //         fputcsv($output, [
+    //             $op['cpf'] ?? '',
+    //             $op['plano'] ?? '',
+    //             $op['valorPremio'] ?? '',
+    //             $op['tipoPagamento'] ?? '',
+    //             $op['mensagem'] ?? ''
+    //         ], ';');
+    //     }
+
+    //     fclose($output);
+    //     exit;
+    // }
+
+    public function gerarMailingSeguro(array $dados, ?string $jobId = null, ?callable $onProgress = null)
+
+    {
+        $fixParams = [
+            'login'        => BMG_SEGURO_LOGIN,
+            'senha'        => BMG_SEGURO_SENHA,
+            'codigoSeguro' => 54,
+        ];
+
+        $operations = [];
+        $toUtf8 = function ($str) {
+            if (!is_string($str)) return $str;
+            $encoding = mb_detect_encoding($str, ['UTF-8', 'ISO-8859-1', 'WINDOWS-1252'], true);
+            if ($encoding !== 'UTF-8') {
+                return mb_convert_encoding($str, 'UTF-8', $encoding);
+            }
+            return $str;
+        };
+
+        $total = count($dados['cpfs']);
+
+        foreach ($dados['cpfs'] as $index => $dado) {
+            $cpf = str_pad(preg_replace('/\D/', '', $dado), 11, '0', STR_PAD_LEFT);
+            $params = array_merge($fixParams, ['cpf' => $cpf]);
+            $mensagem = '';
+
+            try {
+                $client = new \SoapClient(BMG_WSDL, ['trace' => 1, 'exceptions' => true]);
+                $response = $client->__soapCall('obterCartoesDisponiveis', [$params]);
+
+                if (isset($response->cartaoClienteAtivoVendaSeguro[0]->numeroInternoConta)) {
+                    $newParams = [
+                        'numeroInternoConta' => $response->cartaoClienteAtivoVendaSeguro[0]->numeroInternoConta,
+                        'entidade' => $dados['entidade'],
+                        'codigoProdutoSeguro' => 54,
+                        'renda' => 2500.00
+                    ];
+                }
+
+                $legivel = true;
+                if (isset($response->cartaoClienteAtivoVendaSeguro) && is_array($response->cartaoClienteAtivoVendaSeguro)) {
+                    foreach ($response->cartaoClienteAtivoVendaSeguro as $cartao) {
+                        if ($cartao->ehElegivel === false) {
+                            $legivel = false;
+                            $mensagem = $cartao->motivoElegibilidade;
+                        }
+                    }
+                }
+
+                if (!empty($response->mensagemDeErro)) {
+                    $mensagem = $response->mensagemDeErro;
+                }
+
+                if (!empty($mensagem) || $legivel === false) {
+                    $operations[] = [
+                        'cpf' => $toUtf8($dado),
+                        'plano' => '',
+                        'valorPremio' => '',
+                        'tipoPagamento' => '',
+                        'mensagem' => $toUtf8($mensagem)
+                    ];
+                } else {
+                    $clientPlanos = new \SoapClient(BMG_WSDL, ['trace' => 1, 'exceptions' => true]);
+                    $paramsPlanos = array_merge($fixParams, $newParams);
+                    $responsePlanos = $clientPlanos->__soapCall('listaPlanosRating', [$paramsPlanos]);
+
+                    $planos = $responsePlanos->planos ?? [];
+                    $mensagem = empty($planos) ? ($responsePlanos->mensagemDeErro ?? '') : 'Possui planos disponíveis';
+
+                    $parcelados = array_filter($planos, fn($p) => strtolower($p->tipoPagamento) === 'parcelado');
+                    $base = !empty($parcelados) ? $parcelados : $planos;
+
+                    $maiorPlano = array_reduce($base, function ($carry, $item) {
+                        if ($carry === null) return $item;
+                        return $item->valorPremio > $carry->valorPremio ? $item : $carry;
+                    });
+
+                    $operations[] = [
+                        'cpf' => $toUtf8($dado),
+                        'plano' => $toUtf8($maiorPlano->nomePlano ?? ''),
+                        'valorPremio' => $maiorPlano->valorPremio ?? '',
+                        'tipoPagamento' => $toUtf8($maiorPlano->tipoPagamento ?? ''),
+                        'mensagem' => $toUtf8($mensagem)
+                    ];
+                }
+            } catch (\SoapFault $fault) {
+                $operations[] = [
+                    'cpf' => $toUtf8($dado),
+                    'plano' => '',
+                    'valorPremio' => '',
+                    'tipoPagamento' => '',
+                    'mensagem' => "Erro SOAP: {$fault->faultstring}"
+                ];
+            }
+
+            // Callback de progresso
+            if ($onProgress) {
+                $onProgress($index + 1, $total);
+            }
+        }
+
+        $resultsDir = WRITEPATH . 'jobs/resultados/';
+        if (!is_dir($resultsDir)) mkdir($resultsDir, 0777, true);
+
+        $filename = ($jobId ? $jobId . '_' : '') . 'resultado_' . date('Ymd_His') . '.csv';
+        $filePath = $resultsDir . $filename;
+
+        $output = fopen($filePath, 'w');
+        fwrite($output, "\xEF\xBB\xBF");
+        fputcsv($output, ['CPF', 'Plano', 'Valor Prêmio', 'Tipo Pagamento', 'Mensagem'], ';');
+
+        foreach ($operations as $op) {
+            fputcsv($output, [
+                $op['cpf'] ?? '',
+                $op['plano'] ?? '',
+                $op['valorPremio'] ?? '',
+                $op['tipoPagamento'] ?? '',
+                $op['mensagem'] ?? ''
+            ], ';');
+        }
+
+        fclose($output);
+
+        return $filePath;
     }
 }
