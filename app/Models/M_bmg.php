@@ -179,7 +179,7 @@ class M_bmg extends Model
                     // 'loginConsig' => BMG_SEGURO_LOGIN_CONSIG,
                     // 'senhaConsig' => BMG_SEGURO_SENHA_CONSIG,
                     // 'codigoSeguro' => $produto,
-                    'codigoEntidade' => "1581",
+                    'codigoEntidade' => 1581,
                     'cpf'          => $cpf,
                 ]
             ];
