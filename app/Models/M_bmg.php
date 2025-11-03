@@ -166,7 +166,7 @@ class M_bmg extends Model
         $returnData["cartoes"] = [];
 
         try {
-            $client = new \SoapClient(BMG_WSDL, [
+            $client = new \SoapClient(BMG_SAQUE_WSDL, [
                 'trace'      => 1,
                 'exceptions' => true,
                 'soap_version' => SOAP_1_1,
@@ -183,7 +183,7 @@ class M_bmg extends Model
                 ]
             ];
 
-            $response = $client->__soapCall('obterCartoesDisponiveis', [$params]);
+            $response = $client->__soapCall('buscarCartoesDisponiveis', [$params]);
 
             // return $response;
 
