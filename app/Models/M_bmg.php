@@ -902,6 +902,16 @@ class M_bmg extends Model
         return $this->dbMasterDefault->runQuery($sql);
     }
 
+    private function toUtf8($str)
+    {
+        if (!is_string($str)) return $str;
+        $encoding = mb_detect_encoding($str, ['UTF-8', 'ISO-8859-1', 'WINDOWS-1252'], true);
+        if ($encoding !== 'UTF-8') {
+            return mb_convert_encoding($str, 'UTF-8', $encoding);
+        }
+        return $str;
+    }
+
     public function gerarMailingSeguro(array $dados, ?string $jobId = null, ?callable $onProgress = null)
     {
         $fixParams = [
@@ -911,14 +921,6 @@ class M_bmg extends Model
         ];
 
         $operations = [];
-        $toUtf8 = function ($str) {
-            if (!is_string($str)) return $str;
-            $encoding = mb_detect_encoding($str, ['UTF-8', 'ISO-8859-1', 'WINDOWS-1252'], true);
-            if ($encoding !== 'UTF-8') {
-                return mb_convert_encoding($str, 'UTF-8', $encoding);
-            }
-            return $str;
-        };
 
         $total = count($dados['cpfs']);
 
@@ -956,11 +958,11 @@ class M_bmg extends Model
 
                 if (!empty($mensagem) || $legivel === false) {
                     $operations[] = [
-                        'cpf' => $toUtf8($dado),
+                        'cpf' => $this->toUtf8($dado),
                         'plano' => '',
                         'valorPremio' => '',
                         'tipoPagamento' => '',
-                        'mensagem' => $toUtf8($mensagem)
+                        'mensagem' => $this->toUtf8($mensagem)
                     ];
                 } else {
                     $clientPlanos = new \SoapClient(BMG_WSDL, ['trace' => 1, 'exceptions' => true]);
@@ -979,16 +981,16 @@ class M_bmg extends Model
                     });
 
                     $operations[] = [
-                        'cpf' => $toUtf8($dado),
-                        'plano' => $toUtf8($maiorPlano->nomePlano ?? ''),
+                        'cpf' => $this->toUtf8($dado),
+                        'plano' => $this->toUtf8($maiorPlano->nomePlano ?? ''),
                         'valorPremio' => $maiorPlano->valorPremio ?? '',
-                        'tipoPagamento' => $toUtf8($maiorPlano->tipoPagamento ?? ''),
-                        'mensagem' => $toUtf8($mensagem)
+                        'tipoPagamento' => $this->toUtf8($maiorPlano->tipoPagamento ?? ''),
+                        'mensagem' => $this->toUtf8($mensagem)
                     ];
                 }
             } catch (\SoapFault $fault) {
                 $operations[] = [
-                    'cpf' => $toUtf8($dado),
+                    'cpf' => $this->toUtf8($dado),
                     'plano' => '',
                     'valorPremio' => '',
                     'tipoPagamento' => '',
@@ -1027,8 +1029,16 @@ class M_bmg extends Model
         return $filePath;
     }
 
+    // public function gerarMailingSaque(array $dados, ?string $jobId = null, ?callable $onProgress = null)
     public function gerarMailingSaque($cpf)
     {
+        // $operations = [];
+
+        // $total = count($dados['cpfs']);
+
+        // foreach ($dados['cpfs'] as $index => $dado) {
+        // $cpf = str_pad(preg_replace('/\D/', '', $dado), 11, '0', STR_PAD_LEFT);
+
         try {
             $client = new \SoapClient(BMG_SAQUE_WSDL, [
                 'trace'      => 1,
@@ -1054,17 +1064,50 @@ class M_bmg extends Model
 
             $paramsPlanos = array_merge($params, $newParams);
 
-            $params2 = [
-                'param' => $paramsPlanos
-            ];
+            // $params2 = [
+            //     'param' => $paramsPlanos
+            // ];
 
             // return var_dump($params2);
 
-            $responsePlanos = $client->__soapCall('buscarLimiteSaque', [$params2]);
+            $responsePlanos = $client->__soapCall('buscarLimiteSaque', [$paramsPlanos]);
 
-            return $responsePlanos;
+            return print_r($responsePlanos);
         } catch (SoapFault $fault) {
             $returnData["mensagem"] = "Erro: {$fault->faultcode} - {$fault->faultstring}";
         }
+
+        // if ($onProgress) {
+        //     $onProgress($index + 1, $total);
+        // }
+        // }
+
+        // Processar dados e gerar CSV similar ao método gerarMailingSeguro
+
+        // $resultsDir = WRITEPATH . 'jobs/resultados/';
+        // if (!is_dir($resultsDir)) mkdir($resultsDir, 0777, true);
+
+        // $filename = ($jobId ? $jobId . '_' : '') . 'resultado_' . date('Ymd_His') . '.csv';
+        // $filePath = $resultsDir . $filename;
+
+        // $output = fopen($filePath, 'w');
+        // fwrite($output, "\xEF\xBB\xBF");
+        // fputcsv($output, ['CPF', 'Plano', 'Valor Prêmio', 'Tipo Pagamento', 'Mensagem'], ';');
+
+        // ////////////// estabelecer formato dos dados no CSV
+
+        // // foreach ($operations as $op) {
+        // //     fputcsv($output, [
+        // //         $op['cpf'] ?? '',
+        // //         $op['plano'] ?? '',
+        // //         $op['valorPremio'] ?? '',
+        // //         $op['tipoPagamento'] ?? '',
+        // //         $op['mensagem'] ?? ''
+        // //     ], ';');
+        // // }
+
+        // fclose($output);
+
+        // return $filePath;
     }
 }

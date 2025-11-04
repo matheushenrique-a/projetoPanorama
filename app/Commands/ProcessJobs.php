@@ -67,11 +67,19 @@ class ProcessJobs extends BaseCommand
             'cpfs' => $jobData['cpfs'],
         ];
 
-        $resultadoCSV = $model->gerarMailingSeguro($dados, $jobId, function ($concluidos, $total) use (&$jobData, $newJobFile) {
-            $jobData['concluidos'] = $concluidos;
-            $jobData['progresso'] = round(($concluidos / $total) * 100, 2);
-            file_put_contents($newJobFile, json_encode($jobData, JSON_PRETTY_PRINT));
-        });
+        if ($jobData['produto'] === 'seguro') {
+            $resultadoCSV = $model->gerarMailingSeguro($dados, $jobId, function ($concluidos, $total) use (&$jobData, $newJobFile) {
+                $jobData['concluidos'] = $concluidos;
+                $jobData['progresso'] = round(($concluidos / $total) * 100, 2);
+                file_put_contents($newJobFile, json_encode($jobData, JSON_PRETTY_PRINT));
+            });
+        } else {
+            $resultadoCSV = $model->gerarMailingSaque($dados, $jobId, function ($concluidos, $total) use (&$jobData, $newJobFile) {
+                $jobData['concluidos'] = $concluidos;
+                $jobData['progresso'] = round(($concluidos / $total) * 100, 2);
+                file_put_contents($newJobFile, json_encode($jobData, JSON_PRETTY_PRINT));
+            });
+        }
 
         // Finaliza job
         $jobData['status'] = 'concluido';
