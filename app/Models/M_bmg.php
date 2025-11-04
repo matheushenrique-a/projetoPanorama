@@ -1070,9 +1070,9 @@ class M_bmg extends Model
 
             // return var_dump($params2);
 
-            $responsePlanos = $client->__soapCall('buscarLimiteSaque', [$paramsPlanos]);
+            // $responsePlanos = $client->__soapCall('buscarLimiteSaque', [$paramsPlanos]);
 
-            return print_r($responsePlanos);
+            return $paramsPlanos;
         } catch (SoapFault $fault) {
             $returnData["mensagem"] = "Erro: {$fault->faultcode} - {$fault->faultstring}";
         }
