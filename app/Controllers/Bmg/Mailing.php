@@ -163,6 +163,6 @@ class Mailing extends BaseController
 
         $result = $this->m_bmg->gerarMailingSaque($cpf);
 
-        return $result;
+        return var_dump($result);
     }
 }
