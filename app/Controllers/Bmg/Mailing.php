@@ -157,4 +157,12 @@ class Mailing extends BaseController
 
         return redirect()->to('/mailing/list');
     }
+
+    public function gerarSaque($cpf){
+        $this->m_bmg = new M_bmg();
+
+        $result = $this->m_bmg->gerarMailingSaque($cpf);
+
+        return $result;
+    }
 }

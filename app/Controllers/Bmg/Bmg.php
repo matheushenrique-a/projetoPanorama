@@ -936,20 +936,20 @@ class Bmg extends BaseController
             $matricula = $returnData->cartoes[0]->cartao->matricula;
             $contaInterna = $returnData->cartoes[0]->cartao->numeroContaInterna;
 
-            $data['valorSaque'] = $valorMaximo;
-            $data['codigoEntidade'] = $entidade;
+            // $data['valorSaque'] = $valorMaximo;
+            // $data['codigoEntidade'] = $entidade;
 
-            $obtemValorParcela = $this->m_bmg->obterValorParcela($data);
+            // $obtemValorParcela = $this->m_bmg->obterValorParcela($data);
 
-            $dataSeguro = [
-                'login' => BMG_SEGURO_LOGIN,
-                'senha' => BMG_SEGURO_SENHA,
-                'cpf' => $params['cpf'],
-                'renda' => $valorMaximo,
-                'codigoProdutoSeguro' => 54,
-                'entidade' => $entidade,
-                'numeroInternoConta' => $contaInterna
-            ];
+            // $dataSeguro = [
+            //     'login' => BMG_SEGURO_LOGIN,
+            //     'senha' => BMG_SEGURO_SENHA,
+            //     'cpf' => $params['cpf'],
+            //     'renda' => $valorMaximo,
+            //     'codigoProdutoSeguro' => 54,
+            //     'entidade' => $entidade,
+            //     'numeroInternoConta' => $contaInterna
+            // ];
 
             $obtemInfoSeguro = $this->m_bmg->obterCartoesDisponiveis($params['cpf'], 54);
 
