@@ -1039,6 +1039,8 @@ class M_bmg extends Model
         // foreach ($dados['cpfs'] as $index => $dado) {
         // $cpf = str_pad(preg_replace('/\D/', '', $dado), 11, '0', STR_PAD_LEFT);
 
+        $error = null;
+
         try {
             $client = new \SoapClient(BMG_SAQUE_WSDL, [
                 'trace'      => 1,
@@ -1074,8 +1076,10 @@ class M_bmg extends Model
 
             return $paramsPlanos;
         } catch (SoapFault $fault) {
-            $returnData["mensagem"] = "Erro: {$fault->faultcode} - {$fault->faultstring}";
+            $error = "Erro: {$fault->faultcode} - {$fault->faultstring}";
         }
+
+        return $error;
 
         // if ($onProgress) {
         //     $onProgress($index + 1, $total);
