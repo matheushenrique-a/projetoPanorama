@@ -24,7 +24,7 @@ class App extends BaseConfig
      *
      * @var string
      */
-    public $baseURL = 'https://grupoquid.com.br/';
+    public $baseURL = 'http://localhost/Insight/public';
 
 
     /**
@@ -197,10 +197,10 @@ class App extends BaseConfig
      */
 
     // Produção:
-    public $sessionSavePath = WRITEPATH . 'session';
+    // public $sessionSavePath = WRITEPATH . 'session';
 
     //Localhost:
-    // public $sessionSavePath = 'C:\xampp\tmp';
+    public $sessionSavePath = 'C:\xampp\tmp';
 
     /**
      * --------------------------------------------------------------------------

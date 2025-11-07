@@ -6,7 +6,7 @@
 					<h1 class="page-heading d-flex text-dark fw-bold fs-3 flex-column justify-content-center my-0">QUID - Listar propostas</h1>
 					<ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0 pt-1">
 						<li class="breadcrumb-item text-muted">
-							<a href="<?php echo assetfolder ?>" class="text-muted text-hover-primary">Home</a>
+							<a href="<?php echo assetfolder ?>" class="text-muted text-hover-primary">Homes</a>
 						</li>
 						<li class="breadcrumb-item">
 							<span class="bullet bg-gray-800 w-5px h-2px"></span>
@@ -313,9 +313,8 @@
 											default         => "secondary"
 										};
 									?>
-										<tr class="position-relative clickable-row">
+										<tr class="position-relative clickable-row" data-href="<?= assetfolder ?>proposta/<?= $row->idquid_propostas ?>">
 											<td class="align-middle text-center">
-												<a href="<?= assetfolder ?>proposta/<?= $row->idquid_propostas ?>" class="stretched-link"></a>
 												<span class="badge badge-light-<?= $status ?> fs-6"><?= $row->status ?></span>
 												<p class="text-<?= $status ?> fw-bold fst-italic fs-7 pt-2">
 													<?php if ($row->status == "Cancelada"): ?>
@@ -344,7 +343,7 @@
 												<td class="align-middle">
 													<a target="_blank"
 														href="https://grupoquid.panoramaemprestimos.com.br/emprestimoInterno.do?action=exibir&codigo=<?= $row->panorama_id ?>"
-														class="btn btn-sm btn-icon btn-bg-light btn-active-color-primary w-25px h-25px">
+														class="position-relative btn-primary z-3 btn btn-sm btn-icon btn-bg-light btn-active-color-primary w-25px h-25px">
 														<span class="svg-icon svg-icon-5 svg-icon-gray-700">
 															<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
 																<path d="M14.4 11H3C2.4 11 2 11.4 2 12C2 12.6 2.4 13 3 13H14.4V11Z" fill="currentColor" />
@@ -378,20 +377,36 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-	document.addEventListener('DOMContentLoaded', function() {
-		function formatarTelefone(valor) {
-			valor = valor.replace(/\D/g, '');
-			if (valor.length === 0) return '';
-			if (valor.length < 3) return `(${valor}`;
-			if (valor.length < 7) return `(${valor.slice(0, 2)}) ${valor.slice(2)}`;
-			if (valor.length < 11) return `(${valor.slice(0, 2)}) ${valor.slice(2, 6)}-${valor.slice(6)}`;
-			return `(${valor.slice(0, 2)}) ${valor.slice(2, 7)}-${valor.slice(7, 11)}`;
-		}
-	});
+function formatarTelefone(valor) {
+  valor = valor.replace(/\D/g, '');
+  if (valor.length === 0) return '';
+  if (valor.length < 3) return `(${valor}`;
+  if (valor.length < 7) return `(${valor.slice(0, 2)}) ${valor.slice(2)}`;
+  if (valor.length < 11) return `(${valor.slice(0, 2)}) ${valor.slice(2, 6)}-${valor.slice(6)}`;
+  return `(${valor.slice(0, 2)}) ${valor.slice(2, 7)}-${valor.slice(7, 11)}`;
+}
 
-	function aplicarFiltro(dateDe, dateAte) {
-		document.querySelector('[name="dateDe"]').value = dateDe;
-		document.querySelector('[name="dateAte"]').value = dateAte;
-		document.querySelector('#formFiltros').submit();
-	}
+function aplicarFiltro(dateDe, dateAte) {
+  document.querySelector('[name="dateDe"]').value = dateDe;
+  document.querySelector('[name="dateAte"]').value = dateAte;
+  document.querySelector('#formFiltros').submit();
+}
+
+// função de clique nas linhas
+function inicializarClickLinhas() {
+  document.querySelectorAll(".clickable-row").forEach(row => {
+    row.addEventListener("click", function(e) {
+      if (e.target.closest("a, button")) return; // ignora cliques em botões/links
+      const destino = this.dataset.href;
+      if (destino) window.location.href = destino; // redireciona
+    });
+  });
+}
+
+// chama a função de forma garantida
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", inicializarClickLinhas);
+} else {
+  inicializarClickLinhas();
+}
 </script>
