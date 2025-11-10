@@ -243,7 +243,7 @@
 						</div>
 
 
-						<div class="table-responsive">
+						<!-- <div class="table-responsive">
 							<table class="table align-middle table-bordered table-flush table-row-bordered fs-6 gy-4" id="kt_widget_table_3" data-kt-table-widget-3="all">
 								<thead class="shadow bg-body-tertiary rounded">
 									<tr class="text-gray-800 fw-bold fs-6 gs-0">
@@ -343,7 +343,7 @@
 												<td class="align-middle">
 													<a target="_blank"
 														href="https://grupoquid.panoramaemprestimos.com.br/emprestimoInterno.do?action=exibir&codigo=<?= $row->panorama_id ?>"
-														class="position-relative btn-primary z-3 btn btn-sm btn-icon btn-bg-light btn-active-color-primary w-25px h-25px">
+														class="position-relative btn btn-sm btn-icon btn-bg-light btn-active-color-primary w-25px h-25px">
 														<span class="svg-icon svg-icon-5 svg-icon-gray-700">
 															<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
 																<path d="M14.4 11H3C2.4 11 2 11.4 2 12C2 12.6 2.4 13 3 13H14.4V11Z" fill="currentColor" />
@@ -356,8 +356,10 @@
 										</tr>
 									<?php endforeach; ?>
 								</tbody>
-							</table>
-						</div>
+							</table> 
+						</div> -->
+
+						<div id="kt_docs_jkanban_basic"></div>
 					</div>
 			</form>
 		</div>
