@@ -243,7 +243,7 @@
 						</div>
 
 
-						<!-- <div class="table-responsive">
+						<div class="table-responsive">
 							<table class="table align-middle table-bordered table-flush table-row-bordered fs-6 gy-4" id="kt_widget_table_3" data-kt-table-widget-3="all">
 								<thead class="shadow bg-body-tertiary rounded">
 									<tr class="text-gray-800 fw-bold fs-6 gs-0">
@@ -357,9 +357,239 @@
 									<?php endforeach; ?>
 								</tbody>
 							</table> 
-						</div> -->
+						</div>
+						<style>
+							.marginTop {
+								margin-top: 1.1rem;
+							}
+							.height-personalize {
+								max-height: 500px;
+								overflow-Y: auto;
+							}
 
-						<div id="kt_docs_jkanban_basic"></div>
+						</style>
+						<div class="d-flex gap-5">
+							<div class="card shadow-sm w-100">
+    							<div class="card-header">
+        							<h3 class="badge badge-light-warning fs-6 text-warning">Pendente</h3>
+    							</div>
+    							<div class="height-personalize card-body d-flex flex-column p-2">
+        							<div class="bg-secondary border border-dark-subtle mb-8 rounded p-2">
+										<div class="d-flex flex-column flex-wrap w-100">
+											<div class="d-flex justify-content-between gap-1 w-100">
+												<p class="align-middle text-center"><?= date('d/m/Y', strtotime($row->data_criacao)); ?> - 
+													<span class="fs-7">
+														<?= $row->adesao; ?>
+													</span>
+												</p>
+											</div>
+											<div class="text-center text-gray-800 fw-bold">
+													<p class="align-middle text-center fs-5 badge badge-light-warning text-warning">
+														<?= $row->produto ?>
+													</p>
+											</div>
+										</div>
+										<div class="marginTop d-flex flex-wrap w-100">
+												<div class="align-middle">
+													<span class="fs-7"><?= $row->nome; ?></span>
+													<p class="text-gray-500 fw-bold fs-8"><?= $row->assessor ?></p>
+												</div>
+										</div>
+										<div class="text-start w-100">													
+											<span class="text-success fw-bold">
+												<?= $row->valor == '' ? '-' : 'R$ ' . number_format((float)$row->valor, 2, ',', '.') ?>
+											</span>
+										</div>
+									</div>
+									<div class="bg-secondary border border-dark-subtle mb-8 rounded p-2">
+										<div class="d-flex flex-column-fluid flex-wrap w-100">
+											<div class="d-flex justify-content-between w-100 gap-1 w-100">
+												<p class="align-middle text-center"><?= date('d/m/Y', strtotime($row->data_criacao)); ?> - 
+													<span class="fs-7">
+														<?= $row->adesao; ?>
+													</span>
+												</p>
+											</div>
+											<div class="align-middle text-center text-gray-800 fw-bold w-100">
+												<div class="align-middle w-100">
+													<span class="align-middle text-center fs-5 badge badge-light-warning text-warning">
+														<?= $row->produto ?>
+													</span>
+												</div>
+											</div>
+										</div>
+										<div class="marginTop d-flex flex-row-fluid w-100 flex-wrap">
+												<div class="align-middle">
+													<span class="fs-7"><?= $row->nome; ?></span>
+													<p class="text-gray-500 fw-bold fs-8"><?= $row->assessor ?></p>
+												</div>
+										</div>
+										<div class="text-start w-100">													
+											<span class="text-success fw-bold">
+												<?= $row->valor == '' ? '-' : 'R$ ' . number_format((float)$row->valor, 2, ',', '.') ?>
+											</span>
+										</div>
+									</div>
+									<div class="bg-secondary border border-dark-subtle mb-8 rounded p-2">
+										<div class="d-flex flex-column-fluid flex-wrap w-100">
+											<div class="d-flex justify-content-between w-100 gap-1 w-100">
+												<p class="align-middle text-center"><?= date('d/m/Y', strtotime($row->data_criacao)); ?> - 
+													<span class="fs-7">
+														<?= $row->adesao; ?>
+													</span>
+												</p>
+											</div>
+											<div class="align-middle text-center text-gray-800 fw-bold w-100">
+												<div class="align-middle w-100">
+													<span class="align-middle text-center fs-5 badge badge-light-warning text-warning">
+														<?= $row->produto ?>
+													</span>
+												</div>
+											</div>
+										</div>
+										<div class="marginTop d-flex flex-row-fluid w-100 flex-wrap">
+												<div class="align-middle">
+													<span class="fs-7"><?= $row->nome; ?></span>
+													<p class="text-gray-500 fw-bold fs-8"><?= $row->assessor ?></p>
+												</div>
+										</div>
+										<div class="text-start w-100">													
+											<span class="text-success fw-bold">
+												<?= $row->valor == '' ? '-' : 'R$ ' . number_format((float)$row->valor, 2, ',', '.') ?>
+											</span>
+										</div>
+									</div>
+									<div class="bg-secondary border border-dark-subtle mb-8 rounded p-2">
+										<div class="d-flex flex-column-fluid flex-wrap w-100">
+											<div class="d-flex justify-content-between w-100 gap-1 w-100">
+												<p class="align-middle text-center"><?= date('d/m/Y', strtotime($row->data_criacao)); ?> - 
+													<span class="fs-7">
+														<?= $row->adesao; ?>
+													</span>
+												</p>
+											</div>
+											<div class="align-middle text-center text-gray-800 fw-bold w-100">
+												<div class="align-middle w-100">
+													<span class="align-middle text-center fs-5 badge badge-light-warning text-warning">
+														<?= $row->produto ?>
+													</span>
+												</div>
+											</div>
+										</div>
+										<div class="marginTop d-flex flex-row-fluid w-100 flex-wrap">
+												<div class="align-middle">
+													<span class="fs-7"><?= $row->nome; ?></span>
+													<p class="text-gray-500 fw-bold fs-8"><?= $row->assessor ?></p>
+												</div>
+										</div>
+										<div class="text-start w-100">													
+											<span class="text-success fw-bold">
+												<?= $row->valor == '' ? '-' : 'R$ ' . number_format((float)$row->valor, 2, ',', '.') ?>
+											</span>
+										</div>
+									</div>
+									<div class="bg-secondary border border-dark-subtle mb-8 rounded p-2">
+										<div class="d-flex flex-column-fluid flex-wrap w-100">
+											<div class="d-flex justify-content-between w-100 gap-1 w-100">
+												<p class="align-middle text-center"><?= date('d/m/Y', strtotime($row->data_criacao)); ?> - 
+													<span class="fs-7">
+														<?= $row->adesao; ?>
+													</span>
+												</p>
+											</div>
+											<div class="align-middle text-center text-gray-800 fw-bold w-100">
+												<div class="align-middle w-100">
+													<span class="align-middle text-center fs-5 badge badge-light-warning text-warning">
+														<?= $row->produto ?>
+													</span>
+												</div>
+											</div>
+										</div>
+										<div class="marginTop d-flex flex-row-fluid w-100 flex-wrap">
+												<div class="align-middle">
+													<span class="fs-7"><?= $row->nome; ?></span>
+													<p class="text-gray-500 fw-bold fs-8"><?= $row->assessor ?></p>
+												</div>
+										</div>
+										<div class="text-start w-100">													
+											<span class="text-success fw-bold">
+												<?= $row->valor == '' ? '-' : 'R$ ' . number_format((float)$row->valor, 2, ',', '.') ?>
+											</span>
+										</div>
+									</div>
+									<div class="bg-secondary border border-dark-subtle mb-8 rounded p-2">
+										<div class="d-flex flex-column-fluid flex-wrap w-100">
+											<div class="d-flex justify-content-between w-100 gap-1 w-100">
+												<p class="align-middle text-center"><?= date('d/m/Y', strtotime($row->data_criacao)); ?> - 
+													<span class="fs-7">
+														<?= $row->adesao; ?>
+													</span>
+												</p>
+											</div>
+											<div class="align-middle text-center text-gray-800 fw-bold w-100">
+												<div class="align-middle w-100">
+													<span class="align-middle text-center fs-5 badge badge-light-warning text-warning">
+														<?= $row->produto ?>
+													</span>
+												</div>
+											</div>
+										</div>
+										<div class="marginTop d-flex flex-row-fluid w-100 flex-wrap">
+												<div class="align-middle">
+													<span class="fs-7"><?= $row->nome; ?></span>
+													<p class="text-gray-500 fw-bold fs-8"><?= $row->assessor ?></p>
+												</div>
+										</div>
+										<div class="text-start w-100">													
+											<span class="text-success fw-bold">
+												<?= $row->valor == '' ? '-' : 'R$ ' . number_format((float)$row->valor, 2, ',', '.') ?>
+											</span>
+										</div>
+									</div>
+   							 	</div>
+							</div>
+							<div class="card shadow-sm w-100">
+    							<div class="card-header">
+        							<h3 class="badge badge-light-danger fs-6 text-danger">Cancelada</h3>
+    							</div>
+    							<div class="card-body">
+        							Lorem Ipsum is simply dummy text...
+   							 	</div>
+							</div>
+							<div class="card shadow-sm w-100">
+    							<div class="card-header">
+        							<h3 class="badge badge-light-info fs-6 text-info">Análise</h3>
+    							</div>
+    							<div class="card-body">
+        							Lorem Ipsum is simply dummy text...
+   							 	</div>
+							</div>
+							<div class="card shadow-sm w-100">
+    							<div class="card-header">
+        							<h3 class="badge badge-light-warning fs-6 text-warning">Corrigir Erro</h3>
+    							</div>
+    							<div class="card-body">
+        							Lorem Ipsum is simply dummy text...
+   							 	</div>
+							</div>
+							<div class="card shadow-sm w-100">
+    							<div class="card-header">
+        							<h3 class="badge badge-light-success fs-6 text-success">Aprovada</h3>
+    							</div>
+    							<div class="card-body">
+        							Lorem Ipsum is simply dummy text...
+   							 	</div>
+							</div>
+							<div class="card shadow-sm w-100">
+    							<div class="card-header">
+        							<h3 class="badge badge-light-dark fs-6 text-dark">Adesão</h3>
+    							</div>
+    							<div class="card-body">
+        							Lorem Ipsum is simply dummy text...Lorem Ipsum is simply dummy text...Lorem Ipsum is simply dummy text...Lorem Ipsum is simply dummy text...Lorem Ipsum is simply dummy text...Lorem Ipsum is simply dummy text...
+   							 	</div>
+							</div>
+						</div>
+						
 					</div>
 			</form>
 		</div>
