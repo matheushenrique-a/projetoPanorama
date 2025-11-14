@@ -239,6 +239,18 @@
 										</div>
 									</div>
 								<?php endif; ?>
+								<div class="card-title mb-0 mx-3">
+									<div class="mb-0 mx-3">
+										<div class="d-flex align-items-center position-relative my-1 mt-0 mb-0">
+											<button type="button" class="fs-5 mt-2 ms-3 btn btn-outline-secondary">
+												<i class="mb-1 bi bi-table fs-3"></i>Tabela
+											</button> 
+											<button type="button" class="fs-5 mt-2 ms-3 btn btn-outline-secondary">
+												<i class="mb-1 bi bi-kanban fs-3"></i>Card
+											</button> 
+										</div>
+									</div>
+								</div>
 							</div>
 						</div>
 
@@ -298,6 +310,8 @@
 										vertical-align: middle;
 										/* garante alinhamento */
 									}
+
+
 								</style>
 								<tbody class="text-gray-700 fw-semibold ">
 									<?php foreach ($propostas['result']->getResult() as $row):
@@ -362,10 +376,16 @@
 							.marginTop {
 								margin-top: 1.1rem;
 							}
+
+							
 							.height-personalize {
 								max-height: 500px;
 								overflow-Y: auto;
 							}
+
+							.hover:hover {
+								background: #2c2c3fff !important;
+							} 
 
 						</style>
 						<div class="d-flex gap-5">
@@ -374,7 +394,7 @@
         							<h3 class="badge badge-light-warning fs-6 text-warning">Pendente</h3>
     							</div>
     							<div class="height-personalize card-body d-flex flex-column p-2">
-        							<div class="bg-secondary border border-dark-subtle mb-8 rounded p-2">
+        							<div class="bg-secondary border border-dark-subtle mb-8 rounded p-2  position-relative clickable-row hover" data-href="<?= assetfolder ?>proposta/<?= $row->idquid_propostas ?>">
 										<div class="d-flex flex-column flex-wrap w-100">
 											<div class="d-flex justify-content-between gap-1 w-100">
 												<p class="align-middle text-center"><?= date('d/m/Y', strtotime($row->data_criacao)); ?> - 
@@ -390,151 +410,6 @@
 											</div>
 										</div>
 										<div class="marginTop d-flex flex-wrap w-100">
-												<div class="align-middle">
-													<span class="fs-7"><?= $row->nome; ?></span>
-													<p class="text-gray-500 fw-bold fs-8"><?= $row->assessor ?></p>
-												</div>
-										</div>
-										<div class="text-start w-100">													
-											<span class="text-success fw-bold">
-												<?= $row->valor == '' ? '-' : 'R$ ' . number_format((float)$row->valor, 2, ',', '.') ?>
-											</span>
-										</div>
-									</div>
-									<div class="bg-secondary border border-dark-subtle mb-8 rounded p-2">
-										<div class="d-flex flex-column-fluid flex-wrap w-100">
-											<div class="d-flex justify-content-between w-100 gap-1 w-100">
-												<p class="align-middle text-center"><?= date('d/m/Y', strtotime($row->data_criacao)); ?> - 
-													<span class="fs-7">
-														<?= $row->adesao; ?>
-													</span>
-												</p>
-											</div>
-											<div class="align-middle text-center text-gray-800 fw-bold w-100">
-												<div class="align-middle w-100">
-													<span class="align-middle text-center fs-5 badge badge-light-warning text-warning">
-														<?= $row->produto ?>
-													</span>
-												</div>
-											</div>
-										</div>
-										<div class="marginTop d-flex flex-row-fluid w-100 flex-wrap">
-												<div class="align-middle">
-													<span class="fs-7"><?= $row->nome; ?></span>
-													<p class="text-gray-500 fw-bold fs-8"><?= $row->assessor ?></p>
-												</div>
-										</div>
-										<div class="text-start w-100">													
-											<span class="text-success fw-bold">
-												<?= $row->valor == '' ? '-' : 'R$ ' . number_format((float)$row->valor, 2, ',', '.') ?>
-											</span>
-										</div>
-									</div>
-									<div class="bg-secondary border border-dark-subtle mb-8 rounded p-2">
-										<div class="d-flex flex-column-fluid flex-wrap w-100">
-											<div class="d-flex justify-content-between w-100 gap-1 w-100">
-												<p class="align-middle text-center"><?= date('d/m/Y', strtotime($row->data_criacao)); ?> - 
-													<span class="fs-7">
-														<?= $row->adesao; ?>
-													</span>
-												</p>
-											</div>
-											<div class="align-middle text-center text-gray-800 fw-bold w-100">
-												<div class="align-middle w-100">
-													<span class="align-middle text-center fs-5 badge badge-light-warning text-warning">
-														<?= $row->produto ?>
-													</span>
-												</div>
-											</div>
-										</div>
-										<div class="marginTop d-flex flex-row-fluid w-100 flex-wrap">
-												<div class="align-middle">
-													<span class="fs-7"><?= $row->nome; ?></span>
-													<p class="text-gray-500 fw-bold fs-8"><?= $row->assessor ?></p>
-												</div>
-										</div>
-										<div class="text-start w-100">													
-											<span class="text-success fw-bold">
-												<?= $row->valor == '' ? '-' : 'R$ ' . number_format((float)$row->valor, 2, ',', '.') ?>
-											</span>
-										</div>
-									</div>
-									<div class="bg-secondary border border-dark-subtle mb-8 rounded p-2">
-										<div class="d-flex flex-column-fluid flex-wrap w-100">
-											<div class="d-flex justify-content-between w-100 gap-1 w-100">
-												<p class="align-middle text-center"><?= date('d/m/Y', strtotime($row->data_criacao)); ?> - 
-													<span class="fs-7">
-														<?= $row->adesao; ?>
-													</span>
-												</p>
-											</div>
-											<div class="align-middle text-center text-gray-800 fw-bold w-100">
-												<div class="align-middle w-100">
-													<span class="align-middle text-center fs-5 badge badge-light-warning text-warning">
-														<?= $row->produto ?>
-													</span>
-												</div>
-											</div>
-										</div>
-										<div class="marginTop d-flex flex-row-fluid w-100 flex-wrap">
-												<div class="align-middle">
-													<span class="fs-7"><?= $row->nome; ?></span>
-													<p class="text-gray-500 fw-bold fs-8"><?= $row->assessor ?></p>
-												</div>
-										</div>
-										<div class="text-start w-100">													
-											<span class="text-success fw-bold">
-												<?= $row->valor == '' ? '-' : 'R$ ' . number_format((float)$row->valor, 2, ',', '.') ?>
-											</span>
-										</div>
-									</div>
-									<div class="bg-secondary border border-dark-subtle mb-8 rounded p-2">
-										<div class="d-flex flex-column-fluid flex-wrap w-100">
-											<div class="d-flex justify-content-between w-100 gap-1 w-100">
-												<p class="align-middle text-center"><?= date('d/m/Y', strtotime($row->data_criacao)); ?> - 
-													<span class="fs-7">
-														<?= $row->adesao; ?>
-													</span>
-												</p>
-											</div>
-											<div class="align-middle text-center text-gray-800 fw-bold w-100">
-												<div class="align-middle w-100">
-													<span class="align-middle text-center fs-5 badge badge-light-warning text-warning">
-														<?= $row->produto ?>
-													</span>
-												</div>
-											</div>
-										</div>
-										<div class="marginTop d-flex flex-row-fluid w-100 flex-wrap">
-												<div class="align-middle">
-													<span class="fs-7"><?= $row->nome; ?></span>
-													<p class="text-gray-500 fw-bold fs-8"><?= $row->assessor ?></p>
-												</div>
-										</div>
-										<div class="text-start w-100">													
-											<span class="text-success fw-bold">
-												<?= $row->valor == '' ? '-' : 'R$ ' . number_format((float)$row->valor, 2, ',', '.') ?>
-											</span>
-										</div>
-									</div>
-									<div class="bg-secondary border border-dark-subtle mb-8 rounded p-2">
-										<div class="d-flex flex-column-fluid flex-wrap w-100">
-											<div class="d-flex justify-content-between w-100 gap-1 w-100">
-												<p class="align-middle text-center"><?= date('d/m/Y', strtotime($row->data_criacao)); ?> - 
-													<span class="fs-7">
-														<?= $row->adesao; ?>
-													</span>
-												</p>
-											</div>
-											<div class="align-middle text-center text-gray-800 fw-bold w-100">
-												<div class="align-middle w-100">
-													<span class="align-middle text-center fs-5 badge badge-light-warning text-warning">
-														<?= $row->produto ?>
-													</span>
-												</div>
-											</div>
-										</div>
-										<div class="marginTop d-flex flex-row-fluid w-100 flex-wrap">
 												<div class="align-middle">
 													<span class="fs-7"><?= $row->nome; ?></span>
 													<p class="text-gray-500 fw-bold fs-8"><?= $row->assessor ?></p>
