@@ -242,10 +242,10 @@
 								<div class="card-title mb-0 mx-3">
 									<div class="mb-0 mx-3">
 										<div class="d-flex align-items-center position-relative my-1 mt-0 mb-0">
-											<button type="button" class="fs-5 mt-2 ms-3 btn btn-outline-secondary">
+											<button id="btnTabela" type="button" class="fs-5 mt-2 ms-3 btn btn-outline-secondary">
 												<i class="mb-1 bi bi-table fs-3"></i>Tabela
 											</button> 
-											<button type="button" class="fs-5 mt-2 ms-3 btn btn-outline-secondary">
+											<button id="btnCard" type="button" class="fs-5 mt-2 ms-3 btn btn-outline-secondary">
 												<i class="mb-1 bi bi-kanban fs-3"></i>Card
 											</button> 
 										</div>
@@ -255,7 +255,7 @@
 						</div>
 
 
-						<div class="table-responsive">
+						<div id="viewTabela" class="table-responsive">
 							<table class="table align-middle table-bordered table-flush table-row-bordered fs-6 gy-4" id="kt_widget_table_3" data-kt-table-widget-3="all">
 								<thead class="shadow bg-body-tertiary rounded">
 									<tr class="text-gray-800 fw-bold fs-6 gs-0">
@@ -388,13 +388,15 @@
 							} 
 
 						</style>
-						<div class="d-flex gap-5">
+						<div id="viewCard" class="d-flex d-none gap-5">
 							<div class="card shadow-sm w-100">
-    							<div class="card-header">
-        							<h3 class="badge badge-light-warning fs-6 text-warning">Pendente</h3>
+    							<div class="card-header d-flex justify-content-center align-items-center">
+        							<h3 class="badge d-inline-block p-5 badge-light-dark fs-6 text-dark">Adesão</h3>
     							</div>
     							<div class="height-personalize card-body d-flex flex-column p-2">
-        							<div class="bg-secondary border border-dark-subtle mb-8 rounded p-2  position-relative clickable-row hover" data-href="<?= assetfolder ?>proposta/<?= $row->idquid_propostas ?>">
+									<?php foreach ($propostas['result']->getResult() as $row): ?>
+    									<?php if ($row->status != 'Adesão') continue; ?>
+										<div class="bg-secondary border border-dark-subtle mb-8 rounded p-2  position-relative clickable-row hover" data-href="<?= assetfolder ?>proposta/<?= $row->idquid_propostas ?>">
 										<div class="d-flex flex-column flex-wrap w-100">
 											<div class="d-flex justify-content-between gap-1 w-100">
 												<p class="align-middle text-center"><?= date('d/m/Y', strtotime($row->data_criacao)); ?> - 
@@ -404,6 +406,43 @@
 												</p>
 											</div>
 											<div class="text-center text-gray-800 fw-bold">
+													<p style="white-space: normal; word-break: break-word;" class="align-middle text-center fs-5 badge badge-light-dark text-dark">
+														<?= $row->produto ?>
+													</p>
+											</div>
+										</div>
+										<div class="marginTop d-flex flex-wrap w-100">
+												<div class="align-middle">
+													<span class="fs-7"><?= $row->nome; ?></span>
+													<p class="text-gray-500 fw-bold fs-8"><?= $row->assessor ?></p>
+												</div>
+										</div>
+										<div class="text-start w-100">													
+											<span class="text-success fw-bold">
+												<?= $row->valor == '' ? '-' : 'R$ ' . number_format((float)$row->valor, 2, ',', '.') ?>
+											</span>
+										</div>
+									</div>
+									<?php endforeach; ?>
+   							 	</div>
+							</div>
+							<div class="card shadow-sm w-100">
+    							<div class="card-header d-flex justify-content-center align-items-center">
+        							<h3 class="badge d-inline-block p-5 badge-light-warning fs-6 text-warning">Auditoria</h3>
+    							</div>
+    							<div class="height-personalize card-body d-flex flex-column p-2">
+									<?php foreach ($propostas['result']->getResult() as $row): ?>
+    									<?php if ($row->status != 'Auditoria') continue; ?>
+										<div class="bg-secondary border border-dark-subtle mb-8 rounded p-2  position-relative clickable-row hover" data-href="<?= assetfolder ?>proposta/<?= $row->idquid_propostas ?>">
+										<div class="d-flex flex-column flex-wrap w-100">
+											<div class="d-flex justify-content-between gap-1 w-100">
+												<p class="align-middle text-center"><?= date('d/m/Y', strtotime($row->data_criacao)); ?> - 
+													<span class="fs-7">
+														<?= $row->adesao; ?>
+													</span>
+												</p>
+											</div>
+											<div style="white-space: normal; word-break: break-word;" class="text-center text-gray-800 fw-bold">
 													<p class="align-middle text-center fs-5 badge badge-light-warning text-warning">
 														<?= $row->produto ?>
 													</p>
@@ -421,50 +460,158 @@
 											</span>
 										</div>
 									</div>
+									<?php endforeach; ?>
    							 	</div>
 							</div>
 							<div class="card shadow-sm w-100">
-    							<div class="card-header">
-        							<h3 class="badge badge-light-danger fs-6 text-danger">Cancelada</h3>
+    							<div class="card-header d-flex justify-content-center align-items-center">
+        							<h3 class="badge d-inline-block p-5 badge-light-warning fs-6 text-warning">Pendente</h3>
     							</div>
-    							<div class="card-body">
-        							Lorem Ipsum is simply dummy text...
+    							<div class="height-personalize card-body d-flex flex-column p-2">
+									<?php foreach ($propostas['result']->getResult() as $row): ?>
+    									<?php if ($row->status != 'Pendente') continue; ?>
+										<div class="bg-secondary border border-dark-subtle mb-8 rounded p-2  position-relative clickable-row hover" data-href="<?= assetfolder ?>proposta/<?= $row->idquid_propostas ?>">
+										<div class="d-flex flex-column flex-wrap w-100">
+											<div class="d-flex justify-content-between gap-1 w-100">
+												<p class="align-middle text-center"><?= date('d/m/Y', strtotime($row->data_criacao)); ?> - 
+													<span class="fs-7">
+														<?= $row->adesao; ?>
+													</span>
+												</p>
+											</div>
+											<div class="text-center text-gray-800 fw-bold">
+													<p style="white-space: normal; word-break: break-word;" class="align-middle text-center fs-5 badge badge-light-warning text-warning">
+														<?= $row->produto ?>
+													</p>
+											</div>
+										</div>
+										<div class="marginTop d-flex flex-wrap w-100">
+												<div class="align-middle">
+													<span class="fs-7"><?= $row->nome; ?></span>
+													<p class="text-gray-500 fw-bold fs-8"><?= $row->assessor ?></p>
+												</div>
+										</div>
+										<div class="text-start w-100">													
+											<span class="text-success fw-bold">
+												<?= $row->valor == '' ? '-' : 'R$ ' . number_format((float)$row->valor, 2, ',', '.') ?>
+											</span>
+										</div>
+									</div>
+									<?php endforeach; ?>
    							 	</div>
 							</div>
 							<div class="card shadow-sm w-100">
-    							<div class="card-header">
-        							<h3 class="badge badge-light-info fs-6 text-info">Análise</h3>
+    							<div class="card-header d-flex justify-content-center align-items-center">
+        							<h3 class="d-inline-block p-5 badge badge-light-info fs-6 text-info">Análise</h3>
     							</div>
-    							<div class="card-body">
-        							Lorem Ipsum is simply dummy text...
+    							<div class="height-personalize card-body d-flex flex-column p-2">
+									<?php foreach ($propostas['result']->getResult() as $row): ?>
+    									<?php if ($row->status != 'Análise') continue; ?>
+										<div class="bg-secondary border border-dark-subtle mb-8 rounded p-2  position-relative clickable-row hover" data-href="<?= assetfolder ?>proposta/<?= $row->idquid_propostas ?>">
+										<div class="d-flex flex-column flex-wrap w-100">
+											<div class="d-flex justify-content-between gap-1 w-100">
+												<p class="align-middle text-center"><?= date('d/m/Y', strtotime($row->data_criacao)); ?> - 
+													<span class="fs-7">
+														<?= $row->adesao; ?>
+													</span>
+												</p>
+											</div>
+											<div class="text-center text-gray-800 fw-bold">
+													<p style="white-space: normal; word-break: break-word;" class="align-middle text-center fs-5 badge badge-light-info text-info">
+														<?= $row->produto ?>
+													</p>
+											</div>
+										</div>
+										<div class="marginTop d-flex flex-wrap w-100">
+												<div class="align-middle">
+													<span class="fs-7"><?= $row->nome; ?></span>
+													<p class="text-gray-500 fw-bold fs-8"><?= $row->assessor ?></p>
+												</div>
+										</div>
+										<div class="text-start w-100">													
+											<span class="text-success fw-bold">
+												<?= $row->valor == '' ? '-' : 'R$ ' . number_format((float)$row->valor, 2, ',', '.') ?>
+											</span>
+										</div>
+									</div>
+									<?php endforeach; ?>
    							 	</div>
 							</div>
 							<div class="card shadow-sm w-100">
-    							<div class="card-header">
-        							<h3 class="badge badge-light-warning fs-6 text-warning">Corrigir Erro</h3>
+    							<div class="card-header d-flex justify-content-center align-items-center">
+        							<h3 class=" d-inline-block p-5 badge badge-light-success fs-6 text-success">Aprovada</h3>
     							</div>
-    							<div class="card-body">
-        							Lorem Ipsum is simply dummy text...
+    							<div class="height-personalize card-body d-flex flex-column p-2">
+									<?php foreach ($propostas['result']->getResult() as $row): ?>
+    									<?php if ($row->status != 'Aprovada') continue; ?>
+										<div class="bg-secondary border border-dark-subtle mb-8 rounded p-2  position-relative clickable-row hover" data-href="<?= assetfolder ?>proposta/<?= $row->idquid_propostas ?>">
+										<div class="d-flex flex-column flex-wrap w-100">
+											<div class="d-flex justify-content-between gap-1 w-100">
+												<p class="align-middle text-center"><?= date('d/m/Y', strtotime($row->data_criacao)); ?> - 
+													<span class="fs-7">
+														<?= $row->adesao; ?>
+													</span>
+												</p>
+											</div>
+											<div class="text-center text-gray-800 fw-bold">
+													<p style="white-space: normal; word-break: break-word;" class="align-middle text-center fs-5 badge badge-light-success text-success">
+														<?= $row->produto ?>
+													</p>
+											</div>
+										</div>
+										<div class="marginTop d-flex flex-wrap w-100">
+												<div class="align-middle">
+													<span class="fs-7"><?= $row->nome; ?></span>
+													<p class="text-gray-500 fw-bold fs-8"><?= $row->assessor ?></p>
+												</div>
+										</div>
+										<div class="text-start w-100">													
+											<span class="text-success fw-bold">
+												<?= $row->valor == '' ? '-' : 'R$ ' . number_format((float)$row->valor, 2, ',', '.') ?>
+											</span>
+										</div>
+									</div>
+									<?php endforeach; ?>
    							 	</div>
 							</div>
 							<div class="card shadow-sm w-100">
-    							<div class="card-header">
-        							<h3 class="badge badge-light-success fs-6 text-success">Aprovada</h3>
+    							<div class="card-header d-flex justify-content-center align-items-center">
+        							<h3 class="badge d-inline-block p-5 badge-light-danger fs-6 text-danger">Cancelada</h3>
     							</div>
-    							<div class="card-body">
-        							Lorem Ipsum is simply dummy text...
-   							 	</div>
-							</div>
-							<div class="card shadow-sm w-100">
-    							<div class="card-header">
-        							<h3 class="badge badge-light-dark fs-6 text-dark">Adesão</h3>
-    							</div>
-    							<div class="card-body">
-        							Lorem Ipsum is simply dummy text...Lorem Ipsum is simply dummy text...Lorem Ipsum is simply dummy text...Lorem Ipsum is simply dummy text...Lorem Ipsum is simply dummy text...Lorem Ipsum is simply dummy text...
+    							<div class="height-personalize card-body d-flex flex-column p-2">
+									<?php foreach ($propostas['result']->getResult() as $row): ?>
+    									<?php if ($row->status != 'Cancelada') continue; ?>
+										<div class="bg-secondary border border-dark-subtle mb-8 rounded p-2  position-relative clickable-row hover" data-href="<?= assetfolder ?>proposta/<?= $row->idquid_propostas ?>">
+										<div class="d-flex flex-column flex-wrap w-100">
+											<div class="d-flex justify-content-between gap-1 w-100">
+												<p class="align-middle text-center"><?= date('d/m/Y', strtotime($row->data_criacao)); ?> - 
+													<span class="fs-7">
+														<?= $row->adesao; ?>
+													</span>
+												</p>
+											</div>
+											<div class="text-center text-gray-800 fw-bold">
+													<p style="white-space: normal; word-break: break-word;" class="align-middle text-center fs-5 badge badge-light-danger text-danger">
+														<?= $row->produto ?>
+													</p>
+											</div>
+										</div>
+										<div class="marginTop d-flex flex-wrap w-100">
+												<div class="align-middle">
+													<span class="fs-7"><?= $row->nome; ?></span>
+													<p class="text-gray-500 fw-bold fs-8"><?= $row->assessor ?></p>
+												</div>
+										</div>
+										<div class="text-start w-100">													
+											<span class="text-success fw-bold">
+												<?= $row->valor == '' ? '-' : 'R$ ' . number_format((float)$row->valor, 2, ',', '.') ?>
+											</span>
+										</div>
+									</div>
+									<?php endforeach; ?>
    							 	</div>
 							</div>
 						</div>
-						
 					</div>
 			</form>
 		</div>
@@ -499,7 +646,6 @@ function aplicarFiltro(dateDe, dateAte) {
   document.querySelector('#formFiltros').submit();
 }
 
-// função de clique nas linhas
 function inicializarClickLinhas() {
   document.querySelectorAll(".clickable-row").forEach(row => {
     row.addEventListener("click", function(e) {
@@ -510,10 +656,27 @@ function inicializarClickLinhas() {
   });
 }
 
-// chama a função de forma garantida
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", inicializarClickLinhas);
 } else {
   inicializarClickLinhas();
 }
+
+document.addEventListener("DOMContentLoaded", function(){
+	const tabela = document.getElementById("viewTabela");
+	const card = document.getElementById("viewCard");
+
+	const btnTabela = document.getElementById("btnTabela");
+	const btnCard = document.getElementById("btnCard");
+
+	btnTabela.addEventListener("click", () => {
+		tabela.classList.remove("d-none");
+		card.classList.add("d-none");
+	});
+	
+	btnCard.addEventListener("click", () => {
+		card.classList.remove("d-none");
+		tabela.classList.add("d-none");
+	});
+});
 </script>
